@@ -170,7 +170,7 @@
     },
     {
       "title": "Branche principale non protégée",
-      "description": "UCP-QA-12 confirme que main n'est pas protégée, sans checks obligatoires ni ruleset ; le HEAD est non signé et CODEOWNERS, SECURITY.md et modèle de pull request sont absents. 1 contrôle réussi, 7 exigences XFAIL.",
+      "description": "UCP-QA-12 confirme que main n'est pas protégée, sans checks obligatoires ni ruleset. UCP-QA-13 prépare CODEOWNERS, SECURITY.md, un modèle de PR et un plan de protection ; lot testé 7 réussites/2 XFAIL, non intégré tant que le canal privé et les noms de checks CI ne sont pas validés.",
       "level": "critical"
     }
   ],
@@ -186,6 +186,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-12",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-13",
   "baseline_date": "2026-10-16"
 }
