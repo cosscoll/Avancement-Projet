@@ -1,1 +1,34 @@
-[]
+[
+  {
+    "id": "banque-ia-20261016-121539",
+    "started_at": "2026-10-16T12:15:39+02:00",
+    "ended_at": "2026-10-16T12:19:42+02:00",
+    "summary": "Prototype marketing non marchand : navigation réparée dans experience.html ; nouveau prototype local de 4 pages et tests statiques/Chromium. Publication GitHub incomplète.",
+    "done": [
+      "Recherche initiale des issues ouvertes de cosscoll : aucune consigne ni décision banque-ia trouvée.",
+      "experience.html : liens Avancement réparés et six liens vers des fiches ; relecture du blob GitHub SHA 4546208e9c62a41812963c3321c695fa8e7bb647.",
+      "Prototype local indépendant : accueil, six fiches publiques, parcours simulé sans paiement, page Avancement, CSS et JS ; archive ZIP vérifiée, SHA256 5e971dafaff9a36325dc8a6bf7b76d5c5720f2063f47c26210682a099fa9fdd8, sauvegardée en Bibliothèque personnelle.",
+      "Contrôles statiques des liens ; Chromium set_content 1440/390 : filtres, recherche, sélection, parcours, absence d'erreurs JS et de débordement."
+    ],
+    "blockers": [
+      "Écritures GitHub ultérieures (index.html, nouvelles pages, CSS) refusées par contrôles du connecteur ; synchronisation du prototype bloquée.",
+      "Mise à jour du journal Google Docs refusée par contrôles du connecteur.",
+      "Navigation réelle file:// refusée ERR_BLOCKED_BY_ADMINISTRATOR ; aucune publication publique ni tests Lighthouse prouvés."
+    ],
+    "next": "Résoudre les écritures GitHub par voie autorisée ; intégrer les quatre pages et assets, vérifier les liens puis la publication publique, réaliser une recette mobile et accessibilité. Aucune vente ni prospection sans autorisation.",
+    "links": [
+      {
+        "label": "Page expérience modifiée",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/blob/main/experience.html"
+      },
+      {
+        "label": "Dépôt marketing",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA"
+      },
+      {
+        "label": "Journal de projet",
+        "url": "https://docs.google.com/document/d/1eP9ZVO-chyra1sZf1gISfawNwzQPjNOA66KZYjdwMhI/edit"
+      }
+    ]
+  }
+]
