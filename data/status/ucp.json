@@ -164,8 +164,8 @@
       "level": "critical"
     },
     {
-      "title": "Chaîne de dépendances et CI non reproductibles",
-      "description": "UCP-QA-11 confirme le verrou JavaScript, mais les dépendances Python restent en plages sans hashes ; aucun workflow CI ni Dependabot n'a été trouvé. 3 contrôles réussis et 5 exigences XFAIL.",
+      "title": "Verrou Python non haché et CI absente",
+      "description": "Rectification UCP-QA-14 : requirements-lock.txt existe avec 22 versions exactes et les lanceurs Windows/macOS/Linux l'installent. Les hashes d'artefacts, la CI et Dependabot restent absents. Tests QA-14 : 5 réussites, 3 XFAIL. Les affirmations contraires de QA-11 sont supersédées.",
       "level": "warning"
     },
     {
@@ -186,6 +186,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-13",
-  "baseline_date": "2026-10-16"
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-14 ; QA-14 rectifie QA-11 sur l'existence du verrou Python",
+  "baseline_date": "2026-10-17"
 }
