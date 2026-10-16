@@ -15,9 +15,18 @@
     ],
     "next": "Relire les nouvelles issues UCP, vérifier les résultats du clone Windows lorsqu'ils sont publiés, puis préparer le rapprochement sans rebase, merge ni push automatique.",
     "links": [
-      { "label": "Commit UCP vérifié", "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2" },
-      { "label": "Statut UCP central", "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json" },
-      { "label": "Journal UCP", "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit" }
+      {
+        "label": "Commit UCP vérifié",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
     ]
   },
   {
@@ -36,9 +45,48 @@
     ],
     "next": "Faire valider le modèle de menace et la gestion des clés, puis préparer sur branche dédiée un format de sauvegarde chiffré authentifié et son exercice de restauration, sans fusion automatique.",
     "links": [
-      { "label": "Script audité", "url": "https://github.com/cosscoll/UnCoupdePouce/blob/2034e1152944bcb65bd09f3fb70a52e23a399ef2/application/scripts/database.py" },
-      { "label": "Statut UCP central", "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json" },
-      { "label": "Journal UCP", "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit" }
+      {
+        "label": "Script audité",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/blob/2034e1152944bcb65bd09f3fb70a52e23a399ef2/application/scripts/database.py"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
+  },
+  {
+    "id": "ucp-20261016T122945Z",
+    "started_at": "2026-10-16T12:29:45Z",
+    "ended_at": "2026-10-16T12:34:14Z",
+    "summary": "Audit isolé UCP-QA-04 : défaut de navigation mobile et de lien d'évitement démontré sur la page Avancement ; correctif minimal préparé et testé sans modifier UCP.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat.",
+      "HEAD main UCP vérifié à 2034e1152944bcb65bd09f3fb70a52e23a399ef2 ; blobs avancement.html, style.css et app.js contrôlés.",
+      "Tests isolés : 4 réussites, 1 XFAIL strict attendu ; le correctif en mémoire restaure bouton mobile, relation aria-controls, contrôleur app.js et style du lien d'évitement."
+    ],
+    "blockers": [
+      "Correctif non intégré, non poussé et non testé dans un navigateur réel ou lecteur d'écran.",
+      "dev/ucp-codex distante reste à 712a06997e9e9dd39658ad558cb9ea7585e757b8 ; travail et résultats du clone Windows inconnus."
+    ],
+    "next": "Intégrer le patch UCP-QA-04 depuis une branche dédiée après contrôle de conflit, reconstruire la vitrine si nécessaire, puis recetter menu, Échap, clic extérieur et focus à 320/360/390/768 px.",
+    "links": [
+      {
+        "label": "Page Avancement auditée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/blob/2034e1152944bcb65bd09f3fb70a52e23a399ef2/site-vitrine/dist/avancement.html"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
     ]
   }
 ]
