@@ -74,6 +74,10 @@
         {
           "name": "Dépendances reproductibles et CI validées",
           "done": false
+        },
+        {
+          "name": "Protection de main et revue obligatoire validées",
+          "done": false
         }
       ]
     },
@@ -163,6 +167,11 @@
       "title": "Chaîne de dépendances et CI non reproductibles",
       "description": "UCP-QA-11 confirme le verrou JavaScript, mais les dépendances Python restent en plages sans hashes ; aucun workflow CI ni Dependabot n'a été trouvé. 3 contrôles réussis et 5 exigences XFAIL.",
       "level": "warning"
+    },
+    {
+      "title": "Branche principale non protégée",
+      "description": "UCP-QA-12 confirme que main n'est pas protégée, sans checks obligatoires ni ruleset ; le HEAD est non signé et CODEOWNERS, SECURITY.md et modèle de pull request sont absents. 1 contrôle réussi, 7 exigences XFAIL.",
+      "level": "critical"
     }
   ],
   "decisions": [
@@ -177,6 +186,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-11",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-12",
   "baseline_date": "2026-10-16"
 }
