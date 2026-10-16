@@ -59,5 +59,33 @@
         "url": "https://docs.google.com/document/d/1eP9ZVO-chyra1sZf1gISfawNwzQPjNOA66KZYjdwMhI/edit"
       }
     ]
+  },
+  {
+    "id": "banque-ia-20261016-202450",
+    "started_at": "2026-10-16T20:24:50+02:00",
+    "ended_at": "2026-10-16T20:27:34+02:00",
+    "summary": "Consolidation locale du catalogue non marchand : recherche avec état vide, effacement et réinitialisation des filtres, focus clavier ; 6 pages et tests Chromium isolés. Déploiement GitHub non confirmé.",
+    "done": [
+      "Issues ouvertes [CONSIGNE][banque-ia] et [DECISION][banque-ia] auteur cosscoll : aucune trouvée (contrôle initial).",
+      "index.html, assets/site.js, assets/site.css modifiés localement : état vide accessible, bouton Effacer, reset et focus.",
+      "Tests check_public_site.py PASS 6 pages ; test_catalogue_empty_state.py PASS Chromium 1440/390/320 ; test_compare.py PASS ; test_site_1820.py PASS 15 scénarios.",
+      "Archive ZIP complète 30 fichiers, SHA256 afd6262a568070cd1169f8611a25066757d79b8bdac43c6b5ccb70be487134ae ; patch ZIP SHA256 fe0ba8078ded9be5c89e153e759d17f8fb2f9a6f87b3bfcb75a4009b31690380 ; les deux archivés en Bibliothèque ChatGPT."
+    ],
+    "blockers": [
+      "GitHub update_file(index.html) refusé par contrôles de sécurité : modifications non publiées.",
+      "Google Docs batch_update_document refusé par contrôles de sécurité : journal non synchronisé.",
+      "Chromium URL locale bloquée ERR_BLOCKED_BY_ADMINISTRATOR ; GitHub Pages non accessible par consultation ; aucun test HTTP, Lighthouse ou appareil réel."
+    ],
+    "next": "Intégrer le ZIP par une voie GitHub autorisée, vérifier SHA/HEAD, publication et navigation réelle, puis audits Lighthouse/accessibilité. Ne pas activer de vente ou de prospection.",
+    "links": [
+      {
+        "label": "Dépôt marketing",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA"
+      },
+      {
+        "label": "Journal de référence",
+        "url": "https://docs.google.com/document/d/1eP9ZVO-chyra1sZf1gISfawNwzQPjNOA66KZYjdwMhI/edit"
+      }
+    ]
   }
 ]
