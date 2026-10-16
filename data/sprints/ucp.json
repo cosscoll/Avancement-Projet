@@ -396,5 +396,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261016T232920Z",
+    "started_at": "2026-10-16T23:29:20Z",
+    "ended_at": "2026-10-16T23:39:00Z",
+    "summary": "UCP-QA-15 : proposition isolée de CI minimale et Dependabot préparée et testée, sans intégration ni exécution sur GitHub Actions.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat.",
+      "HEAD main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2 ; README, verrou Python et contrat DOM contrôlés.",
+      "Proposition CI avec checks backend-tests/dom-tests et Dependabot testée isolément : 8 réussites, 2 XFAIL stricts ; lot archivé séparément (SHA256 8023061568e87459648007fc50f8beaddb465c25be8d815f9bb64e4e0adf8999)."
+    ],
+    "blockers": [
+      "Workflow non intégré et jamais exécuté sur les runners GitHub ; aucune réussite CI réelle ne peut être revendiquée.",
+      "Verrou Python exact non haché ; aucun test navigateur, staging ou déploiement.",
+      "État du clone Windows dev/ucp-codex inconnu ; aucune tentative de lecture ou de rapprochement."
+    ],
+    "next": "Comparer la proposition QA-15 au travail Codex local, puis ouvrir une pull request dédiée sans fusion automatique ; après premier passage vert, rendre backend-tests et dom-tests obligatoires et traiter séparément le verrou haché.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
