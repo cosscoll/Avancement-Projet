@@ -5,10 +5,14 @@ const CACHE_PUBLIC='control-public-data-v1';
 const ROOT=new URL(self.registration.scope);
 const ASSETS=['./','./index.html','./assets/app.js','./assets/style.css','./assets/pwa.js','./assets/icon.svg','./assets/icon-192.png','./assets/icon-512.png','./manifest.webmanifest'];
 const PUBLIC_DATA=/^data\/(?:projects|catalog|automations)\.json$|^data\/(?:sprints|status)\/[a-z0-9-]+\.json$/;
+const INITIAL_DATA=['./data/projects.json','./data/catalog.json','./data/automations.json',...['pack-pro','banque-ia','ucp','iagile','tcg'].map(id=>'./data/sprints/'+id+'.json')];
 self.addEventListener('install',(e)=>{
-  e.waitUntil(caches.open(CACHE_SHELL).then(async cache=>{
+  e.waitUntil((async()=>{
+    const cache=await caches.open(CACHE_SHELL);
     for(const a of ASSETS){try{const resp=await fetch(new URL(a,ROOT),{cache:'reload'});if(resp.ok)await cache.put(new URL(a,ROOT),resp)}catch{/* Offline installation must not claim every asset was cached. */}}
-  }));
+    const dataCache=await caches.open(CACHE_PUBLIC);
+    for(const a of INITIAL_DATA){try{const url=new URL(a,ROOT),response=await fetch(url,{cache:'no-store'});if(response.ok)await dataCache.put(url,response)}catch{/* No fabricated state if initial online fetch failed. */}}
+  })());
   self.skipWaiting();
 });
 self.addEventListener('activate',e=>{
