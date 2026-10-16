@@ -8,8 +8,8 @@
   "start_url": "./#/automations",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#090e18",
-  "theme_color": "#090e18",
+  "background_color": "#f5f7fa",
+  "theme_color": "#f5f7fa",
   "categories": [
     "productivity",
     "business"
