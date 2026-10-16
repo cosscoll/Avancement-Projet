@@ -334,5 +334,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261016T213209Z",
+    "started_at": "2026-10-16T21:32:09Z",
+    "ended_at": "2026-10-16T21:40:00Z",
+    "summary": "UCP-QA-13 : kit isolé de gouvernance préparé et testé pour CODEOWNERS, politique de sécurité, modèle de pull request et protection de main, sans intégration.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat.",
+      "HEAD main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2 ; CODEOWNERS, SECURITY.md et modèle de PR toujours absents.",
+      "Kit isolé testé : 7 réussites et 2 XFAIL stricts ; archive UCP-QA-13 conservée (SHA256 c907e9d69c1ac35ef7fd634f5a29cf9a8a8ea476a56156dca9b3d9ca984f21b6)."
+    ],
+    "blockers": [
+      "Canal privé officiel de signalement de vulnérabilité non approuvé.",
+      "Noms des checks obligatoires impossibles à figer avant intégration et premier passage vert de la CI.",
+      "Aucun fichier/réglage UCP intégré ; suites applicatives non exécutées et état du clone Windows inconnu."
+    ],
+    "next": "Après validation du canal privé et disponibilité d'une CI verte, adapter les marqueurs, ouvrir une pull request dédiée et tester les protections de main sans fusion automatique.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
