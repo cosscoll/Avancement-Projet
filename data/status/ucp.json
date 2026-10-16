@@ -66,6 +66,10 @@
         {
           "name": "Vérification professionnelle multi-preuves validée",
           "done": false
+        },
+        {
+          "name": "Protection anti-abus et anti-spam validée",
+          "done": false
         }
       ]
     },
@@ -145,6 +149,11 @@
       "title": "Bascule SEO publique non sécurisée",
       "description": "UCP-QA-09 confirme une prévisualisation correctement noindex, mais l'origine est codée en dur, aucun profil public ni sitemap n'existe et aucun test atomique ne protège la bascule robots/meta/en-têtes. 2 contrôles réussis, 5 exigences XFAIL.",
       "level": "warning"
+    },
+    {
+      "title": "Protection anti-abus incomplète",
+      "description": "UCP-QA-10 confirme verrou de connexion, idempotence des messages et signalements audités, mais aucune limitation réseau ou de vélocité sur inscription, publication, candidature, messagerie et signalement ; 3 contrôles réussis et 6 exigences XFAIL.",
+      "level": "critical"
     }
   ],
   "decisions": [
@@ -159,6 +168,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-09",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-10",
   "baseline_date": "2026-10-16"
 }
