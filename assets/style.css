@@ -125,3 +125,27 @@
 .instruction-top{display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:space-between}
 @media(max-width:980px){.sync-steps{grid-template-columns:1fr}.sync-step{align-items:center}}
 @media(max-width:580px){.sync-step{padding:12px 14px}}
+
+
+/* Application mobile installable (PWA) — en conservant la charte CONTROL. */
+#install-panel[hidden],#offline-banner[hidden]{display:none!important}
+.install-panel{margin:14px clamp(18px,4vw,54px) 0;padding:15px 17px;display:flex;gap:14px;align-items:center;background:linear-gradient(115deg,rgba(23,53,53,.95),rgba(18,32,51,.94));border:1px solid #3c7061;border-radius:15px}
+.install-emblem{width:38px;height:38px;border-radius:10px;background:#9af7c4;color:#09241c;display:grid;place-items:center;font-size:26px;flex:none}
+.install-copy{flex:1;min-width:0}.install-copy strong{display:block;font-weight:800;font-size:13px}.install-copy p{margin:4px 0 0;color:#b9d7d1;font-size:12px;line-height:1.55}
+.install-action{flex:none;white-space:nowrap}
+.install-dismiss{border:0;background:transparent;color:#cbd7e6;font-size:25px;padding:3px 9px;align-self:flex-start;line-height:1}
+.offline-banner{background:#3c3021;color:#ffe2ad;text-align:center;border-bottom:1px solid #806239;padding:10px clamp(16px,4vw,54px);font-weight:700;font-size:12px}
+@media(display-mode:standalone){
+ .workspace{padding-top:env(safe-area-inset-top,0px)}
+ footer{padding-bottom:calc(25px + env(safe-area-inset-bottom,0px))}
+ .sidebar{padding-top:calc(22px + env(safe-area-inset-top,0px))}
+}
+@media(max-width:700px){
+ .install-panel{margin:11px 13px 0;padding:12px 13px;gap:10px;align-items:flex-start}
+ .install-emblem{width:34px;height:34px;font-size:22px}
+ .install-copy p{font-size:11px}
+ .install-action{padding:8px 10px;font-size:12px}
+ .install-dismiss{padding:1px 4px}
+ .topbar{padding-left:calc(12px + env(safe-area-inset-left,0px));padding-right:calc(12px + env(safe-area-inset-right,0px))}
+ .sidebar{padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+}
