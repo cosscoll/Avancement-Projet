@@ -1,9 +1,9 @@
 /* CONTROL PWA — public static shell only; no private instructions, secrets or GitHub API responses. */
 'use strict';
-const CACHE_SHELL='control-shell-v3';
-const CACHE_PUBLIC='control-public-data-v3';
+const CACHE_SHELL='control-shell-v4';
+const CACHE_PUBLIC='control-public-data-v4';
 const ROOT=new URL(self.registration.scope);
-const ASSETS=['./','./index.html','./assets/app.js','./assets/style.css','./assets/pwa.js','./assets/icon.svg','./assets/icon-192.png','./assets/icon-512.png','./manifest.webmanifest'];
+const ASSETS=['./','./index.html','./assets/app.js','./assets/style.css','./assets/theme.css','./assets/pwa.js','./assets/icon.svg','./assets/icon-192.png','./assets/icon-512.png','./manifest.webmanifest'];
 const PUBLIC_DATA=/^data\/(?:projects|catalog|automations)\.json$|^data\/(?:sprints|status)\/[a-z0-9-]+\.json$/;
 const INITIAL_DATA=['./data/projects.json','./data/catalog.json','./data/automations.json',...['pack-pro','banque-ia','ucp','iagile','tcg'].map(id=>'./data/sprints/'+id+'.json')];
 self.addEventListener('install',(e)=>{
