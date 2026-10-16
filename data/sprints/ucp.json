@@ -241,5 +241,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261016T182955Z",
+    "started_at": "2026-10-16T18:29:55Z",
+    "ended_at": "2026-10-16T18:36:00Z",
+    "summary": "Audit isolé UCP-QA-10 : protections de connexion, idempotence et signalement confirmées, mais limitations réseau, vélocité et contrôles destinataire absents ; contrat de tests livré.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat.",
+      "HEAD main vérifié à 2034e1152944bcb65bd09f3fb70a52e23a399ef2 ; app.py et features_v4.py contrôlés par blob.",
+      "Tests isolés : 3 réussites et 6 XFAIL stricts sur limitation réseau, inscription, place de marché, communication, répétition/blocage et priorité de modération ; lot UCP-QA-10 archivé séparément."
+    ],
+    "blockers": [
+      "Aucune limitation de vélocité démontrée hors verrouillage de connexion par e-mail ; inscription, projets, candidatures, messages et signalements restent exposés aux rafales.",
+      "Aucune détection de répétition, mise en sourdine/blocage destinataire ni file de modération priorisée.",
+      "Aucun proxy, multi-processus, navigateur ou staging testé ; état du clone Windows dev/ucp-codex inconnu."
+    ],
+    "next": "Préparer isolément un limiteur serveur configurable et fermé par défaut, avec Retry-After, clés pseudonymisées, compteurs expirables, blocage destinataire et tests de concurrence, sans fusion automatique.",
+    "links": [
+      {
+        "label": "Messagerie auditée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/blob/2034e1152944bcb65bd09f3fb70a52e23a399ef2/application/backend/app.py"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
