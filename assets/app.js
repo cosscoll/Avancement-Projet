@@ -27,6 +27,8 @@ const last=`<div class="nav-label nav-section">RACCOURCIS</div><a class="nav-ite
 q('#project-nav').innerHTML=top+acts+extras+last;
 const bread=selected==='automations'?'Automatisations':selected==='overview'?'Vue générale':selected==='catalog'?'Autres projets':selected==='inbox'?'Consignes & décisions':selected==='activity'?'Journal des sprints':selected==='other'?state.catalogSelected?.name||'Projet':state.selected?.name||'Projet';
 q('#crumb').textContent=bread;
+ const dest=selected==='inbox'?'inbox':selected==='activity'?'activity':selected==='catalog'||selected==='other'?'catalog':'automations';
+ document.querySelectorAll('.mobile-tab').forEach(a=>{const active=a.dataset.nav===dest;a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
 }
 function mainHeading(label,title,desc,action=''){return `<div class="page-head"><div><div class="page-eyebrow">${safe(label)}</div><h1 class="page-title">${safe(title)}</h1><p class="page-description">${safe(desc)}</p></div>${action}</div>`}
 function alertMarkup(project,alert){return `<div class="alert-item"><div class="alert-icon" aria-hidden="true">!</div><div><b>${safe(alert.title)}</b><p>${safe(alert.description)}</p><span class="small muted">${safe(project.name)}</span></div></div>`}
@@ -96,27 +98,32 @@ function bindInstructions(p){q('#instructions-form')?.addEventListener('submit',
 q('#publish-draft')?.addEventListener('click',()=>{const body=q('#draft-text').value.trim();if(!body){toast('Écris une consigne non confidentielle avant de poursuivre.');return}if(!confirm('Ta consigne sera PUBLIQUE. GitHub va s’ouvrir et tu devras cliquer sur « Submit new issue » pour réellement l’envoyer. Aucun secret, donnée privée ou autorisation sensible ?'))return;const title=body.split('\n')[0].slice(0,72)||'Nouvelle consigne';try{localStorage.setItem(draftKey(p.id),body)}catch{}window.location.href=issueUrl(p.id,title,body,'CONSIGNE')})}
 async function loadCommits(p){let result=null;try{const r=await fetch('https://api.github.com/repos/cosscoll/'+encodeURIComponent(p.repo)+'/commits?per_page=6',{headers:{Accept:'application/vnd.github+json'}});if(r.ok)result=await r.json()}catch{}state.commits[p.id]=Array.isArray(result)?result:null;if(state.selected?.id===p.id&&state.section==='sprints'){const el=q('#github-activity');if(el)el.innerHTML=renderCommits(state.commits[p.id])}}
 function taskReport(t){
- const p=state.projects.find(p=>p.id===t.id),s=state.sprints[t.id]||[],last=s.slice().sort((a,b)=>Date.parse(b.ended_at||0)-Date.parse(a.ended_at||0))[0],newAlerts=(p&&statusFor(p).alerts||[]).length,link=p?`#/${p.id}/sprints`:'#/automations';
- return `<article class="automation-card panel"><div class="auto-head"><span class="auto-symbol">${safe(p?.symbol||'◉')}</span><div class="auto-copy"><strong>${safe(t.title)}</strong><span>${safe(t.schedule)}</span></div>${badge(t.active_at_last_check?'Actif au dernier contrôle':'Non confirmé',t.active_at_last_check?'':'warning')}</div><div class="auto-lines"><div><span>Dernier rapport centralisé</span><b>${last?safe(dateFR(last.ended_at||last.started_at)):'En attente'}</b></div><div><span>Alertes de référence</span><b>${newAlerts}</b></div><div><span>Compte rendus stockés</span><b>${s.length}</b></div></div><p class="auto-last">${last?safe(last.summary||'Bilan disponible'):'Aucun sprint encore enregistré dans ce tableau de bord.'}</p>${last?.blockers?.length?`<a class="auto-alert" href="${link}" title="Lire les blocages du sprint"><span aria-hidden="true">!</span> ${safe(last.blockers[0].slice(0,175))}</a>`:''}<div class="auto-foot"><a href="${link}" class="external">Voir le projet et ses rapports →</a><a href="https://github.com/cosscoll/Avancement-Projet/blob/main/data/sprints/${safe(t.id)}.json" target="_blank" rel="noopener noreferrer" class="external">JSON ↗</a></div></article>`;
+ const p=state.projects.find(p=>p.id===t.id),reports=state.sprints[t.id]||[];
+ const last=latestSprint(t.id),link=p?'#/'+p.id+'/overview':'#/automations';
+ const problem=Array.isArray(last?.blockers)&&last.blockers.length;
+ return `<article class="automation-card panel">
+   <div class="auto-head"><span class="auto-symbol" aria-hidden="true">${safe(p?.symbol||'◉')}</span><div class="auto-copy"><strong>${safe(t.title)}</strong><span>${safe(t.schedule)}</span></div>${badge(t.active_at_last_check?'Actif · dernier relevé':'Statut à confirmer','neutral')}</div>
+   <div class="auto-lines"><div><span>Dernier rapport :</span><b>${last?safe(dateFR(last.ended_at||last.started_at)):'En attente'}</b></div><div><span>Rapports :</span><b>${reports.length}</b></div></div>
+   <p class="auto-last">${last?safe(last.summary||'Compte rendu disponible'):'Aucun rapport centralisé pour le moment.'}</p>
+   ${problem?`<a class="auto-alert" href="#/${safe(t.id)}/sprints"><span aria-hidden="true">!</span> ${safe(last.blockers[0].slice(0,130))}</a>`:''}
+   <div class="auto-foot"><a class="external" href="${link}">Ouvrir le projet →</a><a href="#/${safe(t.id)}/sprints" class="external">Voir les sprints ↗</a></div>
+ </article>`;
 }
-
 function automationsStrip(){
  const tasks=state.taskInfo;
  return `<section aria-label="Automatisations" class="automation-feature"><div class="panel-heading"><div><div class="page-eyebrow">PRIORITÉ / TÂCHES CHATGPT</div><h2>Automatisations</h2><p class="muted small">Suivi des rapports réellement synchronisés et des horaires enregistrés.</p></div><div class="auto-actions"><a href="#/activity" class="btn small">Journal global ↗</a><a href="#/automations" class="btn small">Toutes les tâches →</a></div></div><div class="automation-list">${tasks.map(t=>taskReport(t)).join('')}</div></section>`;
 }
 
 function automationsView(){
- const tasks=state.taskInfo;
- const count=tasks.filter(t=>t.active_at_last_check).length;
- const total=Object.values(state.sprints).reduce((n,v)=>n+v.length,0);
- q('#main').innerHTML=mainHeading('CHATGPT / TÂCHES PROGRAMMÉES','Mes automatisations','Centre de suivi prioritaire : fréquence, rapports, blocages et prochaines actions. Les contrôles sont datés ; ce site ne peut pas activer ou désactiver les tâches ChatGPT.',`<a class="btn" href="https://chatgpt.com/tasks" target="_blank" rel="noopener noreferrer">Gérer dans ChatGPT ↗</a>`)+
- `<div class="stat-grid"><div class="panel stat"><div class="kicker">Automatisations suivies</div><strong>${tasks.length}</strong><small>Espaces dédiés</small></div><div class="panel stat"><div class="kicker">Actives au dernier contrôle</div><strong>${count}</strong><small>Pas une lecture en temps réel</small></div><div class="panel stat"><div class="kicker">Rapports centralisés</div><strong>${total}</strong><small>Fichiers de sprint GitHub</small></div><div class="panel stat"><div class="kicker">Dernière vérification</div><strong style="font-size:21px">16/10</strong><small>Statut à confirmer dans ChatGPT</small></div></div>
- <div class="hint"><strong>Source : instantané du 16 octobre 2026.</strong> Les horaires et états affichés ne proviennent pas d'une API ChatGPT temps réel. Pour activer, désactiver ou reprogrammer une tâche, utilise ChatGPT directement. Le site peut afficher les bilans déposés sur GitHub, pas exécuter les automatisations à ta place.</div><div class="warning-banner"><strong>Notifications ChatGPT — dernier contrôle.</strong>Les notifications push et e-mail étaient désactivées pour les cinq tâches lors du dernier relevé du 16 octobre. Si tu veux recevoir les bilans de sprint, vérifie les réglages de notifications des Tâches dans ChatGPT. Cet état peut avoir changé depuis.</div>
- <div class="automation-list">${tasks.map(t=>taskReport(t)).join('')}</div>
+ const tasks=state.taskInfo,total=Object.values(state.sprints).reduce((n,v)=>n+v.length,0);
+ const withReports=tasks.filter(t=>(state.sprints[t.id]||[]).length).length;
+ q('#main').innerHTML=mainHeading('CENTRE DE PILOTAGE','Automatisations','Retrouve tes tâches programmées, leurs derniers résultats et les projets associés.',`<a class="btn" href="https://chatgpt.com/tasks" target="_blank" rel="noopener noreferrer">Gérer dans ChatGPT ↗</a>`)+
+ `<section class="stat-grid" aria-label="Résumé du suivi"><div class="panel stat"><div class="kicker">Tâches suivies</div><strong>${tasks.length}</strong><small>Dernier relevé de statut</small></div><div class="panel stat"><div class="kicker">Rapports enregistrés</div><strong>${total}</strong><small>Historique du centre</small></div><div class="panel stat"><div class="kicker">Projets avec rapport</div><strong>${withReports}/5</strong><small>Synchronisation constatée</small></div><div class="panel stat"><div class="kicker">Autres projets</div><strong>${state.catalog.length+state.custom.length}</strong><small><a class="external" href="#/catalog">Explorer →</a></small></div></section>
+ <div class="section-heading"><div><h2>Mes cinq automatisations</h2><p class="muted small">Clique sur un projet pour ses objectifs, sprints, alertes et consignes.</p></div><a href="#/activity" class="btn small">Journal des sprints →</a></div>
+ <div class="automation-list">${tasks.map(taskReport).join('')}</div>
  ${attentionSummary()}
- <div class="panel mt"><div class="panel-heading"><h2>Comment transmettre une instruction</h2></div><p class="muted">Ouvre l'espace d'un projet, onglet <strong>Mes instructions</strong>, puis confirme sur GitHub une issue publique non confidentielle. L'automatisation concernée a pour consigne de consulter ces issues au début de sa prochaine exécution et de publier un rapport à la fin. Les brouillons locaux ne sont pas lus.</p><p class="small muted">Les autorisations Work/Codex, dépenses, changement de tâches et décisions sensibles doivent être données directement dans un chat.</p></div>`;
+ <details class="info-disclosure"><summary>Comprendre les statuts et les notifications</summary><div class="info-disclosure-body"><p>Les statuts des tâches sont des instantanés du 16 octobre 2026, et non une connexion en temps réel à ChatGPT. Les rapports affichés proviennent des fichiers centralisés sur GitHub.</p><p>Les notifications push/e-mail étaient désactivées au dernier contrôle. Leur activation et toute modification des tâches se font exclusivement dans ChatGPT.</p><p>Pour transmettre une consigne non confidentielle, ouvre son projet puis « Mes instructions » et confirme la publication d'une issue GitHub. Un brouillon local n'est pas transmis. Ne partage aucun secret dans les issues publiques.</p></div></details>`;
 }
-
 function safeChatLink(url){
  try{const v=new URL(url);return v.protocol==='https:'&&(['chatgpt.com','chat.openai.com'].includes(v.hostname))&&v.username===''&&v.password==='' ? v.href:''}catch{return''}
 }
@@ -233,6 +240,19 @@ toast(clean.length+' rapport(s) publics exportés.');
 render();
 }
 
+function closeMobileMenu(){
+ q('.sidebar').classList.remove('open');
+ const backdrop=q('#sidebar-backdrop');if(backdrop)backdrop.hidden=true;
+ document.body.classList.remove('menu-open');
+ q('#toggle-nav').setAttribute('aria-expanded','false');
+}
+function toggleMobileMenu(){
+ const side=q('.sidebar'),isOpen=!side.classList.contains('open');
+ side.classList.toggle('open',isOpen);
+ const backdrop=q('#sidebar-backdrop');if(backdrop)backdrop.hidden=!isOpen;
+ document.body.classList.toggle('menu-open',isOpen);
+ q('#toggle-nav').setAttribute('aria-expanded',String(isOpen));
+}
 function resolve(){
 const segments=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean),id=segments[0]||'automations';
 state.route=id==='automations'||id==='overview'||id==='catalog'||id==='other'||id==='inbox'||id==='activity'||state.projects.some(x=>x.id===id)?id:'automations';
@@ -241,7 +261,7 @@ state.catalogSelected=state.route==='other'?[...state.catalog,...state.custom].f
 state.section=sections.some(x=>x[0]===segments[1])?segments[1]:'overview';
 nav();
 if(state.route==='automations')automationsView();else if(state.route==='overview')overview();else if(state.route==='catalog')catalogView();else if(state.route==='inbox')inboxView();else if(state.route==='activity')activityView();else if(state.route==='other')state.catalogSelected?otherView(state.catalogSelected):catalogView();else renderProject(state.selected);
-q('.sidebar').classList.remove('open');q('#toggle-nav').setAttribute('aria-expanded','false');scrollTo({top:0,behavior:'instant'});
+closeMobileMenu();scrollTo({top:0,behavior:'instant'});
 }
 
 function commandEntries(){
@@ -285,7 +305,9 @@ if(!data||!Array.isArray(data.projects)){q('#main').innerHTML=empty('Données in
 state.projects=data.projects;state.disclaimer=data.disclaimer||'';state.catalog=Array.isArray(others.projects)?others.projects:[];state.taskInfo=Array.isArray(auto.tasks)?auto.tasks:[];state.custom=customList();
 const ids=state.projects.map(p=>p.id);
 await Promise.all(ids.map(async id=>{const [s,d]=await Promise.all([json('data/sprints/'+id+'.json',[]),json('data/status/'+id+'.json',null)]);state.sprints[id]=Array.isArray(s)?s:[];if(d&&typeof d==='object')state.runtime[id]=d}));
-initialNotice();resolve();window.addEventListener('hashchange',resolve);initCommand();q('#refresh-data')?.addEventListener('click',()=>window.location.reload());q('#toggle-nav').addEventListener('click',()=>{const side=q('.sidebar'),open=side.classList.toggle('open');q('#toggle-nav').setAttribute('aria-expanded',String(open))});
+initialNotice();resolve();window.addEventListener('hashchange',resolve);initCommand();q('#refresh-data')?.addEventListener('click',()=>window.location.reload());q('#toggle-nav').addEventListener('click',toggleMobileMenu);
+q('#sidebar-backdrop')?.addEventListener('click',closeMobileMenu);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMobileMenu()});
 }
 
 init();
