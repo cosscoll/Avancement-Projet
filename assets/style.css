@@ -37,3 +37,46 @@
 .visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:1220px){.automation-list{grid-template-columns:1fr}}
 @media(max-width:700px){.automation-list{grid-template-columns:1fr}.automation-feature .panel-heading{align-items:start;flex-direction:column;gap:9px}.auto-head .tag{margin-left:0}.auto-head{align-items:start}.catalog-actions{align-items:stretch;flex-direction:column}.catalog-add{grid-template-columns:1fr}.catalog-add label:first-child{grid-column:1}.catalog-add .btn{width:100%}.sidebar{display:flex}.main-nav{flex:1;overflow-y:auto}}
+
+
+/* Sprint intelligence — suivi de preuves et filtres */
+.auto-actions{display:flex;gap:9px;flex-wrap:wrap}
+.auto-alert{border:1px solid #785c35;background:rgba(127,86,38,.17);color:#ffe1a9;text-decoration:none;border-radius:10px;padding:9px 11px;font-size:11px;display:flex;gap:8px;align-items:center;margin-bottom:14px}
+.auto-alert span{border:1px solid currentColor;border-radius:100%;width:17px;height:17px;display:grid;place-items:center;font-weight:900;flex:none}
+.auto-alert:hover{background:#513c28}
+.attention-panel{margin-bottom:26px;background:linear-gradient(125deg,rgba(44,34,33,.97),rgba(20,29,45,.94) 70%)}
+.attention-panel h2{font-size:20px;margin:6px 0 0}
+.attention-panel .page-eyebrow{color:#e6c39a}
+.attention-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.attention-item{border:1px solid #614a3b;border-radius:13px;padding:16px;text-decoration:none;display:grid;gap:5px;background:rgba(20,30,45,.8)}
+.attention-item:hover{border-color:#ac8658;background:rgba(60,46,36,.6)}
+.attention-project{font-weight:800;color:#f7eddf}
+.attention-date{font-size:11px;color:#b7aaa0}
+.attention-description{font-size:12px;color:#d3c9c4;line-height:1.5;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.attention-link{color:#f1c78c;font-weight:800;font-size:11px;margin-top:5px}
+.activity-filter-panel{margin:0 0 20px}
+.activity-filters{display:flex;gap:12px;align-items:end;flex-wrap:wrap}
+.activity-filters label{display:grid;gap:6px;flex:1;min-width:145px;color:#bac8da;font-weight:700;font-size:12px}
+.activity-filters .activity-search{flex:2;min-width:200px}
+.activity-filters input,.activity-filters select{width:100%;background:#0c1524;color:#eef3fb;padding:11px 13px;border:1px solid #3b4a64;border-radius:10px;min-height:44px}
+.activity-filter-panel #activity-count{margin:13px 0 0}
+.activity-stream{display:grid;gap:15px}
+.activity-card{padding:25px;transition:border-color .2s}
+.activity-card:hover{border-color:#475874}
+.activity-meta{display:flex;gap:11px;align-items:center;flex-wrap:wrap}
+.activity-meta time{color:#9db0c9;font-size:12px;margin-right:auto}
+.activity-project{color:var(--mint);font-size:12px;font-weight:800;text-decoration:none}
+.activity-project:hover{text-decoration:underline}
+.activity-card h3{font:600 clamp(18px,2vw,23px)/1.35 'Space Grotesk',sans-serif;margin:15px 0 22px}
+.activity-detail{display:grid;grid-template-columns:120px 1fr;gap:10px;border-top:1px solid var(--line);padding:12px 0}
+.activity-detail strong{color:#d7e4f4;font-size:12px}
+.activity-detail p{margin:0;color:var(--muted);font-size:13px;white-space:pre-line;overflow-wrap:anywhere}
+.activity-detail.warning-text strong{color:var(--yellow)}
+.activity-detail.warning-text p{color:#f0d0a2}
+.activity-footer{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;border-top:1px solid var(--line);padding-top:14px;margin-top:4px}
+.proofs{font-size:12px;color:var(--muted);display:flex;gap:9px;flex-wrap:wrap}
+.proofs a{color:var(--mint);text-decoration:none}
+.proofs a:hover{text-decoration:underline}
+.stat .stat-date{font-size:clamp(20px,2.5vw,28px)}
+@media(max-width:800px){.attention-grid{grid-template-columns:1fr}}
+@media(max-width:580px){.activity-detail{grid-template-columns:1fr;gap:5px}.activity-card{padding:19px}.activity-filters{display:grid;grid-template-columns:1fr;gap:12px}.activity-filters label,.activity-filters .activity-search{min-width:0}.attention-panel{padding:18px}.auto-actions{width:100%}}
