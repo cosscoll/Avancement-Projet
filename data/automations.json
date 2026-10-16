@@ -7,31 +7,42 @@
       "id": "pack-pro",
       "title": "Pack Procédures Pro",
       "schedule": "Chaque heure à XXh10",
-      "active_at_last_check": true
+      "active_at_last_check": true,
+      "push_at_last_check": false,
+      "email_at_last_check": false
     },
     {
       "id": "banque-ia",
       "title": "Banque Outils IA",
       "schedule": "Chaque heure à XXh20",
-      "active_at_last_check": true
+      "active_at_last_check": true,
+      "push_at_last_check": false,
+      "email_at_last_check": false
     },
     {
       "id": "ucp",
       "title": "UCP — Construction autonome",
       "schedule": "Chaque heure à XXh30",
-      "active_at_last_check": true
+      "active_at_last_check": true,
+      "push_at_last_check": false,
+      "email_at_last_check": false
     },
     {
       "id": "iagile",
       "title": "IAgile — Pilotage autonome",
       "schedule": "Chaque heure à XXh40",
-      "active_at_last_check": true
+      "active_at_last_check": true,
+      "push_at_last_check": false,
+      "email_at_last_check": false
     },
     {
       "id": "tcg",
       "title": "TCG Thomas Deseur",
       "schedule": "Chaque jour à 11h05",
-      "active_at_last_check": true
+      "active_at_last_check": true,
+      "push_at_last_check": false,
+      "email_at_last_check": false
     }
-  ]
+  ],
+  "notifications_note": "Au dernier relevé du 16/10/2026, push et emails des tâches étaient désactivés. L'utilisateur peut changer ces réglages depuis ChatGPT. Ce JSON n'est PAS un inventaire temps réel."
 }
