@@ -40,5 +40,39 @@
         "url": "https://presse.economie.gouv.fr/barometre-france-num-2026-quatre-tpe-pme-sur-dix-utilisent-desormais-lintelligence-artificielle/"
       }
     ]
+  },
+  {
+    "id": "iagile-20261016-183703-paris",
+    "started_at": "2026-10-16T18:37:03+02:00",
+    "ended_at": "2026-10-16T18:40:12+02:00",
+    "summary": "Contrat privé d'import V0.9.1 R3 vérifié hors ligne, audit SQL de dépendances et étude comparative publique ; aucune mise en ligne premium.",
+    "done": [
+      "Recherche des consignes/decisions iagile ouvertes : aucun résultat retourné.",
+      "Lecture seule Supabase : 47 modules, 283 associations, 14 métadonnées Processus, 0 compte Auth, 0 objet Storage, 0 cours publié et 0 collision de chemin V0.9.1.",
+      "Nouveau contrôle de concordance R3/registre : 12 fichiers validés hors ligne ; 12 tests unitaires locaux réussis ; aucun import.",
+      "PR #12 et #77 toujours en brouillon ; importateur historique v0.1 incompatible avec R3 versionnée.",
+      "Comparatif documentaire de quatre offres de formation, sans prix IAgile fixé."
+    ],
+    "blockers": [
+      "Version Processus V0.9.1 non approuvée ; module 8 contient encore une ancienne référence.",
+      "Métadonnées V0.9.1 non intégrées et aucun fichier premium téléversé.",
+      "Tests réels Auth/RLS, téléchargement et révocation absents.",
+      "GitHub Pages non vérifiable en HTTP depuis cette session."
+    ],
+    "next": "Préparer un correctif isolé de l'importateur R3 sans déploiement, obtenir validation pédagogique V0.9.1, puis organiser les tests réels des accès avec identités autorisées.",
+    "links": [
+      {
+        "label": "PR Academy #12",
+        "url": "https://github.com/cosscoll/IAgile/pull/12"
+      },
+      {
+        "label": "PR Viewer V9 #77",
+        "url": "https://github.com/cosscoll/IAgile/pull/77"
+      },
+      {
+        "label": "Baromètre France Num 2026",
+        "url": "https://www.francenum.gouv.fr/guides-et-conseils/strategie-numerique/comprendre-le-numerique/barometre-france-num-2026-le"
+      }
+    ]
   }
 ]
