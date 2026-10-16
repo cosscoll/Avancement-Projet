@@ -25,12 +25,20 @@
       <header class="topbar">
         <button class="mobile-nav" id="toggle-nav" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
         <div class="breadcrumb"><span>WORKSPACE</span><span aria-hidden="true">/</span><strong id="crumb">Vue générale</strong></div>
-        <div class="top-actions"><span id="sync-indicator" class="sync-indicator"><span class="pulse"></span> Données de référence</span><a class="ghost" href="https://github.com/cosscoll/Avancement-Projet" target="_blank" rel="noopener noreferrer" title="Ouvrir le dépôt GitHub">GitHub ↗</a></div>
+        <div class="top-actions"><button type="button" id="quick-open" class="ghost quick-open" title="Rechercher dans les projets (Ctrl+K)">⌕ <span>Rechercher</span> <kbd>Ctrl K</kbd></button><span id="sync-indicator" class="sync-indicator"><span class="pulse"></span> Données de référence</span><a class="ghost" href="https://github.com/cosscoll/Avancement-Projet" target="_blank" rel="noopener noreferrer" title="Ouvrir le dépôt GitHub">GitHub ↗</a></div>
       </header>
       <main id="main" tabindex="-1"><div class="loading"><span class="spinner"></span> Chargement du tableau de bord…</div></main>
       <footer>CONTROL <span>·</span> Données publiques ou simulées signalées <span>·</span> Aucun paiement ni utilisation de Work/Codex</footer>
     </div>
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="command-overlay" class="command-overlay" hidden>
+    <section id="command-dialog" role="dialog" aria-modal="true" aria-labelledby="command-title" class="command-panel">
+      <div class="command-head"><label id="command-title" for="command-search">Accès rapide à mes projets</label><button type="button" id="command-close" aria-label="Fermer la recherche" class="ghost">Échap</button></div>
+      <input type="search" id="command-search" placeholder="Automatisation, projet, rapport, consigne…" autocomplete="off" aria-controls="command-results">
+      <div id="command-results" class="command-results" aria-live="polite"></div>
+      <p class="small muted">Raccourci <kbd>Ctrl</kbd> + <kbd>K</kbd> · <kbd>Échap</kbd> pour fermer · Recherche locale dans le catalogue connu</p>
+    </section>
+  </div>
 </body>
 </html>
