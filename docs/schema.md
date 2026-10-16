@@ -1,6 +1,6 @@
 # Contrat de synchronisation — CONTROL (version 1)
 
-Ce fichier décrit les données publiques admissibles et la future connexion privée. Il ne constitue **pas** une preuve de synchronisation active.
+Ce fichier décrit les données publiques admissibles, le canal GitHub Issues de consignes NON sensibles et la future connexion privée. Les consignes de synchronisation ont été enregistrées dans les cinq automatisations ; leur fonctionnement doit encore être vérifié sur des sprints réels.
 
 ## Identifiants de projet
 
@@ -36,6 +36,10 @@ Une automatisation n'écrit que dans son propre fichier : `data/sprints/<id>.jso
 
 Les historiques sont initialement vides. Ne pas remplir avec des exemples ni réécrire les précédents comptes rendus. Contrôler SHA et état du dépôt avant chaque modification. Ne pas effacer ou dupliquer les anciens sprints. Chaque résultat doit distinguer « conçu », « testé », « intégré » et « publié ».
 
+## Canal public : GitHub Issues (non confidentiel)
+
+Le site ouvre un nouveau ticket GitHub prérempli dans le dépôt central. La publication exige une **confirmation manuelle sur GitHub**. Les titres utilisent exactement `[CONSIGNE][project_id]` et `[DECISION][project_id]`. Les tâches doivent chercher ces tickets au début du sprint, vérifier le propriétaire GitHub `cosscoll` et en rendre compte. Les brouillons locaux ne sont PAS visibles. Ce canal n'autorise jamais Work/Codex, les dépenses ou des changements de programmation.
+
 ## Privé : commandes et décisions (non activées)
 
 La source privée prévue doit enregistrer les champs `project_id`, `instruction_id`, `author_user_id`, `body`, `created_at`, `read_at`, `status`, `sprint_id`, `decision`, `approved_at` et une piste d'audit. Prévoir :
@@ -46,4 +50,4 @@ La source privée prévue doit enregistrer les champs `project_id`, `instruction
 5. Jamais de clé privilégiée dans le navigateur ou dans le GitHub public.
 6. Le site ne peut ni autoriser Work/Codex, ni engager des frais, ni modifier le statut des automatisations. Ces pouvoirs restent aux commandes directes de l'utilisateur dans ChatGPT.
 
-Le backend privé dédié n'est pas encore connecté : jusqu'à sa mise en place, les brouillons du site sont **locaux** et **invisibles pour les automatisations**. Ne pas annoncer un fonctionnement bidirectionnel sans test de bout en bout.
+Le backend privé dédié n'est pas encore connecté : `prive.html` est désactivé par `config/private.json`, et le SQL RLS préparé dans `database/001_control_schema.sql` n'a PAS été exécuté. Les brouillons locaux sont invisibles pour les tâches ; seules les issues réellement publiées peuvent être consultées. Ne pas annoncer un fonctionnement bidirectionnel sans test de bout en bout.
