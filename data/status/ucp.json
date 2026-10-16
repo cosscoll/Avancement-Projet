@@ -62,6 +62,10 @@
         {
           "name": "Cycle de vie et effacement validés",
           "done": false
+        },
+        {
+          "name": "Vérification professionnelle multi-preuves validée",
+          "done": false
         }
       ]
     },
@@ -127,6 +131,11 @@
       "title": "Cycle de vie des données incomplet",
       "description": "UCP-QA-07 confirme export individuel et retrait bêta, mais aucune fermeture complète, matrice de conservation, purge automatisée, propagation aux sauvegardes ni stratégie des données partagées ; 2 contrôles réussis et 6 exigences XFAIL.",
       "level": "critical"
+    },
+    {
+      "title": "Vérification professionnelle insuffisante",
+      "description": "UCP-QA-08 confirme le contrôle de forme SIREN et l'approbation administrative, mais aucun contrôle de registre officiel, du représentant, du domaine RGE ou de l'assurance ; 2 contrôles réussis et 5 exigences XFAIL.",
+      "level": "critical"
     }
   ],
   "decisions": [
@@ -141,6 +150,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-07",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-08",
   "baseline_date": "2026-10-16"
 }
