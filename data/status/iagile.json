@@ -73,6 +73,11 @@
       "title": "Accès premium non testé en conditions réelles",
       "description": "Aucun parcours complet avec des comptes de recette n'est confirmé.",
       "level": "warning"
+    },
+    {
+      "title": "Import du parcours pilote non prêt",
+      "description": "Le contrôle hors ligne du corpus candidat a réussi (12 fichiers), mais l'importateur existant n'accepte pas encore son format versionné. Aucun fichier privé n'est téléversé et les tests d'accès réels restent à effectuer.",
+      "level": "warning"
     }
   ],
   "decisions": [
