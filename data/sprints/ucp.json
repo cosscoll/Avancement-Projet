@@ -365,5 +365,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261016T223457Z",
+    "started_at": "2026-10-16T22:34:57Z",
+    "ended_at": "2026-10-16T22:42:00Z",
+    "summary": "UCP-QA-14 rectifie QA-11 : un verrou Python exact de 22 paquets existe et les lanceurs l'utilisent ; seuls les hashes, la CI et Dependabot restent absents.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat.",
+      "HEAD main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2 ; requirements-lock.txt vérifié au blob 1f9e3293af47758bab9258fba5acb6aa039b8c19.",
+      "Tests isolés : 5 réussites et 3 XFAIL stricts ; correction archivée (SHA256 aba2b2803b0708baa4dc4d64f325c25bad8b14590c9658972a2085e9028c619e) et alerte publique rectifiée sans effacer QA-11."
+    ],
+    "blockers": [
+      "Le verrou Python fixe les versions mais ne contient pas de hashes d'artefacts.",
+      "Aucune CI ni configuration Dependabot trouvée ; suites applicatives et navigateur non exécutées.",
+      "État du clone Windows dev/ucp-codex inconnu."
+    ],
+    "next": "Générer et vérifier isolément une variante hachée du verrou sous Python 3.12, puis préparer une CI utilisant ce verrou sans intégrer ni fusionner automatiquement.",
+    "links": [
+      {
+        "label": "Verrou Python vérifié",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/blob/2034e1152944bcb65bd09f3fb70a52e23a399ef2/application/backend/requirements-lock.txt"
+      },
+      {
+        "label": "Statut UCP rectifié",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
