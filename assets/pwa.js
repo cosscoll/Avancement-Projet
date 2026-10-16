@@ -22,8 +22,8 @@ window.addEventListener('beforeinstallprompt',event=>{
  if(action){action.hidden=false;action.textContent="Installer l'application";}
  if(message)message.textContent='Ajouter CONTROL à ton écran d’accueil, sans passer par un store.';
 });
-if(apple){show();if(action){action.hidden=true;}if(message)message.textContent='Sur iPhone ou iPad : ouvre ce site dans Safari, touche Partager, puis « Sur l’écran d’accueil » et « Ajouter ».';}
-else if(android){show();if(action)action.hidden=true;if(message)message.textContent='Sur Android : dans Chrome, ouvre le menu ⋮ puis « Installer l’application » ou « Ajouter à l’écran d’accueil ». Si le bouton Installer apparaît ici, tu peux aussi l’utiliser.';}
+if(apple){show();if(action){action.hidden=true;}if(message)message.textContent='Ne télécharge pas de fichier : ouvre cette page HTTPS dans Safari, touche Partager, puis « Sur l’écran d’accueil » et « Ajouter ».';}
+else if(android){show();if(action)action.hidden=true;if(message)message.textContent='Ne télécharge pas de fichier : ouvre cette page HTTPS dans Chrome, puis menu ⋮ → « Installer l’application » ou « Ajouter à l’écran d’accueil ».';}
 if(action)action.addEventListener('click',async()=>{
  if(!deferred){if(message)message.textContent='Utilise le menu de ton navigateur puis « Installer l’application » ou « Ajouter à l’écran d’accueil ».';return;}
  const ev=deferred;deferred=null;action.disabled=true;try{await ev.prompt();await ev.userChoice}catch{}finally{action.disabled=false}
