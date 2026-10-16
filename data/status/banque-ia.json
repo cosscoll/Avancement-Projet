@@ -1,0 +1,95 @@
+{
+  "id": "banque-ia",
+  "name": "Banque Outils IA",
+  "short": "Business 02",
+  "description": "Site catalogue interactif en préparation, recherche utilisateur non encore menée sur le terrain.",
+  "status": "Développement",
+  "objectives": [
+    {
+      "name": "Boutique interactive",
+      "desc": "Catalogue, démos, navigation immersive et animations calibrées.",
+      "criteria": [
+        {
+          "name": "Dépôt et vitrine informative créés",
+          "done": true
+        },
+        {
+          "name": "Catalogue interactif avec filtres",
+          "done": false
+        },
+        {
+          "name": "Démos et fiches produits accessibles",
+          "done": false
+        },
+        {
+          "name": "3D/animations et recette mobile",
+          "done": false
+        },
+        {
+          "name": "Checkout sandbox testé",
+          "done": false
+        }
+      ]
+    },
+    {
+      "name": "Qualité du produit",
+      "desc": "Outils utiles et suffisamment éprouvés pour des clients.",
+      "criteria": [
+        {
+          "name": "Kit interne d'évaluation V0.12 préparé",
+          "done": true
+        },
+        {
+          "name": "Entretiens utilisateurs réels réalisés",
+          "done": false
+        },
+        {
+          "name": "Utilité des outils validée sur le terrain",
+          "done": false
+        },
+        {
+          "name": "Notice RGPD finalisée",
+          "done": false
+        }
+      ]
+    },
+    {
+      "name": "Mise en vente",
+      "desc": "Offre, livraison, paiement et tests réels.",
+      "criteria": [
+        {
+          "name": "Prix/positionnement validés",
+          "done": false
+        },
+        {
+          "name": "Autorisation commerciale",
+          "done": false
+        },
+        {
+          "name": "Paiement réel testé",
+          "done": false
+        },
+        {
+          "name": "Première vente constatée",
+          "done": false
+        }
+      ]
+    }
+  ],
+  "alerts": [
+    {
+      "title": "Tests utilisateurs à organiser",
+      "description": "Aucun entretien réel confirmé ; consentement et notice doivent être finalisés d'abord.",
+      "level": "warning"
+    }
+  ],
+  "decisions": [
+    {
+      "title": "Recrutement des testeurs",
+      "description": "Autorisation et protocole de consentement nécessaires avant tout contact.",
+      "state": "pending"
+    }
+  ],
+  "baseline_source": "État public initial du 16/10/2026 à revalider, pas un sprint",
+  "baseline_date": "2026-10-16"
+}
