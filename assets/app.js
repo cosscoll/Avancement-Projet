@@ -219,14 +219,42 @@ nav();
 if(state.route==='automations')automationsView();else if(state.route==='overview')overview();else if(state.route==='catalog')catalogView();else if(state.route==='inbox')inboxView();else if(state.route==='activity')activityView();else if(state.route==='other')state.catalogSelected?otherView(state.catalogSelected):catalogView();else renderProject(state.selected);
 q('.sidebar').classList.remove('open');q('#toggle-nav').setAttribute('aria-expanded','false');scrollTo({top:0,behavior:'instant'});
 }
-function initialNotice(){q('#sync-indicator').innerHTML='<span class="pulse"></span> Référence du 16/10/2026'}
+
+function commandEntries(){
+ const menu=[{name:'Mes automatisations',subtitle:'Statuts, derniers sprints et liens',route:'#/automations',symbol:'◈'},{name:'Journal global des sprints',subtitle:'Filtres, résultats, blocages',route:'#/activity',symbol:'≡'},{name:'Consignes & décisions',subtitle:'Canal public de pilotage',route:'#/inbox',symbol:'✉'},{name:'Tous les autres projets',subtitle:'Catalogue GitHub et ChatGPT',route:'#/catalog',symbol:'⌑'}];
+ return [...menu,...state.projects.map(p=>({name:p.name,subtitle:'Projet automatisé · '+p.category,route:'#/'+p.id+'/overview',symbol:p.symbol})),...[...state.catalog,...state.custom].map(p=>({name:p.name,subtitle:'Autre projet · '+(p.category||'Projet'),route:'#/other/'+encodeURIComponent(p.id),symbol:p.symbol||'+'}))];
+}
+function drawCommand(){
+ const el=q('#command-results'),filter=q('#command-search').value.trim().toLocaleLowerCase('fr');
+ const items=commandEntries().filter(x=>!filter||(x.name+' '+x.subtitle).toLocaleLowerCase('fr').includes(filter)).slice(0,18);
+ el.innerHTML=items.length?items.map((item,i)=>`<a class="command-result" href="${safe(item.route)}" data-index="${i}"><span class="command-symbol">${safe(item.symbol)}</span><span><strong>${safe(item.name)}</strong><small>${safe(item.subtitle)}</small></span><span class="command-arrow">↗</span></a>`).join(''):empty('Aucun résultat','Essaie un nom de projet ou une autre recherche.');
+}
+function initCommand(){
+ const layer=q('#command-overlay'),entry=q('#quick-open'),box=q('#command-search'),closeBtn=q('#command-close');
+ if(!layer||!entry||!box||!closeBtn)return;
+ let previous=null;
+ const open=()=>{previous=document.activeElement;layer.hidden=false;box.value='';drawCommand();box.focus()};
+ const close=()=>{if(layer.hidden)return;layer.hidden=true;(previous&&previous.focus?previous:entry).focus()};
+ entry.addEventListener('click',open);
+ closeBtn.addEventListener('click',close);
+ box.addEventListener('input',drawCommand);
+ layer.addEventListener('click',event=>{if(event.target===layer)close();else if(event.target.closest?.('.command-result'))close()});
+ document.addEventListener('keydown',event=>{
+  if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){event.preventDefault();layer.hidden?open():close()}
+  else if(event.key==='Escape'&&!layer.hidden){event.preventDefault();close()}
+  else if(event.key==='Enter'&&!layer.hidden&&event.target===box){event.preventDefault();const first=layer.querySelector('.command-result');if(first)first.click()}
+ });
+ window.addEventListener('hashchange',close);
+}
+
+function initialNotice(){const total=Object.values(state.sprints).reduce((n,x)=>n+x.length,0);q('#sync-indicator').innerHTML='<span class="pulse"></span> '+total+' compte rendu(s) centralisé(s)'}
 async function init(){
 const [data,others,auto]=await Promise.all([json('data/projects.json',null),json('data/catalog.json',{projects:[]}),json('data/automations.json',{tasks:[]})]);
 if(!data||!Array.isArray(data.projects)){q('#main').innerHTML=empty('Données indisponibles','Impossible de charger data/projects.json.');return}
 state.projects=data.projects;state.disclaimer=data.disclaimer||'';state.catalog=Array.isArray(others.projects)?others.projects:[];state.taskInfo=Array.isArray(auto.tasks)?auto.tasks:[];state.custom=customList();
 const ids=state.projects.map(p=>p.id);
 await Promise.all(ids.map(async id=>{const [s,d]=await Promise.all([json('data/sprints/'+id+'.json',[]),json('data/status/'+id+'.json',null)]);state.sprints[id]=Array.isArray(s)?s:[];if(d&&typeof d==='object')state.runtime[id]=d}));
-initialNotice();resolve();window.addEventListener('hashchange',resolve);q('#toggle-nav').addEventListener('click',()=>{const side=q('.sidebar'),open=side.classList.toggle('open');q('#toggle-nav').setAttribute('aria-expanded',String(open))});
+initialNotice();resolve();window.addEventListener('hashchange',resolve);initCommand();q('#toggle-nav').addEventListener('click',()=>{const side=q('.sidebar'),open=side.classList.toggle('open');q('#toggle-nav').setAttribute('aria-expanded',String(open))});
 }
 
 init();
