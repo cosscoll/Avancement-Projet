@@ -1,0 +1,95 @@
+{
+  "id": "ucp",
+  "name": "Un Coup de Pouce",
+  "short": "Startup",
+  "description": "Application de laboratoire et vitrine existantes. Tests de production et sécurité encore requis.",
+  "status": "Prototype",
+  "objectives": [
+    {
+      "name": "Développement de la plateforme",
+      "desc": "Parcours particuliers/professionnels et fonctionnalités essentielles.",
+      "criteria": [
+        {
+          "name": "Application de référence sur GitHub",
+          "done": true
+        },
+        {
+          "name": "Tests de référence documentés",
+          "done": true
+        },
+        {
+          "name": "Tests navigateur complets actuels",
+          "done": false
+        },
+        {
+          "name": "Correctifs critiques intégrés",
+          "done": false
+        },
+        {
+          "name": "Staging privé testé",
+          "done": false
+        }
+      ]
+    },
+    {
+      "name": "Sécurité et conformité",
+      "desc": "Données, authentification, sauvegardes et conformité.",
+      "criteria": [
+        {
+          "name": "Audits de sécurité initiaux",
+          "done": true
+        },
+        {
+          "name": "Sauvegarde chiffrée et restauration testées",
+          "done": false
+        },
+        {
+          "name": "Contrôles d'accès en conditions réelles",
+          "done": false
+        },
+        {
+          "name": "Dossier RGPD et autorisations validés",
+          "done": false
+        }
+      ]
+    },
+    {
+      "name": "Communication et lancement",
+      "desc": "Étude de marché, SEO, communication et validation.",
+      "criteria": [
+        {
+          "name": "Site vitrine développé",
+          "done": true
+        },
+        {
+          "name": "Positionnement marché validé",
+          "done": false
+        },
+        {
+          "name": "Stratégie 360 exécutée et mesurée",
+          "done": false
+        },
+        {
+          "name": "Ouverture publique approuvée",
+          "done": false
+        }
+      ]
+    }
+  ],
+  "alerts": [
+    {
+      "title": "Environnement de production non validé",
+      "description": "Les tests locaux ne démontrent pas la sécurité d'une plateforme ouverte au public.",
+      "level": "warning"
+    }
+  ],
+  "decisions": [
+    {
+      "title": "Validation du lancement",
+      "description": "Recette, tarifs et sécurité doivent être approuvés avant l'ouverture.",
+      "state": "blocked"
+    }
+  ],
+  "baseline_source": "État public initial du 16/10/2026 à revalider, pas un sprint",
+  "baseline_date": "2026-10-16"
+}
