@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "last_checked": "2026-10-16",
+  "description": "Autres projets connus ; les espaces ChatGPT ne sont pas accessibles automatiquement à partir de GitHub. Les liens ChatGPT peuvent être renseignés manuellement dans l'interface (enregistrés dans le navigateur).",
+  "projects": [
+    {
+      "id": "portfolio-3d",
+      "name": "Portfolio 3D",
+      "category": "Site personnel",
+      "summary": "Portfolio immersif 3D à navigation en tunnel et pages projets.",
+      "repo": "Cosme-Collomb",
+      "source": "github",
+      "symbol": "3D"
+    },
+    {
+      "id": "chess-openings",
+      "name": "Chess Openings",
+      "category": "Application",
+      "summary": "Entraînement aux ouvertures d'échecs et expérience visuelle.",
+      "repo": "Chess-Openings",
+      "source": "github",
+      "symbol": "CH"
+    },
+    {
+      "id": "poker-stats",
+      "name": "PokerStats",
+      "category": "Application",
+      "summary": "Application de suivi et statistiques de poker.",
+      "repo": "PokerStats",
+      "source": "github",
+      "symbol": "PK"
+    },
+    {
+      "id": "mybeer",
+      "name": "MyBeer",
+      "category": "Application",
+      "summary": "Questionnaire et découverte de bières avec interactions.",
+      "repo": "MyBeer",
+      "source": "github",
+      "symbol": "MB"
+    },
+    {
+      "id": "eurorare",
+      "name": "Eurorare",
+      "category": "Application",
+      "summary": "Collection et informations sur les pièces et billets rares.",
+      "repo": "Is-my-coin-rare-",
+      "source": "github",
+      "symbol": "€"
+    },
+    {
+      "id": "ifsi",
+      "name": "Révisions IFSI",
+      "category": "Formation",
+      "summary": "Supports et interface de révision pour les études en soins infirmiers.",
+      "repo": "Berenice.ifsy",
+      "source": "github",
+      "symbol": "IF"
+    },
+    {
+      "id": "la-skin-academie",
+      "name": "La Skin Académie",
+      "category": "Projet ChatGPT",
+      "summary": "Site vitrine et parcours de formation ; dépôt GitHub non identifié.",
+      "repo": null,
+      "source": "chatgpt-unlinked",
+      "symbol": "LS"
+    },
+    {
+      "id": "expert-days",
+      "name": "Expert Day's",
+      "category": "Projet ChatGPT",
+      "summary": "Identité visuelle et communication de l'événement ; dépôt GitHub non identifié.",
+      "repo": null,
+      "source": "chatgpt-unlinked",
+      "symbol": "ED"
+    },
+    {
+      "id": "business-automatisation",
+      "name": "Business Automatisation",
+      "category": "Projet ChatGPT",
+      "summary": "Pilotage général des business automatisés et de ce centre de contrôle.",
+      "repo": null,
+      "source": "chatgpt-unlinked",
+      "symbol": "BA"
+    },
+    {
+      "id": "automatisation",
+      "name": "Automatisation / Briefings",
+      "category": "Projet ChatGPT",
+      "summary": "Espace d'organisation et projets de briefings ; connexion directe non configurée.",
+      "repo": null,
+      "source": "chatgpt-unlinked",
+      "symbol": "AU"
+    }
+  ]
+}
