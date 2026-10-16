@@ -115,9 +115,10 @@ create policy "owner reads decisions" on public.control_decisions
   for select to authenticated using
   (exists(select 1 from public.control_owners where user_id=(select auth.uid())));
 create policy "owner creates decisions" on public.control_decisions
-  for insert to authenticated with check
-  (exists(select 1 from public.control_owners where user_id=(select auth.uid())))
-  and (decided_by is null or decided_by=(select auth.uid()));
+  for insert to authenticated with check (
+    exists(select 1 from public.control_owners where user_id=(select auth.uid()))
+    and (decided_by is null or decided_by=(select auth.uid()))
+  );
 create policy "owner updates decisions" on public.control_decisions
   for update to authenticated using
   (exists(select 1 from public.control_owners where user_id=(select auth.uid())))
