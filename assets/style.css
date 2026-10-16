@@ -101,3 +101,12 @@
 .command-arrow{margin-left:auto;color:var(--mint)}
 .command-panel>p{margin:3px 0 0}
 @media(max-width:700px){.quick-open span,.quick-open kbd{display:none}.quick-open{min-width:39px;height:39px;padding:0;font-size:23px}.command-overlay{padding:55px 12px 12px}.command-panel{padding:17px;border-radius:17px;max-height:80vh}.command-head label{font-size:15px}}
+
+
+/* Export and manual refresh */
+.refresh-data{font-size:20px;min-width:38px;min-height:37px;padding:5px 9px}
+.refresh-data:hover{border-color:var(--mint);color:var(--mint)}
+.activity-toolbar{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-bottom:17px}
+.activity-toolbar .btn{background:#1e3744;border-color:#365d59;color:var(--mint)}
+.activity-toolbar .btn:hover{background:#294b50}
+@media(max-width:700px){.refresh-data{padding:6px;min-width:37px;min-height:38px}}
