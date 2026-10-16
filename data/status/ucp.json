@@ -48,6 +48,11 @@
       "title": "Branche locale Codex non synchronisée",
       "description": "main est à 2034e115 tandis que dev/ucp-codex distante reste à 712a069 ; les modifications et résultats du clone Windows ne sont pas prouvés sur GitHub.",
       "level": "warning"
+    },
+    {
+      "title": "Sauvegardes SQLite non chiffrées",
+      "description": "UCP-QA-03 a confirmé sur le blob a4f587d que le fichier de sauvegarde expose l'en-tête SQLite et une valeur synthétique en clair ; 4 contrôles réussis et 2 exigences de chiffrement marquées XFAIL.",
+      "level": "warning"
     }
   ],
   "decisions": [
@@ -62,6 +67,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audit UCP-QA-03",
   "baseline_date": "2026-10-16"
 }
