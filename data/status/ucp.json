@@ -9,32 +9,78 @@
       "name": "Développement de la plateforme",
       "desc": "Parcours particuliers/professionnels et fonctionnalités essentielles.",
       "criteria": [
-        { "name": "Application de référence sur GitHub", "done": true },
-        { "name": "Tests de référence documentés", "done": true },
-        { "name": "Tests navigateur complets actuels", "done": false },
-        { "name": "Correctifs critiques intégrés", "done": false },
-        { "name": "Staging privé testé", "done": false }
+        {
+          "name": "Application de référence sur GitHub",
+          "done": true
+        },
+        {
+          "name": "Tests de référence documentés",
+          "done": true
+        },
+        {
+          "name": "Tests navigateur complets actuels",
+          "done": false
+        },
+        {
+          "name": "Correctifs critiques intégrés",
+          "done": false
+        },
+        {
+          "name": "Staging privé testé",
+          "done": false
+        },
+        {
+          "name": "PWA installable validée",
+          "done": false
+        }
       ]
     },
     {
       "name": "Sécurité et conformité",
       "desc": "Données, authentification, sauvegardes et conformité.",
       "criteria": [
-        { "name": "Audits de sécurité initiaux", "done": true },
-        { "name": "Sauvegarde chiffrée et restauration testées", "done": false },
-        { "name": "Contrôles d'accès en conditions réelles", "done": false },
-        { "name": "Dossier RGPD et autorisations validés", "done": false }
+        {
+          "name": "Audits de sécurité initiaux",
+          "done": true
+        },
+        {
+          "name": "Sauvegarde chiffrée et restauration testées",
+          "done": false
+        },
+        {
+          "name": "Contrôles d'accès en conditions réelles",
+          "done": false
+        },
+        {
+          "name": "Dossier RGPD et autorisations validés",
+          "done": false
+        }
       ]
     },
     {
       "name": "Communication et lancement",
       "desc": "Étude de marché, SEO, communication et validation.",
       "criteria": [
-        { "name": "Site vitrine développé", "done": true },
-        { "name": "Tableau de bord central relié depuis la vitrine", "done": true },
-        { "name": "Positionnement marché validé", "done": false },
-        { "name": "Stratégie 360 exécutée et mesurée", "done": false },
-        { "name": "Ouverture publique approuvée", "done": false }
+        {
+          "name": "Site vitrine développé",
+          "done": true
+        },
+        {
+          "name": "Tableau de bord central relié depuis la vitrine",
+          "done": true
+        },
+        {
+          "name": "Positionnement marché validé",
+          "done": false
+        },
+        {
+          "name": "Stratégie 360 exécutée et mesurée",
+          "done": false
+        },
+        {
+          "name": "Ouverture publique approuvée",
+          "done": false
+        }
       ]
     }
   ],
@@ -58,6 +104,11 @@
       "title": "Navigation mobile de la page Avancement",
       "description": "UCP-QA-04 a démontré que les liens de navigation disparaissent à 760 px et moins sur avancement.html ; correctif isolé préparé, non intégré et non testé en navigateur réel.",
       "level": "warning"
+    },
+    {
+      "title": "PWA non installable",
+      "description": "UCP-QA-05 a confirmé sur main 2034e115 que les interfaces ont viewport et theme-color, mais aucun Web App Manifest relié, service worker ni jeu d'icônes installables ; 2 contrôles réussis et 4 exigences XFAIL.",
+      "level": "warning"
     }
   ],
   "decisions": [
@@ -72,6 +123,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03/UCP-QA-04",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03/UCP-QA-04/UCP-QA-05",
   "baseline_date": "2026-10-16"
 }
