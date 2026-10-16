@@ -1,0 +1,95 @@
+{
+  "id": "pack-pro",
+  "name": "Pack Procédures Pro",
+  "short": "Business 01",
+  "description": "Boutique immersive en préparation, produits et contrôles métiers encore à valider.",
+  "status": "Développement",
+  "objectives": [
+    {
+      "name": "Site de vente premium",
+      "desc": "Design original, pages produits, interactions et expérience mobile.",
+      "criteria": [
+        {
+          "name": "Dépôt GitHub créé",
+          "done": true
+        },
+        {
+          "name": "Accueil et suivi initial créés",
+          "done": true
+        },
+        {
+          "name": "Site commercial premium intégré et testé",
+          "done": false
+        },
+        {
+          "name": "Animation/3D utile et performante validée",
+          "done": false
+        },
+        {
+          "name": "Parcours d'achat test/sandbox contrôlé",
+          "done": false
+        }
+      ]
+    },
+    {
+      "name": "Fiabilité des packs",
+      "desc": "Procédures validées, tableurs testés et livraison fiable.",
+      "criteria": [
+        {
+          "name": "Corpus initial de procédures préparé",
+          "done": true
+        },
+        {
+          "name": "Validation métier indépendante",
+          "done": false
+        },
+        {
+          "name": "Test réel dans Excel",
+          "done": false
+        },
+        {
+          "name": "Recette de livraison complète",
+          "done": false
+        }
+      ]
+    },
+    {
+      "name": "Lancement commercial",
+      "desc": "Conformité, offre, paiement et réception de ventes.",
+      "criteria": [
+        {
+          "name": "Conditions juridiques et fiscales validées",
+          "done": false
+        },
+        {
+          "name": "Prix et offre approuvés",
+          "done": false
+        },
+        {
+          "name": "Paiement réel autorisé puis testé",
+          "done": false
+        },
+        {
+          "name": "Vente réelle confirmée",
+          "done": false
+        }
+      ]
+    }
+  ],
+  "alerts": [
+    {
+      "title": "Validation des procédures",
+      "description": "Les supports sont encore des brouillons et demandent une validation professionnelle.",
+      "level": "warning"
+    }
+  ],
+  "decisions": [
+    {
+      "title": "Autoriser la commercialisation",
+      "description": "À examiner uniquement après la validation métier, juridique et technique.",
+      "state": "blocked"
+    }
+  ],
+  "baseline_source": "État public initial du 16/10/2026 à revalider, pas un sprint",
+  "baseline_date": "2026-10-16"
+}
