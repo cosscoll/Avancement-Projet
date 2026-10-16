@@ -70,6 +70,10 @@
         {
           "name": "Protection anti-abus et anti-spam validée",
           "done": false
+        },
+        {
+          "name": "Dépendances reproductibles et CI validées",
+          "done": false
         }
       ]
     },
@@ -154,6 +158,11 @@
       "title": "Protection anti-abus incomplète",
       "description": "UCP-QA-10 confirme verrou de connexion, idempotence des messages et signalements audités, mais aucune limitation réseau ou de vélocité sur inscription, publication, candidature, messagerie et signalement ; 3 contrôles réussis et 6 exigences XFAIL.",
       "level": "critical"
+    },
+    {
+      "title": "Chaîne de dépendances et CI non reproductibles",
+      "description": "UCP-QA-11 confirme le verrou JavaScript, mais les dépendances Python restent en plages sans hashes ; aucun workflow CI ni Dependabot n'a été trouvé. 3 contrôles réussis et 5 exigences XFAIL.",
+      "level": "warning"
     }
   ],
   "decisions": [
@@ -168,6 +177,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-10",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-11",
   "baseline_date": "2026-10-16"
 }
