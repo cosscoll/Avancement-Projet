@@ -1,1 +1,29 @@
-[]
+[
+  {
+    "id": "pack-pro-20261016-1309-paris",
+    "started_at": "2026-10-16T13:09:00+02:00",
+    "ended_at": "2026-10-16T13:11:48+02:00",
+    "summary": "Prototype non marchand enrichi en local avec trois fiches produits et une page d'avancement; tests statiques et scénarios JavaScript simulés réussis, publication non démontrée.",
+    "done": [
+      "Trois pages de présentation (procédures, registres, tableur) créées localement, sans contenu payant ni paiement",
+      "Page de suivi local créée et liens internes vérifiés",
+      "106 assertions statiques et 12 assertions JavaScript sur DOM simulé réussies"
+    ],
+    "blockers": [
+      "Aucun test navigateur visuel réussi (navigateur local bloqué)",
+      "Accessibilité HTTP publique des sites GitHub Pages et Vercel non vérifiée",
+      "Validation métier, Excel réel, offre et paiement encore manquants"
+    ],
+    "next": "Conserver les fichiers en bibliothèque, effectuer une recette navigateur autorisée et publier la vitrine uniquement si l'écriture GitHub est autorisée.",
+    "links": [
+      {
+        "label": "Dépôt vitrine",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro"
+      },
+      {
+        "label": "Suivi central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/pack-pro.json"
+      }
+    ]
+  }
+]
