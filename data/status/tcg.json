@@ -1,0 +1,87 @@
+{
+  "id": "tcg",
+  "name": "TCG Thomas Deseur",
+  "short": "Jeu",
+  "description": "Jeu existant sur Floot ; travail d'évolution et de recette authentifiée toujours en cours.",
+  "status": "Développement",
+  "objectives": [
+    {
+      "name": "Collection et règles",
+      "desc": "Illustrations, raretés, variantes et règles de collection.",
+      "criteria": [
+        {
+          "name": "Visuels et règles référencés",
+          "done": true
+        },
+        {
+          "name": "Collection de base et alternatives testées sur comptes",
+          "done": false
+        },
+        {
+          "name": "Règles de tirage et doublons validées en production",
+          "done": false
+        },
+        {
+          "name": "Secret préservé",
+          "done": true
+        }
+      ]
+    },
+    {
+      "name": "Fonctionnement applicatif",
+      "desc": "Boosters, codes cadeaux et sauvegarde.",
+      "criteria": [
+        {
+          "name": "Application Floot existante",
+          "done": true
+        },
+        {
+          "name": "Ouverture des boosters validée sur compte autorisé",
+          "done": false
+        },
+        {
+          "name": "Codes cadeaux intégrés et testés",
+          "done": false
+        },
+        {
+          "name": "Recette responsive et sécurité",
+          "done": false
+        }
+      ]
+    },
+    {
+      "name": "Communauté et lancement",
+      "desc": "Expérience joueur, contenu organique et communication.",
+      "criteria": [
+        {
+          "name": "Galerie des cartes publiques préparée",
+          "done": true
+        },
+        {
+          "name": "Plan éditorial testé",
+          "done": false
+        },
+        {
+          "name": "Communication publiée et évaluée",
+          "done": false
+        }
+      ]
+    }
+  ],
+  "alerts": [
+    {
+      "title": "Quota Floot et recette des comptes",
+      "description": "Les limites gratuites et les tests authentifiés peuvent ralentir la finalisation.",
+      "level": "warning"
+    }
+  ],
+  "decisions": [
+    {
+      "title": "Validation finale du jeu",
+      "description": "Décider après les tests de collection et de sauvegarde.",
+      "state": "blocked"
+    }
+  ],
+  "baseline_source": "État public initial du 16/10/2026 à revalider, pas un sprint",
+  "baseline_date": "2026-10-16"
+}
