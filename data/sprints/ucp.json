@@ -303,5 +303,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261016T203244Z",
+    "started_at": "2026-10-16T20:32:44Z",
+    "ended_at": "2026-10-16T20:40:00Z",
+    "summary": "Audit isolé UCP-QA-12 : la branche principale n'est pas protégée et aucun processus de revue obligatoire n'est démontré ; contrat de gouvernance et plan de fermeture livrés.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat.",
+      "HEAD main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2 ; protection désactivée, checks obligatoires absents, rulesets et pull requests observés vides.",
+      "Tests isolés : 1 réussite et 7 XFAIL stricts pour protection de main, checks, ruleset, signature, CODEOWNERS, SECURITY.md et modèle de pull request ; lot UCP-QA-12 archivé (SHA256 83672016b8dc39c67e588445492dd0e425b85d419ebd26512db2589d7b3dc439)."
+    ],
+    "blockers": [
+      "main accepte des changements sans barrière GitHub visible ; aucune revue ni vérification automatique n'est imposée.",
+      "Aucun réglage n'a été modifié car la mise en place doit suivre une CI verte et une validation explicite de gouvernance.",
+      "Suites applicatives et navigateur non exécutées ; état du clone Windows dev/ucp-codex inconnu."
+    ],
+    "next": "Préparer isolément les fichiers CODEOWNERS, SECURITY.md et modèle de pull request, puis définir les protections à activer après disponibilité d'une CI verte, sans modifier les réglages ni fusionner automatiquement.",
+    "links": [
+      {
+        "label": "Révision UCP auditée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
