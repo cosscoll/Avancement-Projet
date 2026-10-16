@@ -80,3 +80,24 @@
 .stat .stat-date{font-size:clamp(20px,2.5vw,28px)}
 @media(max-width:800px){.attention-grid{grid-template-columns:1fr}}
 @media(max-width:580px){.activity-detail{grid-template-columns:1fr;gap:5px}.activity-card{padding:19px}.activity-filters{display:grid;grid-template-columns:1fr;gap:12px}.activity-filters label,.activity-filters .activity-search{min-width:0}.attention-panel{padding:18px}.auto-actions{width:100%}}
+
+
+/* Accessible keyboard command palette */
+.quick-open{display:flex;align-items:center;gap:9px}
+.quick-open kbd,.command-panel kbd{font-family:inherit;font-weight:700;border:1px solid #536178;border-radius:6px;background:#243248;color:#d7e5f6;padding:2px 5px;font-size:10px}
+.command-overlay[hidden]{display:none!important}
+.command-overlay{position:fixed;inset:0;background:rgba(1,6,16,.78);z-index:60;display:flex;justify-content:center;align-items:flex-start;padding:clamp(50px,11vh,135px) 18px 20px;backdrop-filter:blur(9px)}
+.command-panel{width:min(640px,100%);background:#121d30;border:1px solid #40516e;border-radius:22px;box-shadow:0 25px 100px rgba(0,0,0,.65);padding:23px;max-height:min(73vh,750px);display:flex;flex-direction:column;gap:13px}
+.command-head{display:flex;align-items:center;justify-content:space-between;gap:15px}
+.command-head label{font:700 17px 'Space Grotesk',sans-serif}
+.command-panel input{background:#0a1424;border:1px solid #50617a;border-radius:12px;padding:14px 16px;color:#edf4fc;width:100%;font-size:16px;min-height:50px}
+.command-results{display:grid;gap:4px;overflow-y:auto;overscroll-behavior:contain;min-height:0}
+.command-result{display:flex;gap:13px;align-items:center;text-decoration:none;border:1px solid transparent;border-radius:11px;padding:10px 13px}
+.command-result:hover,.command-result:focus-visible{background:#24394b;border-color:#3f7068}
+.command-symbol{display:grid;place-items:center;border-radius:10px;background:#2a394f;color:var(--mint);min-width:37px;height:37px;font-weight:800}
+.command-result strong,.command-result small{display:block}
+.command-result strong{font-size:13px}
+.command-result small{color:var(--muted);font-size:11px}
+.command-arrow{margin-left:auto;color:var(--mint)}
+.command-panel>p{margin:3px 0 0}
+@media(max-width:700px){.quick-open span,.quick-open kbd{display:none}.quick-open{min-width:39px;height:39px;padding:0;font-size:23px}.command-overlay{padding:55px 12px 12px}.command-panel{padding:17px;border-radius:17px;max-height:80vh}.command-head label{font-size:15px}}
