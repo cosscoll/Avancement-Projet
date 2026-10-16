@@ -54,6 +54,10 @@
         {
           "name": "Dossier RGPD et autorisations validés",
           "done": false
+        },
+        {
+          "name": "MFA administrateur et garde de staging validés",
+          "done": false
         }
       ]
     },
@@ -109,6 +113,11 @@
       "title": "PWA non installable",
       "description": "UCP-QA-05 a confirmé sur main 2034e115 que les interfaces ont viewport et theme-color, mais aucun Web App Manifest relié, service worker ni jeu d'icônes installables ; 2 contrôles réussis et 4 exigences XFAIL.",
       "level": "warning"
+    },
+    {
+      "title": "Administration sans MFA et cookie non sécurisé",
+      "description": "UCP-QA-06 confirme sur main 2034e115 le contrôle de rôle, le CSRF et la revérification transactionnelle, mais aucun MFA/step-up ; ucp_lab_sid reste Secure=False sans garde non locale. 2 contrôles réussis, 5 exigences XFAIL.",
+      "level": "critical"
     }
   ],
   "decisions": [
@@ -123,6 +132,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03/UCP-QA-04/UCP-QA-05",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-06",
   "baseline_date": "2026-10-16"
 }
