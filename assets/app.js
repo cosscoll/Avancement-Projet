@@ -23,7 +23,7 @@ const selected=state.route;
 const top=`<div class="nav-label">AUTOMATISATIONS</div><a class="nav-item ${selected==='automations'?'active':''}" href="#/automations"><span class="nav-dot">◈</span> Vue automatisations</a><a class="nav-item ${selected==='overview'?'active':''}" href="#/overview"><span class="nav-dot">◫</span> Vue générale</a><a class="nav-item ${selected==='inbox'?'active':''}" href="#/inbox"><span class="nav-dot">✉</span> Consignes &amp; décisions</a><a class="nav-item ${selected==='activity'?'active':''}" href="#/activity"><span class="nav-dot">≡</span> Journal des sprints</a>`;
 const acts=state.projects.map(p=>`<a class="nav-item ${selected===p.id?'active':''}" href="#/${p.id}/overview"><span class="nav-dot">${safe(p.symbol)}</span>${safe(p.name)}</a>`).join('');
 const extras=`<div class="nav-label nav-section">MES AUTRES PROJETS</div><a class="nav-item ${selected==='catalog'?'active':''}" href="#/catalog"><span class="nav-dot">⌑</span> Tous les projets <span class="mini-count">${state.catalog.length+state.custom.length}</span></a>`;
-const last=`<div class="nav-label nav-section">RACCOURCIS</div><a class="nav-item" href="prive.html"><span class="nav-dot">♙</span> Espace privé <span class="mini-count">Bêta</span></a><a class="nav-item" href="https://chatgpt.com/tasks" target="_blank" rel="noopener noreferrer"><span class="nav-dot">↗</span> Tâches ChatGPT</a>`;
+const last=`<div class="nav-label nav-section">ACCÈS RAPIDE</div><a class="nav-item" href="https://chatgpt.com/tasks" target="_blank" rel="noopener noreferrer"><span class="nav-dot">↗</span> Tâches ChatGPT</a>`;
 q('#project-nav').innerHTML=top+acts+extras+last;
 const bread=selected==='automations'?'Automatisations':selected==='overview'?'Vue générale':selected==='catalog'?'Autres projets':selected==='inbox'?'Consignes & décisions':selected==='activity'?'Journal des sprints':selected==='other'?state.catalogSelected?.name||'Projet':state.selected?.name||'Projet';
 q('#crumb').textContent=bread;
@@ -245,6 +245,7 @@ function closeMobileMenu(){
  const backdrop=q('#sidebar-backdrop');if(backdrop)backdrop.hidden=true;
  document.body.classList.remove('menu-open');
  q('#toggle-nav').setAttribute('aria-expanded','false');
+ q('#toggle-nav').setAttribute('aria-label','Ouvrir le menu');
 }
 function toggleMobileMenu(){
  const side=q('.sidebar'),isOpen=!side.classList.contains('open');
@@ -252,6 +253,7 @@ function toggleMobileMenu(){
  const backdrop=q('#sidebar-backdrop');if(backdrop)backdrop.hidden=!isOpen;
  document.body.classList.toggle('menu-open',isOpen);
  q('#toggle-nav').setAttribute('aria-expanded',String(isOpen));
+ q('#toggle-nav').setAttribute('aria-label',isOpen?'Fermer le menu':'Ouvrir le menu');
 }
 function resolve(){
 const segments=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean),id=segments[0]||'automations';
