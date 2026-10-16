@@ -81,6 +81,11 @@
       "title": "Validation des procédures",
       "description": "Les supports sont encore des brouillons et demandent une validation professionnelle.",
       "level": "warning"
+    },
+    {
+      "title": "Vitrine enrichie non publiée",
+      "description": "Trois fiches produits et une page de suivi ont été créées en prototype local le 16/10/2026 ; 106 vérifications statiques et 12 tests JavaScript simulés réussis. Publication GitHub refusée et recette navigateur non effectuée.",
+      "level": "warning"
     }
   ],
   "decisions": [
