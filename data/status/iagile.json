@@ -1,0 +1,87 @@
+{
+  "id": "iagile",
+  "name": "IAgile",
+  "short": "Formation",
+  "description": "Contenus pédagogiques préparés ; espace privé et authentification encore à valider.",
+  "status": "Pré-lancement",
+  "objectives": [
+    {
+      "name": "Formations premium",
+      "desc": "Qualité pédagogique, fichiers et évaluations des quatre parcours.",
+      "criteria": [
+        {
+          "name": "Plan de 47 modules préparé",
+          "done": true
+        },
+        {
+          "name": "Bibliothèque de ressources inventoriée",
+          "done": true
+        },
+        {
+          "name": "Validation pédagogique du premier parcours",
+          "done": false
+        },
+        {
+          "name": "Quatre parcours approuvés",
+          "done": false
+        }
+      ]
+    },
+    {
+      "name": "Academy sécurisée",
+      "desc": "Auth, stockage, cloisonnement et tests de recette.",
+      "criteria": [
+        {
+          "name": "Socle Supabase dédié au projet",
+          "done": true
+        },
+        {
+          "name": "Fichiers premium stockés en privé",
+          "done": false
+        },
+        {
+          "name": "Tests entre comptes autorisés",
+          "done": false
+        },
+        {
+          "name": "Recette complète et déploiement",
+          "done": false
+        }
+      ]
+    },
+    {
+      "name": "Marketing et vente",
+      "desc": "Vitrine, contenus organiques et validation commerciale.",
+      "criteria": [
+        {
+          "name": "Vitrine GitHub disponible dans le dépôt",
+          "done": true
+        },
+        {
+          "name": "Plan de communication exécuté",
+          "done": false
+        },
+        {
+          "name": "Vente autorisée",
+          "done": false
+        }
+      ]
+    }
+  ],
+  "alerts": [
+    {
+      "title": "Accès premium non testé en conditions réelles",
+      "description": "Aucun parcours complet avec des comptes de recette n'est confirmé.",
+      "level": "warning"
+    }
+  ],
+  "decisions": [
+    {
+      "title": "Publication des formations premium",
+      "description": "Nécessite une recette d'accès sécurisée et une validation de l'offre.",
+      "state": "blocked"
+    }
+  ],
+  "baseline_source": "État public initial du 16/10/2026 à revalider, pas un sprint",
+  "baseline_date": "2026-10-16"
+}
