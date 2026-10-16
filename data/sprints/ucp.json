@@ -210,5 +210,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261016T172721Z",
+    "started_at": "2026-10-16T17:27:21Z",
+    "ended_at": "2026-10-16T17:34:30Z",
+    "summary": "Audit isolé UCP-QA-09 : prévisualisation SEO correctement fermée, mais la bascule publique n'est ni paramétrée ni atomiquement testée ; contrat de recette livré.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat.",
+      "HEAD main vérifié à 2034e1152944bcb65bd09f3fb70a52e23a399ef2 ; build.py et check_site.py contrôlés par blob.",
+      "Tests isolés : 2 réussites sur la fermeture noindex et les métadonnées, 5 XFAIL stricts sur profil public, origine obligatoire, sitemap, garde juridique et bascule atomique ; lot UCP-QA-09 archivé séparément."
+    ],
+    "blockers": [
+      "Origine de prévisualisation codée en dur ; aucun profil public explicite ni sitemap.",
+      "Mentions publiques encore incomplètes selon la page d'information ; aucun crawl, navigateur, domaine final ou déploiement testé.",
+      "Travail et résultats du clone Windows dev/ucp-codex toujours inconnus."
+    ],
+    "next": "Préparer sur branche isolée deux profils preview/public fermés par défaut, un sitemap généré et une vérification atomique robots/meta/en-têtes, sans publication ni fusion automatique.",
+    "links": [
+      {
+        "label": "Générateur de vitrine audité",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/blob/2034e1152944bcb65bd09f3fb70a52e23a399ef2/site-vitrine/build.py"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
