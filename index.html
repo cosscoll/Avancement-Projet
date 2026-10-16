@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#090e18">
+  <meta name="theme-color" content="#f5f7fa">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="CONTROL">
   <meta name="mobile-web-app-capable" content="yes">
   <link rel="manifest" href="manifest.webmanifest">
@@ -16,12 +16,14 @@
   <title>CONTROL — Tableau de bord ChatGPT</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/theme.css">
   <script defer src="assets/app.js"></script>
   <script defer src="assets/pwa.js"></script>
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
   <a href="#main" class="skip">Aller au contenu</a>
+  <div id="sidebar-backdrop" class="menu-backdrop" hidden aria-hidden="true"></div>
   <div class="shell">
     <aside class="sidebar" aria-label="Navigation principale">
       <div class="brand"><span class="brand-mark" aria-hidden="true">◈</span><span>CONTROL <small>ChatGPT · Projets &amp; Automatisations</small></span></div>
@@ -31,7 +33,7 @@
     </aside>
     <div class="workspace">
       <header class="topbar">
-        <button class="mobile-nav" id="toggle-nav" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+        <button class="mobile-nav" id="toggle-nav" aria-label="Ouvrir le menu" aria-controls="project-nav" aria-expanded="false">☰</button>
         <div class="breadcrumb"><span>WORKSPACE</span><span aria-hidden="true">/</span><strong id="crumb">Vue générale</strong></div>
         <div class="top-actions"><button type="button" id="quick-open" class="ghost quick-open" aria-controls="command-overlay" aria-expanded="false" title="Rechercher dans les projets (Ctrl+K)">⌕ <span>Rechercher</span> <kbd>Ctrl K</kbd></button><span id="sync-indicator" class="sync-indicator"><span class="pulse"></span> Données de référence</span><button type="button" id="refresh-data" class="ghost refresh-data" title="Recharger les données de GitHub Pages" aria-label="Actualiser le tableau de bord">↻</button><a class="ghost" href="https://github.com/cosscoll/Avancement-Projet" target="_blank" rel="noopener noreferrer" title="Ouvrir le dépôt GitHub">GitHub ↗</a></div>
       </header>
@@ -46,6 +48,12 @@
       <footer>CONTROL <span>·</span> Données publiques ou simulées signalées <span>·</span> Aucun paiement ni utilisation de Work/Codex</footer>
     </div>
   </div>
+  <nav class="mobile-tabs" id="mobile-tabs" aria-label="Navigation mobile rapide">
+    <a class="mobile-tab active" data-nav="automations" href="#/automations"><span aria-hidden="true">◈</span>Tâches</a>
+    <a class="mobile-tab" data-nav="activity" href="#/activity"><span aria-hidden="true">≡</span>Sprints</a>
+    <a class="mobile-tab" data-nav="catalog" href="#/catalog"><span aria-hidden="true">▦</span>Projets</a>
+    <a class="mobile-tab" data-nav="inbox" href="#/inbox"><span aria-hidden="true">✉</span>Consignes</a>
+  </nav>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <div id="command-overlay" class="command-overlay" hidden>
     <section id="command-dialog" role="dialog" aria-modal="true" aria-labelledby="command-title" class="command-panel">
