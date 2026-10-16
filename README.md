@@ -22,6 +22,19 @@ Ce site reste **public** sur GitHub Pages. Ne saisir aucun secret, adresse clien
 
 Une autorisation d'usage Work, Codex, de dépense ou de changement de tâche ne peut pas être donnée depuis CONTROL : elle nécessite une demande directe à ChatGPT. Les brouillons enregistrés en localStorage ne sont **jamais lus** par les automatisations.
 
+## Améliorations du tableau de bord — version du 16 octobre 2026
+
+- **Automatisations mises en avant** : cartes de suivi et lien vers les rapports de chaque projet.
+- **Journal global des sprints** (`#/activity`) : tri chronologique de tous les comptes rendus réellement présents dans les cinq fichiers `data/sprints/*.json` ; filtrage par projet, présence d'un blocage et recherche dans les résultats/étapes.
+- **Blocages du dernier sprint** : affichage prioritaire avec lien direct vers le projet concerné. Les alertes statiques restent séparées des obstacles effectivement remontés dans les derniers rapports.
+- **Recherche rapide** : bouton en haut du site ou raccourci **Ctrl+K** / **⌘K**. La recherche porte sur les projets, automatisations et destinations internes du site. Elle ne recherche PAS le contenu privé ChatGPT.
+- **Export JSON** : sur le journal, export local des rapports publics actuellement filtrés. Aucune connexion supplémentaire ni transfert à un serveur tiers.
+- **Rafraîchissement manuel** : bouton ↻ du header pour recharger les fichiers GitHub Pages. La fréquence des automatisations n'est jamais modifiée par ce bouton.
+- **Mobile** : affichage adaptatif des filtres, alertes et résultats de sprints ; prise en charge de `prefers-reduced-motion`.
+- **Honnêteté des données** : les progrès ne sont pas inventés, les trois premiers comptes rendus réellement enregistrés sont affichés lorsqu'ils sont présents, et les projets sans rapport conservent un état « en attente ». Les heures/statuts des automatisations restent des instantanés jusqu'à une vraie intégration dédiée.
+
+**Limites actuelles :** hébergement public GitHub Pages non vérifiable depuis les outils de développement actuels ; pas de synchronisation native des projets ChatGPT ; instructions privées désactivées tant que la nouvelle organisation Supabase Free n'existe pas et que les droits ne sont pas testés. Aucun paiement ni changement à IAgile Academy.
+
 ## État de développement
 
 - **Interface créée** : navigation entre cinq projets, vue globale, objectifs et pourcentages calculés à partir de critères de recette, sprints, activité GitHub, alertes, décisions et brouillons de consignes.
