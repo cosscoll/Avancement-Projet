@@ -272,5 +272,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261016T193220Z",
+    "started_at": "2026-10-16T19:32:20Z",
+    "ended_at": "2026-10-16T19:40:00Z",
+    "summary": "Audit isolé UCP-QA-11 : verrou JavaScript confirmé, mais dépendances Python non figées et automatisation CI absente ; contrat de tests et plan de fermeture livrés.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat.",
+      "HEAD main UCP vérifié à 2034e1152944bcb65bd09f3fb70a52e23a399ef2 ; requirements, package-lock et README contrôlés par blob.",
+      "Tests isolés : 3 réussites et 5 XFAIL stricts sur verrou/hashes Python, CI, Dependabot et cohérence documentaire ; lot UCP-QA-11 archivé séparément (SHA256 aebee338eccacbd1e85b1541ad5736548f3225092366203f7064b9bac7cb4161)."
+    ],
+    "blockers": [
+      "Les dépendances Python utilisent des plages de versions sans hashes ; une installation fraîche n'est pas strictement reproductible.",
+      "Aucun workflow CI ni configuration Dependabot n'a été trouvé ; suites backend, DOM et navigateur réel non exécutées dans ce sprint.",
+      "Le travail et les résultats du clone Windows dev/ucp-codex restent inconnus."
+    ],
+    "next": "Préparer isolément un verrou Python exact et haché reproductible sous Python 3.12 ainsi qu'une CI minimale fermée par défaut, sans pousser ni fusionner dans l'application.",
+    "links": [
+      {
+        "label": "Dépendances Python auditées",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/blob/2034e1152944bcb65bd09f3fb70a52e23a399ef2/application/backend/requirements.txt"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
