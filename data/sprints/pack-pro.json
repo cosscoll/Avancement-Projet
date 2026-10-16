@@ -25,5 +25,34 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/pack-pro.json"
       }
     ]
+  },
+  {
+    "id": "pack-pro-20261016-140846-paris",
+    "started_at": "2026-10-16T14:08:46+02:00",
+    "ended_at": "2026-10-16T12:13:44.820Z",
+    "summary": "Recette navigateur locale du prototype cinq pages réalisée; deux débordements mobiles corrigés dans une copie interne. Publication GitHub du site refusée; aucun déploiement commercial.",
+    "done": [
+      "Prototype HTML cinq pages relu et corrigé localement pour éviter les débordements horizontaux à 320 et 390 px",
+      "133 contrôles Chromium Playwright réussis sur rendu HTML injecté, interactions fictives et trois largeurs; aucune navigation HTTP validée",
+      "106 contrôles statiques et 12 assertions JavaScript simulées réussis",
+      "Neuf fils de la campagne Gmail autorisée lus : un seul message SENT par fil, aucune réponse visible"
+    ],
+    "blockers": [
+      "Écriture de index.html dans le dépôt vitrine refusée par les contrôles de sécurité; aucun commit produit",
+      "Navigation HTTP locale Chromium bloquée par l'environnement; tests Playwright effectués par injection DOM, pas en navigation réelle",
+      "Sites publics GitHub Pages et Vercel non accessibles au contrôle HTTP de cette session",
+      "Validation métier indépendante, Excel réel et paiements officiels toujours absents"
+    ],
+    "next": "Conserver la version corrigée et ses tests dans la bibliothèque, obtenir une voie de publication GitHub autorisée sans contourner les refus, puis réaliser la recette HTTP réelle et la validation métier.",
+    "links": [
+      {
+        "label": "Dépôt vitrine public inchangé",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro"
+      },
+      {
+        "label": "Suivi central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/pack-pro.json"
+      }
+    ]
   }
 ]
