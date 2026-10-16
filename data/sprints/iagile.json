@@ -1,1 +1,44 @@
-[]
+[
+  {
+    "id": "iagile-20261016-123823-paris",
+    "started_at": "2026-10-16T12:38:23+02:00",
+    "ended_at": "2026-10-16T10:41:16.546Z",
+    "summary": "Audit en lecture seule des licences et de la préparation de l'Academy IAgile ; aucun lancement premium.",
+    "done": [
+      "Consignes ouvertes du dépôt Avancement-Projet recherchées : aucune issue ouverte retournée.",
+      "Supabase vérifié : 4 parcours, 47 modules, 283 associations, 0 publication, 0 compte Auth, 0 objet Storage ; bucket pédagogique privé.",
+      "Parcours Processus : 18 des 27 associations de ressources portent un statut de licence non contrôlée ; 0 ressource approuvée.",
+      "Licences racines MIT consultées sur deux dépôts tiers ; analyse des droits sur contenus dérivés encore nécessaire.",
+      "Vitrine main : lien Avancement présent dans le header desktop et mobile ; étude France Num 2026 relue."
+    ],
+    "blockers": [
+      "Version candidate V0.9.1 non approuvée ; référence S-PR à aligner dans le module 8.",
+      "Recette réelle Auth/RLS, cloisonnement et téléchargement non effectuée.",
+      "Écriture du journal Google Docs refusée par les contrôles de sécurité ; HTTPS GitHub Pages non vérifiable.",
+      "Licences de 18 associations Processus non contrôlées ; aucun contenu premium approuvé."
+    ],
+    "next": "Qualifier les droits de réutilisation des ressources Processus, valider le corpus V0.9.1, puis effectuer une recette d'accès premium avec des comptes autorisés.",
+    "links": [
+      {
+        "label": "État public IAgile",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/iagile.json"
+      },
+      {
+        "label": "Vitrine IAgile",
+        "url": "https://github.com/cosscoll/IAgile/blob/main/index.html"
+      },
+      {
+        "label": "Licence MIT Microsoft",
+        "url": "https://github.com/microsoft/generative-ai-for-beginners/blob/main/LICENSE"
+      },
+      {
+        "label": "Licence MIT WXT",
+        "url": "https://github.com/wxt-dev/wxt/blob/main/LICENSE"
+      },
+      {
+        "label": "Baromètre France Num 2026",
+        "url": "https://presse.economie.gouv.fr/barometre-france-num-2026-quatre-tpe-pme-sur-dix-utilisent-desormais-lintelligence-artificielle/"
+      }
+    ]
+  }
+]
