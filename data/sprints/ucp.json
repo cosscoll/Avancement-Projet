@@ -149,5 +149,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261016T152557Z",
+    "started_at": "2026-10-16T15:25:57Z",
+    "ended_at": "2026-10-16T15:32:00Z",
+    "summary": "Audit isolé UCP-QA-07 : export et retrait bêta confirmés, mais cycle de vie global, conservation, purge et effacement des sauvegardes absents ; contrat non prescriptif livré.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat.",
+      "HEAD main vérifié à 2034e1152944bcb65bd09f3fb70a52e23a399ef2 ; app.py et features_v4.py contrôlés par blob.",
+      "Tests isolés : 2 réussites pour export/retrait bêta et 6 XFAIL stricts pour effacement complet, matrice de conservation, purge, sauvegardes, suivi des droits et données partagées."
+    ],
+    "blockers": [
+      "Aucune suppression complète de compte ni politique de conservation approuvée par finalité.",
+      "Aucune purge automatisée ou prévention démontrée de la résurrection après restauration de sauvegarde.",
+      "Les durées et exceptions exigent validation juridique/métier ; travail et résultats du clone Windows restent inconnus."
+    ],
+    "next": "Faire approuver la matrice de conservation, puis préparer sur branche dédiée un workflow pending_erasure, une purge idempotente et des tombstones rejoués après restauration, avec données synthétiques.",
+    "links": [
+      {
+        "label": "Code de cycle de vie audité",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/blob/2034e1152944bcb65bd09f3fb70a52e23a399ef2/application/backend/app.py"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
