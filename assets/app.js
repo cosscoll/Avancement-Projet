@@ -20,12 +20,12 @@ return `<div class="objective"><div class="objective-top"><div><strong>${safe(go
 const empty=(title,msg)=>`<div class="empty"><strong>${safe(title)}</strong><span>${safe(msg)}</span></div>`;
 function nav(){
 const selected=state.route;
-const top=`<div class="nav-label">AUTOMATISATIONS</div><a class="nav-item ${selected==='automations'?'active':''}" href="#/automations"><span class="nav-dot">◈</span> Vue automatisations</a><a class="nav-item ${selected==='overview'?'active':''}" href="#/overview"><span class="nav-dot">◫</span> Vue générale</a>`;
+const top=`<div class="nav-label">AUTOMATISATIONS</div><a class="nav-item ${selected==='automations'?'active':''}" href="#/automations"><span class="nav-dot">◈</span> Vue automatisations</a><a class="nav-item ${selected==='overview'?'active':''}" href="#/overview"><span class="nav-dot">◫</span> Vue générale</a><a class="nav-item ${selected==='inbox'?'active':''}" href="#/inbox"><span class="nav-dot">✉</span> Consignes &amp; décisions</a>`;
 const acts=state.projects.map(p=>`<a class="nav-item ${selected===p.id?'active':''}" href="#/${p.id}/overview"><span class="nav-dot">${safe(p.symbol)}</span>${safe(p.name)}</a>`).join('');
 const extras=`<div class="nav-label nav-section">MES AUTRES PROJETS</div><a class="nav-item ${selected==='catalog'?'active':''}" href="#/catalog"><span class="nav-dot">⌑</span> Tous les projets <span class="mini-count">${state.catalog.length+state.custom.length}</span></a>`;
 const last=`<div class="nav-label nav-section">RACCOURCIS</div><a class="nav-item" href="prive.html"><span class="nav-dot">♙</span> Espace privé <span class="mini-count">Bêta</span></a><a class="nav-item" href="https://chatgpt.com/tasks" target="_blank" rel="noopener noreferrer"><span class="nav-dot">↗</span> Tâches ChatGPT</a>`;
 q('#project-nav').innerHTML=top+acts+extras+last;
-const bread=selected==='automations'?'Automatisations':selected==='overview'?'Vue générale':selected==='catalog'?'Autres projets':selected==='other'?state.catalogSelected?.name||'Projet':state.selected?.name||'Projet';
+const bread=selected==='automations'?'Automatisations':selected==='overview'?'Vue générale':selected==='catalog'?'Autres projets':selected==='inbox'?'Consignes & décisions':selected==='other'?state.catalogSelected?.name||'Projet':state.selected?.name||'Projet';
 q('#crumb').textContent=bread;
 }
 function mainHeading(label,title,desc,action=''){return `<div class="page-head"><div><div class="page-eyebrow">${safe(label)}</div><h1 class="page-title">${safe(title)}</h1><p class="page-description">${safe(desc)}</p></div>${action}</div>`}
@@ -170,14 +170,31 @@ q('#chat-link-form')?.addEventListener('submit',e=>{e.preventDefault();let value
 if(p.repo)loadOtherCommits(p);
 }
 
+function inboxView(){
+ const alerts=state.projects.flatMap(p=>(statusFor(p).alerts||[]).map(a=>({p,a})));
+ const list=state.issues;
+ const issues=Array.isArray(list)?list.filter(i=>i.user?.login==='cosscoll' && /^\[(CONSIGNE|DECISION)\]\[[a-z0-9-]+\]/.test(i.title||'')):[];
+ q('#main').innerHTML=mainHeading('CENTRE D’ACTION / CONSIGNES','Consignes & décisions','Consulte les demandes publiques transmises par GitHub, les blocages connus et leur projet. Les cinq automatisations consultent uniquement les consignes de leur propre projet en début de sprint.',`<a class="btn" href="https://github.com/cosscoll/Avancement-Projet/issues" target="_blank" rel="noopener noreferrer">Toutes les issues GitHub ↗</a>`)+
+ `<div class="warning-banner"><strong>Canal public de pilotage uniquement.</strong>N'inscris jamais de mot de passe, donnée personnelle, information client ou secret. Les demandes financières, Work/Codex ou modifications d'automatisation restent à autoriser directement dans ChatGPT. Une issue GitHub ne peut pas les autoriser.</div>
+ <div class="layout"><section class="stack"><div class="panel"><div class="panel-heading"><h2>Transmettre une instruction</h2>${badge('Validation sur GitHub','neutral')}</div><form id="global-instruction" class="note-form"><label for="global-project">Projet concerné</label><select id="global-project" required><option value="">Choisir le projet</option>${state.projects.map(p=>`<option value="${safe(p.id)}">${safe(p.name)} (automatisation)</option>`).join('')}${state.catalog.map(p=>`<option value="${safe(p.id)}">${safe(p.name)} (sans automatisation)</option>`).join('')}</select><label for="global-content">Consigne non confidentielle</label><textarea id="global-content" required maxlength="8000" placeholder="Instruction précise, priorité ou question à examiner. Publication confirmée sur GitHub."></textarea><div class="foot"><p>L'ouverture de GitHub ne publie rien : tu dois confirmer la création de l'issue. Seuls les cinq projets automatisés peuvent la lire en début de sprint.</p><button type="submit" class="btn primary">Ouvrir la demande sur GitHub ↗</button></div></form></div>
+ <div class="panel"><div class="panel-heading"><h2>Demandes enregistrées</h2><button type="button" class="btn small" id="refresh-inbox">Actualiser ↻</button></div><div id="inbox-issues">${list===null?'<div class="loading"><span class="spinner"></span> Chargement GitHub…</div>':list===false?empty('Indisponible','Impossible de consulter GitHub actuellement.'):issues.length?issues.sort((a,b)=>Date.parse(b.created_at||0)-Date.parse(a.created_at||0)).map(i=>`<div class="update-row"><div><strong>${safe(i.title||'Consigne')}</strong><p class="small muted">${safe(dateFR(i.created_at))} · ${safe(i.state==='open'?'Ouverte':'Clôturée')}</p></div><a class="external" href="${safe(limitedUrl(i.html_url))}" target="_blank" rel="noopener noreferrer">Ouvrir ↗</a></div>`).join(''):empty('Aucune issue du propriétaire','Crée une demande non sensible pour un projet.')}</div></div></section>
+ <aside class="stack"><div class="panel"><div class="panel-heading"><h2>Blocages des projets</h2>${badge(alerts.length+' alertes','warning')}</div>${alerts.map(({p,a})=>alertMarkup(p,a)).join('')||empty('Aucun blocage','Aucun problème de référence renseigné')}</div><div class="panel"><h2>Autres projets ChatGPT</h2><p class="muted">Les projets sans automatisation se pilotent pour l'instant avec leurs conversations ChatGPT ou avec des notes locales. L'issue GitHub ne déclenche pas un agent.</p><a href="#/catalog" class="external">Explorer mes autres projets →</a></div></aside></div>`;
+ q('#global-instruction')?.addEventListener('submit',e=>{e.preventDefault();const id=q('#global-project').value,body=q('#global-content').value.trim();if(!id||!body)return;if(!confirm('Cette demande sera PUBLIQUE sur GitHub, sans secret ni donnée personnelle. Continuer ?'))return;window.location.href=issueUrl(id,body.split('\n')[0].slice(0,70)||'Consigne',body,'CONSIGNE')});
+ q('#refresh-inbox')?.addEventListener('click',()=>{state.issues=null;loadInbox()});
+ if(state.issues===null)loadInbox();
+}
+async function loadInbox(){
+ try{const r=await fetch('https://api.github.com/repos/cosscoll/Avancement-Projet/issues?state=all&per_page=100',{headers:{Accept:'application/vnd.github+json'},cache:'no-store'});state.issues=r.ok?(await r.json()).filter(i=>!i.pull_request):false}catch{state.issues=false}
+ if(state.route==='inbox')inboxView();
+}
 function resolve(){
 const segments=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean),id=segments[0]||'automations';
-state.route=id==='automations'||id==='overview'||id==='catalog'||id==='other'||state.projects.some(x=>x.id===id)?id:'automations';
+state.route=id==='automations'||id==='overview'||id==='catalog'||id==='other'||id==='inbox'||state.projects.some(x=>x.id===id)?id:'automations';
 state.selected=state.projects.find(x=>x.id===state.route)||null;
 state.catalogSelected=state.route==='other'?[...state.catalog,...state.custom].find(p=>p.id===segments[1])||null:null;
 state.section=sections.some(x=>x[0]===segments[1])?segments[1]:'overview';
 nav();
-if(state.route==='automations')automationsView();else if(state.route==='overview')overview();else if(state.route==='catalog')catalogView();else if(state.route==='other')state.catalogSelected?otherView(state.catalogSelected):catalogView();else renderProject(state.selected);
+if(state.route==='automations')automationsView();else if(state.route==='overview')overview();else if(state.route==='catalog')catalogView();else if(state.route==='inbox')inboxView();else if(state.route==='other')state.catalogSelected?otherView(state.catalogSelected):catalogView();else renderProject(state.selected);
 q('.sidebar').classList.remove('open');q('#toggle-nav').setAttribute('aria-expanded','false');scrollTo({top:0,behavior:'instant'});
 }
 function initialNotice(){q('#sync-indicator').innerHTML='<span class="pulse"></span> Référence du 16/10/2026'}
