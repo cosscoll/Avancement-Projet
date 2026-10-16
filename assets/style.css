@@ -110,3 +110,18 @@
 .activity-toolbar .btn{background:#1e3744;border-color:#365d59;color:var(--mint)}
 .activity-toolbar .btn:hover{background:#294b50}
 @media(max-width:700px){.refresh-data{padding:6px;min-width:37px;min-height:38px}}
+
+
+/* Canal de consignes réellement publié sur GitHub : progression lisible */
+.sync-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:0 0 23px}
+.sync-step{display:flex;align-items:flex-start;gap:12px;padding:15px 16px;border-radius:13px;background:#15283b;border:1px solid #355569;min-width:0}
+.sync-step strong{display:block;color:var(--ink);font-size:13px;margin-bottom:4px}
+.sync-step small{display:block;color:#adc1d7;font-size:11px;line-height:1.55}
+.sync-number{width:26px;height:26px;flex:none;display:grid;place-items:center;background:#2b574c;color:var(--mint);font-size:12px;font-weight:900;border-radius:9px}
+.instruction-item{padding:15px 0;border-bottom:1px solid var(--line);display:grid;gap:8px}
+.instruction-item:last-child{border-bottom:0;padding-bottom:0}
+.instruction-item strong{overflow-wrap:anywhere}
+.instruction-item p{margin:0}
+.instruction-top{display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+@media(max-width:980px){.sync-steps{grid-template-columns:1fr}.sync-step{align-items:center}}
+@media(max-width:580px){.sync-step{padding:12px 14px}}
