@@ -118,5 +118,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261016T143329Z",
+    "started_at": "2026-10-16T14:33:29Z",
+    "ended_at": "2026-10-16T14:39:00Z",
+    "summary": "Audit isolé UCP-QA-06 : socle d'autorisation confirmé, mais MFA administrateur et garde de staging absents ; contrat de fermeture et tests livrés.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat.",
+      "HEAD main vérifié à 2034e1152944bcb65bd09f3fb70a52e23a399ef2 ; app.py, features_v4.py et requirements-lock.txt contrôlés par blob.",
+      "Tests isolés : 2 réussites sur rôle/CSRF/revérification transactionnelle et 5 XFAIL stricts sur MFA, step-up, cookie Secure, garde non locale et longueur minimale sans MFA."
+    ],
+    "blockers": [
+      "Compte administrateur protégé par mot de passe seul ; aucune réauthentification renforcée pour les actions critiques.",
+      "Cookie de session forcé à Secure=False et aucune garde empêchant un démarrage de staging mal configuré.",
+      "Aucun test navigateur/staging ; travail et résultats du clone Windows dev/ucp-codex toujours inconnus."
+    ],
+    "next": "Intégrer sur branche dédiée une configuration local/staging/production fermée par défaut, cookie Secure hors local et MFA obligatoire pour les administrateurs, puis exécuter la recette de session/récupération/révocation.",
+    "links": [
+      {
+        "label": "Code d'authentification audité",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/blob/2034e1152944bcb65bd09f3fb70a52e23a399ef2/application/backend/app.py"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
