@@ -1,7 +1,7 @@
 /* CONTROL PWA — public static shell only; no private instructions, secrets or GitHub API responses. */
 'use strict';
-const CACHE_SHELL='control-shell-v2';
-const CACHE_PUBLIC='control-public-data-v2';
+const CACHE_SHELL='control-shell-v3';
+const CACHE_PUBLIC='control-public-data-v3';
 const ROOT=new URL(self.registration.scope);
 const ASSETS=['./','./index.html','./assets/app.js','./assets/style.css','./assets/pwa.js','./assets/icon.svg','./assets/icon-192.png','./assets/icon-512.png','./manifest.webmanifest'];
 const PUBLIC_DATA=/^data\/(?:projects|catalog|automations)\.json$|^data\/(?:sprints|status)\/[a-z0-9-]+\.json$/;
@@ -43,10 +43,16 @@ self.addEventListener('fetch',e=>{
    return;
  }
  if(!ASSETS.some(a=>a.replace(/^\.\//,'')===path))return;
+ // Online assets use the newest deployed version, instead of returning a stale copy first.
+ // Offline access falls back to the most recently cached public version.
  e.respondWith((async()=>{
    const cache=await caches.open(CACHE_SHELL);
-   const cached=await cache.match(request);
-   const net=fetch(request).then(async response=>{if(response.ok)await cache.put(request,response.clone());return response}).catch(()=>null);
-   return cached||await net||Response.error();
+   try {
+     const response=await fetch(request,{cache:'no-cache'});
+     if(response.ok){await cache.put(request,response.clone());return response}
+     return await cache.match(request)||response;
+   } catch {
+     return await cache.match(request)||Response.error();
+   }
  })());
 });
