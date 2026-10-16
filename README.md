@@ -35,6 +35,18 @@ Une autorisation d'usage Work, Codex, de dépense ou de changement de tâche ne 
 
 **Limites actuelles :** hébergement public GitHub Pages non vérifiable depuis les outils de développement actuels ; pas de synchronisation native des projets ChatGPT ; instructions privées désactivées tant que la nouvelle organisation Supabase Free n'existe pas et que les droits ne sont pas testés. Aucun paiement ni changement à IAgile Academy.
 
+## Statut de la synchronisation des consignes — 16 octobre 2026
+
+Les **cinq tâches actives** ont chacune une instruction explicite de lecture, **en début de sprint**, des tickets `[CONSIGNE][<id>]` et `[DECISION][<id>]` créés par le compte GitHub `cosscoll` dans le dépôt central. Ce protocole existe sans Supabase, à coût supplémentaire nul. Le site affiche maintenant **trois étapes** : rédaction de la consigne → confirmation de sa publication GitHub → vérification de la prise en compte dans le compte rendu de sprint.
+
+- **Effectivement partagé :** une GitHub Issue créée et soumise sur GitHub dans le dépôt central est visible publiquement, et consultable par le connecteur GitHub. Les comptes rendus réels sont écrits dans `data/sprints/<id>.json` par les automatisations lorsque le connecteur l'autorise.
+- **Non partagé :** un brouillon uniquement enregistré dans le navigateur. Le bouton « Publier via GitHub » ouvre un formulaire GitHub prérempli, **mais la création doit être confirmée sur GitHub**, sous le compte du propriétaire.
+- **Non encore testé en bout de chaîne :** aucune GitHub Issue réelle de consigne utilisateur n'est actuellement publiée dans le dépôt central ; la lecture d'une nouvelle consigne par un sprint réel et l'accusé de réception restent donc à vérifier. Les tests simulés de navigation, filtrage auteur `cosscoll`, affichage et URL préremplie ont réussi (10/10).
+- **Non disponible :** synchronisation privée directe depuis le site. L'organisation Supabase dédiée n'existe pas encore, et il n'est pas permis de toucher à la base IAgile Academy. L'écran `prive.html` reste désactivé.
+- **Sécurité :** ne publier sur GitHub aucune donnée sensible, clé, secret, autorisation de dépense, accès Work/Codex ou changement d'automatisation. Le site et les issues ne peuvent pas autoriser ces opérations.
+
+Le texte antérieur « les consignes ne sont pas encore synchronisées » a été remplacé par une description exacte des possibilités du canal GitHub et des limites de la connexion privée.
+
 ## État de développement
 
 - **Interface créée** : navigation entre cinq projets, vue globale, objectifs et pourcentages calculés à partir de critères de recette, sprints, activité GitHub, alertes, décisions et brouillons de consignes.
