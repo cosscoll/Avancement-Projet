@@ -1,0 +1,6 @@
+{
+  "enabled": false,
+  "supabaseUrl": "",
+  "publishableKey": "",
+  "note": "La connexion privée reste désactivée avant création et contrôle du projet Supabase dédié. Ne jamais placer ici une clé secrète ou service_role."
+}
