@@ -180,5 +180,35 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261016T162541Z",
+    "started_at": "2026-10-16T16:25:41Z",
+    "ended_at": "2026-10-16T16:32:30Z",
+    "summary": "Audit isolé UCP-QA-08 : le contrôle de forme SIREN et l'approbation administrative existent, mais la vérification professionnelle multi-preuves reste absente ; architecture et contrat de tests livrés.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat.",
+      "HEAD main vérifié à 2034e1152944bcb65bd09f3fb70a52e23a399ef2 ; app.py et features_v4.py contrôlés par blob.",
+      "Tests isolés : 2 réussites pour les garde-fous existants et 5 XFAIL stricts pour registre officiel, contrôle du représentant, RGE par domaine, assurance structurée et statut multi-preuves daté ; lot UCP-QA-08 archivé séparément."
+    ],
+    "blockers": [
+      "Le booléen approved repose sur une revue administrateur sans consultation démontrée d'une source officielle ni granularité des preuves.",
+      "Aucun appel de registre, document réel, staging ou navigateur n'a été utilisé ; le travail et les résultats du clone Windows restent inconnus."
+    ],
+    "next": "Préparer sur branche isolée un connecteur serveur vers l'API publique Recherche d'entreprises avec état needs_review, puis séparer les preuves représentant, RGE par domaine et assurance, sans fusion automatique.",
+    "links": [
+      {
+        "label": "Code professionnel audité",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/blob/2034e1152944bcb65bd09f3fb70a52e23a399ef2/application/backend/features_v4.py"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
