@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "id": "ucp-20261016T103254Z",
+    "started_at": "2026-10-16T10:32:54Z",
+    "ended_at": "2026-10-16T10:34:30Z",
+    "summary": "Canal de consignes contrôlé, nouveau HEAD UCP vérifié et suivi central actualisé sans toucher à l'application.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat.",
+      "HEAD main UCP vérifié à 2034e1152944bcb65bd09f3fb70a52e23a399ef2 ; ce commit relie le menu Avancement à la console centrale sans modifier l'application.",
+      "Statut public enrichi avec le critère de liaison au tableau central et l'alerte de divergence de dev/ucp-codex."
+    ],
+    "blockers": [
+      "dev/ucp-codex distante reste à 712a06997e9e9dd39658ad558cb9ea7585e757b8 alors que main a avancé ; le travail du clone Windows et ses tests restent inconnus.",
+      "Aucun test backend, DOM ou navigateur réel n'a été exécuté dans ce sprint."
+    ],
+    "next": "Relire les nouvelles issues UCP, vérifier les résultats du clone Windows lorsqu'ils sont publiés, puis préparer le rapprochement sans rebase, merge ni push automatique.",
+    "links": [
+      { "label": "Commit UCP vérifié", "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2" },
+      { "label": "Statut UCP central", "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json" },
+      { "label": "Journal UCP", "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit" }
+    ]
+  }
+]
