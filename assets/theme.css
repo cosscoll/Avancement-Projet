@@ -366,3 +366,18 @@ footer span{color:#b5c0cd}
  .tab{min-width:0;white-space:normal;display:flex;align-items:center;justify-content:center;text-align:center;min-height:45px;font-size:11.5px;line-height:1.3;border:1px solid #e1e7ee;background:#fff;padding:9px 7px}
  .tab.active{font-weight:800}
 }
+
+
+/* Tailles mobiles : les informations essentielles restent lisibles sans zoom. */
+@media(max-width:760px){
+ .mobile-tab{font-size:12px;min-height:57px}
+ .mobile-tab span{font-size:20px}
+ .auto-copy span,.auto-lines>div span,.auto-lines b{font-size:12px;line-height:1.5}
+ .auto-head .tag{font-size:10.5px}
+ .auto-foot a,.auto-last,.auto-alert{font-size:12.5px}
+ .stat small{font-size:12px}
+ .stat .kicker{font-size:10.5px}
+ .tab{font-size:12.5px}
+ .page-description{font-size:13.5px}
+ .panel .small{font-size:12.5px}
+}
