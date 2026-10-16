@@ -19,5 +19,26 @@
       { "label": "Statut UCP central", "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json" },
       { "label": "Journal UCP", "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit" }
     ]
+  },
+  {
+    "id": "ucp-20261016T113010Z",
+    "started_at": "2026-10-16T11:30:10Z",
+    "ended_at": "2026-10-16T11:34:25Z",
+    "summary": "Audit isolé UCP-QA-03 : les sauvegardes 4.0.2 sont cohérentes mais restent lisibles en clair ; contrat de chiffrement et tests complémentaires livrés.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat.",
+      "HEAD main UCP vérifié à 2034e1152944bcb65bd09f3fb70a52e23a399ef2 et database.py contrôlé sur le blob a4f587dc03e3bd22c8a36c6df0e5b41864c010e0.",
+      "Tests isolés sur données synthétiques : 4 réussites, 2 XFAIL attendus démontrant l'en-tête SQLite et une sentinelle lisibles en clair ; lot UCP-QA-03 conservé sans modification du dépôt UCP."
+    ],
+    "blockers": [
+      "Aucun chiffrement authentifié ni gestion de clés n'est intégré ; la sauvegarde chiffrée et la restauration restent non validées.",
+      "dev/ucp-codex distante reste à 712a06997e9e9dd39658ad558cb9ea7585e757b8 ; le travail du clone Windows et ses résultats --basetemp demeurent inconnus."
+    ],
+    "next": "Faire valider le modèle de menace et la gestion des clés, puis préparer sur branche dédiée un format de sauvegarde chiffré authentifié et son exercice de restauration, sans fusion automatique.",
+    "links": [
+      { "label": "Script audité", "url": "https://github.com/cosscoll/UnCoupdePouce/blob/2034e1152944bcb65bd09f3fb70a52e23a399ef2/application/scripts/database.py" },
+      { "label": "Statut UCP central", "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json" },
+      { "label": "Journal UCP", "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit" }
+    ]
   }
 ]
