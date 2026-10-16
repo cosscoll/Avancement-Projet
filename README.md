@@ -35,6 +35,19 @@ Une autorisation d'usage Work, Codex, de dépense ou de changement de tâche ne 
 
 **Limites actuelles :** hébergement public GitHub Pages non vérifiable depuis les outils de développement actuels ; pas de synchronisation native des projets ChatGPT ; instructions privées désactivées tant que la nouvelle organisation Supabase Free n'existe pas et que les droits ne sont pas testés. Aucun paiement ni changement à IAgile Academy.
 
+## Application mobile (PWA) — iPhone et Android
+
+Le tableau de bord est désormais préparé comme **application web installable**. Aucun store, compte développeur ni coût supplémentaire.
+
+- Manifeste : `manifest.webmanifest` ; scope et URL de départ relatifs au dépôt GitHub Pages.
+- Icônes : `assets/icon.svg`, `assets/icon-192.png`, `assets/icon-512.png` (fichiers confirmés dans la branche main).
+- Service worker `service-worker.js` : navigation et actifs publics en cache ; données publiques en stratégie réseau d'abord ; pas de cache des API GitHub, de `prive.html` ni de secrets.
+- Assistant d'installation : `assets/pwa.js` ; affichage adapté à Safari iOS et Chrome Android.
+- Modifications HTML / CSS : manifeste, icônes Apple, écran d'accueil, safe areas, bandeau hors connexion et aide d'installation.
+- **Guide d'installation : [INSTALLER_SUR_TELEPHONE.md](docs/INSTALLER_SUR_TELEPHONE.md)**.
+- Limite : installation mobile et notifications sont deux systèmes séparés. Aucune notification push native CONTROL, et le serveur Supabase privé reste à créer avec une organisation distincte de celle d'IAgile.
+- La validation sur appareils et la disponibilité HTTPS en direct nécessitent un essai réel (aucun test physique ni publication Play Store/App Store déclaré).
+
 ## Statut de la synchronisation des consignes — 16 octobre 2026
 
 Les **cinq tâches actives** ont chacune une instruction explicite de lecture, **en début de sprint**, des tickets `[CONSIGNE][<id>]` et `[DECISION][<id>]` créés par le compte GitHub `cosscoll` dans le dépôt central. Ce protocole existe sans Supabase, à coût supplémentaire nul. Le site affiche maintenant **trois étapes** : rédaction de la consigne → confirmation de sa publication GitHub → vérification de la prise en compte dans le compte rendu de sprint.
