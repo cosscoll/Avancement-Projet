@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "verified_at": "2026-10-16T10:10:20Z",
+  "source": "Relevé des tâches ChatGPT : instantané, pas d'API temps réel depuis GitHub Pages. Les exécutions et statuts peuvent changer.",
+  "tasks": [
+    {
+      "id": "pack-pro",
+      "title": "Pack Procédures Pro",
+      "schedule": "Chaque heure à XXh10",
+      "active_at_last_check": true
+    },
+    {
+      "id": "banque-ia",
+      "title": "Banque Outils IA",
+      "schedule": "Chaque heure à XXh20",
+      "active_at_last_check": true
+    },
+    {
+      "id": "ucp",
+      "title": "UCP — Construction autonome",
+      "schedule": "Chaque heure à XXh30",
+      "active_at_last_check": true
+    },
+    {
+      "id": "iagile",
+      "title": "IAgile — Pilotage autonome",
+      "schedule": "Chaque heure à XXh40",
+      "active_at_last_check": true
+    },
+    {
+      "id": "tcg",
+      "title": "TCG Thomas Deseur",
+      "schedule": "Chaque jour à 11h05",
+      "active_at_last_check": true
+    }
+  ]
+}
