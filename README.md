@@ -9,7 +9,8 @@ Tableau de bord statique initial pour les cinq projets : Pack Procédures Pro, B
 - **Historique des sprints** : fichiers `data/sprints/{id}.json` initialisés vides ; ne pas inventer de comptes rendus historiques. L'interface peut lire les vrais sprints quand ils sont ajoutés par les automatisations.
 - **Statut plus récent facultatif** : si présent, `data/status/{id}.json` (format de la fiche projet correspondante dans `data/projects.json`) remplace ses objectifs/alertes/décisions pour le calcul et l'affichage.
 - **Activité GitHub** : récupérée depuis l'API GitHub publique lors de la consultation de la section Sprints. Un commit n'est pas automatiquement un sprint.
-- **Instructions et décisions privées** : **PAS ENCORE CONNECTÉES**. Les champs « Mes instructions » ne sauvegardent qu'un brouillon dans le stockage du navigateur. Il n'est **pas lu** par les automatisations ; le bouton de décision est volontairement absent tant que le backend sécurisé n'est pas configuré.
+- **Instructions publiques non confidentielles** : le formulaire « Mes instructions » permet de préparer une consigne et ouvre GitHub Issues prérempli. **L'utilisateur doit confirmer la publication dans GitHub.** Les automatisations sont désormais configurées pour rechercher les issues `[CONSIGNE][projet]` écrites par `cosscoll` au début du sprint. Les brouillons restent locaux et NE sont PAS lus. Les décisions sensibles ne passent pas par GitHub Issues.
+- **Instructions et décisions privées** : portail `prive.html` créé, mais désactivé par `config/private.json` (`enabled: false`) jusqu'à création d'un projet Supabase dédié, migration/RLS et validation du propriétaire. Aucun secret publié.
 - **Hébergement public** : fichiers prêts pour GitHub Pages ; activation de Pages et réponse HTTPS réelle à vérifier. Le dépôt public ne doit contenir aucune information confidentielle.
 
 ## Ouvrir le site via GitHub Pages
@@ -24,11 +25,15 @@ L'hébergement et le code sont statiques sans dépendance NPM, build serveur, AP
 
 ```text
 index.html                Interface principale
+prive.html                Portail privé prêt mais désactivé
 assets/style.css          Mise en forme responsive et accessible
-assets/app.js             Navigation, métriques, historique, brouillons locaux
+assets/app.js             Navigation, métriques, historique et formulaires GitHub
+assets/private.js         Auth et commandes privées (uniquement après configuration)
+config/private.json      Configuration publique sans secret (désactivée)
 data/projects.json        Métadonnées et état de référence public
 data/sprints/*.json       Comptes rendus vérifiés publics par projet
-data/status/*.json        État public actualisé facultatif, un fichier par projet
+data/status/*.json        État public actualisé, un fichier par projet
+database/*.sql            Schéma SQL sécurisé préparé, non appliqué
 docs/schema.md            Format de synchronisation
 ```
 
@@ -56,6 +61,12 @@ Exemple **illustratif de structure, pas un sprint réel** :
 ```
 
 Le fichier public ne doit jamais révéler des noms ou emails de prospects, secrets, données clients, tokens, contenus payants, codes cadeaux ou autres informations privées.
+
+## Canal public de consignes — utilisable sans serveur privé
+
+Dans l’espace d’un projet, ouvrir **Mes instructions**, rédiger une consigne NON CONFIDENTIELLE, cliquer **Transmettre sur GitHub**, puis terminer en cliquant **Submit new issue** sur GitHub. Seuls les tickets publiés dans https://github.com/cosscoll/Avancement-Projet/issues avec titre préfixé `[CONSIGNE][id]` et auteur `cosscoll` sont à consulter avant le sprint ; les questions `[DECISION][id]` ne valent jamais approbation d’une opération sensible.
+
+Ce canal **n'est pas privé** : les autres internautes peuvent lire les issues. Pour toute instruction contenant des secrets, des données de clients ou une décision sensible, continuer à passer par une conversation ChatGPT jusqu’à la mise en service du backend privé.
 
 ## À faire : transmission sécurisée des instructions
 
