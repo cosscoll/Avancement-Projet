@@ -10,7 +10,13 @@
       "summary": "Portfolio immersif 3D à navigation en tunnel et pages projets.",
       "repo": "Cosme-Collomb",
       "source": "github",
-      "symbol": "3D"
+      "symbol": "3D",
+      "website": {
+        "url": "https://cosscoll.github.io/Cosme-Collomb/",
+        "label": "Portfolio 3D",
+        "verification": "unverified",
+        "note": "Adresse déclarée dans le README."
+      }
     },
     {
       "id": "chess-openings",
@@ -19,7 +25,13 @@
       "summary": "Entraînement aux ouvertures d'échecs et expérience visuelle.",
       "repo": "Chess-Openings",
       "source": "github",
-      "symbol": "CH"
+      "symbol": "CH",
+      "website": {
+        "url": "https://cosscoll.github.io/Chess-Openings/",
+        "label": "Chess Openings",
+        "verification": "unverified",
+        "note": "Adresse probable d'après le dépôt et son index.html ; publication non confirmée."
+      }
     },
     {
       "id": "poker-stats",
@@ -28,7 +40,13 @@
       "summary": "Application de suivi et statistiques de poker.",
       "repo": "PokerStats",
       "source": "github",
-      "symbol": "PK"
+      "symbol": "PK",
+      "website": {
+        "url": "https://cosscoll.github.io/PokerStats/",
+        "label": "PokerStats",
+        "verification": "unverified",
+        "note": "Adresse probable d'après le dépôt et son index.html ; publication non confirmée."
+      }
     },
     {
       "id": "mybeer",
@@ -37,7 +55,13 @@
       "summary": "Questionnaire et découverte de bières avec interactions.",
       "repo": "MyBeer",
       "source": "github",
-      "symbol": "MB"
+      "symbol": "MB",
+      "website": {
+        "url": "https://cosscoll.github.io/MyBeer/",
+        "label": "MyBeer",
+        "verification": "unverified",
+        "note": "Adresse référencée dans le README."
+      }
     },
     {
       "id": "eurorare",
@@ -46,7 +70,13 @@
       "summary": "Collection et informations sur les pièces et billets rares.",
       "repo": "Is-my-coin-rare-",
       "source": "github",
-      "symbol": "€"
+      "symbol": "€",
+      "website": {
+        "url": "https://cosscoll.github.io/Is-my-coin-rare-/",
+        "label": "Eurorare",
+        "verification": "unverified",
+        "note": "Adresse probable d'après le dépôt et son index.html ; publication non confirmée."
+      }
     },
     {
       "id": "ifsi",
@@ -55,7 +85,13 @@
       "summary": "Supports et interface de révision pour les études en soins infirmiers.",
       "repo": "Berenice.ifsy",
       "source": "github",
-      "symbol": "IF"
+      "symbol": "IF",
+      "website": {
+        "url": "https://cosscoll.github.io/Berenice.ifsy/",
+        "label": "Révisions IFSI",
+        "verification": "unverified",
+        "note": "Adresse référencée dans le README."
+      }
     },
     {
       "id": "la-skin-academie",
