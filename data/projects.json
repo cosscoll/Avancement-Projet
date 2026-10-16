@@ -99,7 +99,13 @@
           "description": "À examiner uniquement après la validation métier, juridique et technique.",
           "state": "blocked"
         }
-      ]
+      ],
+      "website": {
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "label": "Site Pack Procédures Pro",
+        "verification": "unverified",
+        "note": "Adresse GitHub Pages indiquée dans le README ; activation non vérifiée."
+      }
     },
     {
       "id": "banque-ia",
@@ -197,7 +203,13 @@
           "description": "Autorisation et protocole de consentement nécessaires avant tout contact.",
           "state": "pending"
         }
-      ]
+      ],
+      "website": {
+        "url": "https://cosscoll.github.io/Banque-Outils-IA/",
+        "label": "Site Banque Outils IA",
+        "verification": "unverified",
+        "note": "Adresse GitHub Pages indiquée dans le README ; activation non vérifiée."
+      }
     },
     {
       "id": "ucp",
@@ -295,6 +307,19 @@
           "description": "Recette, tarifs et sécurité doivent être approuvés avant l'ouverture.",
           "state": "blocked"
         }
+      ],
+      "website": {
+        "url": "https://un-coup-de-pouce.foamybirch8.chatgpt.site/index.html",
+        "label": "Site vitrine UCP",
+        "verification": "unverified",
+        "note": "Adresse canonique présente dans le HTML de la vitrine ; accès public non vérifié."
+      },
+      "other_sites": [
+        {
+          "url": "https://cosscoll.github.io/UnCoupdePouce/",
+          "label": "Vitrine GitHub Pages (aperçu)",
+          "verification": "unverified"
+        }
       ]
     },
     {
@@ -385,7 +410,13 @@
           "description": "Nécessite une recette d'accès sécurisée et une validation de l'offre.",
           "state": "blocked"
         }
-      ]
+      ],
+      "website": {
+        "url": "https://cosscoll.github.io/IAgile/",
+        "label": "Site IAgile",
+        "verification": "unverified",
+        "note": "Adresse référencée dans le README ; accès HTTP non vérifié."
+      }
     },
     {
       "id": "tcg",
@@ -474,6 +505,24 @@
           "title": "Validation finale du jeu",
           "description": "Décider après les tests de collection et de sauvegarde.",
           "state": "blocked"
+        }
+      ],
+      "website": {
+        "url": "https://budget-illimite-tcg.floot.app/",
+        "label": "Ouvrir le jeu TCG",
+        "verification": "unverified",
+        "note": "Jeu Floot référencé dans le README ; état de disponibilité non vérifié."
+      },
+      "other_sites": [
+        {
+          "url": "https://cosscoll.github.io/TCG-Thomas-Deseur/collection-validee/",
+          "label": "Galerie de cartes",
+          "verification": "unverified"
+        },
+        {
+          "url": "https://cosscoll.github.io/TCG-Thomas-Deseur/",
+          "label": "Vitrine du jeu",
+          "verification": "unverified"
         }
       ]
     }
