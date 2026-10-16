@@ -1,6 +1,26 @@
 # CONTROL — Centre de pilotage des projets
 
-Tableau de bord statique initial pour les cinq projets : Pack Procédures Pro, Banque Outils IA, UCP, IAgile et TCG Thomas Deseur.
+Tableau de bord du pilotage ChatGPT, avec suivi de cinq automatisations et catalogue des autres projets : Pack Procédures Pro, Banque Outils IA, UCP, IAgile et TCG Thomas Deseur.
+
+
+## Extension : tableau de bord de l'espace ChatGPT
+
+Depuis le 16 octobre 2026, CONTROL n'est plus réservé aux cinq projets automatisés.
+
+- **Page Automatisations, en première position** : cinq tâches, horaires, statut **au dernier relevé**, nombre et date des comptes rendus effectivement enregistrés dans `data/sprints/*.json`. Aucune lecture du statut ChatGPT en direct depuis le navigateur, et aucun contrôle d'activation/désactivation sur ce site.
+- **Vue générale** : automatisations au premier plan, puis objectifs et alertes des cinq projets pilotés.
+- **Centre Consignes & décisions** : création d'issues GitHub publiques par projet, avec confirmation manuelle sur GitHub. Les cinq tâches programmées sont configurées pour consulter les issues du propriétaire `cosscoll` avant le travail. Une issue ne déclenche pas une conversation ou un sprint hors programmation.
+- **Autres projets** : `data/catalog.json` référence les autres dépôts GitHub accessibles (Portfolio 3D, Chess Openings, PokerStats, MyBeer, Eurorare, IFSI) et quelques projets ChatGPT sans dépôt identifié. Les commits publics GitHub sont consultables depuis leur fiche.
+- **Interactions sur les autres projets** : notes locales, copie d'une consigne pour la conversation ChatGPT, enregistrement local d'un lien ChatGPT, option de créer une issue GitHub publique. Un projet sans automatisation n'est **pas** lu automatiquement.
+- **Ajout manuel d'autres projets** : local au navigateur. Il n'existe pas de synchronisation automatique de la liste des Projets ChatGPT ni d'accès à leurs conversations privées depuis GitHub Pages.
+
+Les sources d'interface supplémentaires sont `data/catalog.json`, `data/automations.json` et `assets/app.js`. Les informations d'automatisation dans `data/automations.json` sont des **instantanés**, jamais une preuve de statut live.
+
+### Confidentialité et intégration future
+
+Ce site reste **public** sur GitHub Pages. Ne saisir aucun secret, adresse client, dossier confidentiel, renseignement personnel, devis ou autorisation sensible dans les GitHub Issues. Le portail `prive.html` est **désactivé**, et le rattachement à une nouvelle base privée dédiée reste à financer/valider et tester uniquement après acceptation du propriétaire et vérification du coût. Ne pas utiliser automatiquement la base Supabase d'IAgile.
+
+Une autorisation d'usage Work, Codex, de dépense ou de changement de tâche ne peut pas être donnée depuis CONTROL : elle nécessite une demande directe à ChatGPT. Les brouillons enregistrés en localStorage ne sont **jamais lus** par les automatisations.
 
 ## État de développement
 
@@ -19,7 +39,7 @@ Tableau de bord statique initial pour les cinq projets : Pack Procédures Pro, B
 2. Dans *Build and deployment*, choisir **Deploy from a branch**, la branche **main**, le répertoire **/(root)** puis **Save**.
 3. Vérifier le résultat réel sur `https://cosscoll.github.io/Avancement-Projet/` seulement **après** activation et déploiement. Tant que ce n'est pas vérifié, ne pas déclarer le site en ligne.
 
-L'hébergement et le code sont statiques sans dépendance NPM, build serveur, API payante ou secret.
+L'hébergement et le code sont statiques sans dépendance NPM, build serveur, API payante ou secret. Les appels à GitHub API sont publics et peuvent être limités en volume.
 
 ## Structure
 
