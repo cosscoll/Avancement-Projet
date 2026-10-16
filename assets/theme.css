@@ -331,3 +331,24 @@ footer span{color:#b5c0cd}
 @media(prefers-reduced-motion:reduce){
  *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
+/* Secondary explanation is closed by default, but fully accessible to keyboard and readers. */
+.section-heading{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:24px 0 13px}
+.section-heading h2{font:700 20px 'Space Grotesk',system-ui,sans-serif;letter-spacing:-.025em;color:#243a53;margin:0 0 3px}
+.section-heading p{margin:0}
+.info-disclosure{border:1px solid #e0e7ee;border-radius:12px;background:#fff;margin:18px 0 0;overflow:hidden}
+.info-disclosure summary{list-style:none;padding:15px 18px;font-weight:700;color:#50677f;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.info-disclosure summary::-webkit-details-marker{display:none}
+.info-disclosure summary::after{content:'+';font-size:21px;font-weight:400;color:#7e8fa1}
+.info-disclosure[open] summary::after{content:'−'}
+.info-disclosure[open] summary{border-bottom:1px solid #e5ebf1}
+.info-disclosure-body{padding:8px 18px 17px;color:#6a7b90;font-size:12.5px}
+.info-disclosure-body p{margin:10px 0}
+@media(max-width:760px){
+ .section-heading{align-items:start;flex-direction:column;gap:10px;margin:19px 0 12px}
+ .section-heading h2{font-size:18px}
+ .section-heading .btn{width:100%}
+ .auto-actions{display:flex;flex-wrap:wrap;gap:7px}
+ .auto-actions .btn{flex:1;min-width:0}
+ .info-disclosure summary{padding:15px}
+ .info-disclosure-body{padding:8px 15px 15px}
+}
