@@ -92,6 +92,10 @@
         {
           "name": "Ouverture publique approuvée",
           "done": false
+        },
+        {
+          "name": "Bascule SEO privée vers publique validée",
+          "done": false
         }
       ]
     }
@@ -136,6 +140,11 @@
       "title": "Vérification professionnelle insuffisante",
       "description": "UCP-QA-08 confirme le contrôle de forme SIREN et l'approbation administrative, mais aucun contrôle de registre officiel, du représentant, du domaine RGE ou de l'assurance ; 2 contrôles réussis et 5 exigences XFAIL.",
       "level": "critical"
+    },
+    {
+      "title": "Bascule SEO publique non sécurisée",
+      "description": "UCP-QA-09 confirme une prévisualisation correctement noindex, mais l'origine est codée en dur, aucun profil public ni sitemap n'existe et aucun test atomique ne protège la bascule robots/meta/en-têtes. 2 contrôles réussis, 5 exigences XFAIL.",
+      "level": "warning"
     }
   ],
   "decisions": [
@@ -150,6 +159,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-08",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-09",
   "baseline_date": "2026-10-16"
 }
