@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#090e18">
+<title>CONTROL — Espace privé</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.private-shell{max-width:1100px;margin:0 auto;padding:40px 24px 100px}
+.private-head{display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:45px}
+.private-head a{color:var(--mint);text-decoration:none;font-weight:800}
+.private-title{font:600 clamp(30px,5vw,52px)/1.1 'Space Grotesk',sans-serif;letter-spacing:-.05em;margin:10px 0 20px}
+.private-form{display:grid;gap:13px}.private-form label{font-weight:750}.private-form input,.private-form select,.private-form textarea,.private-form button{min-height:45px}
+.private-form input,.private-form select,.private-form textarea{width:100%;border:1px solid #43536c;background:#0c1524;color:var(--ink);padding:12px 14px;border-radius:11px}
+.private-form textarea{resize:vertical;min-height:110px}
+.private-form select{cursor:pointer}
+.private-card{margin-bottom:16px}.private-error{color:var(--red);margin:12px 0}.private-ok{color:var(--mint);margin:12px 0}
+.private-list{display:grid;gap:11px;margin-top:16px}.private-entry{border:1px solid var(--line);border-radius:12px;padding:15px;background:#111a2a;word-break:break-word}
+.private-entry h3{font-size:15px;margin:0 0 8px}.private-entry p{color:var(--muted);white-space:pre-wrap;margin:7px 0}.private-entry small{color:var(--muted)}.private-entry button{margin:7px 9px 0 0}
+.private-toolbar{display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-bottom:25px}.private-toolbar label{display:grid;gap:7px}
+.private-toolbar select{padding:10px 12px;background:#111a2a;color:#fff;border:1px solid #36465f;border-radius:9px}
+.private-section{margin-bottom:20px}
+.private-section button{min-height:40px}
+@media(max-width:700px){.private-shell{padding:28px 16px 70px}}
+</style>
+<script type="module" src="assets/private.js"></script>
+</head>
+<body>
+<div class="ambient" aria-hidden="true"></div>
+<main class="private-shell" id="private-main">
+<header class="private-head"><div><span class="page-eyebrow">BUSINESS CONTROL CENTER</span><h1 class="private-title">Espace privé</h1><p class="muted">Instructions, décisions et alertes réservées au propriétaire authentifié.</p></div><a href="./index.html">← Tableau de bord public</a></header>
+<div class="warning-banner"><strong>Accès protégé</strong>Les informations confidentielles ne doivent jamais être enregistrées dans des issues GitHub publiques. Une décision sur ce site ne peut pas autoriser des dépenses, Work/Codex ou le changement de programmation des automatisations.</div>
+<p id="private-status" role="status" aria-live="polite">Vérification de la configuration…</p>
+<section class="panel private-card" id="login-panel" hidden>
+<h2>Connexion du propriétaire</h2><p class="small muted">Compte préalablement autorisé dans la base privée. Un lien de connexion sera envoyé à l'adresse du compte.</p>
+<form id="login-form" class="private-form"><label for="owner-email">Adresse e-mail autorisée</label><input type="email" id="owner-email" autocomplete="email" required placeholder="adresse du propriétaire"><button class="btn primary" type="submit">Recevoir mon lien de connexion</button></form>
+</section>
+<section id="dashboard-panel" hidden>
+<div class="private-toolbar"><label for="project-picker"><strong>Projet</strong><select id="project-picker"><option value="pack-pro">Pack Procédures Pro</option><option value="banque-ia">Banque Outils IA</option><option value="ucp">Un Coup de Pouce</option><option value="iagile">IAgile</option><option value="tcg">TCG Thomas Deseur</option></select></label><button class="btn small" id="refresh-private">Rafraîchir ↻</button><button class="btn small" id="logout-private">Déconnexion</button></div>
+<div class="layout"><div class="stack">
+<section class="panel private-section"><h2>Envoyer une instruction privée</h2><form id="instruction-form" class="private-form"><label for="instruction-body">Ton commentaire ou ton ordre pour le prochain sprint</label><textarea id="instruction-body" maxlength="20000" required placeholder="Exemple : corriger les erreurs mobiles avant de poursuivre les animations."></textarea><button class="btn primary" type="submit">Enregistrer une instruction sécurisée</button></form><div id="instruction-list" class="private-list"></div></section>
+<section class="panel private-section"><h2>Décisions</h2><form id="decision-form" class="private-form"><label for="decision-question">Nouvelle question / arbitrage</label><textarea id="decision-question" maxlength="12000" required placeholder="Quelle décision dois-je examiner ?"></textarea><button class="btn" type="submit">Créer une demande de décision</button></form><div id="decision-list" class="private-list"></div></section>
+</div><aside class="stack"><section class="panel private-section"><h2>Alertes privées</h2><div id="alert-list" class="private-list"></div></section><section class="panel"><h2>Historique</h2><p class="small muted">La lecture et les accusés de réception seront enregistrés après chaque sprint, lorsque l'accès Supabase des automatisations aura été validé.</p><a class="external" id="go-public" href="index.html">Voir les comptes rendus publics ↗</a></section></aside></div>
+</section>
+</main></body></html>
