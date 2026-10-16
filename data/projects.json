@@ -1,0 +1,481 @@
+{
+  "schema_version": 1,
+  "last_verified": "2026-10-16",
+  "disclaimer": "États initiaux tirés des informations de pilotage connues au 16 octobre 2026. Les critères indiquent une préparation ou un contrôle, pas une preuve de lancement. À réévaluer à chaque sprint.",
+  "projects": [
+    {
+      "id": "pack-pro",
+      "short": "Business 01",
+      "name": "Pack Procédures Pro",
+      "symbol": "01",
+      "tagline": "Produits documentaires pour les professionnels des conciergeries.",
+      "repo": "Pack-Proc-dures-Pro",
+      "category": "Business digital",
+      "status": "Développement",
+      "color": "#9af7c4",
+      "description": "Boutique immersive en préparation, produits et contrôles métiers encore à valider.",
+      "objectives": [
+        {
+          "name": "Site de vente premium",
+          "desc": "Design original, pages produits, interactions et expérience mobile.",
+          "criteria": [
+            {
+              "name": "Dépôt GitHub créé",
+              "done": true
+            },
+            {
+              "name": "Accueil et suivi initial créés",
+              "done": true
+            },
+            {
+              "name": "Site commercial premium intégré et testé",
+              "done": false
+            },
+            {
+              "name": "Animation/3D utile et performante validée",
+              "done": false
+            },
+            {
+              "name": "Parcours d'achat test/sandbox contrôlé",
+              "done": false
+            }
+          ]
+        },
+        {
+          "name": "Fiabilité des packs",
+          "desc": "Procédures validées, tableurs testés et livraison fiable.",
+          "criteria": [
+            {
+              "name": "Corpus initial de procédures préparé",
+              "done": true
+            },
+            {
+              "name": "Validation métier indépendante",
+              "done": false
+            },
+            {
+              "name": "Test réel dans Excel",
+              "done": false
+            },
+            {
+              "name": "Recette de livraison complète",
+              "done": false
+            }
+          ]
+        },
+        {
+          "name": "Lancement commercial",
+          "desc": "Conformité, offre, paiement et réception de ventes.",
+          "criteria": [
+            {
+              "name": "Conditions juridiques et fiscales validées",
+              "done": false
+            },
+            {
+              "name": "Prix et offre approuvés",
+              "done": false
+            },
+            {
+              "name": "Paiement réel autorisé puis testé",
+              "done": false
+            },
+            {
+              "name": "Vente réelle confirmée",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "alerts": [
+        {
+          "title": "Validation des procédures",
+          "description": "Les supports sont encore des brouillons et demandent une validation professionnelle.",
+          "level": "warning"
+        }
+      ],
+      "decisions": [
+        {
+          "title": "Autoriser la commercialisation",
+          "description": "À examiner uniquement après la validation métier, juridique et technique.",
+          "state": "blocked"
+        }
+      ]
+    },
+    {
+      "id": "banque-ia",
+      "short": "Business 02",
+      "name": "Banque Outils IA",
+      "symbol": "02",
+      "tagline": "Une collection d'outils IA pratiques, structurés et vérifiables.",
+      "repo": "Banque-Outils-IA",
+      "category": "Business digital",
+      "status": "Développement",
+      "color": "#a99bff",
+      "description": "Site catalogue interactif en préparation, recherche utilisateur non encore menée sur le terrain.",
+      "objectives": [
+        {
+          "name": "Boutique interactive",
+          "desc": "Catalogue, démos, navigation immersive et animations calibrées.",
+          "criteria": [
+            {
+              "name": "Dépôt et vitrine informative créés",
+              "done": true
+            },
+            {
+              "name": "Catalogue interactif avec filtres",
+              "done": false
+            },
+            {
+              "name": "Démos et fiches produits accessibles",
+              "done": false
+            },
+            {
+              "name": "3D/animations et recette mobile",
+              "done": false
+            },
+            {
+              "name": "Checkout sandbox testé",
+              "done": false
+            }
+          ]
+        },
+        {
+          "name": "Qualité du produit",
+          "desc": "Outils utiles et suffisamment éprouvés pour des clients.",
+          "criteria": [
+            {
+              "name": "Kit interne d'évaluation V0.12 préparé",
+              "done": true
+            },
+            {
+              "name": "Entretiens utilisateurs réels réalisés",
+              "done": false
+            },
+            {
+              "name": "Utilité des outils validée sur le terrain",
+              "done": false
+            },
+            {
+              "name": "Notice RGPD finalisée",
+              "done": false
+            }
+          ]
+        },
+        {
+          "name": "Mise en vente",
+          "desc": "Offre, livraison, paiement et tests réels.",
+          "criteria": [
+            {
+              "name": "Prix/positionnement validés",
+              "done": false
+            },
+            {
+              "name": "Autorisation commerciale",
+              "done": false
+            },
+            {
+              "name": "Paiement réel testé",
+              "done": false
+            },
+            {
+              "name": "Première vente constatée",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "alerts": [
+        {
+          "title": "Tests utilisateurs à organiser",
+          "description": "Aucun entretien réel confirmé ; consentement et notice doivent être finalisés d'abord.",
+          "level": "warning"
+        }
+      ],
+      "decisions": [
+        {
+          "title": "Recrutement des testeurs",
+          "description": "Autorisation et protocole de consentement nécessaires avant tout contact.",
+          "state": "pending"
+        }
+      ]
+    },
+    {
+      "id": "ucp",
+      "short": "Startup",
+      "name": "Un Coup de Pouce",
+      "symbol": "UC",
+      "tagline": "La mise en relation dans le BTP, sans commission sur les travaux.",
+      "repo": "UnCoupdePouce",
+      "category": "Plateforme",
+      "status": "Prototype",
+      "color": "#dcb6ff",
+      "description": "Application de laboratoire et vitrine existantes. Tests de production et sécurité encore requis.",
+      "objectives": [
+        {
+          "name": "Développement de la plateforme",
+          "desc": "Parcours particuliers/professionnels et fonctionnalités essentielles.",
+          "criteria": [
+            {
+              "name": "Application de référence sur GitHub",
+              "done": true
+            },
+            {
+              "name": "Tests de référence documentés",
+              "done": true
+            },
+            {
+              "name": "Tests navigateur complets actuels",
+              "done": false
+            },
+            {
+              "name": "Correctifs critiques intégrés",
+              "done": false
+            },
+            {
+              "name": "Staging privé testé",
+              "done": false
+            }
+          ]
+        },
+        {
+          "name": "Sécurité et conformité",
+          "desc": "Données, authentification, sauvegardes et conformité.",
+          "criteria": [
+            {
+              "name": "Audits de sécurité initiaux",
+              "done": true
+            },
+            {
+              "name": "Sauvegarde chiffrée et restauration testées",
+              "done": false
+            },
+            {
+              "name": "Contrôles d'accès en conditions réelles",
+              "done": false
+            },
+            {
+              "name": "Dossier RGPD et autorisations validés",
+              "done": false
+            }
+          ]
+        },
+        {
+          "name": "Communication et lancement",
+          "desc": "Étude de marché, SEO, communication et validation.",
+          "criteria": [
+            {
+              "name": "Site vitrine développé",
+              "done": true
+            },
+            {
+              "name": "Positionnement marché validé",
+              "done": false
+            },
+            {
+              "name": "Stratégie 360 exécutée et mesurée",
+              "done": false
+            },
+            {
+              "name": "Ouverture publique approuvée",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "alerts": [
+        {
+          "title": "Environnement de production non validé",
+          "description": "Les tests locaux ne démontrent pas la sécurité d'une plateforme ouverte au public.",
+          "level": "warning"
+        }
+      ],
+      "decisions": [
+        {
+          "title": "Validation du lancement",
+          "description": "Recette, tarifs et sécurité doivent être approuvés avant l'ouverture.",
+          "state": "blocked"
+        }
+      ]
+    },
+    {
+      "id": "iagile",
+      "short": "Formation",
+      "name": "IAgile",
+      "symbol": "IA",
+      "tagline": "Quatre parcours pour maîtriser les usages professionnels de l'IA.",
+      "repo": "IAgile",
+      "category": "Formation",
+      "status": "Pré-lancement",
+      "color": "#82b5ff",
+      "description": "Contenus pédagogiques préparés ; espace privé et authentification encore à valider.",
+      "objectives": [
+        {
+          "name": "Formations premium",
+          "desc": "Qualité pédagogique, fichiers et évaluations des quatre parcours.",
+          "criteria": [
+            {
+              "name": "Plan de 47 modules préparé",
+              "done": true
+            },
+            {
+              "name": "Bibliothèque de ressources inventoriée",
+              "done": true
+            },
+            {
+              "name": "Validation pédagogique du premier parcours",
+              "done": false
+            },
+            {
+              "name": "Quatre parcours approuvés",
+              "done": false
+            }
+          ]
+        },
+        {
+          "name": "Academy sécurisée",
+          "desc": "Auth, stockage, cloisonnement et tests de recette.",
+          "criteria": [
+            {
+              "name": "Socle Supabase dédié au projet",
+              "done": true
+            },
+            {
+              "name": "Fichiers premium stockés en privé",
+              "done": false
+            },
+            {
+              "name": "Tests entre comptes autorisés",
+              "done": false
+            },
+            {
+              "name": "Recette complète et déploiement",
+              "done": false
+            }
+          ]
+        },
+        {
+          "name": "Marketing et vente",
+          "desc": "Vitrine, contenus organiques et validation commerciale.",
+          "criteria": [
+            {
+              "name": "Vitrine GitHub disponible dans le dépôt",
+              "done": true
+            },
+            {
+              "name": "Plan de communication exécuté",
+              "done": false
+            },
+            {
+              "name": "Vente autorisée",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "alerts": [
+        {
+          "title": "Accès premium non testé en conditions réelles",
+          "description": "Aucun parcours complet avec des comptes de recette n'est confirmé.",
+          "level": "warning"
+        }
+      ],
+      "decisions": [
+        {
+          "title": "Publication des formations premium",
+          "description": "Nécessite une recette d'accès sécurisée et une validation de l'offre.",
+          "state": "blocked"
+        }
+      ]
+    },
+    {
+      "id": "tcg",
+      "short": "Jeu",
+      "name": "TCG Thomas Deseur",
+      "symbol": "TC",
+      "tagline": "Un jeu de cartes numériques à collectionner.",
+      "repo": "TCG-Thomas-Deseur",
+      "category": "Jeu",
+      "status": "Développement",
+      "color": "#ffcf9c",
+      "description": "Jeu existant sur Floot ; travail d'évolution et de recette authentifiée toujours en cours.",
+      "objectives": [
+        {
+          "name": "Collection et règles",
+          "desc": "Illustrations, raretés, variantes et règles de collection.",
+          "criteria": [
+            {
+              "name": "Visuels et règles référencés",
+              "done": true
+            },
+            {
+              "name": "Collection de base et alternatives testées sur comptes",
+              "done": false
+            },
+            {
+              "name": "Règles de tirage et doublons validées en production",
+              "done": false
+            },
+            {
+              "name": "Secret préservé",
+              "done": true
+            }
+          ]
+        },
+        {
+          "name": "Fonctionnement applicatif",
+          "desc": "Boosters, codes cadeaux et sauvegarde.",
+          "criteria": [
+            {
+              "name": "Application Floot existante",
+              "done": true
+            },
+            {
+              "name": "Ouverture des boosters validée sur compte autorisé",
+              "done": false
+            },
+            {
+              "name": "Codes cadeaux intégrés et testés",
+              "done": false
+            },
+            {
+              "name": "Recette responsive et sécurité",
+              "done": false
+            }
+          ]
+        },
+        {
+          "name": "Communauté et lancement",
+          "desc": "Expérience joueur, contenu organique et communication.",
+          "criteria": [
+            {
+              "name": "Galerie des cartes publiques préparée",
+              "done": true
+            },
+            {
+              "name": "Plan éditorial testé",
+              "done": false
+            },
+            {
+              "name": "Communication publiée et évaluée",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "alerts": [
+        {
+          "title": "Quota Floot et recette des comptes",
+          "description": "Les limites gratuites et les tests authentifiés peuvent ralentir la finalisation.",
+          "level": "warning"
+        }
+      ],
+      "decisions": [
+        {
+          "title": "Validation finale du jeu",
+          "description": "Décider après les tests de collection et de sauvegarde.",
+          "state": "blocked"
+        }
+      ]
+    }
+  ]
+}
