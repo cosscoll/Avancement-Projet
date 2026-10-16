@@ -164,8 +164,8 @@
       "level": "critical"
     },
     {
-      "title": "Verrou Python non haché et CI absente",
-      "description": "Rectification UCP-QA-14 : requirements-lock.txt existe avec 22 versions exactes et les lanceurs Windows/macOS/Linux l'installent. Les hashes d'artefacts, la CI et Dependabot restent absents. Tests QA-14 : 5 réussites, 3 XFAIL. Les affirmations contraires de QA-11 sont supersédées.",
+      "title": "Verrou Python non haché ; CI proposée mais non exécutée",
+      "description": "UCP-QA-15 prépare une CI minimale en lecture seule avec deux checks stables (backend-tests et dom-tests) et Dependabot hebdomadaire. Le contrat isolé réussit 8 tests avec 2 XFAIL attendus. Aucun workflow n'est intégré ni exécuté sur GitHub Actions ; le verrou de 22 versions exactes reste sans hashes.",
       "level": "warning"
     },
     {
@@ -186,6 +186,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-14 ; QA-14 rectifie QA-11 sur l'existence du verrou Python",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-15 ; QA-14 rectifie QA-11 sur l'existence du verrou Python",
   "baseline_date": "2026-10-17"
 }
