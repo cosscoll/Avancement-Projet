@@ -48,6 +48,7 @@ create table if not exists public.control_alerts (
   title text not null check (char_length(title) between 1 and 200),
   details text,
   resolved boolean not null default false,
+  acknowledged_at timestamptz,
   created_at timestamptz not null default now(),
   resolved_at timestamptz
 );
