@@ -352,3 +352,17 @@ footer span{color:#b5c0cd}
  .info-disclosure summary{padding:15px}
  .info-disclosure-body{padding:8px 15px 15px}
 }
+
+
+/* Lisibilité vérifiée : secondaires au moins contrastés, onglets de projet tous visibles. */
+:root{--muted:#53677c}
+.page-eyebrow,.kicker,.nav-label,.nav-label.nav-section{color:#596d82}
+.page-description,.muted,.small.muted,.panel .muted{color:#566b81}
+.auto-copy span,.auto-lines>div span,.stat small{color:#596f84}
+.auto-last,.auto-foot,.info-disclosure-body{color:#526980}
+.project-card p,.activity-detail p,.alert-item p{color:#556c82}
+@media(max-width:760px){
+ .tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;border:0;overflow:visible;margin:16px 0 22px;padding:0}
+ .tab{min-width:0;white-space:normal;display:flex;align-items:center;justify-content:center;text-align:center;min-height:45px;font-size:11.5px;line-height:1.3;border:1px solid #e1e7ee;background:#fff;padding:9px 7px}
+ .tab.active{font-weight:800}
+}
