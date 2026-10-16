@@ -2,7 +2,7 @@
 'use strict';
 const q=(s)=>document.querySelector(s);
 const repoRoot='https://github.com/cosscoll/';
-const state={projects:[],disclaimer:'',sprints:{},runtime:{},commits:{},issues:null,selected:null,route:'overview',section:'overview',loading:false};
+const state={projects:[],disclaimer:'',sprints:{},runtime:{},commits:{},issues:null,selected:null,route:'automations',section:'overview',loading:false,catalog:[],catalogSelected:null,taskInfo:[],extraCommits:{},custom:[],activeQuery:''};
 const sections=[['overview','Vue générale'],['objectives','Objectifs'],['sprints','Sprints'],['alerts','Alertes'],['decisions','Décisions'],['instructions','Mes instructions']];
 const safe=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const limitedUrl=(url)=> /^https:\/\/(github\.com|docs\.google\.com|drive\.google\.com|cosscoll\.github\.io)\//.test(url||'')?url:'#';
@@ -19,8 +19,14 @@ function objectiveMarkup(goal){const n=progress(goal);const done=(goal.criteria|
 return `<div class="objective"><div class="objective-top"><div><strong>${safe(goal.name)}</strong><p>${safe(goal.desc)}</p></div>${progressHTML(n)}</div><div class="progressbar" role="progressbar" aria-label="${safe(goal.name)}" aria-valuemin="0" aria-valuemax="100" ${n!==null?'aria-valuenow="'+n+'"':''}><span style="width:${n??0}%"></span></div><p class="small">${done} critère(s) validé(s) sur ${(goal.criteria||[]).length} · Selon la grille de référence</p></div>`}
 const empty=(title,msg)=>`<div class="empty"><strong>${safe(title)}</strong><span>${safe(msg)}</span></div>`;
 function nav(){
-q('#project-nav').innerHTML=`<a class="nav-item ${state.route==='overview'?'active':''}" href="#/overview"><span class="nav-dot">◫</span> Vue générale</a>`+state.projects.map(p=>`<a class="nav-item ${state.route===p.id?'active':''}" href="#/${p.id}/overview"><span class="nav-dot">${safe(p.symbol)}</span>${safe(p.name)}</a>`).join('');
-q('#crumb').textContent=state.route==='overview'?'Vue générale':state.selected?.name||'Projet';
+const selected=state.route;
+const top=`<div class="nav-label">AUTOMATISATIONS</div><a class="nav-item ${selected==='automations'?'active':''}" href="#/automations"><span class="nav-dot">◈</span> Vue automatisations</a><a class="nav-item ${selected==='overview'?'active':''}" href="#/overview"><span class="nav-dot">◫</span> Vue générale</a>`;
+const acts=state.projects.map(p=>`<a class="nav-item ${selected===p.id?'active':''}" href="#/${p.id}/overview"><span class="nav-dot">${safe(p.symbol)}</span>${safe(p.name)}</a>`).join('');
+const extras=`<div class="nav-label nav-section">MES AUTRES PROJETS</div><a class="nav-item ${selected==='catalog'?'active':''}" href="#/catalog"><span class="nav-dot">⌑</span> Tous les projets <span class="mini-count">${state.catalog.length+state.custom.length}</span></a>`;
+const last=`<div class="nav-label nav-section">RACCOURCIS</div><a class="nav-item" href="prive.html"><span class="nav-dot">♙</span> Espace privé <span class="mini-count">Bêta</span></a><a class="nav-item" href="https://chatgpt.com/tasks" target="_blank" rel="noopener noreferrer"><span class="nav-dot">↗</span> Tâches ChatGPT</a>`;
+q('#project-nav').innerHTML=top+acts+extras+last;
+const bread=selected==='automations'?'Automatisations':selected==='overview'?'Vue générale':selected==='catalog'?'Autres projets':selected==='other'?state.catalogSelected?.name||'Projet':state.selected?.name||'Projet';
+q('#crumb').textContent=bread;
 }
 function mainHeading(label,title,desc,action=''){return `<div class="page-head"><div><div class="page-eyebrow">${safe(label)}</div><h1 class="page-title">${safe(title)}</h1><p class="page-description">${safe(desc)}</p></div>${action}</div>`}
 function alertMarkup(project,alert){return `<div class="alert-item"><div class="alert-icon" aria-hidden="true">!</div><div><b>${safe(alert.title)}</b><p>${safe(alert.description)}</p><span class="small muted">${safe(project.name)}</span></div></div>`}
@@ -28,11 +34,11 @@ function overview(){
 const alerts=state.projects.flatMap(p=>(statusFor(p).alerts||[]).map(a=>({p,a})));
 const ready=state.projects.filter(p=>overallProgress(p)===100).length;
 const sprintCount=Object.values(state.sprints).reduce((n,items)=>n+items.length,0);
-q('#main').innerHTML=mainHeading('MISSION CONTROL / 01','Vue générale','Un point de contrôle central pour cinq projets indépendants. Les données de départ sont à confirmer et les comptes rendus de sprint se synchroniseront progressivement.',`<a class="btn" href="https://github.com/cosscoll/Avancement-Projet" target="_blank" rel="noopener noreferrer">Dépôt central ↗</a>`)+
+q('#main').innerHTML=mainHeading('TABLEAU DE BORD / CHATGPT','Mon espace de pilotage','Automatisations en priorité, projets GitHub et projets ChatGPT rassemblés. Les données sont un suivi de référence, pas une connexion native à toutes les conversations.',`<a class="btn" href="https://github.com/cosscoll/Avancement-Projet" target="_blank" rel="noopener noreferrer">Dépôt central ↗</a>` )+automationsStrip()+
 `<section class="stat-grid" aria-label="Indicateurs"><div class="panel stat"><div class="kicker">Projets suivis</div><strong>${state.projects.length}</strong><small>Espaces indépendants</small></div><div class="panel stat"><div class="kicker">Automatisations déclarées</div><strong>5</strong><small>Statut à vérifier dans ChatGPT</small></div><div class="panel stat"><div class="kicker">Alertes de référence</div><strong>${alerts.length}</strong><small>À réévaluer après les sprints</small></div><div class="panel stat"><div class="kicker">Sprints centralisés</div><strong>${sprintCount}</strong><small>Historique réellement importé</small></div></section>
 <div class="hint"><strong>Lecture des pourcentages :</strong> progression de critères de recette connus, et non taux de rentabilité, qualité prouvée ou avancement temporel. Les états initiaux datent du 16/10/2026. Les éventuels sprints antérieurs ne sont pas encore migrés.</div>
 <div class="layout"><section class="stack"><div class="panel-heading"><h2 class="section-title">Espaces projets</h2></div><div class="project-grid">${state.projects.map(p=>`<a class="panel project-card" href="#/${p.id}/overview"><div class="project-icon" style="color:${safe(p.color||'#9af7c4')}">${safe(p.symbol)}</div><div class="footer-row"><span class="kicker">${safe(p.short)}</span>${badge(statusFor(p).status||p.status)}</div><h3>${safe(p.name)}</h3><p>${safe(p.tagline)}</p><div class="footer-row"><span class="small muted">Critères de suivi : ${overallProgress(p)??'non mesurés'}${overallProgress(p)!==null?'%':''}</span><span class="go">Ouvrir ↗</span></div></a>`).join('')}</div></section>
-<section class="stack"><div class="panel"><div class="panel-heading"><h2>Points de vigilance</h2>${badge(alerts.length+' suivis','warning')}</div>${alerts.length?alerts.slice(0,5).map(({p,a})=>alertMarkup(p,a)).join(''):empty('Aucune alerte','Aucun point de vigilance recensé')}</div><div class="panel"><div class="panel-heading"><h2>Derniers comptes rendus</h2></div>${recentSprintsMarkup()}</div></section></div>`;
+<section class="stack"><div class="panel"><div class="panel-heading"><h2>Points de vigilance</h2>${badge(alerts.length+' suivis','warning')}</div>${alerts.length?alerts.slice(0,5).map(({p,a})=>alertMarkup(p,a)).join(''):empty('Aucune alerte','Aucun point de vigilance recensé')}</div><div class="panel"><div class="panel-heading"><h2>Derniers comptes rendus</h2></div>${recentSprintsMarkup()}</div></section></div>`+`<section class="panel mt"><div class="panel-heading"><h2>Autres projets ChatGPT et GitHub</h2><a class="btn small" href="#/catalog">Tous les projets →</a></div><div class="project-grid">${state.catalog.slice(0,4).map(cardOther).join('')}</div></section>`;
 }
 function recentSprintsMarkup(){
 const records=Object.entries(state.sprints).flatMap(([id,list])=>list.map(s=>({...s,pid:id}))).sort((a,b)=>Date.parse(b.ended_at||b.started_at||0)-Date.parse(a.ended_at||a.started_at||0)).slice(0,5);
@@ -75,10 +81,114 @@ if(state.section==='sprints'&&!Object.hasOwn(state.commits,p.id))loadCommits(p);
 function bindInstructions(p){q('#instructions-form')?.addEventListener('submit',e=>{e.preventDefault();try{localStorage.setItem(draftKey(p.id),q('#draft-text').value);toast('Brouillon enregistré uniquement dans ce navigateur.')}catch{toast('Le navigateur ne permet pas d’enregistrer ce brouillon.')}});q('#copy-draft')?.addEventListener('click',async()=>{const t=q('#draft-text').value;try{await navigator.clipboard.writeText(t);toast('Texte copié. Non envoyé aux automatisations.')}catch{q('#draft-text').select();toast('Sélectionne et copie le texte manuellement.')}});
 q('#publish-draft')?.addEventListener('click',()=>{const body=q('#draft-text').value.trim();if(!body){toast('Écris une consigne non confidentielle avant de poursuivre.');return}if(!confirm('Cette consigne sera PUBLIQUE sur GitHub. Aucun secret ou donnée privée ? Tu devras confirmer son envoi sur GitHub.'))return;const title=body.split('\n')[0].slice(0,72)||'Nouvelle consigne';try{localStorage.setItem(draftKey(p.id),body)}catch{}window.location.href=issueUrl(p.id,title,body,'CONSIGNE')})}
 async function loadCommits(p){let result=null;try{const r=await fetch('https://api.github.com/repos/cosscoll/'+encodeURIComponent(p.repo)+'/commits?per_page=6',{headers:{Accept:'application/vnd.github+json'}});if(r.ok)result=await r.json()}catch{}state.commits[p.id]=Array.isArray(result)?result:null;if(state.selected?.id===p.id&&state.section==='sprints'){const el=q('#github-activity');if(el)el.innerHTML=renderCommits(state.commits[p.id])}}
-function resolve(){const segments=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean);const id=segments[0]||'overview';state.route=state.projects.some(x=>x.id===id)?id:'overview';state.selected=state.projects.find(x=>x.id===state.route)||null;state.section=sections.some(x=>x[0]===segments[1])?segments[1]:'overview';nav();state.route==='overview'?overview():renderProject(state.selected);q('.sidebar').classList.remove('open');q('#toggle-nav').setAttribute('aria-expanded','false');scrollTo({top:0,behavior:'instant'})}
+function taskReport(t){
+ const p=state.projects.find(p=>p.id===t.id),s=state.sprints[t.id]||[],last=s.slice().sort((a,b)=>Date.parse(b.ended_at||0)-Date.parse(a.ended_at||0))[0],newAlerts=(p&&statusFor(p).alerts||[]).length,link=p?`#/${p.id}/sprints`:'#/automations';
+ return `<article class="automation-card panel"><div class="auto-head"><span class="auto-symbol">${safe(p?.symbol||'◉')}</span><div class="auto-copy"><strong>${safe(t.title)}</strong><span>${safe(t.schedule)}</span></div>${badge(t.active_at_last_check?'Actif au dernier contrôle':'Non confirmé',t.active_at_last_check?'':'warning')}</div><div class="auto-lines"><div><span>Dernier rapport centralisé</span><b>${last?safe(dateFR(last.ended_at||last.started_at)):'En attente'}</b></div><div><span>Alertes de référence</span><b>${newAlerts}</b></div><div><span>Compte rendus stockés</span><b>${s.length}</b></div></div><p class="auto-last">${last?safe(last.summary||'Bilan disponible'):'Aucun sprint encore enregistré dans ce tableau de bord.'}</p><div class="auto-foot"><a href="${link}" class="external">Voir le projet et ses rapports →</a><a href="https://github.com/cosscoll/Avancement-Projet/blob/main/data/sprints/${safe(t.id)}.json" target="_blank" rel="noopener noreferrer" class="external">JSON ↗</a></div></article>`;
+}
+
+function automationsStrip(){
+ const tasks=state.taskInfo;
+ return `<section aria-label="Automatisations" class="automation-feature"><div class="panel-heading"><div><div class="page-eyebrow">PRIORITÉ / TÂCHES CHATGPT</div><h2>Automatisations</h2><p class="muted small">Suivi des rapports réellement synchronisés et des horaires enregistrés.</p></div><a href="#/automations" class="btn small">Voir toutes les tâches →</a></div><div class="automation-list">${tasks.map(t=>taskReport(t)).join('')}</div></section>`;
+}
+
+function automationsView(){
+ const tasks=state.taskInfo;
+ const count=tasks.filter(t=>t.active_at_last_check).length;
+ const total=Object.values(state.sprints).reduce((n,v)=>n+v.length,0);
+ q('#main').innerHTML=mainHeading('CHATGPT / TÂCHES PROGRAMMÉES','Mes automatisations','Centre de suivi prioritaire : fréquence, rapports, blocages et prochaines actions. Les contrôles sont datés ; ce site ne peut pas activer ou désactiver les tâches ChatGPT.',`<a class="btn" href="https://chatgpt.com/tasks" target="_blank" rel="noopener noreferrer">Gérer dans ChatGPT ↗</a>`)+
+ `<div class="stat-grid"><div class="panel stat"><div class="kicker">Automatisations suivies</div><strong>${tasks.length}</strong><small>Espaces dédiés</small></div><div class="panel stat"><div class="kicker">Actives au dernier contrôle</div><strong>${count}</strong><small>Pas une lecture en temps réel</small></div><div class="panel stat"><div class="kicker">Rapports centralisés</div><strong>${total}</strong><small>Fichiers de sprint GitHub</small></div><div class="panel stat"><div class="kicker">Dernière vérification</div><strong style="font-size:21px">16/10</strong><small>Statut à confirmer dans ChatGPT</small></div></div>
+ <div class="hint"><strong>Source : instantané du 16 octobre 2026.</strong> Les horaires et états affichés ne proviennent pas d'une API ChatGPT temps réel. Pour activer, désactiver ou reprogrammer une tâche, utilise ChatGPT directement. Le site peut afficher les bilans déposés sur GitHub, pas exécuter les automatisations à ta place.</div>
+ <div class="automation-list">${tasks.map(t=>taskReport(t)).join('')}</div>
+ <div class="panel mt"><div class="panel-heading"><h2>Comment transmettre une instruction</h2></div><p class="muted">Ouvre l'espace d'un projet, onglet <strong>Mes instructions</strong>, puis confirme sur GitHub une issue publique non confidentielle. L'automatisation concernée a pour consigne de consulter ces issues au début de sa prochaine exécution et de publier un rapport à la fin. Les brouillons locaux ne sont pas lus.</p><p class="small muted">Les autorisations Work/Codex, dépenses, changement de tâches et décisions sensibles doivent être données directement dans un chat.</p></div>`;
+}
+
+function safeChatLink(url){
+ try{const v=new URL(url);return v.protocol==='https:'&&(['chatgpt.com','chat.openai.com'].includes(v.hostname))&&v.username===''&&v.password==='' ? v.href:''}catch{return''}
+}
+
+function customList(){
+ try{const z=JSON.parse(localStorage.getItem('control-custom-projects-v1')||'[]');return Array.isArray(z)?z.filter(x=>typeof x.id==='string'&&typeof x.name==='string').slice(0,50):[]}catch{return[]}
+}
+
+function localChatLink(id){
+ try{return safeChatLink(localStorage.getItem('control-chat-link-'+id)||'')}catch{return''}
+}
+
+function cardOther(p){
+const link=p.repo?`https://github.com/cosscoll/${encodeURIComponent(p.repo)}`:'';
+return `<a href="#/other/${encodeURIComponent(p.id)}" class="panel project-card"><div class="project-icon">${safe(p.symbol||'◇')}</div><div class="footer-row"><span class="kicker">${safe(p.category||'Projet')}</span>${badge(p.repo?'GitHub':'À relier',p.repo?'neutral':'warning')}</div><h3>${safe(p.name)}</h3><p>${safe(p.summary||'Projet ajouté manuellement')}</p><div class="footer-row"><span class="small muted">${link?'Dépôt GitHub accessible':'Aucun dépôt lié'}</span><span class="go">Consulter →</span></div></a>`;
+}
+
+function catalogView(){
+ const all=[...state.catalog,...state.custom]; const needle=state.activeQuery.trim().toLocaleLowerCase('fr');
+ const found=all.filter(p=>!needle||[p.name,p.summary,p.repo,p.category].some(v=>(v||'').toLocaleLowerCase('fr').includes(needle)));
+ q('#main').innerHTML=mainHeading('CHATGPT + GITHUB / CATALOGUE','Mes autres projets','Retrouve les projets qui ne disposent pas d’automatisation dédiée, leur dépôt GitHub, leurs dernières modifications et tes notes. Les espaces ChatGPT sans lien connu sont signalés.',`<a class="btn" href="https://github.com/cosscoll?tab=repositories" target="_blank" rel="noopener noreferrer">Mes dépôts GitHub ↗</a>`)+
+ `<div class="hint"><strong>Connexion partielle :</strong> les dépôts GitHub accessibles ont été inventoriés. Il n'existe pas ici de synchronisation native des projets, conversations ou messages privés ChatGPT. Tu peux enregistrer localement un lien ChatGPT et préparer une consigne à copier dans la conversation.</div>
+ <div class="catalog-actions"><label for="catalog-search" class="visually-hidden">Rechercher un projet</label><input id="catalog-search" type="search" placeholder="Rechercher un projet, domaine, dépôt..." value="${safe(state.activeQuery)}"><a href="#/automations" class="btn">Automatisations ↗</a></div>
+ <div id="catalog-results"><div class="project-grid">${found.map(cardOther).join('')||empty('Aucun projet','Modifie la recherche ou ajoute ton projet.')}</div><p class="small muted">${found.length} projet(s) affiché(s) · ${state.catalog.length} pré-référencés · ${state.custom.length} ajouté(s) ici.</p></div>
+ <section class="panel mt"><div class="panel-heading"><h2>Ajouter un autre projet ChatGPT</h2>${badge('Local à ce navigateur','warning')}</div><p class="small muted">Pour un projet absent, ajoute son nom et éventuellement un dépôt Github et un lien de projet ChatGPT. Les données sont enregistrées sur cet appareil uniquement : pas de synchronisation avec ton compte ChatGPT.</p><form id="catalog-add" class="catalog-add"><label>Nom du projet<input name="name" maxlength="90" required placeholder="Ex. Mon nouveau projet"></label><label>Dépôt GitHub (facultatif)<input name="repo" maxlength="100" placeholder="Nom du dépôt sous cosscoll"></label><label>Lien ChatGPT (facultatif)<input name="chaturl" type="url" placeholder="https://chatgpt.com/g/..."></label><button type="submit" class="btn primary">Ajouter à mon espace</button></form></section>`;
+ const input=q('#catalog-search');
+ input?.addEventListener('input',e=>{state.activeQuery=e.target.value;const needle=state.activeQuery.trim().toLocaleLowerCase('fr'),res=all.filter(p=>!needle||[p.name,p.summary,p.repo,p.category].some(v=>(v||'').toLocaleLowerCase('fr').includes(needle)));q('#catalog-results').innerHTML=`<div class="project-grid">${res.map(cardOther).join('')||empty('Aucun projet','Modifie la recherche.')}</div><p class="small muted">${res.length} résultat(s)</p>`});
+ q('#catalog-add')?.addEventListener('submit',e=>{
+   e.preventDefault();const form=e.currentTarget,fd=new FormData(form),name=String(fd.get('name')||'').trim(),rawrepo=String(fd.get('repo')||'').trim(),url=String(fd.get('chaturl')||'').trim();
+   if(!name){toast('Renseigne un nom.');return}if(rawrepo&&!/^[A-Za-z0-9_.-]{1,100}$/.test(rawrepo)){toast('Nom de dépôt GitHub invalide.');return}if(url&&!safeChatLink(url)){toast('Lien ChatGPT non valide (chatgpt.com).');return}
+   let id='local-'+Date.now().toString(36);let p={id,name,repo:rawrepo||null,category:'Projet ajouté',symbol:'+',summary:'Projet ajouté depuis ce navigateur.',source:'local'};state.custom.push(p);
+   try{localStorage.setItem('control-custom-projects-v1',JSON.stringify(state.custom));if(url)localStorage.setItem('control-chat-link-'+id,safeChatLink(url))}catch{toast('Stockage local désactivé : projet non persistant.')}
+   location.hash='#/other/'+id;toast('Projet ajouté localement.');
+ });
+}
+
+function extraIssuesUrl(p,title,body){
+return issueUrl(p.id,title,body,'CONSIGNE');
+}
+
+async function loadOtherCommits(p){
+const el=q('#other-commits');if(!el||!p.repo)return;
+try{
+ const r=await fetch('https://api.github.com/repos/cosscoll/'+encodeURIComponent(p.repo)+'/commits?per_page=6',{headers:{Accept:'application/vnd.github+json'},cache:'no-store'});
+ if(!r.ok)throw Error('HTTP '+r.status);
+ const commits=await r.json();
+ if(!Array.isArray(commits))throw Error('Réponse inattendue');
+ el.innerHTML=commits.length?commits.map(c=>`<div class="update-row"><div><strong>${safe((c.commit?.message||'Mise à jour').split('\n')[0].slice(0,110))}</strong><div class="small muted">${safe(dateFR(c.commit?.committer?.date))} · ${safe((c.sha||'').slice(0,7))}</div></div><a class="external" href="${safe(limitedUrl(c.html_url))}" target="_blank" rel="noopener noreferrer">Commit ↗</a></div>`).join(''):empty('Aucun commit','Aucune mise à jour retournée');
+}catch{el.innerHTML=empty('Lecture GitHub indisponible','Le dépôt reste consultable depuis GitHub.')}}
+
+function otherView(p){
+const chat=localChatLink(p.id),repourl=p.repo?'https://github.com/cosscoll/'+encodeURIComponent(p.repo):'';
+const saved=(()=>{try{return localStorage.getItem('control-notes-'+p.id)||''}catch{return''}})();
+q('#main').innerHTML=mainHeading('MES AUTRES PROJETS / '+String(p.category||'projet').toUpperCase(),p.name,p.summary||'Espace projet à compléter.',`<div class="project-heading-meta">${badge(p.repo?'Dépôt GitHub relié':'Sans dépôt GitHub',p.repo?'neutral':'warning')}${repourl?`<a class="btn" href="${repourl}" target="_blank" rel="noopener noreferrer">Dépôt ↗</a>`:''}${chat?`<a class="btn primary" href="${safe(chat)}" target="_blank" rel="noopener noreferrer">Ouvrir dans ChatGPT ↗</a>`:''}</div>`)+
+`<div class="hint"><strong>Projet sans automatisation dédiée.</strong> Les notes enregistrées ici ne déclenchent aucune conversation ChatGPT. Une issue GitHub publique peut servir de trace, mais pour demander à ChatGPT de travailler, ouvre le projet dans ChatGPT et transmets-lui l'instruction.</div>
+<div class="layout"><div class="stack">
+<section class="panel"><div class="panel-heading"><h2>Mon espace de travail</h2>${badge('Notes locales','warning')}</div><form class="note-form" id="other-note-form"><label for="other-note">Commentaire, conseil ou consigne</label><textarea id="other-note" maxlength="8000" placeholder="Écris une note pour ce projet (conservée seulement dans ce navigateur).">${safe(saved)}</textarea><div class="foot"><p>Pas de synchronisation automatique avec ChatGPT.</p><div class="extra-links"><button type="submit" class="btn">Enregistrer localement</button><button type="button" id="copy-other" class="btn primary">Copier pour ChatGPT</button><button type="button" id="publish-other" class="btn">Créer une issue GitHub ↗</button></div></div></form></section>
+<section class="panel"><div class="panel-heading"><h2>Derniers commits</h2><span class="small muted">${safe(p.repo||'Aucun dépôt relié')}</span></div>${p.repo?`<div id="other-commits">${renderCommits(undefined)}</div>`:empty('GitHub non connecté','Aucun dépôt trouvé pour cet espace projet.')}</section>
+</div><aside class="stack">
+<section class="panel"><h2>Accès à la conversation ChatGPT</h2><p class="muted">Colle le lien de ton projet ou de sa conversation ChatGPT : il sera mémorisé localement pour y accéder rapidement.</p><form id="chat-link-form" class="note-form"><label for="chat-link">URL ChatGPT</label><input id="chat-link" type="url" value="${safe(chat)}" placeholder="https://chatgpt.com/g/..."><div class="foot"><button class="btn primary" type="submit">Enregistrer le lien</button></div></form><p class="small muted">Ce lien n'autorise pas le site à lire les conversations ou à envoyer des messages directement.</p></section>
+<section class="panel"><h2>Interagir avec le projet</h2><p class="muted">Tu peux consulter son code, sauvegarder des notes, créer une demande publique suivie dans GitHub ou ouvrir directement la conversation ChatGPT si tu l'as reliée.</p>${repourl?`<a class="external" href="${repourl}/issues" target="_blank" rel="noopener noreferrer">Issues de son dépôt ↗</a>`:''}<p class="small muted">Les notes sensibles ne doivent pas être transmises à GitHub public. Aucune automatisation n'est créée à partir de cette page.</p></section></aside></div>`;
+q('#other-note-form')?.addEventListener('submit',e=>{e.preventDefault();try{localStorage.setItem('control-notes-'+p.id,q('#other-note').value);toast('Note conservée dans ce navigateur.')}catch{toast('Enregistrement local indisponible.')}});
+q('#copy-other')?.addEventListener('click',async()=>{const value=q('#other-note').value;try{await navigator.clipboard.writeText(value);toast('Instruction copiée, colle-la dans le chat du projet.')}catch{q('#other-note').select();toast('Texte sélectionné, copie-le manuellement.')}});
+q('#publish-other')?.addEventListener('click',()=>{const body=q('#other-note').value.trim();if(!body){toast('Ajoute une consigne non confidentielle.');return}if(!confirm('Cette issue GitHub sera PUBLIQUE. Aucune donnée privée ?'))return;const dest=extraIssuesUrl(p,body.split('\n')[0].slice(0,70)||'Suivi du projet',body);window.location.href=dest});
+q('#chat-link-form')?.addEventListener('submit',e=>{e.preventDefault();let value=q('#chat-link').value.trim();if(value&&!safeChatLink(value)){toast('Seules les URL HTTPS ChatGPT sont acceptées.');return}try{value?localStorage.setItem('control-chat-link-'+p.id,safeChatLink(value)):localStorage.removeItem('control-chat-link-'+p.id);toast('Lien enregistré dans ton navigateur.');otherView(p)}catch{toast('Stockage du navigateur indisponible.')}});
+if(p.repo)loadOtherCommits(p);
+}
+
+function resolve(){
+const segments=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean),id=segments[0]||'automations';
+state.route=id==='automations'||id==='overview'||id==='catalog'||id==='other'||state.projects.some(x=>x.id===id)?id:'automations';
+state.selected=state.projects.find(x=>x.id===state.route)||null;
+state.catalogSelected=state.route==='other'?[...state.catalog,...state.custom].find(p=>p.id===segments[1])||null:null;
+state.section=sections.some(x=>x[0]===segments[1])?segments[1]:'overview';
+nav();
+if(state.route==='automations')automationsView();else if(state.route==='overview')overview();else if(state.route==='catalog')catalogView();else if(state.route==='other')state.catalogSelected?otherView(state.catalogSelected):catalogView();else renderProject(state.selected);
+q('.sidebar').classList.remove('open');q('#toggle-nav').setAttribute('aria-expanded','false');scrollTo({top:0,behavior:'instant'});
+}
 function initialNotice(){q('#sync-indicator').innerHTML='<span class="pulse"></span> Référence du 16/10/2026'}
-async function init(){const data=await json('data/projects.json',null);if(!data||!Array.isArray(data.projects)){q('#main').innerHTML=empty('Données indisponibles','Impossible de charger data/projects.json depuis cet hébergement.');return}state.projects=data.projects;state.disclaimer=data.disclaimer||'';const ids=state.projects.map(p=>p.id);
+async function init(){
+const [data,others,auto]=await Promise.all([json('data/projects.json',null),json('data/catalog.json',{projects:[]}),json('data/automations.json',{tasks:[]})]);
+if(!data||!Array.isArray(data.projects)){q('#main').innerHTML=empty('Données indisponibles','Impossible de charger data/projects.json.');return}
+state.projects=data.projects;state.disclaimer=data.disclaimer||'';state.catalog=Array.isArray(others.projects)?others.projects:[];state.taskInfo=Array.isArray(auto.tasks)?auto.tasks:[];state.custom=customList();
+const ids=state.projects.map(p=>p.id);
 await Promise.all(ids.map(async id=>{const [s,d]=await Promise.all([json('data/sprints/'+id+'.json',[]),json('data/status/'+id+'.json',null)]);state.sprints[id]=Array.isArray(s)?s:[];if(d&&typeof d==='object')state.runtime[id]=d}));
-initialNotice();resolve();window.addEventListener('hashchange',resolve);q('#toggle-nav').addEventListener('click',()=>{const side=q('.sidebar'),open=side.classList.toggle('open');q('#toggle-nav').setAttribute('aria-expanded',String(open))});}
+initialNotice();resolve();window.addEventListener('hashchange',resolve);q('#toggle-nav').addEventListener('click',()=>{const side=q('.sidebar'),open=side.classList.toggle('open');q('#toggle-nav').setAttribute('aria-expanded',String(open))});
+}
+
 init();
 })();
