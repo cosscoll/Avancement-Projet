@@ -25,7 +25,7 @@ Avant toute création, consulter le prix réel avec `get_cost`, prévenir l'util
 5. Déployer la fonction `control-delete-account` avec vérification JWT activée et variable d'environnement `CONTROL_ALLOWED_ORIGIN=https://cosscoll.github.io`. La clé de service ne doit exister que dans les secrets du fournisseur, **jamais dans les fichiers GitHub**.
 6. Activer les options de protection disponibles : confirmation des e-mails, prévention des abus, CAPTCHA/rate limits si la fonctionnalité est ouverte à des tiers, restrictions des redirections.
 7. Tester les deux comptes **A et B** (voir protocole de recette) en créant de véritables sessions distinctes. Si un test d'isolation échoue, **stopper l'ouverture**.
-8. Renseigner `config/cloud.json` avec `enabled:true`, `supabaseUrl` et la **clé publishable publique** `sb_publishable_...`, `accountDeletionEnabled:true` **uniquement après** la validation de la suppression du compte.
+8. Renseigner `config/cloud.json` avec `enabled:true`, `supabaseUrl` et la **clé publishable publique** `sb_publishable_...`. Garder `allowRegistration:false`, `allowGoogleLogin:false` et `accountDeletionEnabled:false` pendant les premiers tests sur invitation. Activer chaque drapeau **uniquement après** validation du flux correspondant (création publique, OAuth Google, suppression du compte).
 9. Vérifier l'inscription, la connexion par lien magique, le login Google, la création des projets, le chargement multi-appareils, l'import volontaire et les sauvegardes. Tester sur Android et iOS.
 10. Préparer politiques de confidentialité, mentions légales, CGU, politique de conservation/suppression et gestion des données, et réaliser une validation sécurité / RGPD avant l'ouverture publique.
 
@@ -65,3 +65,11 @@ Ne pas prétendre que la nouvelle adresse est déjà une application publiquemen
 ## Coûts et limites
 
 Le code n'engage aucune dépense. Créer un nouveau projet Supabase, héberger des données, expédier des e-mails, utiliser un fournisseur IA/API ou déployer des fonctions peut avoir des limites gratuites ou des coûts variables. Le propriétaire doit vérifier et autoriser tout coût non nul au préalable.
+
+## Interrupteurs de lancement (fail-closed)
+
+- `enabled:false` : aucune page de connexion active, écran de préparation uniquement.
+- `enabled:true`, `allowRegistration:false` : authentification e-mail de comptes existants/invités, aucune création libre de comptes via OTP.
+- `allowRegistration:true` : inscription libre par e-mail ; n'activer qu'après validation des protections et des obligations légales.
+- `allowGoogleLogin:true` : afficher le bouton Google **uniquement** quand le fournisseur OAuth est correctement configuré. OAuth Google peut créer des comptes ; ne pas activer pendant une bêta fermée sans mécanisme d'invitation supplémentaire.
+- `accountDeletionEnabled:true` : exposer la suppression définitive uniquement si l'Edge Function JWT vérifiée est déployée et testée.
