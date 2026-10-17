@@ -29,7 +29,17 @@ function mount(root,options={}){
   e.preventDefault();const q=wrap.querySelector('textarea').value;
   let context='';if(options.getContext&&options.hasConsent?.()){try{context=clean(options.getContext())}catch{}}
   const answer=advise(q,context);
-  wrap.querySelector('[data-coach-result]').innerHTML='<h3>'+esc(answer.title)+'</h3><ol>'+answer.steps.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol><p><strong>Pour préciser :</strong> '+esc(answer.question)+'</p><small>'+esc(answer.disclaimer)+'</small>';
+  wrap.querySelector('[data-coach-result]').innerHTML='<h3>'+esc(answer.title)+'</h3><ol>'+answer.steps.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol><p><strong>Pour préciser :</strong> '+esc(answer.question)+'</p><small>'+esc(answer.disclaimer)+'</small><div class="loc-chat-actions"><button type="button" data-coach-use>Approfondir avec l’IA</button><button type="button" data-coach-copy>Copier le plan</button></div>';
+  const plan=answer.title+'\n'+answer.steps.map((step,i)=>(i+1)+'. '+step).join('\n')+'\nQuestion : '+answer.question;
+  wrap.querySelector('[data-coach-copy]').addEventListener('click',async()=>{
+   try{await navigator.clipboard.writeText(plan)}
+   catch{const field=wrap.querySelector('textarea');field.value=plan;field.focus();field.select()}
+  });
+  wrap.querySelector('[data-coach-use]').addEventListener('click',()=>{
+   const field=root.querySelector('#loc-question');if(!field)return;
+   field.value=('Aide-moi à appliquer ce plan : '+plan).slice(0,1400);
+   field.focus();root.querySelector('#loc-form')?.scrollIntoView?.({behavior:'smooth',block:'center'});
+  });
  });
 }
 window.CONTROL_COACH={advise,mount};
