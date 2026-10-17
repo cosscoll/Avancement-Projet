@@ -1,0 +1,45 @@
+/* CONTROL · Laboratoire IA: light mobile first tools, no third-party UI. */
+.lab-shell{max-width:1110px;margin:0 auto 35px;color:#253952}
+.lab-hero{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin:10px 0 21px;flex-wrap:wrap}
+.lab-hero h1{font-size:clamp(28px,4.8vw,39px);letter-spacing:-.8px;margin:8px 0 9px}
+.lab-hero p{max-width:730px;line-height:1.55;color:#5d718c;font-size:14px;margin:4px 0 6px}
+.lab-overline{font-size:11px;font-weight:850;letter-spacing:1.2px;color:#496c94}
+.lab-pill{border:1px solid #d2e0ef;background:#ebf2fa;color:#35587c;border-radius:11px;padding:10px 13px;font-size:12px;font-weight:750}
+.lab-caution{background:#f0f5fc;border:1px solid #d7e2f0;border-radius:13px;color:#385776;padding:14px 17px;font-size:12px;line-height:1.55;margin:16px 0}
+.lab-context{display:flex;align-items:center;gap:15px;background:#fff;border:1px solid #e2eaf2;padding:14px 17px;border-radius:13px;flex-wrap:wrap;margin:14px 0 19px}
+.lab-context label{min-width:230px;flex:1;font-size:12px;font-weight:750}
+.lab-context span{font-size:12px;color:#78899a;flex:1.7;line-height:1.48}
+.lab-tabs{display:flex;gap:7px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:thin;border-bottom:1px solid #dce6f0;overscroll-behavior:contain}
+.lab-tabs button{min-height:43px;font-size:12px;white-space:nowrap;padding:10px 13px;border:1px solid #dce5ef;border-radius:11px;background:#fff;color:#52708e;font-weight:780;cursor:pointer}
+.lab-tabs button[aria-selected=true]{background:#274969;border-color:#274969;color:#fff}
+.lab-content{border:1px solid #e0e7ef;border-radius:17px;padding:20px 22px;background:#fff;margin:16px 0}
+.lab-content h2{font-size:22px;margin:4px 0 11px;letter-spacing:-.4px}
+.lab-content h3{font-size:16px;margin:12px 0}
+.lab-help{font-size:12px;color:#667b91;line-height:1.58;margin:8px 0 17px}
+.lab-field{display:flex;flex-direction:column;flex:1;gap:6px;min-width:0;font-size:12px;font-weight:720;color:#46617d;margin:12px 0}
+.lab-input,.lab-select,.lab-output{width:100%;border:1px solid #d7e1ec;border-radius:10px;background:#fff;color:#203952;padding:11px 12px;font:400 13px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;min-height:43px}
+textarea.lab-input{height:136px;resize:vertical;min-height:95px}
+.lab-output{height:260px;resize:vertical;margin:8px 0 12px;background:#f9fbfd;white-space:pre-wrap}
+.lab-row{display:flex;gap:12px;align-items:stretch}
+.lab-row>.lab-field{flex:1;min-width:0}
+.lab-row textarea.lab-input{min-height:180px}
+.lab-checkboxes{display:flex;flex-direction:column;gap:10px;margin:16px 0;color:#4a657f;font-size:12px}
+.lab-checkboxes label{display:flex;align-items:flex-start;gap:10px}
+.lab-checkboxes input{appearance:auto;width:16px;height:16px;min-height:0;margin:1px 0;flex:0 0 auto}
+.lab-primary,.lab-actions button,.lab-content>button{border:1px solid #d3dfeb;border-radius:10px;padding:10px 14px;min-height:41px;color:#315576;background:#fff;font:730 12px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
+.lab-primary{background:#294c72!important;border-color:#294c72!important;color:#fff!important}
+.lab-actions{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0 6px}
+.lab-actions button:hover,.lab-content button:hover{border-color:#819fbf}
+.lab-result{margin-top:20px;border:1px solid #dde7f3;background:#f8fafc;border-radius:12px;padding:15px 16px}
+.lab-result h3{color:#2e5278}
+.lab-alert{font-size:12px;line-height:1.5;color:#2e7252;min-height:14px;margin:10px 0}
+.lab-alert.is-error{color:#a33f3f}
+.lab-table{border-collapse:collapse;width:100%;font-size:12px;background:white;margin:11px 0}
+.lab-table th,.lab-table td{border-bottom:1px solid #e2eaf2;padding:10px 8px;text-align:left;overflow-wrap:anywhere}
+.lab-table th{background:#ecf3fa;color:#355572}
+.lab-good{color:#366d4e}
+.lab-warn{color:#986623}
+.lab-check-results{padding-left:22px;line-height:1.65;font-size:12px}
+.lab-check-results li{margin:7px 0}
+.lab-shell :is(button,input,textarea,select):focus-visible{outline:3px solid #7fa6dc;outline-offset:2px}
+@media(max-width:680px){.lab-content{padding:14px}.lab-context{padding:12px}.lab-row{flex-direction:column;gap:0}.lab-row>.lab-field{width:100%}.lab-result{padding:12px}.lab-hero h1{font-size:29px}.lab-content h2{font-size:19px}.lab-tabs button{font-size:11px;padding:9px 11px}.lab-table th,.lab-table td{padding:9px 5px}.lab-hero{gap:8px}}
