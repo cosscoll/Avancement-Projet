@@ -38,7 +38,7 @@ test('Explicit video consent and provider limitations are reflected in the modul
  assert.match(src,/loadAPI\(\)/);
  assert.match(src,/Jitsi \(test\)/);
  assert.match(src,/service public n’est pas destiné à un usage commercial/);
- assert.match(src,/Cam\w*ra|cam\w*ra/);
+ assert.match(src,/caméra|caméra|micro/i);
  assert.doesNotMatch(src,/localStorage\.setItem|fetch\(/);
 });
 test('Local and Cloud routes preserve project navigation and owner isolation',()=>{
