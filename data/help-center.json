@@ -1,0 +1,770 @@
+{
+  "version": 1,
+  "updated_at": "2026-10-17",
+  "scope": "CONTROL personal and staged Cloud help; informational, no model API.",
+  "greeting": "Bonjour ! Je suis l’assistant CONTROL. Je peux te guider dans l’application, expliquer les fonctionnalités, les outils IA et la mise en ligne de sites. Pose-moi une question.",
+  "disclosure": "Je réponds à partir de la documentation de CONTROL. Je ne suis pas un modèle IA connecté à tes conversations privées, et je n'effectue aucune action payante.",
+  "entries": [
+    {
+      "id": "demarrage",
+      "title": "Découvrir CONTROL",
+      "keywords": [
+        "commencer",
+        "début",
+        "démarrer",
+        "accueil",
+        "application",
+        "présentation",
+        "navigation",
+        "premières",
+        "étapes"
+      ],
+      "answer": "CONTROL regroupe tes projets, les liens vers tes espaces IA, les missions, les automatisations et des ressources pour apprendre et publier tes sites. Commence par ouvrir « Projets », puis choisis un projet ou crée-en un. Les données synchronisées dépendent de la version utilisée.",
+      "steps": [
+        "1. Ouvre « Projets ».",
+        "2. Sélectionne ou crée ton projet.",
+        "3. Ajoute un espace IA, une ressource ou une mission.",
+        "4. Utilise « À traiter » pour suivre les étapes."
+      ],
+      "route": "projects"
+    },
+    {
+      "id": "projets-creer",
+      "title": "Créer et organiser un projet",
+      "keywords": [
+        "créer",
+        "projet",
+        "nouveau",
+        "espace",
+        "ajouter",
+        "projet",
+        "démarrer",
+        "organiser",
+        "dossier",
+        "nom"
+      ],
+      "answer": "Dans CONTROL, un projet regroupe tes liens IA, ressources, missions, décisions et échéances. Selon la version, l'ajout se fait depuis la liste « Mes projets ». Un projet CONTROL n'est pas automatiquement un projet ChatGPT ou Claude.",
+      "steps": [
+        "1. Ouvre la page « Projets ».",
+        "2. Choisis « Nouveau projet » ou « Ajouter un projet ».",
+        "3. Renseigne son nom et ses objectifs.",
+        "4. Associe ensuite tes espaces IA via leurs URL."
+      ],
+      "route": "projects"
+    },
+    {
+      "id": "projets-transfert",
+      "title": "Retrouver mes projets après changement de téléphone",
+      "keywords": [
+        "changer",
+        "téléphone",
+        "synchronisation",
+        "ordinateur",
+        "transfert",
+        "appareil",
+        "perdre",
+        "mes",
+        "projets",
+        "sauvegarde"
+      ],
+      "answer": "Sur la version personnelle, certaines données sont stockées dans le navigateur : elles ne se synchronisent pas automatiquement entre appareils. Utilise l'export JSON puis l'import pour les transférer. La version CONTROL Cloud prévoit une synchronisation par compte, mais ses inscriptions ne sont pas encore ouvertes.",
+      "steps": [
+        "1. Ouvre « Tous les outils » → « Sauvegardes ».",
+        "2. Exporte tes données (avec mot de passe si elles sont sensibles).",
+        "3. Sur l'autre appareil, importe le fichier avec son mot de passe.",
+        "4. Vérifie que les projets et liens sont visibles."
+      ],
+      "route": "backup"
+    },
+    {
+      "id": "chatgpt",
+      "title": "Associer un projet ChatGPT",
+      "keywords": [
+        "chatgpt",
+        "projet",
+        "conversation",
+        "lier",
+        "connecter",
+        "historiques",
+        "chats",
+        "openai"
+      ],
+      "answer": "CONTROL peut enregistrer un lien direct vers ton projet ChatGPT pour l'ouvrir dans l'application officielle. Cette liaison par URL ne donne pas à CONTROL accès au contenu de tes conversations privées ni aux automatisations ChatGPT.",
+      "steps": [
+        "1. Ouvre le projet souhaité sur chatgpt.com.",
+        "2. Copie l'adresse HTTPS de ce projet.",
+        "3. Dans ton projet CONTROL, ouvre « Espaces IA ».",
+        "4. Associe le lien ChatGPT et utilise le bouton de redirection."
+      ],
+      "route": "projects"
+    },
+    {
+      "id": "claude",
+      "title": "Associer Claude et ses projets",
+      "keywords": [
+        "claude",
+        "projet",
+        "conversations",
+        "anthropic",
+        "espace",
+        "connecter",
+        "synchroniser"
+      ],
+      "answer": "Tu peux associer l'adresse d'un projet Claude à un projet CONTROL et ouvrir son espace d'origine. Les messages Claude privés ne sont pas automatiquement transférés dans CONTROL. Les fonctionnalités API avancées nécessitent une intégration officiellement autorisée.",
+      "steps": [
+        "1. Copie l'adresse du projet dans claude.ai.",
+        "2. Depuis ton projet CONTROL, ouvre « Espaces IA ».",
+        "3. Enregistre ce lien dans la fiche Claude.",
+        "4. Ouvre Claude pour consulter les conversations."
+      ],
+      "route": "projects"
+    },
+    {
+      "id": "gemini",
+      "title": "Associer Gemini ou NotebookLM",
+      "keywords": [
+        "gemini",
+        "google",
+        "notebooklm",
+        "projet",
+        "conversation",
+        "carnet"
+      ],
+      "answer": "CONTROL peut mémoriser des liens vers Gemini ou NotebookLM. Ces liens facilitent la navigation, mais ne connectent pas directement le contenu des conversations à CONTROL.",
+      "steps": [
+        "1. Ouvre Gemini ou NotebookLM depuis ton compte Google.",
+        "2. Copie l'URL HTTPS pertinente.",
+        "3. Dans CONTROL, ajoute ce lien aux espaces IA ou ressources.",
+        "4. Vérifie que tu es connecté au bon compte Google."
+      ],
+      "route": "projects"
+    },
+    {
+      "id": "codex",
+      "title": "Travailler avec Codex",
+      "keywords": [
+        "codex",
+        "git",
+        "code",
+        "programme",
+        "développer",
+        "repository",
+        "github",
+        "travail",
+        "missions"
+      ],
+      "answer": "Tu peux enregistrer un lien Codex, préparer des missions et consulter les modifications GitHub publiques. CONTROL ne peut pas déclencher automatiquement un environnement Codex privé depuis le site statique.",
+      "steps": [
+        "1. Crée une mission dans CONTROL.",
+        "2. Copie ses instructions.",
+        "3. Ouvre Codex depuis son interface officielle.",
+        "4. Reporte le résultat et les preuves dans CONTROL."
+      ],
+      "route": "missions"
+    },
+    {
+      "id": "ia-connexion",
+      "title": "Pourquoi mes conversations IA ne se synchronisent pas ?",
+      "keywords": [
+        "connecter",
+        "compte",
+        "intelligence",
+        "artificielle",
+        "synchroniser",
+        "chats",
+        "conversations",
+        "automatiquement",
+        "api",
+        "oauth"
+      ],
+      "answer": "Associer un lien IA est différent d'une connexion API. Les applications ChatGPT, Claude et Gemini ne donnent pas automatiquement accès à leurs historiques privés via une API grand public. CONTROL n'invente pas de synchronisation : les accès réels exigent une autorisation officielle adaptée.",
+      "steps": [
+        "Les liens ouvrent le service d'origine.",
+        "Les comptes abonnés et les accès API peuvent être distincts.",
+        "Ne transmets jamais ton mot de passe ou des cookies de session à CONTROL."
+      ],
+      "route": "projects"
+    },
+    {
+      "id": "gestion",
+      "title": "Chef de projet central CONTROL IA",
+      "keywords": [
+        "chef",
+        "projet",
+        "ia",
+        "central",
+        "question",
+        "synthèse",
+        "où",
+        "en",
+        "est",
+        "avancement",
+        "bilan",
+        "projets"
+      ],
+      "answer": "« CONTROL IA » rassemble les actions, missions, rapports et références déjà disponibles dans l'application. Dans la version actuelle, les synthèses sont structurées localement ; elles ne sont pas des réponses d'un modèle de langage connecté à tous tes comptes IA.",
+      "steps": [
+        "1. Ouvre « CONTROL IA ».",
+        "2. Sélectionne un projet ou l'ensemble de tes projets.",
+        "3. Pose une question sur son suivi.",
+        "4. Examine la date et la source des informations."
+      ],
+      "route": "manager"
+    },
+    {
+      "id": "inbox",
+      "title": "Boîte de réception À traiter",
+      "keywords": [
+        "inbox",
+        "boîte",
+        "réception",
+        "notification",
+        "alerte",
+        "action",
+        "urgence",
+        "validation"
+      ],
+      "answer": "La rubrique « À traiter » réunit les actions enregistrées, échéances et missions à vérifier. Elle ne lit pas automatiquement les messages privés Gmail, Claude ou ChatGPT sans intégration autorisée.",
+      "steps": [
+        "1. Ouvre « À traiter ».",
+        "2. Classe tes actions par urgence.",
+        "3. Marque les éléments traités.",
+        "4. Consulte les applications externes pour leurs notifications privées."
+      ],
+      "route": "inbox"
+    },
+    {
+      "id": "missions",
+      "title": "Commander plusieurs IA",
+      "keywords": [
+        "mission",
+        "multi",
+        "ia",
+        "coordonner",
+        "orchestrer",
+        "agents",
+        "assigner",
+        "attribuer",
+        "travail"
+      ],
+      "answer": "La page « Missions » prépare et suit des instructions destinées à ChatGPT, Claude, Gemini, Codex ou d'autres IA. Pour l'instant, tu copies les consignes et les transmets dans leurs applications ; CONTROL ne les exécute pas automatiquement.",
+      "steps": [
+        "1. Ouvre « Missions ».",
+        "2. Choisis un projet, un objectif et l'IA concernée.",
+        "3. Copie le prompt et ouvre le fournisseur.",
+        "4. Enregistre le résultat et les tests avant de clôturer."
+      ],
+      "route": "missions"
+    },
+    {
+      "id": "automations",
+      "title": "Créer ou modifier une automatisation",
+      "keywords": [
+        "automatisation",
+        "programmer",
+        "automatique",
+        "routine",
+        "tâche",
+        "planifiée",
+        "fréquence",
+        "horaire",
+        "modifier",
+        "pause"
+      ],
+      "answer": "Les fiches « Automatisations » décrivent les objectifs, règles, contraintes, fréquence et modèle déclaré. Les changements enregistrés dans CONTROL ne modifient pas directement les tâches sur ChatGPT, Claude ou Gemini : utilise la redirection officielle.",
+      "steps": [
+        "1. Ouvre « Automatisations ».",
+        "2. Choisis le fournisseur et l'automatisation.",
+        "3. Consulte ou prépare les nouvelles instructions.",
+        "4. Ouvre la gestion officielle pour appliquer réellement les modifications."
+      ],
+      "route": "automations"
+    },
+    {
+      "id": "quotas",
+      "title": "Suivre les quotas et coûts IA",
+      "keywords": [
+        "tokens",
+        "crédits",
+        "limité",
+        "illimité",
+        "abonnement",
+        "coût",
+        "tarif",
+        "prix",
+        "budget",
+        "payer",
+        "dépenses"
+      ],
+      "answer": "CONTROL peut conserver un suivi déclaratif des coûts et règles de quotas, mais ne connaît pas en direct les limites internes des abonnements ChatGPT, Claude ou Gemini. Les quotas et prix doivent être vérifiés auprès des fournisseurs.",
+      "steps": [
+        "1. Ouvre « Budget et quotas ».",
+        "2. Renseigne les montants réellement facturés.",
+        "3. Définis des restrictions de mission.",
+        "4. Vérifie les limites depuis les tableaux de bord officiels."
+      ],
+      "route": "budget"
+    },
+    {
+      "id": "git",
+      "title": "Mettre en ligne sur GitHub Pages",
+      "keywords": [
+        "publier",
+        "héberger",
+        "déployer",
+        "site",
+        "github",
+        "pages",
+        "statique",
+        "html",
+        "css",
+        "javascript",
+        "url"
+      ],
+      "answer": "GitHub Pages publie des sites statiques. Il faut pousser les fichiers dans un dépôt GitHub, activer Pages dans les paramètres, puis vérifier l'URL et les tests. GitHub Pages n'héberge pas un backend serveur Node ou PHP.",
+      "steps": [
+        "1. Vérifie le fichier index.html et le build.",
+        "2. Envoie le site dans un dépôt GitHub.",
+        "3. Active Settings → Pages ou un workflow GitHub Actions.",
+        "4. Vérifie l'URL, les chemins et HTTPS."
+      ],
+      "route": "deploy"
+    },
+    {
+      "id": "ionos",
+      "title": "Publier sur IONOS",
+      "keywords": [
+        "ionos",
+        "hebergement",
+        "hébergement",
+        "sftp",
+        "ftp",
+        "deploy",
+        "now",
+        "publier",
+        "mettre",
+        "en",
+        "ligne"
+      ],
+      "answer": "Avec IONOS, tu peux soit relier GitHub via Deploy Now, soit transférer les fichiers de production dans ton hébergement Web par SFTP. La méthode dépend de ton contrat et du type de site. CONTROL fournit deux tutoriels distincts ; aucun compte IONOS n'est actuellement connecté.",
+      "steps": [
+        "1. Ouvre « Mise en ligne ».",
+        "2. Choisis « IONOS Deploy Now » ou « IONOS Hébergement Web (SFTP) ».",
+        "3. Suis les étapes et vérifie les frais éventuels.",
+        "4. Teste le domaine, HTTPS et la version publiée."
+      ],
+      "route": "deploy"
+    },
+    {
+      "id": "vercel",
+      "title": "Publier sur Vercel",
+      "keywords": [
+        "vercel",
+        "next",
+        "react",
+        "ssr",
+        "déployer",
+        "frontend",
+        "publication",
+        "héberger"
+      ],
+      "answer": "Vercel convient aux sites et applications frontend modernes, notamment React et Next.js. Importe ton dépôt, configure la compilation et les variables côté serveur, puis teste une preview avant toute publication en production. La connexion Vercel dans ChatGPT ne signifie pas que CONTROL y est connecté.",
+      "steps": [
+        "1. Vérifie que ton build fonctionne.",
+        "2. Importe le dépôt dans Vercel.",
+        "3. Configure le framework et les variables autorisées.",
+        "4. Teste une preview puis publie après validation."
+      ],
+      "route": "deploy"
+    },
+    {
+      "id": "hebergeur-choisir",
+      "title": "Choisir le bon hébergeur",
+      "keywords": [
+        "quel",
+        "hébergeur",
+        "mieux",
+        "choisir",
+        "comparatif",
+        "github",
+        "ionos",
+        "netlify",
+        "vercel",
+        "cloudflare",
+        "render",
+        "railway",
+        "firebase",
+        "site"
+      ],
+      "answer": "Pour un site HTML/CSS/JS, commence par comparer GitHub Pages, Netlify ou Cloudflare Pages. Pour React/Next.js avec rendu serveur, examine Vercel. Pour un site PHP hébergé chez IONOS, utilise la méthode SFTP adaptée. Pour un véritable backend, il faut un hébergement serveur ou des fonctions compatibles.",
+      "steps": [
+        "1. Identifie : statique, React SPA, SSR, PHP ou backend.",
+        "2. Compare les coûts, quotas, régions et limites.",
+        "3. Consulte le tutoriel de l'hébergeur adapté.",
+        "4. Publie une preview et vérifie les résultats."
+      ],
+      "route": "deploy"
+    },
+    {
+      "id": "deploy-check",
+      "title": "Vérifier une mise en ligne",
+      "keywords": [
+        "site",
+        "404",
+        "erreur",
+        "blanc",
+        "image",
+        "css",
+        "cassé",
+        "build",
+        "publier",
+        "bug",
+        "domaine",
+        "ssl",
+        "https",
+        "dns"
+      ],
+      "answer": "Avant de considérer un site publié, vérifie son URL, HTTPS, les liens internes, les images, la version mobile, les formulaires et l'absence de fichiers secrets. Consulte aussi le statut du workflow et conserve une procédure de retour arrière.",
+      "steps": [
+        "1. Ouvre l'URL en navigation privée.",
+        "2. Teste accueil, pages internes, mobile et formulaires.",
+        "3. Consulte les logs de l'hébergeur et du build.",
+        "4. Confirme le domaine/HTTPS et note le commit publié."
+      ],
+      "route": "deploy"
+    },
+    {
+      "id": "domaine",
+      "title": "Connecter un nom de domaine",
+      "keywords": [
+        "domaine",
+        "dns",
+        "cname",
+        "enregistrement",
+        "a",
+        "certificat",
+        "https",
+        "ssl",
+        "redirection",
+        "url"
+      ],
+      "answer": "L'association d'un domaine dépend de l'hébergeur. Tu configures les enregistrements DNS demandés (CNAME ou A/AAAA selon le service), puis vérifies le certificat HTTPS. Évite de modifier tes DNS sans avoir confirmé la configuration exacte du fournisseur.",
+      "steps": [
+        "1. Vérifie d'abord l'URL technique.",
+        "2. Lis la documentation de domaine du fournisseur.",
+        "3. Configure uniquement les DNS nécessaires.",
+        "4. Attends leur propagation et contrôle HTTPS."
+      ],
+      "route": "deploy"
+    },
+    {
+      "id": "outils",
+      "title": "Trouver des outils IA",
+      "keywords": [
+        "bibliothèque",
+        "librairie",
+        "outils",
+        "ia",
+        "plugins",
+        "extension",
+        "github",
+        "framework",
+        "trouver",
+        "chercher",
+        "ressources"
+      ],
+      "answer": "La bibliothèque d'outils IA de CONTROL regroupe 87 références, réparties en neuf catégories et quatre parcours IAgile. Tu peux filtrer par usage, difficulté et type d'accès, ouvrir la documentation officielle et enregistrer une ressource dans ton projet.",
+      "steps": [
+        "1. Ouvre « Bibliothèques IA ».",
+        "2. Choisis le parcours de formation.",
+        "3. Recherche une technologie ou un cas d'usage.",
+        "4. Enregistre les outils utiles dans tes ressources."
+      ],
+      "route": "catalog"
+    },
+    {
+      "id": "kits",
+      "title": "Utiliser les kits et prompts IA",
+      "keywords": [
+        "kit",
+        "tutoriel",
+        "prompt",
+        "exemple",
+        "modèle",
+        "agent",
+        "3d",
+        "workflow",
+        "apprendre"
+      ],
+      "answer": "Les bibliothèques proposent douze kits pratiques avec une combinaison d'outils et un prompt à copier. Ce sont des points de départ pour expérimenter et non les contenus complets des formations IAgile.",
+      "steps": [
+        "1. Ouvre « Bibliothèques IA ».",
+        "2. Descends jusqu'aux kits pratiques.",
+        "3. Choisis un kit adapté à ton objectif.",
+        "4. Copie son prompt dans l'IA que tu utilises."
+      ],
+      "route": "catalog"
+    },
+    {
+      "id": "ia-local",
+      "title": "Installer une IA locale",
+      "keywords": [
+        "ollama",
+        "lm",
+        "studio",
+        "local",
+        "open",
+        "webui",
+        "sans",
+        "internet",
+        "ordinateur",
+        "modele",
+        "local",
+        "confidentialité"
+      ],
+      "answer": "Pour découvrir les IA locales, explore Ollama, LM Studio et Open WebUI dans la bibliothèque. Les capacités dépendent du matériel et des modèles téléchargés. Une installation locale peut éviter l'envoi de certaines données vers une API, mais ne garantit pas automatiquement la confidentialité de toutes les intégrations.",
+      "steps": [
+        "1. Ouvre « Bibliothèques IA ».",
+        "2. Recherche « Ollama » ou « LM Studio ».",
+        "3. Vérifie les besoins matériels et les licences du modèle.",
+        "4. Teste avec des données non sensibles."
+      ],
+      "route": "catalog"
+    },
+    {
+      "id": "fichiers",
+      "title": "Retrouver les documents et liens",
+      "keywords": [
+        "ressource",
+        "document",
+        "fichier",
+        "drive",
+        "googledrive",
+        "dossier",
+        "lien",
+        "bibliothèque",
+        "enregistrer"
+      ],
+      "answer": "CONTROL enregistre des liens vers tes documents, projets GitHub et ressources. La version actuelle ne recherche pas dans le contenu privé de Google Drive sans connexion officielle autorisée.",
+      "steps": [
+        "1. Ouvre un projet.",
+        "2. Va dans « Ressources ».",
+        "3. Ajoute le titre et l'adresse HTTPS du document.",
+        "4. Retrouve-le via la bibliothèque ou la recherche globale."
+      ],
+      "route": "library"
+    },
+    {
+      "id": "github-suivi",
+      "title": "Voir si mon site a été déployé",
+      "keywords": [
+        "github",
+        "action",
+        "workflow",
+        "build",
+        "publication",
+        "état",
+        "déploiement",
+        "vérifier",
+        "commit",
+        "tests"
+      ],
+      "answer": "CONTROL peut consulter à la demande les commits, pull requests et workflows publics d'un dépôt GitHub référencé. Une action verte ne suffit pas à démontrer que toutes les pages d'un site fonctionnent ; une recette sur l'URL publiée reste nécessaire.",
+      "steps": [
+        "1. Ouvre « Activité et développement ».",
+        "2. Sélectionne ton projet GitHub.",
+        "3. Lance la vérification des commits, PR et workflows publics.",
+        "4. Ouvre le site publié et réalise les tests fonctionnels."
+      ],
+      "route": "activity"
+    },
+    {
+      "id": "securite",
+      "title": "Sécurité et confidentialité",
+      "keywords": [
+        "sécurité",
+        "secret",
+        "mot",
+        "de",
+        "passe",
+        "token",
+        "api",
+        "cookie",
+        "oauth",
+        "privé",
+        "rgpd",
+        "données"
+      ],
+      "answer": "Ne copie pas de mot de passe, cookie de session, token API, clé privée ou fichier .env dans CONTROL, les prompts IA ou un dépôt public. Les données de CONTROL personnel restent principalement dans le navigateur. La version Cloud nécessitera une base privée sécurisée et des règles d'accès par compte.",
+      "steps": [
+        "Vérifie les autorisations et la confidentialité de chaque service.",
+        "N'accorde que les accès nécessaires.",
+        "Avant de partager un projet, retire les secrets et les données personnelles."
+      ],
+      "route": "settings"
+    },
+    {
+      "id": "compte",
+      "title": "Créer un compte CONTROL Cloud",
+      "keywords": [
+        "inscription",
+        "compte",
+        "créer",
+        "utilisateur",
+        "login",
+        "connexion",
+        "email",
+        "google",
+        "cloud",
+        "accessible",
+        "public"
+      ],
+      "answer": "CONTROL Cloud est en cours de préparation. Les inscriptions sont volontairement désactivées tant que sa base privée indépendante, l'authentification et les contrôles de séparation des comptes ne sont pas vérifiés. CONTROL personnel reste utilisable sans compte Cloud.",
+      "steps": [
+        "1. Utilise pour le moment CONTROL personnel.",
+        "2. Lorsque Cloud ouvrira, une connexion par e-mail sera proposée.",
+        "3. Ne saisis aucun mot de passe sur un formulaire non encore activé."
+      ],
+      "route": "account"
+    },
+    {
+      "id": "cloud",
+      "title": "Pourquoi CONTROL Cloud affiche mise en service ?",
+      "keywords": [
+        "cloud",
+        "indisponible",
+        "mise",
+        "en",
+        "service",
+        "accès",
+        "inscription",
+        "désactivée",
+        "impossible",
+        "se",
+        "connecter"
+      ],
+      "answer": "Cet écran est volontaire : CONTROL Cloud n'accepte pas encore de nouveaux comptes. Le développement du frontend est préparé, mais la base de données CONTROL et ses tests multi-utilisateurs doivent être terminés avant l'ouverture publique.",
+      "steps": [
+        "Pour travailler maintenant, ouvre CONTROL personnel.",
+        "Les données personnelles du propriétaire ne sont pas automatiquement visibles par d'autres utilisateurs."
+      ],
+      "route": "account"
+    },
+    {
+      "id": "iapprendre",
+      "title": "Lien avec les formations IAgile",
+      "keywords": [
+        "iagile",
+        "formation",
+        "élève",
+        "cours",
+        "bibliothèque",
+        "formation",
+        "complément",
+        "abonnement"
+      ],
+      "answer": "CONTROL est conçu comme un outil pratique complémentaire aux formations IAgile. Les bibliothèques et tutoriels publics permettent d'expérimenter ; les contenus complets des formations ne sont pas automatiquement accessibles dans CONTROL. Des accès élève CONTROL pourront être attribués à l'avenir.",
+      "steps": [
+        "Explore les bibliothèques par parcours.",
+        "Utilise un kit pratique pour démarrer.",
+        "Vérifie les conditions spécifiques de l'accès IAgile une fois proposé."
+      ],
+      "route": "catalog"
+    },
+    {
+      "id": "notifications",
+      "title": "Notifications et rappels",
+      "keywords": [
+        "notification",
+        "prévenir",
+        "rappel",
+        "push",
+        "email",
+        "alerte",
+        "échéance",
+        "automatique"
+      ],
+      "answer": "CONTROL affiche les échéances et les éléments à traiter. La version personnelle peut demander une permission de notification locale, mais elle ne garantit pas de notification en arrière-plan lorsque l'application est fermée.",
+      "steps": [
+        "1. Ouvre « À traiter » et le Calendrier.",
+        "2. Active les notifications locales si ton navigateur les autorise.",
+        "3. Pour des alertes hors application, une infrastructure de notifications sera nécessaire."
+      ],
+      "route": "inbox"
+    },
+    {
+      "id": "sauvegarde",
+      "title": "Sauvegarder et exporter ses données",
+      "keywords": [
+        "exporter",
+        "importer",
+        "restauration",
+        "sauvegarder",
+        "json",
+        "chiffrer",
+        "télécharger",
+        "backup"
+      ],
+      "answer": "Dans CONTROL personnel, la rubrique Sauvegardes permet d'exporter les données enregistrées localement, éventuellement avec chiffrement. Conserve ton mot de passe et vérifie le fichier avant de réinitialiser ton navigateur.",
+      "steps": [
+        "1. Ouvre « Sauvegardes ».",
+        "2. Choisis un mot de passe fort si tu veux chiffrer.",
+        "3. Télécharge le fichier JSON.",
+        "4. Conserve-le en lieu sûr et teste l'import."
+      ],
+      "route": "backup"
+    },
+    {
+      "id": "bugs",
+      "title": "Signaler un bug ou un fonctionnement anormal",
+      "keywords": [
+        "bug",
+        "problème",
+        "site",
+        "ne",
+        "marche",
+        "pas",
+        "erreur",
+        "lent",
+        "écran",
+        "chargement",
+        "assistance",
+        "aide",
+        "support"
+      ],
+      "answer": "Commence par identifier la page concernée et le message d'erreur. Recharge CONTROL, puis vérifie ta connexion et le bon compte. Si le problème persiste, copie le nom de la page, les étapes de reproduction et l'heure de l'incident dans ton message de support. Ne partage jamais de clé, cookie ni mot de passe.",
+      "steps": [
+        "1. Note l'appareil et le navigateur.",
+        "2. Indique le chemin exact dans CONTROL.",
+        "3. Explique ce qui était attendu et ce qui s'est passé.",
+        "4. Fournis une capture sans données sensibles si nécessaire."
+      ],
+      "route": "projects"
+    },
+    {
+      "id": "integrations",
+      "title": "Connecter GitHub et Google Drive",
+      "keywords": [
+        "plugin",
+        "connecter",
+        "intégration",
+        "synchronisation",
+        "github",
+        "google",
+        "drive",
+        "vercel",
+        "API",
+        "service",
+        "compte",
+        "autorisation"
+      ],
+      "answer": "Les ressources GitHub publiques peuvent être consultées directement dans certains écrans CONTROL. Les accès privés Google Drive, Gmail, Vercel ou aux comptes IA nécessitent des intégrations officielles et des autorisations propres à chaque utilisateur. Les boutons de redirection ne constituent pas une connexion.",
+      "steps": [
+        "1. Consulte « Connexions » et les ressources de ton projet.",
+        "2. Utilise uniquement les autorisations officielles des fournisseurs.",
+        "3. Vérifie les droits requis avant toute future synchronisation."
+      ],
+      "route": "settings"
+    }
+  ]
+}
