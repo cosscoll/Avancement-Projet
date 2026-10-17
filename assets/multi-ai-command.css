@@ -1,0 +1,49 @@
+/* CONTROL — Poste de commande Claude / Gemini. Calm, compact and mobile-first. */
+.cmd-shell{max-width:1100px;margin:0 auto 35px;color:#293c54}
+.cmd-top{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin:10px 0 16px}
+.cmd-top h1{font-size:clamp(27px,4vw,37px);letter-spacing:-.7px;margin:5px 0}
+.cmd-top p{font-size:14px;color:#61768e;margin:5px 0}
+.cmd-eyebrow{font-size:10px;letter-spacing:1px;color:#66809d;font-weight:850}
+.cmd-tag{font-size:12px;background:#edf3fa;color:#3b5b7f;padding:9px 12px;border:1px solid #d9e6f2;border-radius:10px;white-space:nowrap}
+.cmd-hint{padding:13px 16px;border:1px solid #dbe6f2;background:#f0f5fa;border-radius:12px;font-size:12px;color:#4a6684;line-height:1.55;margin:16px 0}
+.cmd-builder{background:#fff;border:1px solid #dfe7ef;border-radius:15px;padding:18px}
+.cmd-builder label,.cmd-resultform label{display:block;margin-bottom:13px;font-size:12px;font-weight:750;color:#47607b}
+.cmd-input{display:block;margin-top:6px;width:100%;background:#fff;border:1px solid #d5e0eb;border-radius:10px;min-height:43px;padding:10px 12px;color:#223b54;font:400 13px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+textarea.cmd-input{min-height:92px;resize:vertical}
+.cmd-toggle{display:flex;align-items:center;flex-wrap:wrap;gap:13px;font-size:12px;color:#4f647d;margin:10px 0 17px}
+.cmd-toggle>span{font-weight:750}
+.cmd-toggle label{display:flex;align-items:center;gap:6px;margin:0}
+.cmd-toggle input{appearance:auto;width:16px;height:16px;min-height:auto;margin:0}
+.cmd-primary{display:inline-flex;align-items:center;justify-content:center;background:#294c70;border:1px solid #294c70;border-radius:10px;padding:11px 14px;min-height:43px;color:#fff;font-weight:760;font-size:12px;cursor:pointer}
+.cmd-primary:disabled{opacity:.6;cursor:wait}
+.cmd-small{font-size:11px;color:#72869b;line-height:1.45;margin:7px 0 0}
+.cmd-main{margin-top:22px}
+.cmd-sectiontop{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.cmd-sectiontop h2{font-size:21px;margin:0}
+.cmd-sectiontop span{color:#70859c;font-size:11px}
+.cmd-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.cmd-column{border:1px solid #e0e8f0;border-radius:14px;padding:14px;background:#fff;min-width:0}
+.cmd-provider{display:flex;align-items:center;gap:10px;border-bottom:1px solid #e8eef4;padding:0 2px 13px;margin-bottom:13px}
+.cmd-avatar{width:38px;height:38px;border-radius:11px;background:#eaf1f9;display:grid;place-items:center;color:#365d86;font-weight:820}
+.cmd-provider strong{display:block;font-size:16px}
+.cmd-provider small{display:block;color:#8495a8;font-size:11px}
+.cmd-item{border:1px solid #e3eaf1;border-radius:12px;padding:14px;margin:10px 0;background:#fafcfe}
+.cmd-item-head{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;align-items:start}
+.cmd-item-head strong{font-size:13px;line-height:1.5;flex:1;min-width:130px;overflow-wrap:anywhere}
+.cmd-status{font-size:10px;font-weight:750;color:#536d8a;background:#edf3fa;padding:6px 8px;border-radius:8px}
+.cmd-meta{display:block;color:#8192a8;font-size:10px;margin-top:8px}
+.cmd-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.cmd-actions button,.cmd-actions a{border:1px solid #ccdaea;background:#fff;color:#355b85;padding:8px 10px;border-radius:9px;min-height:37px;font-size:11px;font-weight:730;cursor:pointer;text-decoration:none}
+.cmd-actions button:hover,.cmd-actions a:hover{background:#edf4fc}
+.cmd-resultform{margin-top:13px;border-top:1px solid #dde7f1;padding-top:13px}
+.cmd-actual-result{font-size:12px;margin:13px 0 0;padding:10px;border-radius:8px;background:#fff;border:1px solid #e2e9f0}
+.cmd-actual-result summary{cursor:pointer;font-weight:700}
+.cmd-actual-result pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:360px;overflow-y:auto;font:400 12px/1.5 system-ui;margin:12px 0}
+.cmd-empty{color:#71849b;font-size:13px;line-height:1.5;padding:14px;background:#f9fbfd;border-radius:10px}
+.cmd-guide{margin-top:22px;color:#5f7690;font-size:12px}
+.cmd-guide details{padding:13px 14px;border:1px solid #e0e8f0;background:#f9fbfe;border-radius:11px}
+.cmd-guide summary{cursor:pointer;font-weight:770;color:#425f7f}
+.cmd-message{min-height:20px;font-size:12px;color:#2f7455;margin:12px 0}
+.cmd-message.cmd-error{color:#a13f3f}
+.cmd-shell :is(button,input,textarea,select):focus-visible{outline:3px solid #8eafe0;outline-offset:2px}
+@media(max-width:660px){.cmd-columns{grid-template-columns:1fr}.cmd-column{padding:11px}.cmd-builder{padding:14px}.cmd-top h1{font-size:28px}.cmd-tag{font-size:11px}.cmd-sectiontop{align-items:flex-start}.cmd-sectiontop span{max-width:140px;text-align:right}.cmd-actions>*{flex:1;text-align:center}}
