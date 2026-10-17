@@ -458,5 +458,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T013146Z",
+    "started_at": "2026-10-17T01:31:46Z",
+    "ended_at": "2026-10-17T01:44:00Z",
+    "summary": "UCP-QA-17 : smoke réel du serveur local réussi et kit Playwright bureau/mobile préparé ; le navigateur réel reste bloqué par l'absence de moteur téléchargeable.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat ; HEAD main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Serveur lancé sur base SQLite synthétique : GET / 200, en-têtes CSP/nosniff/DENY/no-store présents, Host externe 403 et marqueurs UI confirmés.",
+      "Kit Playwright exact 1.62.1 avec lockfile, profils bureau/Pixel 7, trois rôles, sécurité et overflow mobile préparé ; contrat 8 réussites, 2 XFAIL stricts, syntaxe shell/JS valide ; archive SHA256 fa5f075d8519a1275b2ab3c084d9b761ff2444574aaffa1016e158230dd63ac0."
+    ],
+    "blockers": [
+      "Aucun binaire Chromium/Firefox/WebKit disponible ; cinq téléchargements Chromium ont renvoyé des archives vides/invalides, donc aucun test navigateur réel exécuté.",
+      "HEAD / renvoie 405 ; GET / fonctionne et le comportement HEAD devra être décidé pour un futur frontal.",
+      "Kit non intégré ; aucun staging/appareil/lecteur d'écran/performance ; état du clone Windows dev/ucp-codex inconnu."
+    ],
+    "next": "Exécuter le kit QA-17 sur le clone Windows ou une CI autorisée disposant de Chromium, conserver les premiers échecs comme preuves, puis corriger sur branche dédiée sans fusion automatique.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
