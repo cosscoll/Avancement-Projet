@@ -138,6 +138,7 @@ function library(){const refs=[...linksPage(),...(db.resources||[])].filter(x=>s
  box('Rechercher','<div class="formgrid"><label>Mot clé<input class="field" id="lib-search" type="search" placeholder="Drive, document, site…"></label><label>Projet<select class="field" id="lib-project">'+projopts()+'</select></label></div><div id="lib-list"></div>')+
  box('Ajouter une ressource','<form id="new-resource">'+field('Nom','label','','text','required maxlength="140"')+selectProject('')+field('URL','url','','url','required')+'<div class="actions"><button class="primary">Ajouter</button>'+btn('Coller depuis le presse-papiers','paste-link')+'</div></form>')+
  box('Explorer les bibliothèques IA','<p class="muted">87 outils à découvrir : 3D, agents, automatisations et productivité, en complément des formations IAgile.</p><a class="button primary" href="#/control/catalog">Découvrir les outils IA →</a>')+
+ box('Mettre un site en ligne','<p class="muted">Tutoriels pas à pas pour GitHub Pages, IONOS, Vercel, Netlify, Cloudflare, Render, Railway et Firebase. Aide IA pour préparer les déploiements.</p><a class="button primary" href="#/control/deploy">Voir les guides de publication →</a>')+
  box('Liens généraux','<div class="actions">'+href('https://drive.google.com/drive/u/0/my-drive','Google Drive')+href('https://github.com/'+OWNER,'GitHub')+'</div>'));
  const draw=()=>{const q=$('#lib-search').value.toLowerCase(),p=$('#lib-project').value;const data=refs.filter(x=>(!p||x.project===p)&&(x.label+' '+x.url+' '+pname(x.project)).toLowerCase().includes(q)).slice(0,80);$('#lib-list').innerHTML=data.length?data.map(x=>'<div class="chatrow"><div><strong>'+h(x.label)+'</strong><small>'+h(pname(x.project))+'</small></div>'+href(x.url,'Ouvrir')+'</div>').join(''):tiny('Aucun résultat.')};draw();$('#lib-search').oninput=draw;$('#lib-project').onchange=draw;
  $('#main [data-act="paste-link"]')?.addEventListener('click',async()=>{try{const v=await navigator.clipboard.readText();const url=safe(v.trim());if(!url)return toast('Le presse-papiers ne contient pas de lien HTTPS accepté.');$('#new-resource').elements.url.value=url;toast('Lien collé. Choisis le projet et enregistre.')}catch{toast('Accès au presse-papiers refusé par le navigateur.')}});
@@ -176,7 +177,20 @@ function catalog(){
  try{localStorage.setItem('control-hub-v2',JSON.stringify(ctx.state))}catch(e){d.links.pop();throw Error('Impossible d’enregistrer sur cet appareil.')}return true;}
  });
 }
-function tools(){const tiles=[['inbox','Boîte universelle','Actions et validations'],['missions','Missions IA','Coordination et transmission'],['activity','GitHub et tests','Code et déploiement'],['calendar','Calendrier','Dates et échéances'],['library','Bibliothèque','Documents et liens'],['catalog','Bibliothèques IA','87 outils classés par formation IAgile'],['memory','Mémoire des projets','Décisions et contexte'],['budget','Budget et quotas','Dépenses et restrictions'],['backup','Sauvegarde','Exporter ou restaurer'],['search','Recherche universelle','Retrouver un élément'],['settings','Règles et sécurité','Garde-fous et connexions']];
+function deploy(){
+ const el=$('#main'),query=location.hash.split('?')[1]||'',params=new URLSearchParams(query),pid=params.get('project')||'';
+ if(!window.CONTROL_DEPLOY_GUIDES){el.innerHTML=note('Les guides de mise en ligne sont indisponibles. Actualise CONTROL.');return}
+ window.CONTROL_DEPLOY_GUIDES.mount(el,{mode:'personal',projectId:pid,projects:ctx.projects,
+ isSaved:(guide,project)=>Array.isArray(ctx.state?.[project]?.links)&&ctx.state[project].links.some(x=>x.catalogToolId===guide.id||x.url===guide.url),
+ onAdd:async(guide,project)=>{if(!ctx.projects.some(x=>x.id===project))throw Error('Projet inconnu.');
+ const d=ctx.state[project]??={chats:[],links:[],memo:'',agents:[]};d.links??=[];
+ if(d.links.some(x=>x.catalogToolId===guide.id||x.url===guide.url))return false;
+ d.links.push({label:guide.name,url:guide.url,catalogToolId:guide.id,category:'hebergement'});
+ try{localStorage.setItem('control-hub-v2',JSON.stringify(ctx.state))}catch(e){d.links.pop();throw Error('Stockage local indisponible.')}
+ return true;}
+ });
+}
+function tools(){const tiles=[['inbox','Boîte universelle','Actions et validations'],['missions','Missions IA','Coordination et transmission'],['activity','GitHub et tests','Code et déploiement'],['calendar','Calendrier','Dates et échéances'],['library','Bibliothèque','Documents et liens'],['catalog','Bibliothèques IA','87 outils classés par formation IAgile'],['deploy','Mettre un site en ligne','10 guides GitHub, IONOS, Vercel et autres'],['memory','Mémoire des projets','Décisions et contexte'],['budget','Budget et quotas','Dépenses et restrictions'],['backup','Sauvegarde','Exporter ou restaurer'],['search','Recherche universelle','Retrouver un élément'],['settings','Règles et sécurité','Garde-fous et connexions']];
  $('#main').innerHTML=view('Tous les outils','Modules CONTROL disponibles', '<div class="grid">'+tiles.map(([k,t,sub])=>'<a href="#/control/'+k+'" class="card toolcard"><strong>'+h(t)+'</strong><small>'+h(sub)+'</small></a>').join('')+'</div>');
 }
 function settings(){$('#main').innerHTML=view('Règles et sécurité','Protection des projets et limites des intégrations',box('Règles globales',note('Ces règles sont ajoutées aux demandes de mission copiées depuis CONTROL. Elles ne sont pas automatiquement appliquées sur les comptes Claude, ChatGPT ou Gemini.')+'<form id="global-rules">'+textarea('Règles générales','rules',db.globalRules||'','rows="8" maxlength="10000"')+'<button class="primary">Enregistrer</button></form>')+
@@ -230,6 +244,6 @@ function paintSprints(selector,onlyBlockers=false){const out=$(selector);if(!out
  '</div>'+href('https://github.com/'+OWNER+'/Avancement-Projet/blob/main/data/sprints/'+encodeURIComponent(id)+'.json','Preuve')+'</div>').join(''):tiny(onlyBlockers?'Aucun blocage dans les derniers rapports accessibles.':'Aucun sprint accessible.');
  const n=Object.keys(sprintLoaded).length;if(n<SPRINT_IDS.length)out.innerHTML+=tiny((SPRINT_IDS.length-n)+' source(s) non vérifiée(s), information potentiellement partielle.');
 }
-function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,inbox:intake,missions,calendar,activity,library,catalog,memory,budget,backup,settings,search};(pages[page]||manager)()}
+function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,budget,backup,settings,search};(pages[page]||manager)()}
 window.CONTROL_CENTER={render};
 })();
