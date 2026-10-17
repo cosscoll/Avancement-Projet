@@ -35,6 +35,7 @@ const ics=m=>[
  'END:VEVENT','END:VCALENDAR'
 ].join('\r\n')+'\r\n';
 let meetAPI=null,loadingAPI=null,observer=null;
+const handlers=new WeakMap();
 function leave(){try{meetAPI?.dispose?.()}catch{}meetAPI=null;if(observer)observer.disconnect();observer=null}
 function loadAPI(){if(window.JitsiMeetExternalAPI)return Promise.resolve(window.JitsiMeetExternalAPI);
  if(!loadingAPI)loadingAPI=new Promise((resolve,reject)=>{
@@ -47,6 +48,8 @@ function loadAPI(){if(window.JitsiMeetExternalAPI)return Promise.resolve(window.
 }
 function mount(root,a={}){
  if(!root)return;leave();
+ handlers.get(root)?.abort();
+ const listeners=new AbortController();handlers.set(root,listeners);
  const projects=(typeof a.projects==='function'?a.projects():a.projects||[]).filter(p=>p?.id&&p?.name);
  const initial=projects.find(p=>p.id===a.projectId)?.id||projects[0]?.id||'';
  let filter='all',showPast=false,active='',busy=false;
@@ -121,9 +124,9 @@ function mount(root,a={}){
   if(m.provider!=='Jitsi (test)')return;
   const panel=root.querySelector('#vs-video'),host=root.querySelector('#vs-frame');leave();panel.hidden=false;host.replaceChildren();panel.scrollIntoView({block:'start'});
   notice('Chargement du module Jitsi. Micro et caméra nécessitent ton autorisation.');
-  try{const C=await loadAPI();if(!root.isConnected||panel.hidden)return;
+  try{const C=await loadAPI();if(!root.isConnected||!panel.isConnected||panel.hidden||!root.contains(panel))return;
    meetAPI=new C('meet.jit.si',{roomName:new URL(m.url).pathname.slice(1),parentNode:host,width:'100%',height:520,lang:'fr',configOverwrite:{startWithAudioMuted:true,startWithVideoMuted:true}});
-   if(typeof MutationObserver!=='undefined'){observer=new MutationObserver(()=>{if(!root.isConnected||panel.hidden)leave()});observer.observe(document.documentElement,{subtree:true,childList:true})}
+   if(typeof MutationObserver!=='undefined'){observer=new MutationObserver(()=>{if(!root.isConnected||!panel.isConnected||panel.hidden||!root.contains(panel))leave()});observer.observe(document.documentElement,{subtree:true,childList:true})}
    notice('Test Jitsi chargé. Si le navigateur bloque la visio, ouvre la réunion via « Rejoindre ».')
   }catch{panel.hidden=true;leave();notice('Module indisponible. Utilise le lien de réunion externe.',true)}
  }
@@ -140,13 +143,13 @@ function mount(root,a={}){
   else if(button.dataset.remove){if(!confirm('Supprimer cette fiche CONTROL ? Le rendez-vous externe et les invitations ne seront pas annulés.'))return;
    try{await a.remove(m);paint();notice('Fiche CONTROL supprimée. Réunion externe inchangée.')}catch(err){notice(err?.message||'Suppression refusée.',true)}
   }
- });
+ },{signal:listeners.signal});
  root.addEventListener('submit',async e=>{
   const form=e.target.closest('[data-update]');if(!form)return;e.preventDefault();
   const m=byId(form.dataset.update);if(!ok(m))return;
   try{await a.update(m,{notes:String(new FormData(form).get('notes')||'').slice(0,4000)});active=m.id;paint();notice('Notes enregistrées localement ou dans ton espace Cloud selon la version.')}
   catch(err){notice(err?.message||'Enregistrement impossible.',true)}
- });
+ },{signal:listeners.signal});
  paint();
 }
 window.CONTROL_VISIOS={mount,roomLink,allowedLink,parseLocal,invitation,calendarURL,ics,leave};
