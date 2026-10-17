@@ -18,10 +18,9 @@ function mount(root,params={}){
  let favorites=new Set();
  if(favoritable)try{favorites=new Set(JSON.parse(localStorage.getItem(favoritesKey)||'[]').filter(x=>typeof x==='string'))}catch{}
  const state={course:'all',category:'all',q:'',level:'all',access:'all',favoritesOnly:false,limit:24,project:projectList.some(p=>p.id===params.projectId)?params.projectId:(projectList[0]?.id||''),busy:false};
- const h=(tag,attrs,text)=>''; // Text insertion is escaped below, never HTML from source strings.
- root.innerHTML='<div class="tool-loading" role="status">Chargement des bibliothèques d’outils IA…</div>';
+ const loading=document.createElement('div');loading.className='tool-loading';loading.setAttribute('role','status');loading.textContent='Chargement des bibliothèques d’outils IA…';root.replaceChildren(loading);
  load().then(data=>{
-   if(!root.isConnected)return;
+   if(!root.isConnected||!loading.isConnected)return;
    const categories=[['all','Toutes les catégories'],...data.categories.map(c=>[c.id,c.name])];
    const setOptions=(items,selected)=>items.map(([id,name])=>'<option value="'+esc(id)+'" '+(id===selected?'selected':'')+'>'+esc(name)+'</option>').join('');
    const courseCards=()=>'<div class="tool-tracks">'+[['all','Toutes les ressources','Parcourir les '+data.tools.length+' outils'],...Object.entries(data.courses).map(([id,p])=>[id,p.name,p.desc])].map(([id,label,sub])=>'<button type="button" data-track="'+esc(id)+'" aria-pressed="'+String(id===state.course)+'" class="tool-track '+(id===state.course?'chosen':'')+'"><strong>'+esc(label)+'</strong><small>'+esc(sub)+'</small><span class="tool-track-count">'+(id==='all'?data.tools.length:data.tools.filter(t=>t.courses.includes(id)).length)+' outils</span></button>').join('')+'</div>';
@@ -48,17 +47,17 @@ function mount(root,params={}){
      '</section><section class="tool-results" aria-live="polite"><div class="tool-results-head"><h2 id="tool-results-title">Outils disponibles</h2><span id="tool-result-count"></span></div><div id="tool-grid" class="tool-grid"></div><div class="tool-more-wrap"><button type="button" id="tool-more">Afficher davantage d’outils</button></div></section>'+
      '<div id="tool-notice" class="tool-feedback" role="status" aria-live="polite"></div>'+
      '<section class="tool-safety"><strong>À savoir</strong><p>« Code libre » décrit le logiciel, pas nécessairement son hébergement ni les modèles IA associés. Certains fournisseurs nécessitent un abonnement ou une clé API payante. Vérifie aussi les licences des modèles et ressources téléchargées.</p></section></div>';
-   const q=selector=>root.querySelector(selector);
+   const panel=root.querySelector('.tool-page');if(!panel)return;const q=selector=>panel.querySelector(selector);
    function matches(t){const text=txt([t.name,t.summary,t.useCase,data.categories.find(x=>x.id===t.category)?.name||''].join(' '));return(state.course==='all'||t.courses.includes(state.course))&&(state.category==='all'||t.category===state.category)&&(state.level==='all'||t.level===state.level)&&(state.access==='all'||t.access===state.access)&&(!state.favoritesOnly||favorites.has(t.id))&&(!state.q||text.includes(txt(state.q)))}
    function drawCourse(){q('#tool-course-container').innerHTML=courseCards()}
    function draw(){const found=data.tools.filter(matches),shown=found.slice(0,state.limit);q('#tool-grid').innerHTML=shown.length?shown.map(makeCard).join(''):'<p class="tool-no-results">Aucun outil ne correspond à ces critères. Essaie une autre recherche.</p>';q('#tool-result-count').textContent=shown.length+' sur '+found.length+' outil(s)';q('#tool-more').hidden=shown.length===found.length;q('#tool-results-title').textContent=state.course==='all'?'Explorer les outils':data.courses[state.course]?.name||'Explorer les outils'}
    function redraw(){state.limit=24;drawCourse();draw()}
    function info(s,isError=false){const e=q('#tool-notice');e.textContent=s;e.dataset.error=isError?'true':'false'}
    drawCourse();draw();
-   root.addEventListener('click',async e=>{
-     const tr=e.target.closest('[data-track]');if(tr&&root.contains(tr)){state.course=tr.dataset.track;state.category='all';q('#tool-category').value='all';redraw();return}
-     const fav=e.target.closest('[data-tool-fav]');if(fav&&root.contains(fav)&&favoritable){const id=fav.dataset.toolFav;favorites.has(id)?favorites.delete(id):favorites.add(id);try{localStorage.setItem(favoritesKey,JSON.stringify([...favorites]))}catch{info('Impossible de sauvegarder les favoris sur cet appareil.',true)}draw();return}
-     const button=e.target.closest('[data-tool-save]');if(button&&root.contains(button)){const t=data.tools.find(x=>x.id===button.dataset.toolSave);if(!t||!state.project||!params.onAdd)return;button.disabled=true;try{const saved=await params.onAdd(t,state.project);info(saved===false?'L’outil était déjà associé à ce projet.':'« '+t.name+' » ajouté à ton projet.');draw()}catch(err){info(err?.message||'Impossible d’enregistrer cet outil.',true);button.disabled=false}return}
+   panel.addEventListener('click',async e=>{
+     const tr=e.target.closest('[data-track]');if(tr&&panel.contains(tr)){state.course=tr.dataset.track;state.category='all';q('#tool-category').value='all';redraw();return}
+     const fav=e.target.closest('[data-tool-fav]');if(fav&&panel.contains(fav)&&favoritable){const id=fav.dataset.toolFav;favorites.has(id)?favorites.delete(id):favorites.add(id);try{localStorage.setItem(favoritesKey,JSON.stringify([...favorites]))}catch{info('Impossible de sauvegarder les favoris sur cet appareil.',true)}draw();return}
+     const button=e.target.closest('[data-tool-save]');if(button&&panel.contains(button)){const t=data.tools.find(x=>x.id===button.dataset.toolSave);if(!t||!state.project||!params.onAdd)return;button.disabled=true;try{const saved=await params.onAdd(t,state.project);info(saved===false?'L’outil était déjà associé à ce projet.':'« '+t.name+' » ajouté à ton projet.');draw()}catch(err){info(err?.message||'Impossible d’enregistrer cet outil.',true);button.disabled=false}return}
      if(e.target.closest('#tool-more')){state.limit+=24;draw()}
    });
    q('#tool-query').addEventListener('input',e=>{state.q=e.target.value;redraw()});
@@ -67,7 +66,7 @@ function mount(root,params={}){
    q('#tool-access').addEventListener('change',e=>{state.access=e.target.value;redraw()});
    q('#tool-project')?.addEventListener('change',e=>{state.project=e.target.value;draw()});
    q('#tool-favorites')?.addEventListener('change',e=>{state.favoritesOnly=e.target.checked;redraw()});
- }).catch(e=>{if(root.isConnected)root.innerHTML='<div class="tool-info">Impossible de charger le catalogue pour le moment. Actualise la page lorsque tu es connecté.</div>'});
+ }).catch(e=>{if(root.isConnected&&loading.isConnected)root.innerHTML='<div class="tool-info">Impossible de charger le catalogue pour le moment. Actualise la page lorsque tu es connecté.</div>'});
 }
 window.CONTROL_TOOL_CATALOG={mount,load};
 })();
