@@ -179,7 +179,7 @@
     },
     {
       "title": "Accessibilité de l’application partiellement auditée",
-      "description": "UCP-QA-18 confirme sur l’écran anonyme la langue, le lien d’évitement, le repère principal, les libellés et le focus visible. axe-core relève une barre de statut hors repère et le contrat détecte un dialogue sans nom accessible. Un patch isolé ramène axe de 1 violation à 0 et le contrat de 5 PASS + 1 TODO à 6 PASS, sans intégration. Quatre règles restent incomplètes sous JSDOM ; clavier, contrastes, zoom et lecteur d’écran exigent un navigateur réel.",
+      "description": "UCP-QA-18 a contrôlé l’écran anonyme et préparé un patch isolé non intégré. UCP-QA-19 étend l’audit DOM aux 16 vues authentifiées des trois rôles : navigation active unique et contrôles rendus structurellement libellés sont confirmés, mais aucune vue ne possède de titre de niveau 1 et quatre vues n’ont aucun titre de page. Une expérience minimale a été rejetée car elle créait des erreurs d’ordre de titres dans 15 vues sur 16. JSDOM ne valide ni clavier réel, contrastes, zoom ni lecteur d’écran.",
       "level": "warning"
     }
   ],
@@ -195,6 +195,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-18 ; QA-16 revalide les suites, QA-17 prépare le navigateur et QA-18 audite l’accessibilité DOM",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-19 ; QA-16 revalide les suites, QA-17 prépare le navigateur, QA-18 audite l’écran anonyme et QA-19 les vues authentifiées",
   "baseline_date": "2026-10-17"
 }
