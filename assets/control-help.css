@@ -1,0 +1,39 @@
+/* CONTROL — In-app contextual support chat. No external chat widget. */
+.ch-launch{position:fixed;bottom:calc(88px + env(safe-area-inset-bottom,0px));right:18px;z-index:89;display:flex;align-items:center;gap:9px;background:#24476c;color:#fff;border:1px solid #21415e;border-radius:999px;min-height:52px;padding:11px 17px;box-shadow:0 9px 30px #1029443d;font:750 13px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
+.ch-launch:hover{background:#315c88;color:#fff}.ch-launch-icon{font-size:23px;line-height:1}.ch-launch:focus-visible,.ch-panel button:focus-visible,.ch-panel a:focus-visible,.ch-panel textarea:focus-visible{outline:3px solid #7ea8da;outline-offset:3px}
+.ch-panel[hidden]{display:none!important}
+.ch-panel{position:fixed;right:18px;bottom:calc(155px + env(safe-area-inset-bottom,0px));z-index:91;width:min(440px,calc(100vw - 28px));height:min(640px,calc(100dvh - 180px));min-height:340px;display:flex;flex-direction:column;overflow:hidden;border-radius:18px;border:1px solid #d5e0ec;background:#fff;color:#20384f;box-shadow:0 20px 65px #102b4a3d;font:400 14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.ch-head{background:#25466a;color:#fff;padding:13px 15px;display:flex;align-items:center;gap:11px;flex-shrink:0}
+.ch-avatar{display:grid;place-items:center;background:#ffffff25;width:38px;height:38px;border-radius:12px;font-size:25px}
+.ch-head-meta{flex:1;min-width:0}.ch-head-meta strong{display:block;font-size:15px;font-weight:790}.ch-head-meta span{display:block;font-size:11px;color:#d3e1f0;margin-top:2px}
+.ch-close{border:0;background:#ffffff1f;color:#fff;border-radius:9px;width:36px;height:36px;min-height:36px;font-size:24px;font-weight:450;display:grid;place-items:center;cursor:pointer}
+.ch-close:hover{background:#ffffff37;color:#fff}
+.ch-disclaimer{padding:9px 14px;font-size:11px;background:#eef3f9;color:#506d87;border-bottom:1px solid #dae5f0;line-height:1.35}
+.ch-messages{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:13px;padding:15px 13px 12px;scrollbar-width:thin;background:#fcfdff}
+.ch-msg{border:1px solid #dee6ef;background:#fff;border-radius:15px;padding:11px 13px;max-width:96%;align-self:flex-start;white-space:normal;overflow-wrap:anywhere;box-shadow:0 1px 5px #1936520a}
+.ch-user{max-width:92%;align-self:flex-end;background:#e9f2fc;border-color:#d4e5f7}
+.ch-msg-label{font-size:10px;text-transform:uppercase;letter-spacing:.6px;font-weight:770;margin:0 0 8px;color:#537397}
+.ch-msg-content{white-space:pre-wrap;line-height:1.53;font-size:13px}
+.ch-steps{margin:13px 0 8px;padding-left:20px;font-size:12px;line-height:1.6}
+.ch-steps li{padding-left:2px;margin-bottom:7px}
+.ch-sources{font-size:10px;color:#71849c;border-top:1px solid #edf1f6;padding-top:8px;margin-top:10px}
+.ch-msg-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.ch-msg-actions button,.ch-msg-actions a{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;text-align:center;border:1px solid #cbdaeb;background:#f0f5fb;color:#284f7d;font:720 11px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:34px;padding:7px 10px;border-radius:10px;cursor:pointer}
+.ch-msg-actions button:hover,.ch-msg-actions a:hover{background:#e2edfa;border-color:#a8c0e1}
+.ch-quick{display:flex;gap:7px;overflow-x:auto;overscroll-behavior:contain;padding:8px 11px 11px;border-top:1px solid #eef1f6;background:#fff;scrollbar-width:thin;flex-shrink:0}
+.ch-quick:empty{display:none}
+.ch-chip{font:650 11px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;border:1px solid #ccdbe9;background:#f5f8fc;color:#345f89;border-radius:11px;padding:9px 11px;white-space:nowrap;min-height:35px;cursor:pointer;flex-shrink:0}
+.ch-chip:hover{background:#eaf2fc}
+.ch-footer{flex-shrink:0;background:#fff;border-top:1px solid #e2eaf2;padding:10px}
+#ch-form{display:flex;align-items:flex-end;gap:8px;margin:0}
+#ch-input{resize:none;min-width:0;flex:1;min-height:43px;max-height:105px;overflow:auto;margin:0;border:1px solid #d1dfe9;border-radius:12px;padding:10px 12px;background:#fff;color:#263d57;font:400 13px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+.ch-send{background:#274a70;border:1px solid #274a70;color:#fff;min-width:43px;width:43px;height:43px;border-radius:11px;cursor:pointer;font-size:17px;display:grid;place-items:center;padding:0}
+.ch-send:hover{background:#365c88;color:#fff}
+.ch-meta{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-top:8px;color:#7a8da1;font-size:10px}
+.ch-meta button{border:0;background:transparent;font-size:11px;color:#4f7398;padding:0;min-height:24px;cursor:pointer}
+.ch-meta button:hover{text-decoration:underline}
+.ch-visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(min-width:861px){.ch-launch{bottom:22px;right:23px}.ch-panel{bottom:88px;right:23px;height:min(645px,calc(100dvh - 112px))}}
+@media(max-width:540px){.ch-launch{right:12px;bottom:calc(82px + env(safe-area-inset-bottom,0px));padding:11px 13px;font-size:12px;min-height:47px}.ch-launch-icon{font-size:20px}.ch-panel{right:7px;left:7px;width:auto;bottom:calc(143px + env(safe-area-inset-bottom,0px));height:min(660px,calc(100dvh - 168px));border-radius:16px;min-height:250px}.ch-disclaimer{font-size:10px}.ch-msg{max-width:98%}}
+@media(max-height:520px){.ch-panel{height:calc(100dvh - 32px);bottom:10px;min-height:0}.ch-launch{bottom:calc(74px + env(safe-area-inset-bottom,0px))}}
+@media(prefers-reduced-motion:reduce){.ch-panel,.ch-launch{scroll-behavior:auto}}
