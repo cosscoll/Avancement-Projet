@@ -84,7 +84,12 @@
     },
     {
       "title": "Vitrine enrichie non publiée",
-      "description": "Trois fiches produits et une page de suivi ont été créées en prototype local le 16/10/2026 ; 106 vérifications statiques et 12 tests JavaScript simulés réussis. Publication GitHub refusée et recette navigateur non effectuée.",
+      "description": "Prototype local non marchand de 14 pages au 17/10/2026, incluant une matrice de validation ; 462 contrôles statiques/Chromium par injection HTML réussis. Le dépôt vitrine n'a pas été mis à jour et la navigation HTTP publique n'a pas été vérifiée.",
+      "level": "warning"
+    },
+    {
+      "title": "Validation indépendante à réaliser",
+      "description": "Plan de contrôle local prêt : 15 procédures, 7 registres et tableur V0.6.1. Aucune validation métier ni recette Microsoft Excel réelle attestée ; prix et offre non approuvés.",
       "level": "warning"
     }
   ],
