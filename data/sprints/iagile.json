@@ -212,12 +212,13 @@
       "Module 8 Processus : une seule ligne non publiée modifiée pour remplacer la référence historique S-PR par cas Sillage ; relecture SQL confirme l'absence de S-PR et la présence de la nouvelle référence.",
       "Contrôle Supabase : 9 modules Processus non publiés ; 47 modules Academy ; 0 compte Auth, bucket premium privé et vide ; 0 ressource approuvée ou publiée ; 105 licences en contrôle ciblé, 177 non contrôlées, 1 partielle.",
       "Métadonnées Processus : 12 supports historiques v0.1 et 2 packs V6/V7 non publiés ; 9 mappings V6 en attente de téléversement.",
-      "PR #12 et #77 ouvertes, non fusionnées."
+      "PR #12 et #77 ouvertes, non fusionnées.",
+      "Statut public IAgile actualisé puis relu : correction module 8 mentionnée, blocages V0.9.1 et Auth/RLS maintenus."
     ],
     "blockers": [
       "V0.9.1 non approuvée ; importateur R3 non intégré, versions des supports à rapprocher.",
       "Tests réels Auth/RLS inter-comptes et stockage privé non réalisés.",
-      "Écriture du journal Google Docs et du statut public GitHub refusées par les contrôles de sécurité ; vérification HTTPS de la vitrine indisponible."
+      "Écriture du journal Google Docs refusée par les contrôles de sécurité ; vérification HTTPS de la vitrine indisponible."
     ],
     "next": "Valider le manifeste R3 et la version canonique du pilote, puis préparer l'import privé et la recette Auth/RLS multi-comptes autorisée ; poursuivre les licences sans diffuser de contenus premium.",
     "links": [
@@ -232,6 +233,10 @@
       {
         "label": "PR ressources #77",
         "url": "https://github.com/cosscoll/IAgile/pull/77"
+      },
+      {
+        "label": "Statut IAgile actualisé",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/181ba5280fe9e906faf7f5c97673d360db95313d"
       }
     ]
   }
