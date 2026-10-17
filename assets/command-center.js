@@ -127,6 +127,7 @@ async function githubRead(repo){const url='https://api.github.com/repos/'+OWNER+
 function activity(){const repos=ctx.projects.filter(p=>p.repo);
  $('#main').innerHTML=view('Activité et développement','GitHub, tests et publications',box('Vérifier le dépôt public','<label>Projet<select class="field" id="git-project">'+repos.map(p=>'<option value="'+h(p.id)+'">'+h(p.name)+'</option>').join('')+'</select></label><div class="actions">'+btn('Vérifier GitHub','github-fetch','primary')+'<span id="git-stamp" class="muted"></span></div><div id="github-result"><p class="muted">Lecture publique à la demande : commits, PR et workflows récents.</p></div>')+
  box('Actions techniques','<div id="git-links" class="links"></div>')+note('CONTROL ne fusionne pas de branches, ne déploie pas et ne restaure pas directement le code. Ces actions nécessitent confirmation sur GitHub.'));
+ const wanted=new URLSearchParams(location.hash.split('?')[1]||'').get('project')||'';if(repos.some(p=>p.id===wanted))$('#git-project').value=wanted;
  const links=()=>{const p=ctx.projects.find(x=>x.id===$('#git-project').value);$('#git-links').innerHTML=p?.repo?[['Dépôt',''],['Pull requests','/pulls'],['Branches','/branches'],['Tests CI','/actions'],['Déploiements','/deployments'],['Versions','/releases']].map(([label,end])=>href('https://github.com/'+OWNER+'/'+p.repo+end,label,'link')).join('')+(p.website?.url?href(p.website.url,'Site web','link'):''):tiny('Aucun dépôt relié.')};links();
  $('#git-project').onchange=()=>{$('#github-result').innerHTML=tiny('Vérification non lancée.');links()};
  $('#main [data-act="github-fetch"]').onclick=async()=>{const p=ctx.projects.find(x=>x.id===$('#git-project').value);if(!p?.repo)return;$('#github-result').textContent='Lecture GitHub en cours…';try{const d=await githubRead(p.repo);$('#git-stamp').textContent='Vérifié '+dt(d.checkedAt)+(d.partial?' · partiel':'');const rows=(array,title,toLabel,toDate)=>'<h3>'+h(title)+'</h3>'+(array.length?array.map(x=>'<div class="chatrow"><div><strong>'+h(cap(toLabel(x),140))+'</strong><small>'+h(toDate(x))+'</small></div>'+href(x.html_url,'Voir')+'</div>').join(''):tiny('Aucun élément retourné ou accès partiel.'));
@@ -182,6 +183,7 @@ function deploy(){
  const el=$('#main'),query=location.hash.split('?')[1]||'',params=new URLSearchParams(query),pid=params.get('project')||'';
  if(!window.CONTROL_DEPLOY_GUIDES){el.innerHTML=note('Les guides de mise en ligne sont indisponibles. Actualise CONTROL.');return}
  window.CONTROL_DEPLOY_GUIDES.mount(el,{mode:'personal',projectId:pid,projects:ctx.projects,
+ onOpenStatus:(project)=>{location.hash='#/control/activity'+(project?'?project='+encodeURIComponent(project):'')},
  isSaved:(guide,project)=>Array.isArray(ctx.state?.[project]?.links)&&ctx.state[project].links.some(x=>x.catalogToolId===guide.id||x.url===guide.url),
  onAdd:async(guide,project)=>{if(!ctx.projects.some(x=>x.id===project))throw Error('Projet inconnu.');
  const d=ctx.state[project]??={chats:[],links:[],memo:'',agents:[]};d.links??=[];
