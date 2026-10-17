@@ -52,7 +52,32 @@ async function reload(silent=false){if(!authUser||!client)return;const owner=aut
  }catch(e){if(token!==epoch||authUser?.id!==owner)return;if(!silent)message(e.message||'Impossible de synchroniser vos données.',true);if(!cache.projects.length&&!cache.items.length)byId('page').innerHTML=panel('Connexion indisponible','<p>Les données privées n’ont pas pu être chargées. Réessaie après vérification de la configuration et des règles d’accès.</p>'+btn('Réessayer','refresh'))}
  finally{if(waitingOwner===owner){waiting=false;waitingOwner=null;byId('refresh').disabled=false}}}
 function nav(where,pid='',newTab='ai_space'){page=where;picked=pid;tab=newTab;window.scrollTo?.(0,0);render()}
-function render(){if(!authUser)return;const fns={projects:projectsPage,project:projectPage,inbox:inboxPage,missions:missionsPage,automations:automationsPage,manager:managerPage,tools:toolsPage,account:accountPage,catalog:catalogPage,deploy:deployPage};byId('page').innerHTML=(fns[page]||projectsPage)();
+function render(){if(!authUser)return;const fns={projects:projectsPage,project:projectPage,inbox:inboxPage,missions:missionsPage,automations:automationsPage,manager:managerPage,tools:toolsPage,account:accountPage,catalog:catalogPage,deploy:deployPage,lab:labPage};byId('page').innerHTML=(fns[page]||projectsPage)();
+ if(page==='lab'){
+  const root=byId('lab-root');if(!window.CONTROL_LAB){root.textContent='Laboratoire IA indisponible. Actualise la page.';return}
+  window.CONTROL_LAB.mount(root,{mode:'cloud',projectId:picked,projects:cache.projects,
+   getProject:(projectId)=>{
+    const p=getProject(projectId);if(!p)return{};
+    const rows=cache.items.filter(x=>x.project_id===projectId);
+    return{context:[
+      ...rows.filter(x=>x.kind==='task'&&x.status!=='done').slice(0,5).map(x=>'Action ouverte : '+x.title+' ('+x.status+')'),
+      ...rows.filter(x=>x.kind==='mission'&&x.status!=='done').slice(0,4).map(x=>'Mission '+x.provider+' : '+x.title+' ('+x.status+')'),
+      ...rows.filter(x=>x.kind==='decision').slice(0,3).map(x=>'Décision : '+x.title+' — '+String(x.body||'').slice(0,140))
+    ],reports:rows.filter(x=>x.kind==='report').slice(0,3).map(x=>x.provider+' : '+x.body)}
+   },
+   providerURL:(projectId,provider)=>cache.items.find(x=>x.project_id===projectId&&x.kind==='ai_space'&&x.provider===provider&&safeURL(x.url))?.url||providers[provider]||'',
+   saveMission:async({projectId,provider,title,instruction})=>{
+    const owner=authUser?.id;if(!owner||!getProject(projectId))throw Error('Connecte-toi à ton projet avant de créer la mission.');
+    if(instruction.length>29000)throw Error('Brief trop long pour la base de données CONTROL Cloud.');
+    if(cache.items.some(x=>x.project_id===projectId&&x.kind==='mission'&&x.provider===provider&&x.body===instruction))return false;
+    const row={owner_id:owner,project_id:projectId,kind:'mission',title:String(title).slice(0,200),body:instruction,provider,status:'todo'};
+    const result=await client.from('control_items').insert(row).select('id').single();
+    if(result.error)throw Error('Enregistrement impossible : '+result.error.message);
+    if(authUser?.id===owner)await reload(true);
+    return true;
+   }
+  });return;
+ }
  if(page==='catalog'||page==='deploy'){
   const root=byId(page==='catalog'?'catalog-root':'deploy-root');
   const extension=page==='catalog'?window.CONTROL_TOOL_CATALOG:window.CONTROL_DEPLOY_GUIDES;
@@ -80,7 +105,7 @@ function projectsPage(){return header('Mes projets','Chaque compte dispose de se
  panel('Accès rapide','<div class="btnrow">'+btn('Recherche universelle','tools','search')+btn('Ressources','tools','library')+btn('Calendrier','tools','calendar')+btn('Budgets','tools','budget')+btn('Mémoire','tools','memory')+'</div>')}
 function projectPage(){const p=getProject(picked);if(!p)return projectsPage();const t=tab;const choices=[['ai_space','Espaces IA'],['conversation','Conversations'],['resource','Ressources'],['task','Actions'],['mission','Missions'],['automation','Automatisations'],['report','Bilans'],['decision','Décisions'],['note','Notes'],['event','Calendrier'],['expense','Budget'],['income','Revenus']];
  const relevant=items(t,p.id);return '<a class="back" href="#" data-action="projects">← Tous les projets</a>'+header(p.name,p.description||p.category||'Espace de travail privé',
- btn('+ Ajouter','toggle-item-form')+' '+btn('Outils IA','catalog',p.id)+' '+btn('Mise en ligne','deploy',p.id)+' '+btn('Modifier','edit-project',p.id))+
+ btn('+ Ajouter','toggle-item-form')+' '+btn('Outils IA','catalog',p.id)+' '+btn('Laboratoire IA','lab',p.id)+' '+btn('Mise en ligne','deploy',p.id)+' '+btn('Modifier','edit-project',p.id))+
  '<div class="tabbar">'+choices.map(([key,label])=>'<button type="button" data-action="project-tab" data-id="'+key+'" class="'+(key===t?'selected':'')+'">'+label+'</button>').join('')+'</div>'+
  '<section id="new-item" class="surface" hidden><h2>Nouvel élément · '+H(names[t])+'</h2>'+itemForm(t,p.id)+'</section>'+
  '<div class="surface"><div class="row"><h2>'+H(names[t])+'</h2>'+pill(relevant.length+' élément(s)')+'</div>'+
@@ -134,9 +159,10 @@ function managerAnswer(question,proj){const chosen=proj?[getProject(proj)].filte
 
 let toolTab='library',searchFilter='';
 function toolsPage(){
- const tabs=[['catalog','Outils IA'],['deploy','Mise en ligne'],['library','Ressources'],['calendar','Calendrier'],['budget','Finances'],['memory','Décisions'],['search','Recherche'],['backup','Sauvegardes']];
+ const tabs=[['lab','Laboratoire IA'],['catalog','Outils IA'],['deploy','Mise en ligne'],['library','Ressources'],['calendar','Calendrier'],['budget','Finances'],['memory','Décisions'],['search','Recherche'],['backup','Sauvegardes']];
  let body='<div class="tabbar">'+tabs.map(([key,label])=>'<button data-action="tool-tab" data-id="'+key+'" class="'+(toolTab===key?'selected':'')+'">'+label+'</button>').join('')+'</div>';
- if(toolTab==='catalog'){body+=panel('Bibliothèques IAgile','<p>Explore 87 outils IA : moteurs 3D, agents, automatisations, recherche et productivité.</p>'+btn('Explorer les bibliothèques','catalog','','primary'));}
+ if(toolTab==='lab'){body+=panel('Atelier de production IA','<p>Briefs avec contexte, comparaison des réponses, audit HTML, contrôle JSON, versions, recettes et masquage des secrets.</p>'+btn('Ouvrir le Laboratoire','lab','','primary'));}
+ else if(toolTab==='catalog'){body+=panel('Bibliothèques IAgile','<p>Explore 87 outils IA : moteurs 3D, agents, automatisations, recherche et productivité.</p>'+btn('Explorer les bibliothèques','catalog','','primary'));}
  else if(toolTab==='deploy'){body+=panel('Guides de publication','<p>10 tutoriels détaillés pour GitHub Pages, IONOS, Vercel, Netlify, Cloudflare Pages et autres hébergeurs. Prompts IA et checklist de production.</p>'+btn('Voir les guides de mise en ligne','deploy','','primary'));}
  else if(toolTab==='library'){
   const list=items('resource').filter(x=>(x.title+' '+x.url+' '+projectName(x.project_id)).toLowerCase().includes(searchFilter.toLowerCase()));
@@ -198,6 +224,7 @@ function toolsPage(){
  return header('Tous les outils','Ressources, agenda, budgets, décisions, sauvegardes.')+body+'<div id="tool-editor"></div>';
 }
 function deployPage(){return header('Mettre mon site en ligne','Tutoriels GitHub Pages, IONOS, Vercel et autres hébergeurs.')+'<div id="deploy-root"></div>'}
+function labPage(){return header('Laboratoire IA','Outils de production, de contrôle qualité et de comparaison des réponses.')+'<div id="lab-root"></div>'}
 function catalogPage(){return header('Bibliothèques IA','Outils pratiques et frameworks, en complément des quatre formations IAgile.')+'<div id="catalog-root"></div>'}
 function accountPage(){
  return header('Mon compte',authUser?.email||'Compte utilisateur')+
@@ -351,6 +378,7 @@ async function action(button){
  const type=button.dataset.action,id=button.dataset.id||'';
  switch(type){
   case 'projects':nav('projects');return;
+  case 'lab':nav('lab',id||'');return;
   case 'catalog':nav('catalog',id||'');return;
   case 'deploy':nav('deploy',id||'');return;
   case 'tools':toolTab=id||'library';nav('tools');return;
