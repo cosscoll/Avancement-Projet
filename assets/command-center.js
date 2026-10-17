@@ -1,0 +1,116 @@
+/* CONTROL · Centre de commande — données locales et lectures GitHub publiques.
+   Aucune API privée, dépense, autorisation ou modification d'automatisation. */
+(()=>{'use strict';
+const KEY='control-command-v1',HUB='control-hub-v2',AUTOS='control-automations-v1',OWNER='cosscoll';
+let db,ctx={projects:[],state:{}},live={};
+const $=s=>document.querySelector(s);
+const h=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;':'&quot;',"'":'&#39;'}[c]));
+const safe=v=>{try{const x=new URL(String(v||''));return x.protocol==='https:'&&!x.username&&!x.password?x.href:''}catch{return''}};
+const href=(url,label,cls='button')=>safe(url)?'<a class="'+cls+'" href="'+h(safe(url))+'" target="_blank" rel="noopener noreferrer">'+h(label)+' ↗</a>':'';
+const date=v=>{if(!v)return 'Non renseigné';const d=new Date(v);return isNaN(+d)?'Non renseigné':d.toLocaleDateString('fr-FR')};
+const dt=v=>{if(!v)return 'Non vérifié';const d=new Date(v);return isNaN(+d)?'Non vérifié':d.toLocaleString('fr-FR')};
+const id=()=>globalThis.crypto?.randomUUID?.()||String(Date.now())+'-'+Math.random().toString(36).slice(2);
+const pname=k=>ctx.projects.find(x=>x.id===k)?.name||k||'Tous les projets';
+const projopts=(selected='',all=true)=> (all?'<option value="">Tous les projets</option>':'')+ctx.projects.map(p=>'<option value="'+h(p.id)+'" '+(selected===p.id?'selected':'')+'>'+h(p.name)+'</option>').join('');
+const openProject=p=>ctx.state?.[p]||{};
+const agents=[{id:'ChatGPT',url:'https://chatgpt.com/'},{id:'Claude',url:'https://claude.ai/'},{id:'Codex',url:'https://chatgpt.com/codex'},{id:'Gemini',url:'https://gemini.google.com/'}];
+function sourceLink(project,provider){const x=openProject(project);return provider==='ChatGPT'?(x.projectUrl||x.spaces?.ChatGPT||''):(x.spaces?.[provider]||'')}
+function providerURL(project,provider){return safe(sourceLink(project,provider))||agents.find(x=>x.id===provider)?.url||''}
+function storage(){try{const a=JSON.parse(localStorage.getItem(KEY)||'{}');return a&&typeof a==='object'&&!Array.isArray(a)?a:{}}catch{return{}}}
+function init(){db=Object.assign({version:1,actions:[],missions:[],events:[],expenses:[],decisions:[],messages:[],globalRules:'Aucune dépense, abonnement, achat de crédits ou action engageante sans autorisation explicite. Ne pas utiliser de quotas partagés interdits par les consignes du projet. Ne pas publier de données sensibles. Vérifier les résultats avant de les annoncer terminés.',notifications:false},storage());for(const key of ['actions','missions','events','expenses','decisions','messages'])if(!Array.isArray(db[key]))db[key]=[]}
+function save(){try{db.lastChanged=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(db));return true}catch{toast('Stockage indisponible ou plein. Effectue une sauvegarde.');return false}}
+function toast(m){const e=$('#toast');if(e){e.textContent=m;e.classList.remove('hidden');setTimeout(()=>e.classList.add('hidden'),4200)}}
+function cap(s,n=320){s=String(s||'');return s.length>n?s.slice(0,n)+'…':s}
+function view(title,subtitle,content,extra=''){return '<div class="toprow"><div><div class="quiet">CONTROL / CENTRE DE COMMANDE</div><h1>'+h(title)+'</h1><p class="muted">'+h(subtitle)+'</p></div>'+extra+'</div>'+content}
+const note=(s)=>'<div class="notice">'+s+'</div>';
+const box=(title,content)=>'<section class="panel"><h2>'+h(title)+'</h2>'+content+'</section>';
+const tiny=(s)=>'<p class="muted">'+h(s)+'</p>';
+const btn=(s,act,cls='')=>'<button type="button" data-act="'+h(act)+'" class="'+h(cls)+'">'+h(s)+'</button>';
+const tag=s=>'<span class="chip">'+h(s)+'</span>';
+function options(values,chosen){return values.map(v=>'<option value="'+h(v)+'" '+(chosen===v?'selected':'')+'>'+h(v)+'</option>').join('')}
+function field(label,name,val='',type='text',extra=''){return '<label>'+h(label)+'<input class="field" name="'+h(name)+'" type="'+h(type)+'" value="'+h(val)+'" '+extra+'></label>'}
+function textarea(label,name,val='',extra=''){return '<label>'+h(label)+'<textarea class="field" name="'+h(name)+'" '+extra+'>'+h(val)+'</textarea></label>'}
+function selectProject(chosen='',all=true){return '<label>Projet<select class="field" name="project">'+projopts(chosen,all)+'</select></label>'}
+function registerForm(form,handler){const f=$(form);if(f)f.onsubmit=e=>{e.preventDefault();handler(new FormData(f),f)}}
+function route(){const x=decodeURIComponent(location.hash.slice(1));const m=x.match(/^\/control(?:\/([^/?#]+))?(?:\/([^/?#]+))?/);return{page:m?.[1]||'manager',param:m?.[2]||''}}
+function go(page,param=''){location.hash='#/control/'+encodeURIComponent(page)+(param?'/'+encodeURIComponent(param):'');if(!location.hash)render()}
+function filterProject(arr,k){return k?arr.filter(x=>x.project===k):arr}
+function subject(){return $('#c-project')?.value||''}
+function scopedMessage(msg,scope){const is=msg.project===scope;return scope?is:true}
+function linksPage(){
+ let rows=[];for(const p of ctx.projects){const d=openProject(p.id),refs=[...(p.repo?[{label:'GitHub',url:'https://github.com/'+OWNER+'/'+encodeURIComponent(p.repo)}]:[]),...(p.website?.url?[{label:p.website.label||'Site',url:p.website.url}]:[]),...(d.links||[]),...(d.projectUrl?[{label:'ChatGPT',url:d.projectUrl}]:[]),...Object.entries(d.spaces||{}).map(([provider,url])=>({label:provider,url}))];
+  for(const r of refs)if(safe(r.url))rows.push({project:p.id,label:r.label,url:r.url})}
+ return rows;
+}
+function contextEvidence(project){
+ const p=ctx.projects.find(p=>p.id===project),d=openProject(project);if(!p)return [];
+ let out=[];
+ if(p.status)out.push('Référence publique '+(p.last_verified||'16/10/2026')+' : statut '+p.status+'.');
+ for(const [name,r] of Object.entries(d.reports||{}))if(r?.text)out.push('Bilan '+name+' saisi '+dt(r.updatedAt)+' : '+cap(r.text,400));
+ const missions=db.missions.filter(x=>x.project===project&&x.status!=='done');
+ if(missions.length)out.push('Missions locales : '+missions.map(x=>x.provider+' — '+x.title+' ('+x.status+')').join(' ; '));
+ const todos=db.actions.filter(x=>x.project===project&&x.status!=='done');
+ if(todos.length)out.push('À traiter : '+todos.slice(0,6).map(x=>x.title+' ('+x.status+')').join(' ; '));
+ const recent=db.decisions.filter(x=>x.project===project).slice(-3);
+ for(const d of recent)out.push('Décision enregistrée '+date(d.at)+' : '+d.title+' — '+cap(d.details,180));
+ if(p.repo&&live[p.repo]){const gh=live[p.repo];out.push('GitHub public vérifié '+dt(gh.checkedAt)+' : '+gh.commits.length+' commits récents, '+gh.prs.length+' PR ouvertes dans la réponse (fenêtre partielle). '+gh.commits.slice(0,2).map(c=>cap(c.commit?.message?.split('\n')[0],100)).join(' ; '))}
+ return out;
+}
+function reply(question,project){const q=question.toLowerCase(),names=project?[project]:ctx.projects.map(p=>p.id).filter(k=>contextEvidence(k).length).slice(0,12);
+ if(!names.length)return 'Aucun projet chargé.';
+ let blocks=[];
+ for(const pid of names){
+  const d=openProject(pid),reports=Object.entries(d.reports||{}),actions=db.actions.filter(x=>x.project===pid&&x.status!=='done'),missions=db.missions.filter(x=>x.project===pid&&x.status!=='done');
+  let segment=[pname(pid)];
+  if(q.includes('blocage')||q.includes('problème')){const p=ctx.projects.find(x=>x.id===pid);const alerts=p?.alerts||[];segment.push(...alerts.slice(0,3).map(x=>'Référence datée (non reconfirmée) : '+x.title));segment.push(...actions.filter(x=>x.priority==='Critique').map(x=>'Critique : '+x.title));if(!alerts.length&&!actions.length)segment.push('Aucun blocage enregistré — absence de rapport ≠ absence de problème.')}
+  else if(q.includes('priorit')||q.includes('prochain')||q.includes('faire')){segment.push(...actions.slice(0,5).map(x=>x.priority+' : '+x.title));if(!actions.length)segment.push('Aucune action locale enregistrée.');}
+  else if(q.includes('claude')||q.includes('codex')||q.includes('gemini')||q.includes('chatgpt')){const provider=['claude','codex','gemini','chatgpt'].find(x=>q.includes(x));const r=reports.find(x=>x[0].toLowerCase()===provider);segment.push(r?'Bilan '+r[0]+' daté '+dt(r[1].updatedAt)+' : '+cap(r[1].text,900):'Aucun bilan '+provider+' reçu.');}
+  else {segment.push('Missions ouvertes : '+missions.length+' ; actions à traiter : '+actions.length+'.');segment.push(...reports.slice(0,3).map(([ai,r])=>'Bilan '+ai+' ('+dt(r.updatedAt)+') : '+cap(r.text,280)));if(!reports.length)segment.push('Aucun bilan IA connecté : les chats privés ne sont pas lisibles depuis CONTROL.');if(live[ctx.projects.find(x=>x.id===pid)?.repo])segment.push('Activité GitHub publique vérifiée (voir Activité).')}
+  blocks.push(segment.join('\n'));
+ }
+ return blocks.join('\n\n————\n\n')+'\n\nSources : rapports renseignés, données locales et références publiques datées. Aucune lecture automatique de conversations privées ; vérifie les preuves avant toute décision.';
+}
+function manager(){
+ const k=new URLSearchParams(location.search).get('project')||'',options=projopts(k,true);
+ const content='<div class="dash-stats"><a href="#/control/inbox" class="stat"><strong>'+db.actions.filter(x=>x.status!=='done').length+'</strong><span>Actions ouvertes</span></a><a href="#/control/missions" class="stat"><strong>'+db.missions.filter(x=>x.status!=='done').length+'</strong><span>Missions en cours</span></a><a href="#/control/calendar" class="stat"><strong>'+db.events.filter(x=>x.date>=new Date().toISOString().slice(0,10)).length+'</strong><span>Échéances enregistrées</span></a></div>'+
+ note('Assistant de synthèse fondé sur les données disponibles dans CONTROL. Ce n’est pas un modèle IA connecté aux conversations privées : chaque réponse distingue les bilans importés et les données GitHub publiques vérifiées.')+
+ '<section class="panel"><div class="sectionhead"><h2>Chef de projet central</h2>'+tag('Sources vérifiables')+'</div><label>Périmètre<select id="c-project" class="field">'+options+'</select></label><div class="messages" id="c-messages">'+(db.messages.length?db.messages.slice(-12).map(m=>'<div class="pilot-message '+(m.role==='user'?'pilot-user':'pilot-answer')+'"><span class="muted">'+h(m.role==='user'?'Vous':'CONTROL · synthèse locale')+' · '+date(m.at)+'</span><p>'+h(m.text)+'</p></div>').join(''):'<p class="empty">Demande « Où en sont mes projets ? » ou « Quelles sont les prochaines priorités ? ».</p>')+'</div>'+
+ '<form id="c-ask"><label>Question<input class="field" name="question" required maxlength="900" placeholder="Où en est UCP sur chaque IA ?"></label><div class="actions"><button class="primary">Interroger CONTROL</button>'+btn('Préparer un briefing ChatGPT','brief')+'</div></form></section>'+
+ box('Accès rapide', '<div class="quicktiles">'+[['inbox','À traiter'],['missions','Missions multi-IA'],['activity','Activité GitHub'],['calendar','Calendrier'],['library','Bibliothèque'],['budget','Coûts et quotas'],['memory','Mémoire et décisions'],['backup','Sauvegardes'],['settings','Règles et sécurité']].map(([url,label])=>'<a href="#/control/'+url+'" class="quicktile">'+h(label)+' →</a>').join('')+'</div>');
+ $('#main').innerHTML=view('CONTROL IA','Centre de pilotage et de synthèse de tous tes projets',content);
+ registerForm('#c-ask',(f)=>{const q=String(f.get('question')||'').trim(),pid=subject();if(!q)return;db.messages.push({id:id(),role:'user',text:q,project:pid,at:new Date().toISOString()},{id:id(),role:'assistant',text:reply(q,pid),project:pid,at:new Date().toISOString()});db.messages=db.messages.slice(-80);save();manager();$('#c-project').value=pid});
+ $('#main [data-act="brief"]')?.addEventListener('click',async()=>{const k=subject(),ps=k?[k]:ctx.projects.filter(p=>p.repo||openProject(p.id).reports).slice(0,12).map(p=>p.id);let data='CONTEXTE DE PILOTAGE — '+(k?pname(k):'Tous les projets')+'\n\n'+db.globalRules+'\n\n'+ps.map(pid=>pname(pid)+'\n'+contextEvidence(pid).join('\n')).join('\n\n')+'\n\nAnalyse les faits, distingue les preuves et les incertitudes, identifie les conflits et propose les 3 prochaines priorités. Ne prétends pas pouvoir lire les autres IA.';await copy(data)});
+}
+async function copy(s){try{await navigator.clipboard.writeText(s);toast('Copié. Tu peux le coller dans ton IA.')}catch{toast('Copie refusée par le navigateur. Ouvre CONTROL en HTTPS.')}} 
+function intake(){const now=new Date().toISOString().slice(0,10),actions=db.actions.filter(x=>x.status!=='done'),reviews=db.missions.filter(x=>x.status==='review'),overdue=actions.filter(x=>x.due&&x.due<now).length;
+ const cards=[...actions.map(x=>({kind:'action',id:x.id,project:x.project,title:x.title,sub:(x.due?'Pour le '+date(x.due)+' · ':'')+'Priorité '+x.priority,level:x.priority==='Critique'?'critical':x.due&&x.due<now?'critical':'normal'})),...reviews.map(x=>({kind:'mission',id:x.id,project:x.project,title:'Mission à vérifier : '+x.title,sub:'Retour attendu de '+x.provider,level:'review'}))].sort((a,b)=>({critical:0,review:1,normal:2}[a.level]-{critical:0,review:1,normal:2}[b.level]));
+ let content='<div class="dash-stats">'+[['À traiter',cards.length],['En retard',overdue],['Missions à vérifier',reviews.length]].map(([n,v])=>'<div class="stat"><strong>'+v+'</strong><span>'+n+'</span></div>').join('')+'</div>'+note('Les alertes ci-dessous proviennent de tâches renseignées dans CONTROL. Les messages privés Gmail, les notifications des IA et les tâches non connectées ne sont pas synchronisés.')+
+ box('Boîte de réception',cards.length?cards.map(a=>'<div class="inbox-item"><div><span class="chip '+(a.level==='critical'?'warn':'')+'">'+h(pname(a.project))+'</span><strong>'+h(a.title)+'</strong><small>'+h(a.sub)+'</small></div><div class="actions">'+(a.kind==='action'?btn('Terminer','done:'+a.id):'<a class="button" href="#/control/missions">Vérifier</a>')+'</div></div>').join(''):'<p class="empty">Aucune action enregistrée en attente. Cela ne signifie pas que les applications externes n’ont aucune notification.</p>')+
+ box('Ajouter une action','<form id="new-action">'+field('Action','title','','text','required maxlength="180"')+selectProject('')+'<div class="formgrid"><label>Priorité<select name="priority" class="field">'+options(['Normale','Haute','Critique'],'Normale')+'</select></label>'+field('Échéance','due','','date')+'</div>'+field('Lien de référence (facultatif)','url','','url')+'<button class="primary">Ajouter</button></form>')+
+ box('Alertes des références publiques','<p class="muted">Ces informations proviennent de relevés précédents, pas d’une surveillance en temps réel.</p>'+ctx.projects.filter(p=>p.alerts?.length).slice(0,6).map(p=>'<details><summary>'+h(p.name)+' · '+p.alerts.length+' point(s) de vigilance</summary><p>'+p.alerts.map(a=>h(a.title)).join('<br>')+'</p><a href="#/project/'+encodeURIComponent(p.id)+'/pilot" class="button">Ouvrir le projet</a></details>').join(''));
+ $('#main').innerHTML=view('À traiter','Actions, validations et échéances centralisées',content);
+ registerForm('#new-action',(f)=>{const title=String(f.get('title')||'').trim();if(!title)return;const url=String(f.get('url')||'').trim();if(url&&!safe(url))return toast('Lien HTTPS requis.');db.actions.push({id:id(),project:String(f.get('project')||''),title,priority:String(f.get('priority')||'Normale'),status:'todo',due:String(f.get('due')||''),url,at:new Date().toISOString()});save();intake();toast('Action enregistrée localement.')});
+ $('#main').querySelectorAll('[data-act^="done:"]').forEach(b=>b.onclick=()=>{const a=db.actions.find(x=>x.id===b.dataset.act.slice(5));if(a){a.status='done';a.closedAt=new Date().toISOString();save();intake()}});
+}
+function missions(){const cards=db.missions.slice().reverse(),counts=['todo','doing','review','done'].map(s=>db.missions.filter(x=>x.status===s).length);
+ let content='<div class="dash-stats">'+['À lancer','En cours','À vérifier','Terminé'].map((s,i)=>'<div class="stat"><strong>'+counts[i]+'</strong><span>'+s+'</span></div>').join('')+'</div>'+
+ note('CONTROL prépare les consignes et permet de suivre leur exécution. Les fournisseurs externes ne reçoivent aucune mission automatiquement depuis ce site public. Les résultats doivent être rapportés et vérifiés.')+
+ box('Créer une mission multi-IA','<form id="new-mission">'+field('Intitulé','title','','text','required maxlength="180"')+selectProject('')+'<div class="formgrid"><label>IA responsable<select class="field" name="provider">'+options(agents.map(a=>a.id),'ChatGPT')+'</select></label>'+field('Fichiers ou périmètre technique (facultatif)','files','','text','placeholder="Ex. application/frontend"')+'</div>'+textarea('Instruction à transmettre','instruction','','required maxlength="8000" rows="4"')+'<button class="primary">Préparer la mission</button> '+btn('Préparer un plan avec plusieurs IA','orchestrate')+'</form>')+
+ box('Suivi des missions',cards.length?cards.map(m=>{const collision=db.missions.filter(x=>x.id!==m.id&&x.project===m.project&&x.status==='doing'&&m.status==='doing'&&x.files&&m.files&&(x.files===m.files||x.files.includes(m.files)||m.files.includes(x.files))).length;return '<div class="mission-row"><div class="row"><strong>'+h(m.title)+'</strong>'+tag(m.provider+' · '+m.status)+'</div><p class="muted">'+h(pname(m.project))+' · '+date(m.at)+(collision?' · ⚠️ Risque de modification concurrente':'')+'</p><p>'+h(cap(m.instruction,180))+'</p><div class="actions">'+btn('Copier','copy:'+m.id)+href(providerURL(m.project,m.provider),'Ouvrir '+m.provider)+btn('Mettre à jour','edit:'+m.id)+'</div>'+(m.result?'<details><summary>Résultat rapporté</summary><p class="auto-text">'+h(m.result)+'</p></details>':'')+'</div>'}).join(''):'<p class="empty">Aucune mission enregistrée.</p>')+
+ '<section class="panel hidden" id="mission-editor"><h2>Mettre à jour une mission</h2><form id="edit-mission"><input name="id" type="hidden"><label>État<select class="field" name="status">'+[['todo','À lancer'],['doing','En cours'],['review','À vérifier'],['done','Terminée']].map(([s,n])=>'<option value="'+s+'">'+n+'</option>').join('')+'</select></label>'+textarea('Compte rendu ou résultat','result','','rows="4"')+'<button class="primary">Enregistrer le suivi</button></form></section>';
+ $('#main').innerHTML=view('Missions IA','Préparer, répartir et suivre les travaux de plusieurs IA',content);
+ registerForm('#new-mission',f=>{const title=String(f.get('title')||'').trim(),instruction=String(f.get('instruction')||'').trim(),project=String(f.get('project')||''),provider=String(f.get('provider')||'ChatGPT');if(!title||!instruction)return;db.missions.push({id:id(),title,provider,project,files:String(f.get('files')||''),instruction,status:'todo',result:'',at:new Date().toISOString()});save();missions();toast('Mission créée : à transmettre manuellement.')});
+ $('#main').querySelector('[data-act="orchestrate"]')?.addEventListener('click',()=>{const f=new FormData($('#new-mission')),project=String(f.get('project')||''),instruction=String(f.get('instruction')||'').trim(),title=String(f.get('title')||'Mission');if(!instruction)return toast('Décris d’abord la mission.');const plans=[['ChatGPT','Définir le besoin et les critères de recette'],['Claude','Examiner les risques et proposer les améliorations UX/architecture'],['Codex','Implémenter sur branche dédiée après vérification des conflits, tester et préparer une PR'],['ChatGPT','Vérifier les preuves et synthétiser la livraison']];for(const [provider,step] of plans)db.missions.push({id:id(),project,title:title+' — '+step,provider,files:provider==='Codex'?String(f.get('files')||''):'',instruction:step+'\n\nDemande initiale : '+instruction+'\n\nRègles globales : '+db.globalRules,status:'todo',result:'',at:new Date().toISOString()});save();missions();toast('4 missions préparées, aucune IA déclenchée.')});
+ $('#main').querySelectorAll('[data-act^="copy:"]').forEach(b=>b.onclick=()=>{const m=db.missions.find(x=>x.id===b.dataset.act.slice(5));if(m)copy('MISSION '+m.provider+' — '+pname(m.project)+'\n'+m.title+'\n\n'+m.instruction+'\n\nPérimètre : '+(m.files||'À définir')+'\n\nCONTRAINTES\n'+db.globalRules+'\n\nAprès le travail, fournis des preuves (lien, tests, fichiers changés). Ne déclare pas une tâche terminée sans vérification.')});
+ $('#main').querySelectorAll('[data-act^="edit:"]').forEach(b=>b.onclick=()=>{const m=db.missions.find(x=>x.id===b.dataset.act.slice(5));if(!m)return;$('#mission-editor').classList.remove('hidden');const f=$('#edit-mission');f.elements.id.value=m.id;f.elements.status.value=m.status;f.elements.result.value=m.result||'';$('#mission-editor').scrollIntoView({block:'nearest'})});
+ registerForm('#edit-mission',f=>{const m=db.missions.find(x=>x.id===String(f.get('id')));if(!m)return;m.status=String(f.get('status'));m.result=String(f.get('result')||'').trim();m.updated=new Date().toISOString();save();missions()});
+}
+function calendar(){const now=new Date().toISOString().slice(0,10),future=db.events.slice().sort((a,b)=>a.date.localeCompare(b.date));
+ const content='<div class="two">'+box('Agenda des projets',future.length?future.map(e=>'<div class="inbox-item"><div><strong>'+h(e.title)+'</strong><small>'+h(pname(e.project))+' · '+h(e.date)+(e.details?' · '+h(cap(e.details,90)):'')+'</small></div>'+btn('Supprimer','delete-event:'+e.id)+'</div>').join(''):'<p class="empty">Aucun événement enregistré.</p>')+
+ box('Ajouter un événement','<form id="new-event">'+field('Intitulé','title','','text','required maxlength="160"')+selectProject('')+field('Date et heure','date',now+'T09:00','datetime-local','required')+textarea('Détails','details','','rows="3"')+'<button class="primary">Ajouter à CONTROL</button></form>')+'</div>'+
+ box('Calendriers externes','<p class="muted">Google Agenda et les calendriers des IA restent gérés dans leurs services respectifs. CONTROL n’affiche pas leurs rendez-vous privés sans authentification dédiée.</p><div class="actions">'+href('https://calendar.google.com/calendar/u/0/r/','Google Agenda')+href('https://chatgpt.com/scheduled','Tâches ChatGPT')+href('https://claude.ai/','Claude')+'</div>')+
+ box('Automatisations connues','<div id="c-auto-preview"><p class="muted">Accéder à la programmation des tâches depuis le catalogue daté.</p><a class="button" href="#/automations">Ouvrir les automatisations →</a></div>');
+ $('#main').innerHTML=view('Calendrier','Échéances, événements et automatisations',content);
+ registerForm('#new-event',f=>{db.events.push({id:id(),project:String(f.get('project')||''),title:String(f.get('title')||''),date:String(f.get('date')||''),details:String(f.get('details')||'')});save();calendar()});
+ $('#main').querySelectorAll('[data-act^="delete-event:"]').forEach(b=>b.onclick=()=>{db.events=db.events.filter(x=>x.id!==b.dataset.act.slice(13));save();calendar()});
+}
