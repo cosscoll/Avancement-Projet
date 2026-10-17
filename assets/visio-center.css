@@ -1,0 +1,51 @@
+/* CONTROL / Visios: compact project and client meeting workflow. */
+.vs-page{max-width:1070px;margin:0 auto 34px;color:#283d54}
+.vs-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin:10px 0 17px}
+.vs-head h1{font-size:clamp(27px,4vw,37px);letter-spacing:-.75px;margin:7px 0}
+.vs-head p{max-width:650px;font-size:14px;color:#5d738b;line-height:1.55;margin:6px 0}
+.vs-kicker{font-size:10px;color:#607e9b;font-weight:800;letter-spacing:1.1px}
+.vs-label{font-size:12px;color:#426284;border:1px solid #d8e5f0;border-radius:10px;padding:9px 12px;background:#edf3fa;white-space:nowrap}
+.vs-disclaimer,.vs-privacy{font-size:12px;line-height:1.65;color:#4b6884;border:1px solid #d8e4f0;border-radius:13px;background:#f0f5fb;padding:14px 16px;margin:15px 0}
+.vs-create{border:1px solid #dfe8f0;border-radius:15px;background:#fff;margin:16px 0;overflow:hidden}
+.vs-create>summary{cursor:pointer;font-size:15px;font-weight:790;color:#2d4d71;padding:16px 18px;min-height:52px;list-style-position:inside}
+.vs-create[open]>summary{border-bottom:1px solid #e3eaf2}
+.vs-create form{padding:17px 19px}
+.vs-create label,.vs-notes label{font-size:12px;color:#46607b;font-weight:760;display:block;margin:0 0 13px}
+.vs-input{font:400 13px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:#263f59;display:block;width:100%;margin:7px 0 0;border:1px solid #d3dfea;border-radius:10px;min-height:44px;padding:10px 12px;background:#fff}
+textarea.vs-input{min-height:95px;resize:vertical}
+.vs-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.vs-hint{font-size:11px;line-height:1.55;color:#71879c;margin:9px 0 15px}
+.vs-buttons,.vs-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.vs-buttons a,.vs-actions a,.vs-actions button,.vs-video button,.vs-card>button{display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:740;min-height:40px;padding:9px 12px;border-radius:10px;border:1px solid #d4e0ed;background:#fff;color:#2d527b;text-decoration:none;cursor:pointer}
+.vs-buttons .vs-primary,.vs-actions .vs-join{border-color:#294d70;background:#294d70;color:#fff}
+.vs-buttons a:hover,.vs-actions a:hover,.vs-actions button:hover{border-color:#abc2db}
+.vs-list{margin:26px 0 19px}
+.vs-listhead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.vs-listhead h2{font-size:20px;margin:0}
+.vs-listhead span{font-size:12px;color:#65809a}
+.vs-filters{display:flex;flex-wrap:wrap;gap:6px;margin:15px 0}
+.vs-filters button{font-size:12px;padding:8px 12px;background:#fff;border:1px solid #dee7f1;border-radius:10px;min-height:39px;color:#4f6985}
+.vs-filters button[aria-pressed=true]{color:#294d75;background:#e9f1fa;border-color:#b7cbe0;font-weight:790}
+.vs-card{border:1px solid #dfe8f2;background:#fff;border-radius:14px;padding:17px 18px;margin:10px 0}
+.vs-card h3{font-size:16px;margin:6px 0 8px;color:#284362;line-height:1.4}
+.vs-card-head p{color:#526e8a;font-size:13px;margin:4px 0}
+.vs-card-head small{color:#8799ac;font-size:11px}
+.vs-category{display:inline-block;font-size:10px;color:#416d93;border-radius:7px;background:#edf4fb;padding:5px 8px;font-weight:780}
+.vs-actions{margin:14px 0 5px}
+.vs-actions .vs-join{font-size:12px}
+.vs-notes{border-top:1px solid #e6edf4;padding-top:11px;margin-top:15px;font-size:12px}
+.vs-notes>summary{color:#446485;font-weight:770;cursor:pointer}
+.vs-notes form{padding-top:13px}
+.vs-empty{font-size:13px;color:#6c8097;background:#f8fafc;border:1px solid #e8edf4;padding:16px;border-radius:10px}
+.vs-past-toggle{font-size:12px;border:1px solid #d9e5f0;background:#fff;color:#426487;padding:10px 14px;border-radius:10px;min-height:41px;margin-top:12px}
+.vs-video{border:1px solid #ccdbea;background:#fff;border-radius:14px;padding:15px;margin:17px 0}
+.vs-videohead{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.vs-videohead strong{color:#294664;font-size:15px}
+.vs-video p{font-size:12px;color:#678098}
+#vs-frame{width:100%;height:520px;overflow:hidden;border-radius:12px;background:#eaf0f5}
+#vs-notice{min-height:15px;color:#246749;font-size:12px;line-height:1.5;margin:10px 0}
+#vs-notice[data-error=true]{color:#9d4141}
+.vs-privacy{background:#fafbfd}
+.vs-privacy summary{font-weight:790;cursor:pointer}
+.vs-page :is(a,button,input,textarea,select):focus-visible{outline:3px solid #90add5;outline-offset:2px}
+@media(max-width:720px){.vs-grid{grid-template-columns:1fr;gap:0}.vs-create form{padding:13px}.vs-card{padding:13px}.vs-head{align-items:flex-start;flex-direction:column}.vs-label{display:none}.vs-actions a,.vs-actions button{flex:1;min-width:0}.vs-buttons a,.vs-buttons button{width:100%;justify-content:center}#vs-frame{height:460px}}
