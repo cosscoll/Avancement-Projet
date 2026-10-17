@@ -20,14 +20,14 @@ return `<div class="objective"><div class="objective-top"><div><strong>${safe(go
 const empty=(title,msg)=>`<div class="empty"><strong>${safe(title)}</strong><span>${safe(msg)}</span></div>`;
 function nav(){
 const selected=state.route;
-const top=`<div class="nav-label">AUTOMATISATIONS</div><a class="nav-item ${selected==='automations'?'active':''}" href="#/automations"><span class="nav-dot">◈</span> Vue automatisations</a><a class="nav-item ${selected==='overview'?'active':''}" href="#/overview"><span class="nav-dot">◫</span> Vue générale</a><a class="nav-item ${selected==='inbox'?'active':''}" href="#/inbox"><span class="nav-dot">✉</span> Consignes &amp; décisions</a><a class="nav-item ${selected==='activity'?'active':''}" href="#/activity"><span class="nav-dot">≡</span> Journal des sprints</a>`;
+const top=`<div class="nav-label">AUTOMATISATIONS</div><a class="nav-item ${selected==='automations'?'active':''}" href="#/automations"><span class="nav-dot">◈</span> Vue automatisations</a><a class="nav-item ${selected==='overview'?'active':''}" href="#/overview"><span class="nav-dot">◫</span> Vue générale</a><a class="nav-item ${selected==='inbox'?'active':''}" href="#/inbox"><span class="nav-dot">✉</span> Consignes &amp; décisions</a><a class="nav-item ${selected==='activity'?'active':''}" href="#/activity"><span class="nav-dot">≡</span> Journal des sprints</a><div class="nav-label nav-section">DÉVELOPPEMENT</div><a class="nav-item ${selected==='codex'?'active':''}" href="#/codex"><span class="nav-dot">⌘</span> Codex · Pilotage mobile</a>`;
 const acts=state.projects.map(p=>`<a class="nav-item ${selected===p.id?'active':''}" href="#/${p.id}/overview"><span class="nav-dot">${safe(p.symbol)}</span>${safe(p.name)}</a>`).join('');
 const extras=`<div class="nav-label nav-section">MES AUTRES PROJETS</div><a class="nav-item ${selected==='catalog'?'active':''}" href="#/catalog"><span class="nav-dot">⌑</span> Tous les projets <span class="mini-count">${state.catalog.length+state.custom.length}</span></a>`;
 const last=`<div class="nav-label nav-section">ACCÈS RAPIDE</div><a class="nav-item" href="https://chatgpt.com/tasks" target="_blank" rel="noopener noreferrer"><span class="nav-dot">↗</span> Tâches ChatGPT</a>`;
 q('#project-nav').innerHTML=top+acts+extras+last;
-const bread=selected==='automations'?'Automatisations':selected==='overview'?'Vue générale':selected==='catalog'?'Autres projets':selected==='inbox'?'Consignes & décisions':selected==='activity'?'Journal des sprints':selected==='other'?state.catalogSelected?.name||'Projet':state.selected?.name||'Projet';
+const bread=selected==='automations'?'Automatisations':selected==='overview'?'Vue générale':selected==='catalog'?'Autres projets':selected==='inbox'?'Consignes & décisions':selected==='activity'?'Journal des sprints':selected==='codex'?'Codex':selected==='other'?state.catalogSelected?.name||'Projet':state.selected?.name||'Projet';
 q('#crumb').textContent=bread;
- const dest=selected==='inbox'?'inbox':selected==='activity'?'activity':selected==='catalog'||selected==='other'?'catalog':'automations';
+ const dest=selected==='inbox'?'inbox':selected==='activity'?'activity':selected==='catalog'||selected==='other'?'catalog':selected==='codex'?'codex':'automations';
  document.querySelectorAll('.mobile-tab').forEach(a=>{const active=a.dataset.nav===dest;a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
 }
 function mainHeading(label,title,desc,action=''){return `<div class="page-head"><div><div class="page-eyebrow">${safe(label)}</div><h1 class="page-title">${safe(title)}</h1><p class="page-description">${safe(desc)}</p></div>${action}</div>`}
@@ -83,12 +83,13 @@ function projectWebsite(p){return localWebsite(p)||validWebsite(p.website?.url)}
 function websiteLink(p){const url=projectWebsite(p);return url?`<a class="btn primary website-primary" href="${safe(url)}" target="_blank" rel="noopener noreferrer" title="Adresse référencée, disponibilité non vérifiée">🌐 Visiter le site ↗</a>`:`<span class="tag warning">Site non renseigné</span>`}
 function websitePanel(p){const url=projectWebsite(p),other=(p.other_sites||[]).filter(x=>validWebsite(x.url));return `<section class="panel website-panel"><div class="panel-heading"><h2>Site du projet</h2>${badge(url?'Lien disponible':'À renseigner',url?'neutral':'warning')}</div>${url?`<p class="small muted">${safe(localWebsite(p)?'Adresse personnalisée : ':p.website?.label||p.name+' : ')}<span class="site-url">${safe(url)}</span></p><div class="site-buttons">${websiteLink(p)}${other.map(x=>`<a class="btn site-secondary" target="_blank" rel="noopener noreferrer" href="${safe(validWebsite(x.url))}">${safe(x.label||'Autre site')} ↗</a>`).join('')}</div><p class="small muted">Adresse référencée ; disponibilité du site non vérifiée automatiquement.</p>`:`<p class="small muted">Aucun site public identifié. Tu peux renseigner une adresse HTTPS exacte ci-dessous.</p>`}<form class="site-edit-form"><label for="website-url">${url?'Personnaliser le lien sur cet appareil':'Ajouter un lien vers le site'}</label><input id="website-url" type="url" inputmode="url" placeholder="https://exemple.fr/" value="${safe(localWebsite(p))}"><div class="site-buttons"><button type="submit" class="btn small">Enregistrer le lien</button><button type="button" class="btn small site-reset" ${localWebsite(p)?'':'disabled'}>Rétablir le lien initial</button></div></form><p class="small muted">Les liens personnalisés restent dans ce navigateur et ne modifient pas les automatisations.</p></section>`}
 function bindWebsite(p){const form=q('.site-edit-form');if(!form)return;form.addEventListener('submit',e=>{e.preventDefault();const raw=form.querySelector('input').value.trim(),url=validWebsite(raw);if(!url){toast('Adresse HTTPS invalide.');return}try{localStorage.setItem('control-website-'+p.id,url);toast('Lien enregistré sur cet appareil.');state.route==='other'?otherView(p):renderProject(p)}catch{toast('Enregistrement local impossible.')}});form.querySelector('.site-reset')?.addEventListener('click',()=>{try{localStorage.removeItem('control-website-'+p.id);toast('Lien par défaut rétabli.');state.route==='other'?otherView(p):renderProject(p)}catch{toast('Enregistrement local impossible.')}})}
-function renderProject(p){const action=`<div class="project-heading-meta">${badge(p.status)}${websiteLink(p)}<a class="btn" href="${repoRoot+encodeURIComponent(p.repo)}" target="_blank" rel="noopener noreferrer">Code GitHub ↗</a></div>`;
+function renderProject(p){const action=`<div class="project-heading-meta">${badge(p.status)}<a class="btn primary" href="#/codex" data-codex-project="${safe(p.id)}">Commander Codex ↗</a>${websiteLink(p)}<a class="btn" href="${repoRoot+encodeURIComponent(p.repo)}" target="_blank" rel="noopener noreferrer">Code GitHub ↗</a></div>`;
 const tabs= `<nav class="tabs" aria-label="Sections du projet">${sections.map(([id,label])=>`<a class="tab ${state.section===id?'active':''}" href="#/${p.id}/${id}" ${state.section===id?'aria-current="page"':''}>${label}</a>`).join('')}</nav>`;
 const descriptions={overview:p.description,objectives:'Progression fondée sur des critères observables.',sprints:'Résultats vérifiés, blocages et preuves associés aux exécutions.',alerts:'Points de vigilance et obstacles identifiés.',decisions:'Arbitrages nécessitant une décision du propriétaire.',instructions:'Publie une consigne non confidentielle sur GitHub pour qu’elle soit consultée au prochain sprint ; brouillons locaux non transmis.'};
 const sectionContent={overview:()=>projectOverview(p),objectives:()=>objectivesView(p),sprints:()=>sprintsView(p),alerts:()=>alertsView(p),decisions:()=>decisionsView(p),instructions:()=>instructionsView(p)};
 q('#main').innerHTML=mainHeading(p.short.toUpperCase()+' / '+p.category.toUpperCase(),p.name,descriptions[state.section]||p.description,action)+tabs+(sectionContent[state.section]||sectionContent.overview)();
 if(state.section==='overview')bindWebsite(p);
+q('[data-codex-project]')?.addEventListener('click',()=>{try{sessionStorage.setItem('control-codex-project',p.id)}catch{}});
 if(state.section==='instructions'){bindInstructions(p);loadIssues(p,'CONSIGNE')}
 if(state.section==='decisions')loadIssues(p,'DECISION');
 q('#refresh-issues')?.addEventListener('click',()=>{state.issues=null;q('#public-issues').innerHTML='<div class="loading"><span class="spinner"></span> Actualisation…</div>';loadIssues(p,state.section==='decisions'?'DECISION':'CONSIGNE')});
@@ -117,7 +118,7 @@ function automationsStrip(){
 function automationsView(){
  const tasks=state.taskInfo,total=Object.values(state.sprints).reduce((n,v)=>n+v.length,0);
  const withReports=tasks.filter(t=>(state.sprints[t.id]||[]).length).length;
- q('#main').innerHTML=mainHeading('CENTRE DE PILOTAGE','Automatisations','Retrouve tes tâches programmées, leurs derniers résultats et les projets associés.',`<a class="btn" href="https://chatgpt.com/tasks" target="_blank" rel="noopener noreferrer">Gérer dans ChatGPT ↗</a>`)+
+ q('#main').innerHTML=mainHeading('CENTRE DE PILOTAGE','Automatisations','Retrouve tes tâches programmées, leurs derniers résultats et les projets associés.',`<div class="project-heading-meta"><a class="btn primary" href="#/codex">Commander Codex ↗</a><a class="btn" href="https://chatgpt.com/tasks" target="_blank" rel="noopener noreferrer">Tâches ChatGPT ↗</a></div>`)+
  `<section class="stat-grid" aria-label="Résumé du suivi"><div class="panel stat"><div class="kicker">Tâches suivies</div><strong>${tasks.length}</strong><small>Dernier relevé de statut</small></div><div class="panel stat"><div class="kicker">Rapports enregistrés</div><strong>${total}</strong><small>Historique du centre</small></div><div class="panel stat"><div class="kicker">Projets avec rapport</div><strong>${withReports}/5</strong><small>Synchronisation constatée</small></div><div class="panel stat"><div class="kicker">Autres projets</div><strong>${state.catalog.length+state.custom.length}</strong><small><a class="external" href="#/catalog">Explorer →</a></small></div></section>
  <div class="section-heading"><div><h2>Mes cinq automatisations</h2><p class="muted small">Clique sur un projet pour ses objectifs, sprints, alertes et consignes.</p></div><a href="#/activity" class="btn small">Journal des sprints →</a></div>
  <div class="automation-list">${tasks.map(taskReport).join('')}</div>
@@ -255,19 +256,28 @@ function toggleMobileMenu(){
  q('#toggle-nav').setAttribute('aria-expanded',String(isOpen));
  q('#toggle-nav').setAttribute('aria-label',isOpen?'Fermer le menu':'Ouvrir le menu');
 }
+function codexView(){
+ const tool=window.CONTROL_CODEX;
+ if(!tool){q('#main').innerHTML=empty('Codex temporairement indisponible','Actualise CONTROL pour charger le module.');return}
+ const ctx={projects:state.projects,catalog:state.catalog,custom:state.custom,currentId:(()=>{try{return sessionStorage.getItem('control-codex-project')||''}catch{return''}})()};
+ q('#main').innerHTML=tool.render(ctx);
+ tool.bind(ctx);
+}
+
 function resolve(){
 const segments=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean),id=segments[0]||'automations';
-state.route=id==='automations'||id==='overview'||id==='catalog'||id==='other'||id==='inbox'||id==='activity'||state.projects.some(x=>x.id===id)?id:'automations';
+state.route=id==='automations'||id==='overview'||id==='catalog'||id==='other'||id==='inbox'||id==='activity'||id==='codex'||state.projects.some(x=>x.id===id)?id:'automations';
 state.selected=state.projects.find(x=>x.id===state.route)||null;
 state.catalogSelected=state.route==='other'?[...state.catalog,...state.custom].find(p=>p.id===segments[1])||null:null;
 state.section=sections.some(x=>x[0]===segments[1])?segments[1]:'overview';
 nav();
-if(state.route==='automations')automationsView();else if(state.route==='overview')overview();else if(state.route==='catalog')catalogView();else if(state.route==='inbox')inboxView();else if(state.route==='activity')activityView();else if(state.route==='other')state.catalogSelected?otherView(state.catalogSelected):catalogView();else renderProject(state.selected);
+if(state.route==='automations')automationsView();else if(state.route==='overview')overview();else if(state.route==='catalog')catalogView();else if(state.route==='inbox')inboxView();else if(state.route==='activity')activityView();else if(state.route==='codex')codexView();else if(state.route==='other')state.catalogSelected?otherView(state.catalogSelected):catalogView();else renderProject(state.selected);
 closeMobileMenu();scrollTo({top:0,behavior:'instant'});
 }
 
 function commandEntries(){
- const menu=[{name:'Mes automatisations',subtitle:'Statuts, derniers sprints et liens',route:'#/automations',symbol:'◈'},{name:'Journal global des sprints',subtitle:'Filtres, résultats, blocages',route:'#/activity',symbol:'≡'},{name:'Consignes & décisions',subtitle:'Canal public de pilotage',route:'#/inbox',symbol:'✉'},{name:'Tous les autres projets',subtitle:'Catalogue GitHub et ChatGPT',route:'#/catalog',symbol:'⌑'}];
+ const menu=[{name:'Mes automatisations',subtitle:'Statuts, derniers sprints et liens',route:'#/automations',symbol:'◈'},
+ {name:'Codex · Pilotage mobile',subtitle:'Préparer une mission et consulter les PR GitHub',route:'#/codex',symbol:'⌘'},{name:'Journal global des sprints',subtitle:'Filtres, résultats, blocages',route:'#/activity',symbol:'≡'},{name:'Consignes & décisions',subtitle:'Canal public de pilotage',route:'#/inbox',symbol:'✉'},{name:'Tous les autres projets',subtitle:'Catalogue GitHub et ChatGPT',route:'#/catalog',symbol:'⌑'}];
  return [...menu,...state.projects.map(p=>({name:p.name,subtitle:'Projet automatisé · '+p.category,route:'#/'+p.id+'/overview',symbol:p.symbol})),...[...state.catalog,...state.custom].map(p=>({name:p.name,subtitle:'Autre projet · '+(p.category||'Projet'),route:'#/other/'+encodeURIComponent(p.id),symbol:p.symbol||'+'}))];
 }
 function drawCommand(){
