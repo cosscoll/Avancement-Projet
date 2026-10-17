@@ -114,3 +114,76 @@ function managerAnswer(question,proj){const chosen=proj?[getProject(proj)].filte
  out+='\n'}
  if(!chosen.length)out+='Aucun projet personnel disponible.\n';
  return out+'Source : données privées de ton compte CONTROL uniquement. Aucun accès automatique aux historiques privés des autres fournisseurs. Les résultats manuels nécessitent une vérification indépendante.'}
+
+let toolTab='library',searchFilter='';
+function toolsPage(){
+ const tabs=[['library','Ressources'],['calendar','Calendrier'],['budget','Finances'],['memory','Décisions'],['search','Recherche'],['backup','Sauvegardes']];
+ let body='<div class="tabbar">'+tabs.map(([key,label])=>'<button data-action="tool-tab" data-id="'+key+'" class="'+(toolTab===key?'selected':'')+'">'+label+'</button>').join('')+'</div>';
+ if(toolTab==='library'){
+  const list=items('resource').filter(x=>(x.title+' '+x.url+' '+projectName(x.project_id)).toLowerCase().includes(searchFilter.toLowerCase()));
+  body+=panel('Bibliothèque · tous les projets',
+   '<input id="tool-search" type="search" value="'+H(searchFilter)+'" placeholder="Rechercher un titre ou un lien…" aria-label="Recherche documentaire">'+
+   '<div id="tool-results">'+(list.length?list.map(itemRow).join(''):empty('Aucune ressource correspondante.'))+'</div>')+
+   panel('Ajouter une ressource','<form data-form="save-item">'+input('Nom','title','','text','required maxlength="200"')+projSelect()+
+   '<input name="kind" value="resource" type="hidden">'+input('Adresse du document','url','','url','required placeholder="https://drive.google.com/…"')+
+   '<button class="primary">Ajouter le document</button></form>')+
+   panel('Services externes','<div class="btnrow">'+ext('https://drive.google.com/','Google Drive')+ext('https://github.com/','GitHub')+
+   '</div><p class="muted">Les fichiers privés ne sont pas synchronisés depuis ces services.</p>');
+ }
+ else if(toolTab==='calendar'){
+  const records=items('event').sort((a,b)=>(a.due_at||'9999').localeCompare(b.due_at||'9999'));
+  body+=panel('Événements et échéances',records.length?records.map(itemRow).join(''):empty('Aucun événement enregistré.'))+
+   panel('Nouvel événement','<form data-form="save-item">'+input('Événement','title','','text','required maxlength="200"')+projSelect()+
+   '<input type="hidden" name="kind" value="event">'+input('Date et heure','due_at','','datetime-local','required')+
+   area('Préparation et notes','body')+'<button class="primary">Enregistrer</button></form>')+
+   panel('Calendriers externes','<div class="btnrow">'+ext('https://calendar.google.com/','Google Agenda')+
+   ext('https://chatgpt.com/scheduled','Tâches ChatGPT')+'</div><p class="muted">La synchronisation des calendriers privés n’est pas encore activée.</p>');
+ }
+ else if(toolTab==='budget'){
+  const expenses=items('expense'),income=items('income'),sum=xs=>xs.reduce((a,x)=>a+Number(x.details?.amount||0),0);
+  const entries=[...expenses,...income];
+  body+='<div class="stats"><div class="stat"><b>'+sum(expenses).toFixed(2)+' €</b><span>Dépenses saisies</span></div>'+
+   '<div class="stat"><b>'+sum(income).toFixed(2)+' €</b><span>Revenus saisis</span></div>'+
+   '<div class="stat"><b>'+(sum(income)-sum(expenses)).toFixed(2)+' €</b><span>Solde déclaré</span></div></div>';
+  body+=panel('Suivi financier',entries.length?entries.map(x=>'<div class="item"><div><strong>'+H(x.title)+'</strong>'+
+   '<span class="muted">'+H(projectName(x.project_id))+' · '+H(names[x.kind])+'</span></div>'+
+   '<span>'+Number(x.details?.amount||0).toFixed(2)+' €</span></div>').join(''):empty('Aucun montant saisi.'));
+  body+=panel('Déclarer un montant','<form data-form="save-item">'+input('Libellé','title','','text','required maxlength="200"')+projSelect()+
+   choose('Type','kind',[['expense','Dépense'],['income','Revenu']],'expense')+
+   input('Montant (€)','amount','','number','required min="0" step="0.01" max="1000000"')+
+   '<button class="primary">Enregistrer</button></form>')+
+   '<div class="hint">Données déclaratives uniquement. Aucun accès bancaire ni suivi réel des tokens des fournisseurs.</div>';
+ }
+ else if(toolTab==='memory'){
+  const ds=items('decision');
+  body+=panel('Historique des décisions',ds.length?ds.map(itemRow).join(''):empty('Aucune décision enregistrée.'))+
+   panel('Ajouter une décision','<form data-form="save-item">'+input('Décision','title','','text','required maxlength="200"')+projSelect()+
+   '<input type="hidden" name="kind" value="decision">'+area('Justification et conséquence','body','','required maxlength="30000"')+
+   input('Source ou compte rendu','url','','url')+'<button class="primary">Enregistrer</button></form>');
+ }
+ else if(toolTab==='search'){
+  const list=[...cache.projects.map(p=>({title:p.name,id:p.id,type:'project',description:'Projet'})),
+   ...cache.items.map(x=>({title:x.title,id:x.id,type:'item',description:names[x.kind]+' · '+projectName(x.project_id)}))];
+  const found=list.filter(x=>(x.title+' '+x.description).toLowerCase().includes(searchFilter.toLowerCase())).slice(0,100);
+  body+=panel('Recherche universelle','<input id="tool-search" type="search" value="'+H(searchFilter)+'" placeholder="Projet, mission, document, décision…" aria-label="Recherche universelle">'+
+   '<div id="tool-results">'+(found.length?found.map(x=>'<div class="item"><div><strong>'+H(x.title)+'</strong><span class="muted">'+H(x.description)+
+   '</span></div>'+btn('Ouvrir',x.type==='project'?'open-project':'open-item',x.id)+'</div>').join(''):empty('Aucun résultat.'))+
+   '</div><p class="muted">N’indexe pas les conversations privées des IA.</p>');
+ }
+ else if(toolTab==='backup'){
+  body+=panel('Exporter votre compte','<p class="muted">Le fichier exporté contient des liens et informations privées. Conservez-le en lieu sûr.</p>'+
+   '<div class="btnrow">'+btn('Exporter un JSON chiffré','export-encrypted')+btn('Exporter en clair','export-json')+'</div>')+
+   panel('Importer mes projets historiques','<p class="muted">Import volontaire uniquement si les données de l’ancien CONTROL vous appartiennent. Aucune suppression automatique.</p>'+
+   btn('Importer mon ancien CONTROL','import-legacy'));
+ }
+ return header('Tous les outils','Ressources, agenda, budgets, décisions, sauvegardes.')+body+'<div id="tool-editor"></div>';
+}
+function accountPage(){
+ return header('Mon compte',authUser?.email||'Compte utilisateur')+
+ panel('Connexion','<p>Adresse : <strong>'+H(authUser?.email||'')+'</strong></p>'+
+ '<p class="muted">Identifiant : '+H(authUser?.id||'')+'</p><div class="btnrow">'+btn('Actualiser','refresh')+btn('Déconnexion','logout')+'</div>')+
+ panel('Confidentialité','<p>Chaque projet est rattaché à son propriétaire via les règles d’accès RLS de la base de données.</p>'+
+ '<p class="muted">Les liens vers les IA ne constituent pas une connexion API. Les droits Google ne sont pas accordés automatiquement par la connexion au compte.</p>')+
+ panel('Données personnelles',btn('Exporter mes données','export-json')+' '+btn('Importer mon ancien espace','import-legacy')+
+ '<p class="muted">La suppression complète d’un compte doit être mise en service après vérification de la procédure côté serveur ; les inscriptions publiques resteront désactivées tant qu’elle n’est pas prête.</p>');
+}
