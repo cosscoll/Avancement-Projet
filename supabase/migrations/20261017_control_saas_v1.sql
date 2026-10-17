@@ -84,16 +84,46 @@ revoke all on public.control_profiles, public.control_projects, public.control_i
 grant select, insert, update, delete on public.control_profiles, public.control_projects, public.control_items, public.control_preferences, public.control_connections to authenticated;
 grant select, insert on public.control_audit_events to authenticated;
 
-create policy control_profiles_owner on public.control_profiles for all to authenticated
+create policy control_profiles_owner_select on public.control_profiles for select to authenticated
+ using (user_id = (select auth.uid()));
+create policy control_profiles_owner_insert on public.control_profiles for insert to authenticated
+ with check (user_id = (select auth.uid()));
+create policy control_profiles_owner_update on public.control_profiles for update to authenticated
  using (user_id = (select auth.uid())) with check (user_id = (select auth.uid()));
-create policy control_projects_owner on public.control_projects for all to authenticated
+create policy control_profiles_owner_delete on public.control_profiles for delete to authenticated
+ using (user_id = (select auth.uid()));
+create policy control_projects_owner_select on public.control_projects for select to authenticated
+ using (owner_id = (select auth.uid()));
+create policy control_projects_owner_insert on public.control_projects for insert to authenticated
+ with check (owner_id = (select auth.uid()));
+create policy control_projects_owner_update on public.control_projects for update to authenticated
  using (owner_id = (select auth.uid())) with check (owner_id = (select auth.uid()));
-create policy control_items_owner on public.control_items for all to authenticated
+create policy control_projects_owner_delete on public.control_projects for delete to authenticated
+ using (owner_id = (select auth.uid()));
+create policy control_items_owner_select on public.control_items for select to authenticated
+ using (owner_id = (select auth.uid()));
+create policy control_items_owner_insert on public.control_items for insert to authenticated
+ with check (owner_id = (select auth.uid()));
+create policy control_items_owner_update on public.control_items for update to authenticated
  using (owner_id = (select auth.uid())) with check (owner_id = (select auth.uid()));
-create policy control_preferences_owner on public.control_preferences for all to authenticated
+create policy control_items_owner_delete on public.control_items for delete to authenticated
+ using (owner_id = (select auth.uid()));
+create policy control_preferences_owner_select on public.control_preferences for select to authenticated
+ using (owner_id = (select auth.uid()));
+create policy control_preferences_owner_insert on public.control_preferences for insert to authenticated
+ with check (owner_id = (select auth.uid()));
+create policy control_preferences_owner_update on public.control_preferences for update to authenticated
  using (owner_id = (select auth.uid())) with check (owner_id = (select auth.uid()));
-create policy control_connections_owner on public.control_connections for all to authenticated
+create policy control_preferences_owner_delete on public.control_preferences for delete to authenticated
+ using (owner_id = (select auth.uid()));
+create policy control_connections_owner_select on public.control_connections for select to authenticated
+ using (owner_id = (select auth.uid()));
+create policy control_connections_owner_insert on public.control_connections for insert to authenticated
+ with check (owner_id = (select auth.uid()));
+create policy control_connections_owner_update on public.control_connections for update to authenticated
  using (owner_id = (select auth.uid())) with check (owner_id = (select auth.uid()));
+create policy control_connections_owner_delete on public.control_connections for delete to authenticated
+ using (owner_id = (select auth.uid()));
 create policy control_audit_select on public.control_audit_events for select to authenticated
  using (owner_id = (select auth.uid()));
 create policy control_audit_insert on public.control_audit_events for insert to authenticated
