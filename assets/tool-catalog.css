@@ -49,3 +49,18 @@
 @media(max-width:700px){.tool-controls{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:13px}.tool-controls label:first-child{grid-column:span 2}.tool-tracks{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.tool-track{min-height:130px;padding:13px}.tool-item{min-height:296px}.tool-page-heading h1{font-size:29px}.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.tool-item{padding:13px}.tool-item h3{font-size:15px}.tool-actions{flex-direction:column}.tool-actions .tool-fav{align-self:flex-start}.tool-info{padding:12px}}
 @media(max-width:480px){.tool-grid{grid-template-columns:1fr}.tool-item{min-height:0}.tool-actions{flex-direction:row}.tool-controls{grid-template-columns:1fr 1fr}.tool-track strong{font-size:13px}}
 @media(max-width:350px){.tool-tracks,.tool-controls{grid-template-columns:1fr}.tool-controls label:first-child{grid-column:span 1}}
+
+
+/* Small reusable starter kits / prompt templates; no paid lesson text. */
+.tool-kits{margin:32px 0 14px;border-top:1px solid #e0e9f2;padding-top:21px}
+.tool-kit-caption{font-size:12px;line-height:1.5;color:#72839a;max-width:620px;margin:7px 0 0}
+.tool-kit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(275px,1fr));gap:12px;margin-top:18px}
+.tool-kit{background:#fff;border:1px solid #dfe6ee;border-radius:15px;padding:18px;display:flex;flex-direction:column;align-items:flex-start}
+.tool-kit-label{font-size:11px;color:#53759e;font-weight:750;margin-bottom:9px}
+.tool-kit h3{margin:0 0 9px;font-size:17px;color:#253b58}
+.tool-kit p{color:#586e87;font-size:13px;line-height:1.54}
+.tool-kit-links{display:flex;flex-wrap:wrap;gap:7px;margin:5px 0 14px}
+.tool-kit-links a{background:#f0f5fb;border-radius:8px;padding:7px 9px;font-size:11px;color:#315881;text-decoration:none}
+.tool-kit button{margin-top:auto;background:#2c496e;border-color:#2c496e;color:#fff;font-size:12px;padding:9px 13px;min-height:39px;border-radius:10px}
+.tool-kit button:hover{background:#3b5e89;color:#fff}
+@media(max-width:520px){.tool-kit-grid{grid-template-columns:1fr}.tool-kit{padding:14px}}
