@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "updated_at": "2026-10-17",
   "scope": "CONTROL personal and staged Cloud help; informational, no model API.",
   "greeting": "Bonjour ! Je suis l’assistant CONTROL. Je peux te guider dans l’application, expliquer les fonctionnalités, les outils IA et la mise en ligne de sites. Pose-moi une question.",
@@ -765,6 +765,93 @@
         "3. Vérifie les droits requis avant toute future synchronisation."
       ],
       "route": "settings"
+    },
+    {
+      "id": "laboratoire",
+      "title": "Utiliser le Laboratoire IA",
+      "keywords": [
+        "laboratoire",
+        "atelier",
+        "productivité",
+        "qualité",
+        "résultat",
+        "améliorer",
+        "réponse",
+        "prompt",
+        "outils",
+        "intégrés",
+        "brief",
+        "comparer",
+        "contrôler",
+        "vérifier"
+      ],
+      "answer": "Le Laboratoire IA regroupe sept utilitaires de production et de vérification dans CONTROL. Il peut préparer un brief à partir du contexte enregistré, comparer les indices présents dans deux réponses, analyser du HTML, vérifier un JSON, comparer des versions, produire une checklist de recette et masquer certains secrets. Ces contrôles sont exécutés directement dans le navigateur : aucun modèle IA externe ne répond automatiquement.",
+      "steps": [
+        "Ouvre « Tous les outils » → « Laboratoire IA ».",
+        "Choisis éventuellement un projet CONTROL.",
+        "Sélectionne Brief IA, Comparer les IA, Audit HTML, Vérifier JSON ou un autre outil.",
+        "Colle uniquement des données autorisées, lance l’analyse puis vérifie les résultats."
+      ],
+      "route": "lab"
+    },
+    {
+      "id": "brief-lab",
+      "title": "Préparer un brief précis pour ChatGPT, Claude ou Codex",
+      "keywords": [
+        "prompt",
+        "consigne",
+        "améliorer",
+        "mission",
+        "ia",
+        "contexte",
+        "besoin",
+        "cahier",
+        "des",
+        "charges",
+        "brief",
+        "qualité",
+        "codex",
+        "claude",
+        "objectif",
+        "règles"
+      ],
+      "answer": "Dans le Laboratoire IA, « Brief IA » assemble ton objectif, le type de mission, le fournisseur, les contraintes et le contexte déjà enregistré dans ton projet. Il ajoute des critères de livrables et de preuves. Tu peux ensuite copier le prompt ou créer une mission CONTROL ; son exécution dans ChatGPT, Claude, Gemini ou Codex reste manuelle.",
+      "steps": [
+        "Ouvre Laboratoire IA → Brief IA.",
+        "Sélectionne le projet et le fournisseur IA.",
+        "Précise l’objectif, le livrable attendu et les contraintes.",
+        "Génère le brief, relis-le et copie-le ou ajoute-le aux missions."
+      ],
+      "route": "lab"
+    },
+    {
+      "id": "qa-lab",
+      "title": "Comparer et contrôler les résultats des IA",
+      "keywords": [
+        "comparaison",
+        "réponses",
+        "ia",
+        "résultats",
+        "html",
+        "json",
+        "audit",
+        "différence",
+        "version",
+        "validation",
+        "note",
+        "score",
+        "objectif",
+        "qualité",
+        "tests"
+      ],
+      "answer": "La comparaison du Laboratoire IA détecte des indices visibles dans les réponses de deux IA, sans juger leur vérité. Les autres outils peuvent vérifier la syntaxe JSON, certains éléments HTML ou les différences entre deux versions. Les scores sont descriptifs et ne remplacent jamais des tests fonctionnels, une revue technique ou une vérification des sources.",
+      "steps": [
+        "Ouvre Laboratoire IA → Comparer les IA.",
+        "Renseigne le même objectif et colle les deux réponses.",
+        "Compare les indicateurs, puis vérifie les faits et le code réellement.",
+        "Utilise Audit HTML, Vérifier JSON ou Plan de recette selon le livrable."
+      ],
+      "route": "lab"
     }
   ]
 }
