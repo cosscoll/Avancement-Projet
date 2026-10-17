@@ -39,6 +39,23 @@ test('Service worker caches only present public shell/data files, and never the 
   assert.ok(shellFiles.includes('assets/control-help.js'));
 });
 
+test('CONTROL migrations fail closed unless the isolated database is explicitly confirmed', () => {
+  for (const pathName of [
+    'supabase/migrations/20261017_control_saas_v1.sql',
+    'supabase/migrations/20261017_control_ai_dispatch.sql'
+  ]) {
+    const sql = read(pathName);
+    const safety = sql.indexOf("current_setting('app.control_isolated_project', true)");
+    const firstMutation = Math.min(
+      ...[sql.indexOf('create table '), sql.indexOf('create extension ')]
+        .filter(position => position >= 0)
+    );
+    assert.ok(safety >= 0 && safety < firstMutation, `${pathName}: missing pre-migration guard`);
+    assert.match(sql, /raise exception 'CONTROL migration refused/);
+    assert.match(sql, /'confirmed'/);
+  }
+});
+
 test('Cloud signups and paid AI dispatch remain disabled', () => {
   const config = JSON.parse(read('config/cloud.json'));
   const example = JSON.parse(read('config/cloud.example.json'));
