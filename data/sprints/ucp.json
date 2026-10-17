@@ -582,5 +582,35 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T083212Z",
+    "started_at": "2026-10-17T08:32:12Z",
+    "ended_at": "2026-10-17T08:36:54.850Z",
+    "summary": "UCP-QA-21 : composition isolée des correctifs QA-18 et QA-20 validée par audits accessibilité, contrats ciblés et suite DOM historique.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat ; HEAD main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Composition sur copie isolée : écran anonyme sans violation axe et 36 règles réussies ; 16/16 vues authentifiées avec exactement un titre principal, sans violation axe ni contrôle sans libellé.",
+      "Exécutions finales : 7/7 contrats de composition et 8/8 tests DOM historiques adaptés réussis ; npm audit production sans vulnérabilité déclarée ; archive SHA256 896f7d04e05ba044fec6c77844eb72595fcf4ed2ba6c5dfcf1f001fd2a4a1ce7."
+    ],
+    "blockers": [
+      "Quatre règles axe restent incomplètes sous JSDOM ; aucun Chromium, clavier réel, contraste calculé, zoom ou lecteur d’écran testé.",
+      "Correctifs non intégrés, aucun staging ou déploiement ; état du clone Windows dev/ucp-codex inconnu."
+    ],
+    "next": "Comparer les trois diffs QA-21 au clone local, exécuter QA-17 à QA-21 sous Chromium, puis envisager une pull request dédiée sans fusion automatique.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut UCP central QA-21",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/14bc6fb01106386a908e1be267f825229678a917"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
