@@ -79,7 +79,7 @@ function manager(){
  '<section class="panel"><div class="sectionhead"><h2>Derniers sprints publics</h2>'+btn('Actualiser','refresh-sprints')+'</div><div id="sprint-overview"><p class="muted">Chargement des rapports enregistrés sur GitHub…</p></div></section>'+
  '<section class="panel"><div class="sectionhead"><h2>Chef de projet central</h2>'+tag('Sources vérifiables')+'</div><label>Périmètre<select id="c-project" class="field">'+options+'</select></label><div class="messages" id="c-messages">'+(db.messages.length?db.messages.slice(-12).map(m=>'<div class="pilot-message '+(m.role==='user'?'pilot-user':'pilot-answer')+'"><span class="muted">'+h(m.role==='user'?'Vous':'CONTROL · synthèse locale')+' · '+date(m.at)+'</span><p>'+h(m.text)+'</p></div>').join(''):'<p class="empty">Demande « Où en sont mes projets ? » ou « Quelles sont les prochaines priorités ? ».</p>')+'</div>'+
  '<form id="c-ask"><label>Question<input class="field" name="question" required maxlength="900" placeholder="Où en est UCP sur chaque IA ?"></label><div class="actions"><button class="primary">Interroger CONTROL</button>'+btn('Préparer un briefing ChatGPT','brief')+href('https://chatgpt.com/','Ouvrir ChatGPT')+'</div></form></section>'+
- box('Accès rapide', '<div class="quicktiles">'+[['inbox','À traiter'],['missions','Missions multi-IA'],['activity','Activité GitHub'],['calendar','Calendrier'],['library','Bibliothèque'],['budget','Coûts et quotas'],['memory','Mémoire et décisions'],['backup','Sauvegardes'],['settings','Règles et sécurité']].map(([url,label])=>'<a href="#/control/'+url+'" class="quicktile">'+h(label)+' →</a>').join('')+'</div>');
+ box('Accès rapide', '<div class="quicktiles">'+[['command','Commander Claude & Gemini'],['inbox','À traiter'],['missions','Missions multi-IA'],['activity','Activité GitHub'],['calendar','Calendrier'],['library','Bibliothèque'],['budget','Coûts et quotas'],['memory','Mémoire et décisions'],['backup','Sauvegardes'],['settings','Règles et sécurité']].map(([url,label])=>'<a href="#/control/'+url+'" class="quicktile">'+h(label)+' →</a>').join('')+'</div>');
  $('#main').innerHTML=view('CONTROL IA','Centre de pilotage et de synthèse de tous tes projets',content);
  registerForm('#c-ask',(f)=>{const q=String(f.get('question')||'').trim(),pid=subject();if(!q)return;db.messages.push({id:id(),role:'user',text:q,project:pid,at:new Date().toISOString()},{id:id(),role:'assistant',text:reply(q,pid),project:pid,at:new Date().toISOString()});db.messages=db.messages.slice(-80);save();manager();$('#c-project').value=pid});
  paintSprints('#sprint-overview');fetchSprints().then(()=>paintSprints('#sprint-overview')).catch(()=>{});$('#main [data-act="refresh-sprints"]')?.addEventListener('click',()=>fetchSprints(true).then(()=>paintSprints('#sprint-overview')));
@@ -102,6 +102,7 @@ function intake(){const now=new Date().toISOString().slice(0,10),actions=db.acti
 function missions(){const cards=db.missions.slice().reverse(),counts=['todo','doing','review','done'].map(s=>db.missions.filter(x=>x.status===s).length);
  let content='<div class="dash-stats">'+['À lancer','En cours','À vérifier','Terminé'].map((s,i)=>'<div class="stat"><strong>'+counts[i]+'</strong><span>'+s+'</span></div>').join('')+'</div>'+
  note('CONTROL prépare les consignes et permet de suivre leur exécution. Les fournisseurs externes ne reçoivent aucune mission automatiquement depuis ce site public. Les résultats doivent être rapportés et vérifiés.')+
+ '<p><a class="button primary" href="#/control/command">Commander Claude + Gemini · Voir tous les résultats →</a></p>'+
  box('Créer une mission multi-IA','<form id="new-mission">'+field('Intitulé','title','','text','required maxlength="180"')+selectProject('')+'<div class="formgrid"><label>IA responsable<select class="field" name="provider">'+options(availableAgents(),'ChatGPT')+'</select></label>'+field('Fichiers ou périmètre technique (facultatif)','files','','text','placeholder="Ex. application/frontend"')+'</div>'+textarea('Instruction à transmettre','instruction','','required maxlength="8000" rows="4"')+'<button class="primary">Préparer la mission</button> '+btn('Préparer un plan avec plusieurs IA','orchestrate')+'</form>')+
  box('Suivi des missions',cards.length?cards.map(m=>{const collision=db.missions.filter(x=>x.id!==m.id&&x.project===m.project&&x.status==='doing'&&m.status==='doing'&&x.files&&m.files&&(x.files===m.files||x.files.includes(m.files)||m.files.includes(x.files))).length;return '<div class="mission-row"><div class="row"><strong>'+h(m.title)+'</strong>'+tag(m.provider+' · '+m.status)+'</div><p class="muted">'+h(pname(m.project))+' · '+date(m.at)+(collision?' · ⚠️ Risque de modification concurrente':'')+'</p><p>'+h(cap(m.instruction,180))+'</p><div class="actions">'+btn('Copier','copy:'+m.id)+href(providerURL(m.project,m.provider),'Ouvrir '+m.provider)+btn('Mettre à jour','edit:'+m.id)+'</div>'+(m.result?'<details><summary>Résultat rapporté</summary><p class="auto-text">'+h(m.result)+'</p></details>':'')+'</div>'}).join(''):'<p class="empty">Aucune mission enregistrée.</p>')+
  '<section class="panel hidden" id="mission-editor"><h2>Mettre à jour une mission</h2><form id="edit-mission"><input name="id" type="hidden"><label>État<select class="field" name="status">'+[['todo','À lancer'],['doing','En cours'],['review','À vérifier'],['done','Terminée']].map(([s,n])=>'<option value="'+s+'">'+n+'</option>').join('')+'</select></label>'+textarea('Compte rendu ou résultat','result','','rows="4"')+'<button class="primary">Enregistrer le suivi</button></form></section>';
@@ -220,9 +221,34 @@ function lab(){
   }
  });
 }
+function command(){
+ const target=$('#main');
+ if(!window.CONTROL_MULTI_AI){target.innerHTML=note('Poste multi-IA indisponible. Recharge CONTROL.');return}
+ const pid=new URLSearchParams(location.hash.split('?')[1]||'').get('project')||'';
+ window.CONTROL_MULTI_AI.mount(target,{mode:'personal',projectId:pid,projects:ctx.projects,
+ listMissions:project=>db.missions.filter(x=>x.project===project&&['Claude','Gemini'].includes(x.provider)).map(x=>({
+   id:x.id,projectId:x.project,provider:x.provider,title:x.title,prompt:x.instruction,status:x.status||'todo',
+   result:x.result||'',proofUrl:x.proofUrl||'',resultOrigin:x.resultOrigin||'manual',updatedAt:x.updated||x.at,url:providerURL(x.project,x.provider)
+ })),
+ providerURL:(project,provider)=>providerURL(project,provider),
+ createMission:async({projectId,provider,title,prompt})=>{
+  if(!ctx.projects.some(x=>x.id===projectId))throw Error('Projet introuvable.');
+  if(!['Claude','Gemini'].includes(provider))throw Error('Fournisseur inconnu.');
+  if(db.missions.some(x=>x.project===projectId&&x.provider===provider&&x.instruction===prompt))return false;
+  if(prompt.length>8000)throw Error('Instruction trop longue : raccourcis le contexte.');
+  const row={id:id(),project:projectId,title,provider,files:'',instruction:prompt,status:'todo',result:'',at:new Date().toISOString(),resultOrigin:'manual'};
+  db.missions.push(row);if(!save()){db.missions.pop();throw Error('Impossible d’enregistrer cette mission.')}return true;
+ },
+ updateMission:async(m,patch)=>{
+  const orig=db.missions.find(x=>x.id===m.id);if(!orig)throw Error('Mission introuvable.');
+  const previous={...orig};Object.assign(orig,{status:patch.status,result:patch.result,proofUrl:patch.proofUrl,resultOrigin:'manual',updated:new Date().toISOString()});
+  if(!save()){Object.assign(orig,previous);throw Error('Échec du stockage local.')}return true;
+ }
+ });
+}
 function tools(){
  const groups=[
-  {name:'Essentiels',subtitle:'Ce que tu utilises au quotidien',open:true,tools:[['missions','Missions IA','Préparer et suivre le travail'],['lab','Laboratoire IA','Créer des briefs et contrôler les réponses'],['library','Ressources','Tes liens et documents'],['search','Rechercher','Retrouver un projet ou un fichier']]},
+  {name:'Essentiels',subtitle:'Ce que tu utilises au quotidien',open:true,tools:[['command','Commander Claude & Gemini','Missions et résultats centralisés'],['missions','Missions IA','Préparer et suivre le travail'],['lab','Laboratoire IA','Créer des briefs et contrôler les réponses'],['library','Ressources','Tes liens et documents'],['search','Rechercher','Retrouver un projet ou un fichier']]},
   {name:'Explorer',subtitle:'Apprendre, créer et publier',open:false,tools:[['catalog','Bibliothèques IA','87 outils et 12 kits pratiques'],['deploy','Mise en ligne','Guides GitHub, IONOS et autres'],['activity','GitHub et tests','Suivi des dépôts publics']]},
   {name:'Organiser',subtitle:'Planifier et garder le contrôle',open:false,tools:[['calendar','Calendrier','Échéances enregistrées'],['memory','Décisions','Historique de projet'],['budget','Budget et quotas','Suivi déclaratif des coûts'],['backup','Sauvegardes','Exporter ou importer tes données'],['settings','Paramètres','Règles et confidentialité'],['inbox','À traiter','Actions prioritaires']]}
  ];
@@ -280,6 +306,6 @@ function paintSprints(selector,onlyBlockers=false){const out=$(selector);if(!out
  '</div>'+href('https://github.com/'+OWNER+'/Avancement-Projet/blob/main/data/sprints/'+encodeURIComponent(id)+'.json','Preuve')+'</div>').join(''):tiny(onlyBlockers?'Aucun blocage dans les derniers rapports accessibles.':'Aucun sprint accessible.');
  const n=Object.keys(sprintLoaded).length;if(n<SPRINT_IDS.length)out.innerHTML+=tiny((SPRINT_IDS.length-n)+' source(s) non vérifiée(s), information potentiellement partielle.');
 }
-function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,budget,backup,settings,search};(pages[page]||manager)()}
+function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,command,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,budget,backup,settings,search};(pages[page]||manager)()}
 window.CONTROL_CENTER={render};
 })();
