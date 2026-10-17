@@ -37,3 +37,10 @@ test('model loading has a timeout and clears its timer on termination',()=>{
  assert.match(local,/600000/);
  assert.match(local,/clearTimeout\(loadTimer\)/);
 });
+
+test('assistant handles denied browser storage without crashing on mount',()=>{
+ assert.match(local,/try\{storage=storage\|\|localStorage\}catch/);
+});
+test('assistant restores UI state when worker messaging fails',()=>{
+ assert.match(local,/Impossible de transmettre la question au moteur IA/);
+});
