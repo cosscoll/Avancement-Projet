@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "updated_at": "2026-10-17",
   "notice": "Catalogue éditorial. Une fiche n'est pas une intégration active. Licences, prix, quotas, disponibilité et compatibilité doivent être vérifiés sur le site de l'éditeur. Outils non affiliés à IAgile ni CONTROL.",
   "courses": {
@@ -1208,6 +1208,159 @@
       "useCase": "Comparer l'accès aux modèles et leurs coûts.",
       "access": "service",
       "level": "intermediaire"
+    }
+  ],
+  "kits": [
+    {
+      "id": "kit-01",
+      "course": "3d",
+      "title": "Site vitrine 3D fluide",
+      "goal": "Créer un site 3D rapide, accessible et optimisé sur mobile.",
+      "tools": [
+        "web3d-three-js",
+        "web3d-react-three-fiber",
+        "web3d-drei",
+        "motion-gsap",
+        "assets-gltf-transform"
+      ],
+      "prompt": "Agis comme un développeur WebGL senior. Propose l'architecture d'un site vitrine 3D mobile-first. Précise les performances ciblées, les mécanismes d'animation et le fallback accessible. Ne génère pas d'effets 3D sans relation avec le contenu. Fournis un plan testable."
+    },
+    {
+      "id": "kit-02",
+      "course": "3d",
+      "title": "Défilement narratif 3D",
+      "goal": "Synchroniser scroll, caméra et objets 3D sans à-coups.",
+      "tools": [
+        "web3d-react-three-fiber",
+        "motion-gsap",
+        "motion-lenis",
+        "motion-theatre-js"
+      ],
+      "prompt": "Conçois une expérience narrative de scroll 3D avec un mouvement de caméra fluide et progressif. Décris la synchronisation du scroll, les interruptions possibles sur mobile, les alternatives reduced-motion et les tests anti-saccades."
+    },
+    {
+      "id": "kit-03",
+      "course": "3d",
+      "title": "Bibliothèque de modèles 3D",
+      "goal": "Créer et intégrer un catalogue de modèles GLB légers.",
+      "tools": [
+        "assets-blender",
+        "assets-gltf-transform",
+        "assets-gltfjsx",
+        "assets-poly-haven"
+      ],
+      "prompt": "Définis un pipeline professionnel pour préparer des modèles Blender puis exporter des GLB optimisés. Donne une check-list licence, géométrie, texture, compression, rendu mobile et accessibilité. Ne suppose aucune licence de réutilisation."
+    },
+    {
+      "id": "kit-04",
+      "course": "agents",
+      "title": "Agent documentaire avec sources",
+      "goal": "Répondre à partir d'une base de documents sans hallucination.",
+      "tools": [
+        "agents-flowise",
+        "knowledge-llamaindex",
+        "knowledge-chroma",
+        "knowledge-langfuse"
+      ],
+      "prompt": "Conçois un agent RAG qui répond uniquement à partir de documents autorisés. Définis le chunking, la recherche, la citation des sources, le refus en cas de manque de preuve, la sécurité et les tests de fiabilité."
+    },
+    {
+      "id": "kit-05",
+      "course": "agents",
+      "title": "Équipe d'agents spécialisés",
+      "goal": "Créer plusieurs rôles IA supervisés avec validation.",
+      "tools": [
+        "agents-openai-agents-sdk",
+        "agents-langgraph",
+        "agents-pydanticai",
+        "knowledge-langfuse"
+      ],
+      "prompt": "Propose une architecture multi-agents avec rôles explicites, outils limités, validation humaine, budget maximal, journal des opérations, gestion des erreurs et vérification des résultats. Aucun agent ne peut acheter, publier ou contacter sans accord."
+    },
+    {
+      "id": "kit-06",
+      "course": "agents",
+      "title": "Connecteur MCP de projet",
+      "goal": "Permettre à une IA d'utiliser un outil externe avec permissions.",
+      "tools": [
+        "agents-model-context-protocol",
+        "agents-openai-agents-sdk",
+        "knowledge-promptfoo"
+      ],
+      "prompt": "Rédige la spécification d'un serveur MCP minimal pour lire les ressources d'un projet. Décris les schémas des outils, les contrôles d'accès, l'authentification, la limitation des commandes et les tests de sécurité, sans inclure de secrets."
+    },
+    {
+      "id": "kit-07",
+      "course": "automatisation",
+      "title": "Traitement automatique d'un formulaire",
+      "goal": "Qualifier une demande, enregistrer et notifier.",
+      "tools": [
+        "workflows-n8n",
+        "data-baserow",
+        "workflows-activepieces"
+      ],
+      "prompt": "Conçois une automatisation de formulaire avec validation RGPD, anti-spam, stockage minimal, vérification des données, notifications uniquement autorisées, détection d'échec, reprise et journal. Aucun message externe réel sans validation."
+    },
+    {
+      "id": "kit-08",
+      "course": "automatisation",
+      "title": "Tests avant déploiement",
+      "goal": "Sécuriser les modifications d'un site web.",
+      "tools": [
+        "data-github-actions",
+        "workflows-trigger-dev",
+        "data-posthog"
+      ],
+      "prompt": "Définis un workflow CI qui contrôle lint, tests, performances et sécurité avant déploiement. Ajoute des étapes de validation humaine, un rollback documenté et une alerte en cas d'échec. Ne déploie rien automatiquement sans permission."
+    },
+    {
+      "id": "kit-09",
+      "course": "automatisation",
+      "title": "Workflows résilients",
+      "goal": "Enchaîner des tâches sans doublons ni dépassement de quota.",
+      "tools": [
+        "workflows-temporal",
+        "workflows-inngest",
+        "workflows-windmill"
+      ],
+      "prompt": "Décris un workflow robuste : idempotence, reprise sur erreur, règles d'accès, retries bornés, budget, limitation des quotas et tests. Prévois une page de suivi des exécutions et des preuves."
+    },
+    {
+      "id": "kit-10",
+      "course": "quotidien",
+      "title": "Assistant de recherche fiable",
+      "goal": "Faire une synthèse à partir de documents sélectionnés.",
+      "tools": [
+        "productivity-notebooklm",
+        "productivity-perplexity",
+        "productivity-obsidian"
+      ],
+      "prompt": "Prépare un protocole de recherche assistée : distinguer les sources primaires et secondaires, relever les dates, citer chaque fait, signaler les incertitudes et produire une synthèse actionnable sans exposer les documents sensibles."
+    },
+    {
+      "id": "kit-11",
+      "course": "quotidien",
+      "title": "Assistant IA local",
+      "goal": "Tester un modèle sur ordinateur sans exposer les secrets.",
+      "tools": [
+        "productivity-ollama",
+        "productivity-lm-studio",
+        "productivity-open-webui"
+      ],
+      "prompt": "Conçois une installation locale expérimentale avec sauvegarde, confidentialité, limites de matériel, évaluation du modèle et isolation réseau. Signale les modèles/licences non adaptés avant tout déploiement."
+    },
+    {
+      "id": "kit-12",
+      "course": "quotidien",
+      "title": "Production de contenus rapide",
+      "goal": "Organiser une chaîne de notes, audio et visuels réutilisables.",
+      "tools": [
+        "creative-whisper-cpp",
+        "creative-ffmpeg",
+        "creative-excalidraw",
+        "creative-penpot"
+      ],
+      "prompt": "Propose un pipeline simple de production de contenus : collecte autorisée, transcription, synthèse, mise en forme, validation humaine, droits des médias et export. Fournis une liste de contrôles qualité."
     }
   ]
 }
