@@ -1,5 +1,17 @@
 -- CONTROL SaaS V1. Independent Supabase project ONLY; never run in IAgile or any product database.
 -- Every record belongs to an authenticated user. No passwords/API tokens stored.
+-- Safe-by-default: intentionally refuses execution in any database until
+-- the operator has separately verified the Supabase project ID and set:
+--   SET app.control_isolated_project = 'confirmed';
+-- This setting is session-local. Never set it in IAgile Academy.
+do $control_isolation_guard$
+begin
+  if current_setting('app.control_isolated_project', true) is distinct from 'confirmed' then
+    raise exception 'CONTROL migration refused: verify isolated CONTROL Cloud project and set app.control_isolated_project=confirmed in this SQL session';
+  end if;
+end
+$control_isolation_guard$;
+
 create extension if not exists pgcrypto;
 
 create table public.control_profiles (
