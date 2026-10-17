@@ -2,7 +2,7 @@
    Aucune API privée, dépense, autorisation ou modification d'automatisation. */
 (()=>{'use strict';
 const KEY='control-command-v1',HUB='control-hub-v2',AUTOS='control-automations-v1',OWNER='cosscoll';
-let db,ctx={projects:[],state:{}},live={};
+let db,ctx={projects:[],state:{}},live={},sprints={},sprintLoaded={},sprintLoading=null;
 const $=s=>document.querySelector(s);
 const h=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safe=v=>{try{const x=new URL(String(v||''));return x.protocol==='https:'&&!x.username&&!x.password&&![...x.searchParams.keys()].some(k=>/^(access_token|token|api_key|secret|password|code)$/i.test(k))?x.href:''}catch{return''}};
@@ -53,6 +53,7 @@ function contextEvidence(project){
  if(todos.length)out.push('À traiter : '+todos.slice(0,6).map(x=>x.title+' ('+x.status+')').join(' ; '));
  const recent=db.decisions.filter(x=>x.project===project).slice(-3);
  for(const d of recent)out.push('Décision enregistrée '+date(d.at)+' : '+d.title+' — '+cap(d.details,180));
+ if(sprints[project]){const a=sprints[project];out.push('Dernier sprint PUBLIC vérifié '+dt(a.ended_at||a.started_at)+' : '+cap(a.summary,500)+' ; terminé : '+(a.done||[]).slice(0,3).join(' ; ')+' ; blocages : '+(a.blockers||[]).slice(0,3).join(' ; ')+' ; suite : '+cap(a.next,200))}
  if(p.repo&&live[p.repo]){const gh=live[p.repo];out.push('GitHub public vérifié '+dt(gh.checkedAt)+' : '+gh.commits.length+' commits récents, '+gh.prs.length+' PR ouvertes dans la réponse (fenêtre partielle). '+gh.commits.slice(0,2).map(c=>cap(c.commit?.message?.split('\n')[0],100)).join(' ; '))}
  return out;
 }
@@ -61,7 +62,7 @@ function reply(question,project){const q=question.toLowerCase(),names=project?[p
  let blocks=[];
  for(const pid of names){
   const d=openProject(pid),reports=Object.entries(d.reports||{}),actions=db.actions.filter(x=>x.project===pid&&x.status!=='done'),missions=db.missions.filter(x=>x.project===pid&&x.status!=='done');
-  let segment=[pname(pid)];
+  let segment=[pname(pid)];const sprint=sprints[pid];if(sprint){if(q.includes('blocage')||q.includes('problème'))segment.push('Blocages du dernier sprint public ('+dt(sprint.ended_at)+') : '+(sprint.blockers||[]).slice(0,4).join(' ; '));else if(q.includes('priorit')||q.includes('prochain')||q.includes('faire'))segment.push('Suite du dernier sprint public : '+(sprint.next||'Non renseignée'));else segment.push('Dernier sprint public '+dt(sprint.ended_at||sprint.started_at)+' : '+cap(sprint.summary,340));}
   if(q.includes('blocage')||q.includes('problème')){const p=ctx.projects.find(x=>x.id===pid);const alerts=p?.alerts||[];segment.push(...alerts.slice(0,3).map(x=>'Référence datée (non reconfirmée) : '+x.title));segment.push(...actions.filter(x=>x.priority==='Critique').map(x=>'Critique : '+x.title));if(!alerts.length&&!actions.length)segment.push('Aucun blocage enregistré — absence de rapport ≠ absence de problème.')}
   else if(q.includes('priorit')||q.includes('prochain')||q.includes('faire')){segment.push(...actions.slice(0,5).map(x=>x.priority+' : '+x.title));if(!actions.length)segment.push('Aucune action locale enregistrée.');}
   else if(q.includes('claude')||q.includes('codex')||q.includes('gemini')||q.includes('chatgpt')){const provider=['claude','codex','gemini','chatgpt'].find(x=>q.includes(x));const r=reports.find(x=>x[0].toLowerCase()===provider);segment.push(r?'Bilan '+r[0]+' daté '+dt(r[1].updatedAt)+' : '+cap(r[1].text,900):'Aucun bilan '+provider+' reçu.');}
@@ -74,11 +75,13 @@ function manager(){
  const k=new URLSearchParams(location.hash.split('?')[1]||'').get('project')||'',options=projopts(k,true);
  const content='<div class="dash-stats"><a href="#/control/inbox" class="stat"><strong>'+db.actions.filter(x=>x.status!=='done').length+'</strong><span>Actions ouvertes</span></a><a href="#/control/missions" class="stat"><strong>'+db.missions.filter(x=>x.status!=='done').length+'</strong><span>Missions en cours</span></a><a href="#/control/calendar" class="stat"><strong>'+db.events.filter(x=>x.date>=new Date().toISOString().slice(0,10)).length+'</strong><span>Échéances enregistrées</span></a></div>'+
  note('Assistant de synthèse fondé sur les données disponibles dans CONTROL. Ce n’est pas un modèle IA connecté aux conversations privées : chaque réponse distingue les bilans importés et les données GitHub publiques vérifiées.')+
+ '<section class="panel"><div class="sectionhead"><h2>Derniers sprints publics</h2>'+btn('Actualiser','refresh-sprints')+'</div><div id="sprint-overview"><p class="muted">Chargement des rapports enregistrés sur GitHub…</p></div></section>'+
  '<section class="panel"><div class="sectionhead"><h2>Chef de projet central</h2>'+tag('Sources vérifiables')+'</div><label>Périmètre<select id="c-project" class="field">'+options+'</select></label><div class="messages" id="c-messages">'+(db.messages.length?db.messages.slice(-12).map(m=>'<div class="pilot-message '+(m.role==='user'?'pilot-user':'pilot-answer')+'"><span class="muted">'+h(m.role==='user'?'Vous':'CONTROL · synthèse locale')+' · '+date(m.at)+'</span><p>'+h(m.text)+'</p></div>').join(''):'<p class="empty">Demande « Où en sont mes projets ? » ou « Quelles sont les prochaines priorités ? ».</p>')+'</div>'+
  '<form id="c-ask"><label>Question<input class="field" name="question" required maxlength="900" placeholder="Où en est UCP sur chaque IA ?"></label><div class="actions"><button class="primary">Interroger CONTROL</button>'+btn('Préparer un briefing ChatGPT','brief')+href('https://chatgpt.com/','Ouvrir ChatGPT')+'</div></form></section>'+
  box('Accès rapide', '<div class="quicktiles">'+[['inbox','À traiter'],['missions','Missions multi-IA'],['activity','Activité GitHub'],['calendar','Calendrier'],['library','Bibliothèque'],['budget','Coûts et quotas'],['memory','Mémoire et décisions'],['backup','Sauvegardes'],['settings','Règles et sécurité']].map(([url,label])=>'<a href="#/control/'+url+'" class="quicktile">'+h(label)+' →</a>').join('')+'</div>');
  $('#main').innerHTML=view('CONTROL IA','Centre de pilotage et de synthèse de tous tes projets',content);
  registerForm('#c-ask',(f)=>{const q=String(f.get('question')||'').trim(),pid=subject();if(!q)return;db.messages.push({id:id(),role:'user',text:q,project:pid,at:new Date().toISOString()},{id:id(),role:'assistant',text:reply(q,pid),project:pid,at:new Date().toISOString()});db.messages=db.messages.slice(-80);save();manager();$('#c-project').value=pid});
+ paintSprints('#sprint-overview');fetchSprints().then(()=>paintSprints('#sprint-overview')).catch(()=>{});$('#main [data-act="refresh-sprints"]')?.addEventListener('click',()=>fetchSprints(true).then(()=>paintSprints('#sprint-overview')));
  $('#main [data-act="brief"]')?.addEventListener('click',async()=>{const k=subject(),ps=k?[k]:ctx.projects.filter(p=>p.repo||openProject(p.id).reports).slice(0,12).map(p=>p.id);let data='CONTEXTE DE PILOTAGE — '+(k?pname(k):'Tous les projets')+'\n\n'+db.globalRules+'\n\n'+ps.map(pid=>pname(pid)+'\n'+contextEvidence(pid).join('\n')).join('\n\n')+'\n\nAnalyse les faits, distingue les preuves et les incertitudes, identifie les conflits et propose les 3 prochaines priorités. Ne prétends pas pouvoir lire les autres IA.';await copy(data)});
 }
 async function copy(s){try{await navigator.clipboard.writeText(s);toast('Copié. Tu peux le coller dans ton IA.')}catch{toast('Copie refusée par le navigateur. Ouvre CONTROL en HTTPS.')}} 
@@ -88,9 +91,11 @@ function intake(){const now=new Date().toISOString().slice(0,10),actions=db.acti
  box('Boîte de réception',cards.length?cards.map(a=>'<div class="inbox-item"><div><span class="chip '+(a.level==='critical'?'warn':'')+'">'+h(pname(a.project))+'</span><strong>'+h(a.title)+'</strong><small>'+h(a.sub)+'</small></div><div class="actions">'+(a.kind==='action'?btn('Terminer','done:'+a.id):'<a class="button" href="#/control/missions">Vérifier</a>')+'</div></div>').join(''):'<p class="empty">Aucune action enregistrée en attente. Cela ne signifie pas que les applications externes n’ont aucune notification.</p>')+
  box('Ajouter une action','<form id="new-action">'+field('Action','title','','text','required maxlength="180"')+selectProject('')+'<div class="formgrid"><label>Priorité<select name="priority" class="field">'+options(['Normale','Haute','Critique'],'Normale')+'</select></label>'+field('Échéance','due','','date')+'</div>'+field('Lien de référence (facultatif)','url','','url')+'<button class="primary">Ajouter</button></form>')+
  box('Accès aux sources externes','<p class="muted">Les messages Gmail, notifications ChatGPT et calendriers privés ne sont pas récupérés directement dans CONTROL. Ouvre les applications pour vérifier leurs alertes.</p><div class="actions">'+href('https://mail.google.com/mail/u/0/#inbox','Gmail')+href('https://calendar.google.com/calendar/u/0/r/','Google Agenda')+href('https://chatgpt.com/scheduled','ChatGPT · Planifiées')+'</div>')+
+ box('Blocages remontés par les derniers sprints','<div id="inbox-sprint-status"><p class="muted">Chargement des rapports publics…</p></div>')+
  box('Alertes des références publiques','<p class="muted">Ces informations proviennent de relevés précédents, pas d’une surveillance en temps réel.</p>'+ctx.projects.filter(p=>p.alerts?.length).slice(0,6).map(p=>'<details><summary>'+h(p.name)+' · '+p.alerts.length+' point(s) de vigilance</summary><p>'+p.alerts.map(a=>h(a.title)).join('<br>')+'</p><a href="#/project/'+encodeURIComponent(p.id)+'/pilot" class="button">Ouvrir le projet</a></details>').join(''));
  $('#main').innerHTML=view('À traiter','Actions, validations et échéances centralisées',content);
  registerForm('#new-action',(f)=>{const title=String(f.get('title')||'').trim();if(!title)return;const url=String(f.get('url')||'').trim();if(url&&!safe(url))return toast('Lien HTTPS requis.');db.actions.push({id:id(),project:String(f.get('project')||''),title,priority:String(f.get('priority')||'Normale'),status:'todo',due:String(f.get('due')||''),url,at:new Date().toISOString()});save();intake();toast('Action enregistrée localement.')});
+ paintSprints('#inbox-sprint-status',true);fetchSprints().then(()=>paintSprints('#inbox-sprint-status',true)).catch(()=>{});
  $('#main').querySelectorAll('[data-act^="done:"]').forEach(b=>b.onclick=()=>{const a=db.actions.find(x=>x.id===b.dataset.act.slice(5));if(a){a.status='done';a.closedAt=new Date().toISOString();save();intake()}});
 }
 function missions(){const cards=db.missions.slice().reverse(),counts=['todo','doing','review','done'].map(s=>db.missions.filter(x=>x.status===s).length);
@@ -191,6 +196,24 @@ function backup(){
 function search(){const items=[...ctx.projects.map(p=>({t:p.name,s:'Projet',u:'#/project/'+encodeURIComponent(p.id)+'/ai'})),...db.actions.map(x=>({t:x.title,s:'Action · '+pname(x.project),u:'#/control/inbox'})),...db.missions.map(x=>({t:x.title,s:'Mission · '+pname(x.project),u:'#/control/missions'})),...db.decisions.map(x=>({t:x.title,s:'Décision · '+pname(x.project),u:'#/control/memory'})),...[...linksPage(),...(db.resources||[])].filter(x=>safe(x.url)).map(x=>({t:x.label,s:'Ressource · '+pname(x.project),u:x.url}))];
  $('#main').innerHTML=view('Recherche universelle','Trouver un projet, une mission, un document ou une décision',box('Chercher dans CONTROL','<label>Recherche<input id="global-search" type="search" class="field" placeholder="Un projet, une tâche, un fichier…"></label><div id="search-hits"></div>'+tiny('Ne recherche pas le texte privé des conversations ChatGPT, Claude ou Gemini.')));
  const draw=()=>{const q=$('#global-search').value.toLowerCase().trim(),res=items.filter(x=>(x.t+' '+x.s).toLowerCase().includes(q)).slice(0,65);$('#search-hits').innerHTML=res.length?res.map(x=>'<a class="link" href="'+h(x.u)+'" '+(x.u.startsWith('https:')?'target="_blank" rel="noopener noreferrer"':'')+'><span><strong>'+h(x.t)+'</strong><small>'+h(x.s)+'</small></span><span>→</span></a>').join(''):tiny('Aucun résultat.')};draw();$('#global-search').oninput=draw;
+}
+const SPRINT_IDS=['pack-pro','banque-ia','ucp','iagile','tcg'];
+async function fetchSprints(force=false){
+ if(sprintLoading)return sprintLoading;
+ const toLoad=SPRINT_IDS.filter(id=>force||!sprintLoaded[id]);if(!toLoad.length)return;
+ sprintLoading=Promise.allSettled(toLoad.map(async id=>{const r=await fetch('./data/sprints/'+id+'.json',{cache:'no-store'});if(!r.ok)throw Error('GitHub Pages '+r.status);const a=await r.json();if(!Array.isArray(a))throw Error('Format incompatible');
+ const clean=a.filter(x=>x&&typeof x==='object'&&typeof x.summary==='string'&&x.ended_at);
+ clean.sort((a,b)=>new Date(b.ended_at)-new Date(a.ended_at));
+ sprints[id]=clean[0]||null;sprintLoaded[id]={checkedAt:new Date().toISOString(),entries:a.length};
+ })).finally(()=>{sprintLoading=null});await sprintLoading;
+}
+function paintSprints(selector,onlyBlockers=false){const out=$(selector);if(!out)return;
+ if(!Object.keys(sprintLoaded).length){out.innerHTML=tiny('Rapports publics non encore chargés.');return}
+ const rows=SPRINT_IDS.flatMap(id=>{const s=sprints[id];if(!s||onlyBlockers&&!(s.blockers||[]).length)return[];return[{id,s}]});
+ out.innerHTML=rows.length?rows.map(({id,s})=>'<div class="chatrow"><div><strong>'+h(pname(id))+'</strong><small>Sprint '+h(dt(s.ended_at||s.started_at))+' · source : GitHub public</small>'+
+ (onlyBlockers?'<p>'+h((s.blockers||[]).slice(0,4).join(' · '))+'</p>':'<p>'+h(cap(s.summary,240))+'</p><small>Suite : '+h(cap(s.next,180))+'</small>')+
+ '</div>'+href('https://github.com/'+OWNER+'/Avancement-Projet/blob/main/data/sprints/'+encodeURIComponent(id)+'.json','Preuve')+'</div>').join(''):tiny(onlyBlockers?'Aucun blocage dans les derniers rapports accessibles.':'Aucun sprint accessible.');
+ const n=Object.keys(sprintLoaded).length;if(n<SPRINT_IDS.length)out.innerHTML+=tiny((SPRINT_IDS.length-n)+' source(s) non vérifiée(s), information potentiellement partielle.');
 }
 function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,inbox:intake,missions,calendar,activity,library,memory,budget,backup,settings,search};(pages[page]||manager)()}
 window.CONTROL_CENTER={render};
