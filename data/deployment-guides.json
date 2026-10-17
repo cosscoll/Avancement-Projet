@@ -1,0 +1,663 @@
+{
+  "version": 1,
+  "last_reviewed": "2026-10-17",
+  "notice": "Tutoriels éducatifs, pas des déploiements réels. Les tarifs et interfaces peuvent changer. Vérifier les conditions officielles avant toute dépense ou publication. Les outils IA, abonnements et connecteurs ChatGPT ne sont pas automatiquement connectés à CONTROL.",
+  "types": {
+    "static": "HTML / CSS / JS",
+    "spa": "React / Vue / SPA",
+    "php": "Site PHP",
+    "serverless": "Fonctions API",
+    "ssr": "Framework SSR",
+    "server": "Serveur Node / Python",
+    "database": "Base de données"
+  },
+  "integration_labels": {
+    "github_public": "Lecture d’activité publique GitHub disponible dans CONTROL; écriture soumise à une connexion autorisée",
+    "github_actions": "Suivi de workflows GitHub publics possible; aucun accès au compte IONOS directement",
+    "vercel_api_possible": "Connecteur Vercel utilisable depuis ChatGPT connecté, mais non relié automatiquement au site CONTROL; futur OAuth/API serveur",
+    "oauth_api_possible": "Connexion API envisageable après OAuth officiel et validation des accès; non active dans CONTROL",
+    "manual": "Redirection et procédure manuelle seulement"
+  },
+  "guides": [
+    {
+      "id": "github-pages",
+      "name": "GitHub Pages",
+      "fit": [
+        "static",
+        "spa"
+      ],
+      "level": "debutant",
+      "pricing": "Offre gratuite possible pour dépôts publics; conditions GitHub à vérifier",
+      "integration": "github_public",
+      "official": "https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site",
+      "setup": "https://github.com/new",
+      "dashboard": "https://github.com/",
+      "duration": "10–25 min",
+      "summary": "Idéal pour des sites HTML/CSS/JS et des projets statiques sans backend serveur.",
+      "prereq": [
+        "Un compte GitHub et un dépôt dédié",
+        "Un index.html (ou projet statique généré)",
+        "Vérifier qu’aucun secret ou contenu privé ne se trouve dans le dépôt"
+      ],
+      "steps": [
+        [
+          "Préparer le projet",
+          "Tester localement les pages, images, liens et l’affichage mobile. Vérifier qu’aucune clé privée ne figure dans les fichiers."
+        ],
+        [
+          "Créer et remplir un dépôt GitHub",
+          "Créer un dépôt, envoyer les fichiers du site ou le code source du projet. Un dépôt public convient à GitHub Free."
+        ],
+        [
+          "Choisir la source de publication",
+          "Ouvrir Settings → Pages → Build and deployment : sélectionner « Deploy from a branch » (branche main et dossier /root ou /docs), ou GitHub Actions si un build Vite/React est nécessaire."
+        ],
+        [
+          "Configurer les chemins",
+          "Sur une URL /nom-du-repo/, vérifier que les chemins d’images, de scripts et le base path du framework correspondent au sous-répertoire."
+        ],
+        [
+          "Publier et contrôler",
+          "Attendre la fin de l’action GitHub Pages, puis cliquer sur « Visit site » dans Settings → Pages. Vérifier aussi le résultat dans l’onglet Actions."
+        ],
+        [
+          "Domaines et mises à jour",
+          "Facultatif : renseigner le domaine personnalisé dans Settings → Pages et configurer les DNS chez le registrar. Tester HTTPS, puis refaire les tests après tout push."
+        ]
+      ],
+      "check": [
+        "Page d’accueil, pages internes et images accessibles",
+        "HTTPS actif et navigation mobile correcte",
+        "Aucune API serveur/PHP attendue sur GitHub Pages",
+        "Workflow Actions réussi et site mis à jour"
+      ],
+      "issues": [
+        [
+          "404 après la publication",
+          "Vérifier que Pages est activé, que le fichier index.html se trouve dans le dossier publié et que le workflow est terminé."
+        ],
+        [
+          "CSS ou images absentes",
+          "Corriger les chemins absolus et le base path d’un site publié sous /nom-du-repo/."
+        ]
+      ]
+    },
+    {
+      "id": "ionos-deploy-now",
+      "name": "IONOS Deploy Now",
+      "fit": [
+        "static",
+        "spa",
+        "php"
+      ],
+      "level": "debutant",
+      "pricing": "Selon offre IONOS; vérifier le devis et le renouvellement avant toute commande",
+      "integration": "github_actions",
+      "official": "https://docs.ionos.space/docs/git-integration/",
+      "setup": "https://www.ionos.fr/hebergement/deploy-now",
+      "dashboard": "https://www.ionos.fr/",
+      "duration": "15–35 min",
+      "summary": "Publication IONOS depuis GitHub avec workflow GitHub Actions généré et environnement de prévisualisation.",
+      "prereq": [
+        "Compte IONOS et GitHub",
+        "Dépôt GitHub contenant un site statique, SPA ou PHP compatible",
+        "Vérification des conditions commerciales IONOS avant activation"
+      ],
+      "steps": [
+        [
+          "Préparer les fichiers",
+          "Vérifier le dossier de production (index.html, dist/ ou build/) ou le point d’entrée PHP ainsi que les dépendances nécessaires."
+        ],
+        [
+          "Ouvrir IONOS Deploy Now",
+          "Se connecter puis choisir « Add new project » et associer le dépôt GitHub autorisé. Évaluer les permissions demandées par l’application GitHub IONOS."
+        ],
+        [
+          "Sélectionner le dépôt",
+          "Choisir le dépôt et la branche de production. Utiliser un projet test avant un site client."
+        ],
+        [
+          "Configurer le build",
+          "Vérifier la détection du framework : HTML sans compilation ou commande de build / dossier de sortie correspondant pour React, Vue, etc."
+        ],
+        [
+          "Lancer et suivre la publication",
+          "Valider la configuration après examen des conditions et coûts. IONOS génère des workflows GitHub Actions ; consulter leurs logs et le statut IONOS."
+        ],
+        [
+          "Vérifier le domaine",
+          "Ouvrir l’URL fournie, tester le certificat TLS, les chemins et les formulaires ; configurer le domaine seulement après la validation du site de test."
+        ]
+      ],
+      "check": [
+        "GitHub Actions de déploiement au vert",
+        "URL de déploiement accessible",
+        "Prévisualisation testée avant la branche de production",
+        "Domaine/HTTPS et éventuels fichiers .htaccess vérifiés"
+      ],
+      "issues": [
+        [
+          "Workflow GitHub refusé",
+          "Vérifier les autorisations GitHub de l’app IONOS et les workflows générés."
+        ],
+        [
+          "Page vide après build",
+          "Corriger la commande de compilation et le dossier de sortie dans le workflow."
+        ]
+      ]
+    },
+    {
+      "id": "ionos-sftp",
+      "name": "IONOS Hébergement Web (SFTP)",
+      "fit": [
+        "static",
+        "php"
+      ],
+      "level": "intermediaire",
+      "pricing": "Contrat d’hébergement IONOS requis; vérifier forfait, renouvellement et restrictions",
+      "integration": "manual",
+      "official": "https://www.ionos.fr/assistance/hosting/ftp-zugaenge-einrichten-und-verwalten/creer-un-compte-sftp/ssh/",
+      "setup": "https://www.ionos.fr/hebergement/hebergement-web",
+      "dashboard": "https://login.ionos.fr/",
+      "duration": "25–60 min",
+      "summary": "Transfert sécurisé des fichiers d’un site statique ou PHP vers un espace web IONOS existant.",
+      "prereq": [
+        "Contrat d’hébergement IONOS actif",
+        "Accès au panneau d’administration IONOS",
+        "Client SFTP local et dossier de production du site"
+      ],
+      "steps": [
+        [
+          "Identifier le site à publier",
+          "Vérifier le contrat d’hébergement et le domaine relié au bon répertoire cible."
+        ],
+        [
+          "Créer un accès SFTP",
+          "Dans IONOS → Hébergement → SFTP & SSH → Configurer/Gérer, créer un compte SFTP dédié et conserver son mot de passe uniquement dans un gestionnaire de secrets."
+        ],
+        [
+          "Préparer le dossier de production",
+          "Pour un site HTML, transmettre le dossier contenant index.html ; pour un framework, générer la version de production."
+        ],
+        [
+          "Transférer les fichiers",
+          "Utiliser un client SFTP vers le dossier racine du site. Ne jamais copier les fichiers .env, .git, clés API ou fichiers privés."
+        ],
+        [
+          "Vérifier le domaine",
+          "Configurer l’affectation du domaine au répertoire cible depuis IONOS, activer ou vérifier HTTPS/TLS."
+        ],
+        [
+          "Tester et documenter la mise à jour",
+          "Vérifier les formulaires, les liens, les images et les droits des fichiers. Conserver une copie de la version précédente avant remplacement."
+        ]
+      ],
+      "check": [
+        "Connexion SFTP et chemin de publication corrects",
+        "Aucun secret présent dans l’espace public",
+        "Domaine et HTTPS fonctionnels",
+        "Copie de sauvegarde vérifiée"
+      ],
+      "issues": [
+        [
+          "403 / 404",
+          "Vérifier le répertoire affecté au domaine, index.html et les permissions."
+        ],
+        [
+          "Mauvaise version publiée",
+          "Vérifier le chemin SFTP et vider le cache navigateur/CDN."
+        ]
+      ]
+    },
+    {
+      "id": "vercel",
+      "name": "Vercel",
+      "fit": [
+        "static",
+        "spa",
+        "serverless",
+        "ssr"
+      ],
+      "level": "debutant",
+      "pricing": "Plans et limites selon usage; fonctions/API et déploiements peuvent être facturés",
+      "integration": "vercel_api_possible",
+      "official": "https://vercel.com/docs/git",
+      "setup": "https://vercel.com/new",
+      "dashboard": "https://vercel.com/dashboard",
+      "duration": "10–30 min",
+      "summary": "Hébergement adapté aux sites frontend modernes, fonctions serveur et prévisualisations par branche.",
+      "prereq": [
+        "Compte Vercel autorisé à accéder au dépôt Git",
+        "Projet GitHub avec configuration de build cohérente",
+        "Vérification des ressources et des coûts éventuels"
+      ],
+      "steps": [
+        [
+          "Préparer le dépôt",
+          "Pousser un code fonctionnel sur une branche et exécuter les tests de build (par exemple npm run build)."
+        ],
+        [
+          "Importer le projet",
+          "Vercel → Add New / Project → Import Git Repository ; autoriser uniquement le dépôt nécessaire."
+        ],
+        [
+          "Choisir les paramètres",
+          "Confirmer framework, root directory, commande de build, dossier de sortie et variables d’environnement, sans mettre de secrets dans Git."
+        ],
+        [
+          "Prévisualiser",
+          "Déployer une branche de test et visiter l’URL Preview ; valider frontend, API autorisées et responsive."
+        ],
+        [
+          "Publier",
+          "Après validation explicite, utiliser la branche de production, puis surveiller les déploiements et logs dans le tableau de bord Vercel."
+        ],
+        [
+          "Domaine et rollback",
+          "Configurer domaine/DNS après vérification, activer HTTPS et garder la version précédente disponible pour un retour arrière."
+        ]
+      ],
+      "check": [
+        "Preview contrôlée avant production",
+        "Variables serveur absentes du dépôt",
+        "Déploiement production confirmé dans Vercel",
+        "Route API/SSR testée si utilisée"
+      ],
+      "issues": [
+        [
+          "Build échoué",
+          "Vérifier les logs, les versions Node et les variables d’environnement."
+        ],
+        [
+          "404 sur routes SPA",
+          "Vérifier la configuration des rewrites et du framework."
+        ]
+      ]
+    },
+    {
+      "id": "netlify",
+      "name": "Netlify",
+      "fit": [
+        "static",
+        "spa",
+        "serverless"
+      ],
+      "level": "debutant",
+      "pricing": "Vérifier l’offre, crédits et limites avant d’activer les fonctions payantes",
+      "integration": "oauth_api_possible",
+      "official": "https://docs.netlify.com/start/quickstarts/deploy-from-repository/",
+      "setup": "https://app.netlify.com/start",
+      "dashboard": "https://app.netlify.com/",
+      "duration": "10–30 min",
+      "summary": "Publication Git depuis un dépôt avec build automatisé, prévisualisations et fonctions optionnelles.",
+      "prereq": [
+        "Dépôt Git et compte Netlify",
+        "Dossier de sortie connu (dist, build, public, etc.)",
+        "Contrôle des coûts et des autorisations Git"
+      ],
+      "steps": [
+        [
+          "Créer ou choisir le dépôt",
+          "Tester le build local et vérifier que les fichiers privés sont exclus du dépôt."
+        ],
+        [
+          "Importer dans Netlify",
+          "Team → Add new project → Import an existing project, puis choisir le fournisseur Git."
+        ],
+        [
+          "Autoriser les accès nécessaires",
+          "Limiter les accès du connecteur au projet visé quand le fournisseur le permet."
+        ],
+        [
+          "Configurer le build",
+          "Contrôler la commande Build et le Publish directory recommandés ; ajouter variables serveur si nécessaire."
+        ],
+        [
+          "Tester la première publication",
+          "Lancer le déploiement, inspecter les logs et ouvrir l’URL Netlify. Tester les routes et les formulaires."
+        ],
+        [
+          "Activer la production",
+          "Une fois les tests validés, configurer le domaine, le TLS et la branche de production."
+        ]
+      ],
+      "check": [
+        "Configuration Build / Publish directory vérifiée",
+        "Site accessible sans 404 sur routes",
+        "Formulaires et fonctions vérifiés selon la formule",
+        "Déploiement Git réussi"
+      ],
+      "issues": [
+        [
+          "Site vide",
+          "Vérifier le dossier de sortie publié."
+        ],
+        [
+          "Navigation interne 404",
+          "Ajouter la règle de réécriture SPA adaptée si nécessaire."
+        ]
+      ]
+    },
+    {
+      "id": "cloudflare-pages",
+      "name": "Cloudflare Pages",
+      "fit": [
+        "static",
+        "spa",
+        "serverless"
+      ],
+      "level": "intermediaire",
+      "pricing": "Plan et quotas selon usage; vérifier fonctions Workers et domaines",
+      "integration": "oauth_api_possible",
+      "official": "https://developers.cloudflare.com/pages/get-started/git-integration/",
+      "setup": "https://dash.cloudflare.com/",
+      "dashboard": "https://dash.cloudflare.com/",
+      "duration": "15–35 min",
+      "summary": "Pages statiques et prévisualisations GitHub/GitLab, avec intégration Cloudflare.",
+      "prereq": [
+        "Compte Cloudflare",
+        "Dépôt GitHub ou GitLab",
+        "Connaissance de la commande de build et du dossier produit"
+      ],
+      "steps": [
+        [
+          "Préparer le site",
+          "Vérifier le build et confirmer que le dossier de sortie contient index.html et les assets."
+        ],
+        [
+          "Créer un projet Pages",
+          "Dans Cloudflare, ouvrir Workers & Pages et choisir le flux Pages connecté à Git."
+        ],
+        [
+          "Relier le dépôt",
+          "Autoriser GitHub/GitLab sur le dépôt voulu et choisir la branche de production."
+        ],
+        [
+          "Définir le build",
+          "Choisir le framework, sa commande de build et le répertoire de sortie ; laisser la commande vide pour un site brut."
+        ],
+        [
+          "Vérifier le déploiement",
+          "Inspecter les logs puis l’URL pages.dev. Tester les prévisualisations d’une branche avant production."
+        ],
+        [
+          "Associer un domaine",
+          "Configurer Custom domains, DNS et HTTPS dans Cloudflare lorsque le site est validé."
+        ]
+      ],
+      "check": [
+        "Build command et output directory cohérents",
+        "Preview Pages utilisable",
+        "Custom domain et HTTPS vérifiés",
+        "Quota Workers/Pages compris"
+      ],
+      "issues": [
+        [
+          "Échec de compilation",
+          "Corriger commande, environnement et répertoire de sortie."
+        ],
+        [
+          "SPA 404",
+          "Configurer les routes ou le fallback adaptés au framework."
+        ]
+      ]
+    },
+    {
+      "id": "render-static",
+      "name": "Render Static Sites",
+      "fit": [
+        "static",
+        "spa"
+      ],
+      "level": "debutant",
+      "pricing": "Statique proposé avec quotas; bande passante et minutes de build à surveiller",
+      "integration": "oauth_api_possible",
+      "official": "https://render.com/docs/static-sites",
+      "setup": "https://dashboard.render.com/",
+      "dashboard": "https://dashboard.render.com/",
+      "duration": "15–30 min",
+      "summary": "Site statique publié depuis Git, mise à jour sur push et domaine onrender.com.",
+      "prereq": [
+        "Compte Render",
+        "Dépôt Git contenant le frontend",
+        "Connaissance de la commande et du dossier de build"
+      ],
+      "steps": [
+        [
+          "Créer un nouveau site statique",
+          "Dans Render Dashboard → New → Static Site."
+        ],
+        [
+          "Lier un dépôt",
+          "Sélectionner le fournisseur Git et le dépôt autorisé."
+        ],
+        [
+          "Configurer les paramètres",
+          "Renseigner la branche, la commande de build et le Publish Directory selon le framework."
+        ],
+        [
+          "Déployer",
+          "Lancer le premier déploiement et consulter la sortie des logs."
+        ],
+        [
+          "Vérifier le site",
+          "Tester l’URL onrender.com, la navigation et les assets."
+        ],
+        [
+          "Configurer production",
+          "Ajouter un domaine personnalisé après validation et surveiller la consommation mensuelle."
+        ]
+      ],
+      "check": [
+        "Build passé sans erreur",
+        "URL onrender.com accessible",
+        "Bon type « Static Site », pas serveur si inutile",
+        "Quotas et coût consultés"
+      ],
+      "issues": [
+        [
+          "Build introuvable",
+          "Vérifier les chemins du monorepo et la commande de build."
+        ],
+        [
+          "Page vide",
+          "Corriger le Publish Directory et la base des chemins."
+        ]
+      ]
+    },
+    {
+      "id": "railway",
+      "name": "Railway (application full-stack)",
+      "fit": [
+        "server",
+        "ssr",
+        "database"
+      ],
+      "level": "avance",
+      "pricing": "Ressources susceptibles d’être facturées; vérifier prix et plafonds avant création",
+      "integration": "oauth_api_possible",
+      "official": "https://docs.railway.com/quick-start",
+      "setup": "https://railway.com/new",
+      "dashboard": "https://railway.com/dashboard",
+      "duration": "25–60 min",
+      "summary": "Déploiement de services avec backend Node, conteneur et variables privées.",
+      "prereq": [
+        "Code serveur testé et dépôt GitHub",
+        "Connaissance de la commande de démarrage",
+        "Budget et coût réel validés avant création de ressources"
+      ],
+      "steps": [
+        [
+          "Vérifier les besoins serveur",
+          "Ne pas utiliser Railway pour un site HTML simple si une solution statique convient. Tester API, port d’écoute et santé du service."
+        ],
+        [
+          "Créer le projet",
+          "Dans Railway → New Project → Deploy from GitHub repo, après accord sur les coûts."
+        ],
+        [
+          "Associer le dépôt",
+          "Choisir le bon service, sa branche et ses autorisations GitHub."
+        ],
+        [
+          "Ajouter les variables",
+          "Renseigner les valeurs nécessaires dans Variables (jamais dans le dépôt). Configurer la commande de démarrage et la healthcheck."
+        ],
+        [
+          "Déployer et exposer",
+          "Surveiller le déploiement. Générer un domaine public si le service doit être accessible publiquement."
+        ],
+        [
+          "Contrôler en production",
+          "Vérifier healthcheck, logs, API, base de données, TLS, sauvegardes et alertes budgétaires."
+        ]
+      ],
+      "check": [
+        "Budget validé et observabilité configurée",
+        "API /health et authentification testées",
+        "Variables secrètes uniquement côté serveur",
+        "Domaine public nécessaire explicitement activé"
+      ],
+      "issues": [
+        [
+          "Service crash",
+          "Consulter les logs et la commande de démarrage."
+        ],
+        [
+          "Pas de domaine",
+          "Configurer Networking et Generate Domain lorsque la publication publique est souhaitée."
+        ]
+      ]
+    },
+    {
+      "id": "firebase-hosting",
+      "name": "Firebase Hosting",
+      "fit": [
+        "static",
+        "spa",
+        "serverless"
+      ],
+      "level": "intermediaire",
+      "pricing": "Tarification Firebase/Google Cloud selon consommation; paramétrer alertes et vérifier quotas",
+      "integration": "oauth_api_possible",
+      "official": "https://firebase.google.com/docs/hosting/quickstart?hl=fr",
+      "setup": "https://console.firebase.google.com/",
+      "dashboard": "https://console.firebase.google.com/",
+      "duration": "20–45 min",
+      "summary": "Hébergement de fichiers statiques via Firebase CLI avec HTTPS, previews et domaines personnalisés.",
+      "prereq": [
+        "Compte Google et projet Firebase",
+        "CLI Firebase ou environnement Cloud Shell autorisé",
+        "Répertoire de sortie du site et coûts vérifiés"
+      ],
+      "steps": [
+        [
+          "Créer le projet Firebase",
+          "Sélectionner un projet distinct avec contrôle de la facturation, de la région et des ressources."
+        ],
+        [
+          "Installer ou lancer la CLI",
+          "Préparer Firebase CLI ou Cloud Shell. Ne pas utiliser de clé de service dans un fichier public."
+        ],
+        [
+          "Initialiser l’hébergement",
+          "Depuis la racine du projet, lancer « firebase init hosting », sélectionner le projet et indiquer le dossier public."
+        ],
+        [
+          "Vérifier le contenu",
+          "S’assurer que le dossier choisi contient le site compilé et que les règles de fallback SPA sont correctes."
+        ],
+        [
+          "Publier après validation",
+          "Exécuter « firebase deploy --only hosting » dans un environnement autorisé et surveiller la sortie de commande."
+        ],
+        [
+          "Contrôler le domaine",
+          "Vérifier l’URL web.app, le TLS, les logs, le budget et l’éventuel domaine personnalisé."
+        ]
+      ],
+      "check": [
+        "firebase.json et public directory cohérents",
+        "Aucun fichier secret déployé",
+        "URL web.app et HTTPS fonctionnels",
+        "Alertes budgétaires vérifiées"
+      ],
+      "issues": [
+        [
+          "Mauvais dossier publié",
+          "Corriger public dans firebase.json et refaire le build."
+        ],
+        [
+          "Routes SPA inaccessibles",
+          "Vérifier la section rewrites d’hébergement."
+        ]
+      ]
+    },
+    {
+      "id": "production-checklist",
+      "name": "Checklist publication & domaine",
+      "fit": [
+        "static",
+        "spa",
+        "server",
+        "ssr",
+        "php"
+      ],
+      "level": "debutant",
+      "pricing": "Sans coût par défaut; domaine ou certificat peuvent avoir des frais chez le fournisseur",
+      "integration": "manual",
+      "official": "https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site",
+      "setup": "https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site",
+      "dashboard": "https://github.com/",
+      "duration": "20–60 min",
+      "summary": "Méthode universelle pour mettre un domaine, vérifier HTTPS, SEO, performance et déploiement.",
+      "prereq": [
+        "Site déjà déployé sur une URL technique",
+        "Droits de gestion DNS du domaine",
+        "Sauvegarde du site et consentement à publier"
+      ],
+      "steps": [
+        [
+          "Tester l’URL technique",
+          "Contrôler le site sur l’adresse fournie par l’hébergeur avant toute modification DNS."
+        ],
+        [
+          "Choisir le domaine",
+          "Vérifier les coûts, la propriété du domaine, les enregistrements DNS et l’hébergeur final."
+        ],
+        [
+          "Configurer DNS",
+          "Suivre exactement la procédure de l’hébergeur : CNAME / A / AAAA selon le cas. Éviter les changements DNS à l’aveugle."
+        ],
+        [
+          "Vérifier le certificat",
+          "S’assurer que HTTPS fonctionne sur toutes les pages, sans contenus mixtes."
+        ],
+        [
+          "Exécuter la recette",
+          "Tester navigateur mobile et ordinateur, navigation clavier, redirections, formulaires, 404, SEO, performances, robots et sitemap le cas échéant."
+        ],
+        [
+          "Consigner et surveiller",
+          "Enregistrer la date de publication, l’URL, le commit, les tests, une sauvegarde et un plan de retour arrière."
+        ]
+      ],
+      "check": [
+        "DNS propagés et enregistrements cohérents",
+        "Certificat valide et aucune redirection en boucle",
+        "Formulaires et sécurité validés",
+        "Sauvegarde et rollback disponibles"
+      ],
+      "issues": [
+        [
+          "Domaine redirige mal",
+          "Vérifier le CNAME, les entrées A/AAAA et la configuration du fournisseur."
+        ],
+        [
+          "HTTPS absent",
+          "Attendre la validation du domaine et vérifier l’activation du certificat."
+        ]
+      ]
+    }
+  ]
+}
