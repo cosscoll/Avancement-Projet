@@ -42,5 +42,5 @@ test('Syntax and Cloud safety remain intact',()=>{
  new Function(personalJS);new Function(center);new Function(cloudJS);
  assert.equal(JSON.parse(file('config/cloud.json')).enabled,false);
  assert.match(file('service-worker.js'),/ux-clarity\.css/);
- assert.match(file('service-worker.js'),/control-shell-v21/);
+ assert.match(file('service-worker.js'),/control-shell-v22/);
 });
