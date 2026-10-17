@@ -1,7 +1,7 @@
 /* CONTROL PWA — public static shell only; no private instructions, secrets or GitHub API responses. */
 'use strict';
-const CACHE_SHELL='control-shell-v28';
-const CACHE_PUBLIC='control-public-data-v28';
+const CACHE_SHELL='control-shell-v29';
+const CACHE_PUBLIC='control-public-data-v29';
 const ROOT=new URL(self.registration.scope);
 const ASSETS=['./','./index.html','./legacy.html','./assets/automations-hub.js','./assets/command-center.js','./assets/command-center.css','./assets/tool-catalog.js','./assets/tool-catalog.css','./assets/deployment-guides.js','./assets/deployment-guides.css','./assets/control-help.js','./assets/control-help.css','./assets/ai-lab.js','./assets/ai-lab.css','./assets/ux-clarity.css','./assets/multi-ai-command.js','./assets/multi-ai-command.css','./assets/visio-center.js','./assets/visio-center.css','./assets/app.js','./assets/codex.js','./assets/style.css','./assets/theme.css','./assets/pwa.js','./assets/icon.svg','./assets/icon-192.png','./assets/icon-512.png','./manifest.webmanifest'];
 const PUBLIC_DATA=/^data\/(?:projects|catalog|automations|ai-tool-libraries|deployment-guides|help-center)\.json$|^data\/(?:sprints|status)\/[a-z0-9-]+\.json$/;
@@ -9,9 +9,20 @@ const INITIAL_DATA=['./data/projects.json','./data/catalog.json','./data/automat
 self.addEventListener('install',(e)=>{
   e.waitUntil((async()=>{
     const cache=await caches.open(CACHE_SHELL);
-    for(const a of ASSETS){try{const resp=await fetch(new URL(a,ROOT),{cache:'reload'});if(resp.ok)await cache.put(new URL(a,ROOT),resp)}catch{/* Offline installation must not claim every asset was cached. */}}
+    // Six parallel requests per batch prevent the long sequential cold-install delay on Android.
+    for(let i=0;i<ASSETS.length;i+=6){
+      await Promise.allSettled(ASSETS.slice(i,i+6).map(async a=>{
+        const url=new URL(a,ROOT),resp=await fetch(url,{cache:'reload'});
+        if(resp.ok)await cache.put(url,resp);
+      }));
+    }
     const dataCache=await caches.open(CACHE_PUBLIC);
-    for(const a of INITIAL_DATA){try{const url=new URL(a,ROOT),response=await fetch(url,{cache:'no-store'});if(response.ok)await dataCache.put(url,response)}catch{/* No fabricated state if initial online fetch failed. */}}
+    for(let i=0;i<INITIAL_DATA.length;i+=6){
+      await Promise.allSettled(INITIAL_DATA.slice(i,i+6).map(async a=>{
+        const url=new URL(a,ROOT),response=await fetch(url,{cache:'no-store'});
+        if(response.ok)await dataCache.put(url,response);
+      }));
+    }
   })());
   self.skipWaiting();
 });
@@ -31,10 +42,17 @@ self.addEventListener('fetch',e=>{
   e.respondWith(fetch(request,{cache:'no-store'}).catch(()=>new Response('<!doctype html><html lang="fr"><meta charset="utf-8"><title>CONTROL hors ligne</title><body style="font-family:system-ui;padding:2rem">Connexion requise : rétablissez votre réseau pour ouvrir CONTROL Cloud.</body></html>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}})));
   return;
  }
- if(path===''||path==='index.html'||request.mode==='navigate'){
+ const isHome=path===''||path==='index.html';
+ if(isHome||request.mode==='navigate'){
    e.respondWith((async()=>{
-      try{const response=await fetch(request);if(response.ok){const cache=await caches.open(CACHE_SHELL);await cache.put(new URL('./index.html',ROOT),response.clone())}return response}catch{
-        const cache=await caches.open(CACHE_SHELL);return await cache.match(new URL('./index.html',ROOT))||Response.error()
+      try{
+        const response=await fetch(request);
+        // Navigating to a legacy or unknown page must never overwrite the offline CONTROL homepage.
+        if(response.ok&&isHome){const cache=await caches.open(CACHE_SHELL);await cache.put(new URL('./index.html',ROOT),response.clone())}
+        return response;
+      }catch{
+        const cache=await caches.open(CACHE_SHELL);
+        return await cache.match(isHome?new URL('./index.html',ROOT):request)||Response.error();
       }
    })());
    return;
