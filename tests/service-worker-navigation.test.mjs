@@ -33,7 +33,7 @@ function harness(fetcher){
 test('Legacy or unknown pages cannot poison the offline CONTROL homepage',async()=>{
  let online=true;
  const h=harness(async request=>{if(!online)throw Error('offline');const url=request.url||String(request);return{ok:true,content:url,clone(){return this}}});
- const shell=await h.open('control-shell-v29');
+ const shell=await h.open('control-shell-v30');
  const home=await h.navigate('index.html');
  assert.equal(home.content,origin+'index.html');
  assert.deepEqual(shell.puts,[origin+'index.html']);
@@ -60,8 +60,8 @@ test('Cold PWA install precaches only public files in bounded parallel batches',
  h.callbacks.install({waitUntil(p){awaited=p}});
  assert.ok(awaited);
  await awaited;
- const shell=await h.open('control-shell-v29');
- const data=await h.open('control-public-data-v29');
+ const shell=await h.open('control-shell-v30');
+ const data=await h.open('control-public-data-v30');
  assert.ok(shell.puts.length>=25);
  assert.ok(data.puts.length>=10);
  assert.ok(total>=35);
