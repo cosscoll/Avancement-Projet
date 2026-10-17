@@ -894,5 +894,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T223430Z",
+    "started_at": "2026-10-17T22:34:30Z",
+    "ended_at": "2026-10-17T22:42:00Z",
+    "summary": "UCP-QA-31 : défaut de repli réseau après erreur CacheStorage reproduit et correctif minimal validé sur copie isolée, sans intégration ni push applicatif.",
+    "done": [
+      "Issues centrales #1/#2 inchangées, déjà lues et bloquées ; main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Défaut QA-28 reproduit : un rejet de caches.match interrompt la réponse d’un actif public et empêche toute tentative réseau.",
+      "Correctif isolé validé par 18/18 contrôles injectés ; cache hit/miss, double panne, absence de boucle et exclusions API/navigation/mutations/origines tierces/hors liste conservés. Archive Drive SHA256 25003e48fd230d2b626241fea3b80219459dd24915ab0775118d231699712c3e."
+    ],
+    "blockers": [
+      "Simulation Node/VM sans navigateur ni moteur Service Worker réel, HTTPS ou quota CacheStorage réel.",
+      "Aucun essai Chrome Android/Xiaomi, Safari iOS/iPadOS ou cycle installation–mise à jour–désinstallation.",
+      "Correctifs QA-28/31 non intégrés ; état du clone Windows dev/ucp-codex inconnu."
+    ],
+    "next": "Comparer QA-31 à dev/ucp-codex, appliquer avec QA-28 sur une branche dédiée, puis vérifier sous Chrome le repli réseau après erreur/suppression Cache Storage.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Livrable QA-31 sur Drive",
+        "url": "https://drive.google.com/file/d/1NWdqrUUi1oJpMFSqPQXbWNj8gGBS5GJz/view"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
