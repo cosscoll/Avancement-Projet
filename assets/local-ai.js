@@ -55,7 +55,7 @@ function mount(root,adapter={}){
   $('#loc-count').textContent=data.length+' message'+(data.length>1?'s':'');
   if(target.scrollTo)target.scrollTo({top:target.scrollHeight,behavior:'auto'});
  }
- const state=()=>{const disabled=!ready||generating;$('#loc-question').disabled=disabled;$('#loc-send').disabled=disabled;$('#loc-load').disabled=loading||ready||generating;$('#loc-project').disabled=generating;$('#loc-stop').hidden=!loading&&!ready&&!generating;$('#loc-cancel').hidden=!generating;};
+ const state=()=>{const disabled=!ready||generating;$('#loc-question').disabled=disabled;$('#loc-send').disabled=disabled;$('#loc-load').disabled=loading||ready||generating;$('#loc-project').disabled=generating;$('#loc-clear').disabled=generating;$('#loc-stop').hidden=!loading&&!ready&&!generating;$('#loc-cancel').hidden=!generating;};
  function stop(message='Modèle arrêté. Tu peux le recharger.'){
   ++requestId;worker?.terminate?.();worker=null;ready=false;loading=false;generating=false;pendingProject=null;
   if(!disposed){$('#loc-progress').hidden=true;status(message);state()}
