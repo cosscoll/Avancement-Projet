@@ -1,11 +1,11 @@
 /* CONTROL PWA — public static shell only; no private instructions, secrets or GitHub API responses. */
 'use strict';
-const CACHE_SHELL='control-shell-v15';
-const CACHE_PUBLIC='control-public-data-v15';
+const CACHE_SHELL='control-shell-v16';
+const CACHE_PUBLIC='control-public-data-v16';
 const ROOT=new URL(self.registration.scope);
-const ASSETS=['./','./index.html','./legacy.html','./assets/automations-hub.js','./assets/command-center.js','./assets/command-center.css','./assets/tool-catalog.js','./assets/tool-catalog.css','./assets/deployment-guides.js','./assets/deployment-guides.css','./assets/app.js','./assets/codex.js','./assets/style.css','./assets/theme.css','./assets/pwa.js','./assets/icon.svg','./assets/icon-192.png','./assets/icon-512.png','./manifest.webmanifest'];
-const PUBLIC_DATA=/^data\/(?:projects|catalog|automations|ai-tool-libraries|deployment-guides)\.json$|^data\/(?:sprints|status)\/[a-z0-9-]+\.json$/;
-const INITIAL_DATA=['./data/projects.json','./data/catalog.json','./data/automations.json','./data/ai-tool-libraries.json','./data/deployment-guides.json',...['pack-pro','banque-ia','ucp','iagile','tcg'].map(id=>'./data/sprints/'+id+'.json')];
+const ASSETS=['./','./index.html','./legacy.html','./assets/automations-hub.js','./assets/command-center.js','./assets/command-center.css','./assets/tool-catalog.js','./assets/tool-catalog.css','./assets/deployment-guides.js','./assets/deployment-guides.css','./assets/control-help.js','./assets/control-help.css','./assets/app.js','./assets/codex.js','./assets/style.css','./assets/theme.css','./assets/pwa.js','./assets/icon.svg','./assets/icon-192.png','./assets/icon-512.png','./manifest.webmanifest'];
+const PUBLIC_DATA=/^data\/(?:projects|catalog|automations|ai-tool-libraries|deployment-guides|help-center)\.json$|^data\/(?:sprints|status)\/[a-z0-9-]+\.json$/;
+const INITIAL_DATA=['./data/projects.json','./data/catalog.json','./data/automations.json','./data/ai-tool-libraries.json','./data/deployment-guides.json','./data/help-center.json',...['pack-pro','banque-ia','ucp','iagile','tcg'].map(id=>'./data/sprints/'+id+'.json')];
 self.addEventListener('install',(e)=>{
   e.waitUntil((async()=>{
     const cache=await caches.open(CACHE_SHELL);
