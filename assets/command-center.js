@@ -5,7 +5,7 @@ const KEY='control-command-v1',HUB='control-hub-v2',AUTOS='control-automations-v
 let db,ctx={projects:[],state:{}},live={};
 const $=s=>document.querySelector(s);
 const h=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const safe=v=>{try{const x=new URL(String(v||''));return x.protocol==='https:'&&!x.username&&!x.password?x.href:''}catch{return''}};
+const safe=v=>{try{const x=new URL(String(v||''));return x.protocol==='https:'&&!x.username&&!x.password&&![...x.searchParams.keys()].some(k=>/^(access_token|token|api_key|secret|password|code)$/i.test(k))?x.href:''}catch{return''}};
 const href=(url,label,cls='button')=>safe(url)?'<a class="'+cls+'" href="'+h(safe(url))+'" target="_blank" rel="noopener noreferrer">'+h(label)+' ↗</a>':'';
 const date=v=>{if(!v)return 'Non renseigné';const d=new Date(v);return isNaN(+d)?'Non renseigné':d.toLocaleDateString('fr-FR')};
 const dt=v=>{if(!v)return 'Non vérifié';const d=new Date(v);return isNaN(+d)?'Non vérifié':d.toLocaleString('fr-FR')};
