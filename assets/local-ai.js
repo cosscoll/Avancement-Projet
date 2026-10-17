@@ -55,7 +55,7 @@ function mount(root,adapter={}){
   $('#loc-count').textContent=data.length+' message'+(data.length>1?'s':'');
   if(target.scrollTo)target.scrollTo({top:target.scrollHeight,behavior:'auto'});
  }
- const state=()=>{const disabled=!ready||generating;$('#loc-question').disabled=disabled;$('#loc-send').disabled=disabled;$('#loc-load').disabled=loading||ready||generating;$('#loc-project').disabled=generating;$('#loc-clear').disabled=generating;$('#loc-stop').hidden=!loading&&!ready&&!generating;$('#loc-cancel').hidden=!generating;};
+ const state=()=>{const disabled=!ready||generating;$('#loc-question').disabled=disabled;$('#loc-send').disabled=disabled;$('#loc-load').disabled=loading||ready||generating;$('#loc-project').disabled=generating;$('#loc-clear').disabled=generating;$('#loc-context').disabled=generating;$('#loc-stop').hidden=!loading&&!ready&&!generating;$('#loc-cancel').hidden=!generating;};
  function stop(message='Modèle arrêté. Tu peux le recharger.'){
   ++requestId;worker?.terminate?.();worker=null;ready=false;loading=false;generating=false;pendingProject=null;
   if(!disposed){$('#loc-progress').hidden=true;status(message);state()}
@@ -115,11 +115,13 @@ function mount(root,adapter={}){
  $('#loc-form').addEventListener('submit',e=>{e.preventDefault();send()});
  $('#loc-project').addEventListener('change',e=>{if(generating)return;chosen=e.target.value;contextEnabled=false;$('#loc-context').checked=false;$('#loc-context-info').textContent='Contexte désactivé pour cette conversation.';render()});
  $('#loc-context').addEventListener('change',e=>{
+  if(generating)return;
   contextEnabled=e.target.checked&&chosen!=='general';
   if(chosen==='general'){e.target.checked=false;contextEnabled=false;status('Choisis un projet pour autoriser le contexte.',true)}
   $('#loc-context-info').textContent=contextEnabled?'Contexte en lecture seule : nom du projet et tâches locales sélectionnées. Aucun envoi serveur.':'Contexte désactivé.';
  });
  $('#loc-clear').addEventListener('click',()=>{
+  if(generating)return;
   if(!confirm('Supprimer l’historique de cette conversation locale ?'))return;
   history[key()]=[];const stored=save();render();status(stored?'Historique effacé pour ce projet.':'Conversation effacée à l’écran, mais la suppression n’a pas pu être enregistrée.',!stored);
  });
