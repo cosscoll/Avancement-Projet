@@ -1,0 +1,95 @@
+/* CONTROL · UX clarity — designed for progressive disclosure, not feature removal.
+   Calm palette, four destinations, restrained dashboard and advanced options on demand. */
+:root{--clarity-ink:#26384e;--clarity-accent:#294d70;--clarity-muted:#66798e;--clarity-border:#dfe6ee;--clarity-surface:#fff;--clarity-soft:#f5f8fb}
+.head-actions{display:flex;gap:8px;align-items:center}
+.head-actions .button{background:#fff;border:1px solid var(--clarity-border);font-size:12px;min-height:40px;padding:10px 13px}
+.head-actions .head-tools{color:#284768;font-weight:750}
+.clarity-intro{padding:4px 0 12px}
+.clarity-intro h1{margin-top:5px}
+.clarity-intro .toprow{align-items:center}
+.clarity-intro .muted{margin:2px 0 12px}
+.clarity-shortcuts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0 22px}
+.clarity-shortcut{display:flex;flex-direction:column;align-items:flex-start;gap:4px;border:1px solid var(--clarity-border);background:#fff;color:var(--clarity-ink);border-radius:13px;padding:14px 15px;text-align:left;text-decoration:none;min-height:78px;cursor:pointer}
+.clarity-shortcut:hover,.clarity-shortcut:focus-visible{border-color:#a7bad1;background:#f7fafd;color:var(--clarity-ink)}
+.clarity-shortcut strong{font-weight:780;font-size:14px;line-height:1.4}
+.clarity-shortcut span{font-size:12px;color:var(--clarity-muted);line-height:1.4}
+.clarity-listhead{margin:6px 0 10px}
+.clarity-listhead h2{margin:0;font-size:20px;font-weight:800}
+.clarity-count{font-size:12px;font-weight:750;display:inline-block;border-radius:8px;padding:4px 9px;color:#5a7190;background:#e9f0f8;vertical-align:middle;margin-left:6px}
+.clarity-projects .search,#project-search{max-width:580px;width:100%}
+.clarity-cards{margin:13px 0 10px!important}
+.clarity-cards .card{min-height:123px;padding:16px 18px;box-shadow:0 1px 9px #1a365108}
+.clarity-cards .card:hover{transform:none;background:#fcfdff}
+.clarity-cards .badge{width:38px;height:38px;border-radius:10px;margin-bottom:10px;font-size:13px}
+.clarity-cards .card strong{line-height:1.28;font-size:15px}
+.clarity-more{text-align:center;margin:13px auto 22px}
+.clarity-more button{min-height:39px;background:transparent;color:#3d6189;font-size:12px;padding:8px 12px;border:1px solid #d6e1eb;border-radius:10px}
+.clarity-more button[hidden]{display:none!important}
+.clarity-helpnote{font-size:13px;color:#5e748d;line-height:1.5;padding:13px 15px;border:1px solid var(--clarity-border);border-radius:12px;background:#fafbfd;margin:16px 0}
+.clarity-helpnote summary{cursor:pointer;font-size:12px;font-weight:750;color:#3e5b7b;list-style-position:inside}
+.clarity-helpnote p{margin:12px 0 0;font-size:12px}
+.clarity-work-nav{display:flex;flex-wrap:wrap;gap:9px;align-items:flex-start;border-bottom:1px solid #e2e8f0;margin:10px 0 16px;padding-bottom:8px}
+.clarity-work-nav .tabs,.clarity-work-nav .tabbar{display:flex;gap:5px;border:0;overflow-x:auto;flex:1;min-width:0;padding:0;scrollbar-width:thin}
+.clarity-work-nav .tabs button,.clarity-work-nav .tabbar button{min-height:43px;white-space:nowrap;font-size:12px;border:1px solid transparent;background:transparent;border-radius:9px;padding:9px 11px;font-weight:680;color:#536a85}
+.clarity-work-nav .tabs button[aria-selected=true],.clarity-work-nav .tabbar button.selected{background:#eaf1f9;color:#284b72;border-color:#cad8e9}
+.clarity-more-tabs{position:relative;max-width:100%;border:1px solid var(--clarity-border);border-radius:10px;background:#fff;min-height:43px;color:#4c6480;min-width:91px;font-size:12px;z-index:2}
+.clarity-more-tabs summary{display:flex;justify-content:space-between;align-items:center;gap:7px;cursor:pointer;font-weight:760;list-style:none;min-height:41px;padding:9px 13px}
+.clarity-more-tabs summary::after{content:'⌄';color:#6c89a5;font-size:16px}
+.clarity-more-tabs summary::-webkit-details-marker{display:none}
+.clarity-more-tabs[open]{box-shadow:0 4px 15px #1e3d5812}
+.clarity-more-tabs[open] summary{color:#2c527b}
+.clarity-advanced{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:9px;border-top:1px solid var(--clarity-border);min-width:250px}
+.clarity-advanced button{min-height:41px;white-space:normal;text-align:left;border:1px solid transparent;border-radius:8px;background:#f6f8fb;padding:9px;font-size:12px;font-weight:680;color:#435f7f}
+.clarity-advanced button[aria-current=page]{border-color:#acc1d9;background:#eaf1fa;color:#294a70}
+.clarity-toolgroup{background:#fff;border:1px solid var(--clarity-border);border-radius:14px;margin:10px 0;overflow:hidden;box-shadow:0 1px 6px #19314e05}
+.clarity-toolgroup>summary{padding:16px 18px;min-height:62px;display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;list-style:none;color:#284361}
+.clarity-toolgroup>summary::-webkit-details-marker{display:none}
+.clarity-toolgroup>summary strong{display:block;font-size:15px;line-height:1.3}
+.clarity-toolgroup>summary small{display:block;font-size:12px;font-weight:450;color:#6b8097;margin-top:4px}
+.clarity-chevron{color:#8498ad;font-weight:800;transition:transform .18s}
+.clarity-toolgroup[open] .clarity-chevron{transform:rotate(180deg)}
+.clarity-toolcards{border-top:1px solid #ebf0f5;display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:9px;padding:13px}
+.clarity-tool-link{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:76px;border:1px solid #e7edf3;background:#f9fbfd;border-radius:10px;padding:12px 13px;color:#304d70;text-decoration:none;text-align:left;position:relative;cursor:pointer;font-size:12px}
+.clarity-tool-link:hover{background:#eef4fb;border-color:#b9cee3}
+.clarity-tool-link strong{font-size:13px;font-weight:780;line-height:1.4;padding-right:22px}
+.clarity-tool-link small{font-size:11px;color:#73869c;padding-right:12px;line-height:1.35}
+.clarity-tool-link span[aria-hidden]{position:absolute;right:12px;top:12px;color:#7b91ab}
+.clarity-tool-link[aria-current=page]{background:#e9f1fa;border-color:#afc5df}
+.clarity-cloud-tools{margin-bottom:18px}
+.clarity-cloud-tools .clarity-toolgroup{margin:8px 0}
+.clarity-cloud-tools .clarity-tool-link{width:100%}
+/* Explicit four-way mobile navigation. These selectors are shared by personal and Cloud. */
+.mobilefoot,.bottomnav{justify-content:space-around;gap:3px}
+.mobilefoot button,.bottomnav button{flex:1;border:0;border-radius:10px;background:transparent;color:#718398;min-height:49px;font-weight:640}
+.mobilefoot button[aria-current=page],.bottomnav button[aria-current=page]{background:#edf3fa;color:#2c537b;font-weight:850}
+.mobilefoot button span,.bottomnav button span{font-size:19px;line-height:1.25}
+.clarity-project-toolset{border-radius:12px;padding:12px;border:1px solid #e0e7ef;color:#536c84;background:#fbfcfe}
+.clarity-project-toolset summary{cursor:pointer;font-weight:720}
+/* Responsive: keep four important tabs on one line; other options appear on demand. */
+@media(max-width:750px){
+ .head-actions{gap:6px}
+ .head-actions .button{padding:9px 10px;font-size:11px}
+ .clarity-shortcuts{gap:7px}
+ .clarity-shortcut{min-height:72px;padding:11px}
+ .clarity-shortcut strong{font-size:12px}
+ .clarity-shortcut span{font-size:11px}
+ .clarity-work-nav{display:block}
+ .clarity-work-nav .tabs,.clarity-work-nav .tabbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%;gap:4px;padding:0 0 8px;overflow:visible}
+ .clarity-work-nav .tabs button,.clarity-work-nav .tabbar button{font-size:11px;min-width:0;white-space:normal;line-height:1.2;padding:7px 5px;min-height:47px}
+ .clarity-more-tabs{width:100%}
+ .clarity-advanced{width:100%;min-width:0;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .clarity-cards .card{padding:13px;min-height:117px}
+ .clarity-toolcards{grid-template-columns:repeat(2,minmax(0,1fr));padding:10px;gap:7px}
+ .clarity-tool-link{padding:10px;min-height:72px}
+}
+@media(max-width:430px){
+ .clarity-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .clarity-shortcut:last-child{grid-column:1/-1;min-height:60px}
+ .clarity-shortcut:last-child span{display:inline}
+ .clarity-cards .card strong{font-size:13px}
+ .clarity-toolcards{grid-template-columns:1fr}
+ .clarity-tool-link{min-height:62px}
+ .head-actions .head-search{display:none}
+ .head-actions .button{min-height:38px}
+}
+@media(prefers-reduced-motion:reduce){.clarity-chevron{transition:none}}
