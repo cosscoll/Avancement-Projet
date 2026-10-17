@@ -54,7 +54,7 @@ function ui(root,adapter={}){
     (items.length?items.map(m=>{
      const open=selectedRun===m.id;
      const link=u(m.url||adapter.providerURL?.(projectId,provider)||home[provider]);
-     const origin=m.resultOrigin==='api'?'API CONTROL vérifiée':m.result?'Résultat saisi manuellement':'Aucun résultat remonté';
+     const origin=m.resultOrigin==='api'?'Réponse reçue via API (contenu à vérifier)':m.result?'Résultat saisi manuellement':'Aucun résultat remonté';
      return '<article class="cmd-item"><div class="cmd-item-head"><strong>'+E(m.title)+'</strong><span class="cmd-status">'+E(statuses[m.status]||'Statut non vérifié')+'</span></div><small class="cmd-meta">'+E(time(m.updatedAt))+' · '+E(origin)+'</small>'+
       '<div class="cmd-actions"><button type="button" data-copy="'+E(m.id)+'">Copier la mission</button>'+(adapter.canDispatch?.()&&m.status==='todo'?'<button type="button" class="cmd-api" data-dispatch="'+E(m.id)+'">Envoyer via API (validation requise)</button>':'')+(link?'<a href="'+E(link)+'" target="_blank" rel="noopener noreferrer">Ouvrir '+provider+' ↗</a>':'')+'<button type="button" data-edit="'+E(m.id)+'">'+(open?'Fermer':'Suivre / Résultat')+'</button></div>'+
       (m.result?'<details class="cmd-actual-result"><summary>Lire le résultat enregistré</summary><pre>'+E(m.result)+'</pre>'+(m.proofUrl&&u(m.proofUrl)?'<p><a href="'+E(u(m.proofUrl))+'" target="_blank" rel="noopener noreferrer">Preuve / livrable ↗</a></p>':'')+'</details>':'')+
@@ -86,7 +86,7 @@ function ui(root,adapter={}){
    if(!m||!adapter.canDispatch?.()||!adapter.dispatchMission||busy)return;
    if(!confirm('Envoyer cette mission à '+m.provider+' via son API ? Cet appel peut entraîner une consommation facturée selon les quotas du fournisseur. Annuler si aucun coût n’est autorisé.'))return;
    busy=true;send.disabled=true;
-   try{await adapter.dispatchMission(m);alert('Commande envoyée. Le résultat disponible sera affiché avec la mention « API CONTROL vérifiée ».');paint()}
+   try{await adapter.dispatchMission(m);alert('Commande envoyée. Le résultat disponible sera affiché avec la mention « Réponse reçue via API (contenu à vérifier) ».');paint()}
    catch(error){alert(error?.message||'Appel IA indisponible.',true);paint()}
    finally{busy=false}return;
   }
