@@ -139,7 +139,7 @@
     },
     {
       "title": "PWA et distribution mobile non validées",
-      "description": "UCP-QA-27 génère réellement, depuis le logo officiel du HEAD, cinq PNG PWA/iOS : 30 contrôles de fichiers et 9/9 tests du générateur réussissent, avec revue visuelle sans découpe apparente. Les fichiers restent isolés : manifeste/HTML non modifiés, aucune installation sur Android/Xiaomi/iOS, intégration, paquet signé, compte store ou publication.",
+      "description": "UCP-QA-28 assemble isolément le socle PWA QA-24 et les cinq PNG QA-27 : manifeste any/maskable, icône Apple, cache statique v2 et bouton d’installation. Contrôles réussis : 35 intégration, 30 icônes, 8/8 DOM et git apply --check. Le patch reste non intégré ; aucun navigateur réel, Android/Xiaomi/iOS, cycle installation–mise à jour–désinstallation, paquet signé, compte store ou publication.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-27 ; QA-27 génère et valide isolément les icônes PWA réelles sans intégration",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-28 ; QA-28 prépare et teste l’intégration PWA complète sans push applicatif",
   "baseline_date": "2026-10-17"
 }
