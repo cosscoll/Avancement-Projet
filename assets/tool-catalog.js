@@ -17,7 +17,7 @@ function mount(root,params={}){
  const favoritesKey='control-tool-favorites-v1',favoritable=mode==='personal';
  let favorites=new Set();
  if(favoritable)try{favorites=new Set(JSON.parse(localStorage.getItem(favoritesKey)||'[]').filter(x=>typeof x==='string'))}catch{}
- const state={course:'all',category:'all',q:'',level:'all',access:'all',favoritesOnly:false,limit:24,project:projectList.some(p=>p.id===params.projectId)?params.projectId:(projectList[0]?.id||''),busy:false};
+ const state={course:'all',category:'all',q:'',level:'all',access:'all',favoritesOnly:false,limit:8,project:projectList.some(p=>p.id===params.projectId)?params.projectId:(projectList[0]?.id||''),busy:false};
  const loading=document.createElement('div');loading.className='tool-loading';loading.setAttribute('role','status');loading.textContent='Chargement des bibliothèques d’outils IA…';root.replaceChildren(loading);
  load().then(data=>{
    if(!root.isConnected||!loading.isConnected)return;
@@ -45,7 +45,7 @@ function mount(root,params={}){
      (projectList.length?'<label>Enregistrer dans le projet<select id="tool-project" class="tool-field">'+setOptions(projectList.map(p=>[p.id,p.name]),state.project)+'</select></label>':'<p class="tool-missing-project">Crée un projet pour pouvoir y enregistrer une ressource.</p>')+
      (favoritable?'<label class="tool-check"><input id="tool-favorites" type="checkbox"> Mes favoris</label>':'')+
      '</section><section class="tool-results" aria-live="polite"><div class="tool-results-head"><h2 id="tool-results-title">Outils disponibles</h2><span id="tool-result-count"></span></div><div id="tool-grid" class="tool-grid"></div><div class="tool-more-wrap"><button type="button" id="tool-more">Afficher davantage d’outils</button></div></section>'+
-     '<div id="tool-notice" class="tool-feedback" role="status" aria-live="polite"></div>'+'<section class="tool-kits"><div class="tool-results-head"><div><h2>Kits pratiques & prompts</h2><p class="tool-kit-caption">12 points de départ prêts à personnaliser pour mettre les outils en pratique. Ce ne sont pas les contenus des formations payantes.</p></div></div><div class="tool-kit-grid" id="tool-kits"></div></section>'+
+     '<div id="tool-notice" class="tool-feedback" role="status" aria-live="polite"></div>'+'<details class="tool-kits clarity-helpnote"><summary>Voir les 12 kits pratiques et prompts de départ</summary><p class="tool-kit-caption">Des exemples pour expérimenter. Ce ne sont pas les contenus des formations payantes.</p><div class="tool-kit-grid" id="tool-kits"></div></details>'+
      '<section class="tool-safety"><strong>À savoir</strong><p>« Code libre » décrit le logiciel, pas nécessairement son hébergement ni les modèles IA associés. Certains fournisseurs nécessitent un abonnement ou une clé API payante. Vérifie aussi les licences des modèles et ressources téléchargées.</p></section></div>';
    const panel=root.querySelector('.tool-page');if(!panel)return;const q=selector=>panel.querySelector(selector);
    function matches(t){const text=txt([t.name,t.summary,t.useCase,data.categories.find(x=>x.id===t.category)?.name||''].join(' '));return(state.course==='all'||t.courses.includes(state.course))&&(state.category==='all'||t.category===state.category)&&(state.level==='all'||t.level===state.level)&&(state.access==='all'||t.access===state.access)&&(!state.favoritesOnly||favorites.has(t.id))&&(!state.q||text.includes(txt(state.q)))}
@@ -54,7 +54,7 @@ function mount(root,params={}){
    function renderKits(){const kits=(data.kits||[]).filter(k=>state.course==='all'||k.course===state.course);q('#tool-kits').innerHTML=kits.map(k=>{
  const referenced=k.tools.map(id=>data.tools.find(x=>x.id===id)).filter(Boolean);
  return '<article class="tool-kit"><span class="tool-kit-label">'+esc(data.courses[k.course]?.name||k.course)+'</span><h3>'+esc(k.title)+'</h3><p>'+esc(k.goal)+'</p><div class="tool-kit-links">'+referenced.map(t=>'<a href="'+esc(t.url)+'" target="_blank" rel="noopener noreferrer">'+esc(t.name)+' ↗</a>').join('')+'</div><button type="button" data-copy-kit="'+esc(k.id)+'">Copier le prompt de départ</button></article>'}).join('');}
-   function redraw(){state.limit=24;drawCourse();draw();renderKits()}
+   function redraw(){state.limit=8;drawCourse();draw();renderKits()}
    function info(s,isError=false){const e=q('#tool-notice');e.textContent=s;e.dataset.error=isError?'true':'false'}
    drawCourse();draw();renderKits();
    panel.addEventListener('click',async e=>{
@@ -63,7 +63,7 @@ function mount(root,params={}){
      const kitButton=e.target.closest('[data-copy-kit]');if(kitButton&&panel.contains(kitButton)){const k=(data.kits||[]).find(x=>x.id===kitButton.dataset.copyKit);if(!k)return;const selected=k.tools.map(id=>data.tools.find(x=>x.id===id)).filter(Boolean);const prompt='KIT CONTROL / IAGILE — '+k.title+'\n\nOutils possibles : '+selected.map(t=>t.name+' ('+t.url+')').join(', ')+'\n\n'+k.prompt+'\n\nContraintes : vérifier les licences, la sécurité, les coûts et les autorisations. Ne pas utiliser de ressources payantes sans accord.';try{await navigator.clipboard.writeText(prompt);info('Prompt « '+k.title+' » copié dans le presse-papiers.')}catch{info('Copie impossible : contrôle les permissions du navigateur.',true)}return}
      const fav=e.target.closest('[data-tool-fav]');if(fav&&panel.contains(fav)&&favoritable){const id=fav.dataset.toolFav;favorites.has(id)?favorites.delete(id):favorites.add(id);try{localStorage.setItem(favoritesKey,JSON.stringify([...favorites]))}catch{info('Impossible de sauvegarder les favoris sur cet appareil.',true)}draw();return}
      const button=e.target.closest('[data-tool-save]');if(button&&panel.contains(button)){const t=data.tools.find(x=>x.id===button.dataset.toolSave);if(!t||!state.project||!params.onAdd)return;button.disabled=true;try{const saved=await params.onAdd(t,state.project);info(saved===false?'L’outil était déjà associé à ce projet.':'« '+t.name+' » ajouté à ton projet.');draw()}catch(err){info(err?.message||'Impossible d’enregistrer cet outil.',true);button.disabled=false}return}
-     if(e.target.closest('#tool-more')){state.limit+=24;draw()}
+     if(e.target.closest('#tool-more')){state.limit+=8;draw()}
    });
    q('#tool-query').addEventListener('input',e=>{state.q=e.target.value;redraw()});
    q('#tool-category').addEventListener('change',e=>{state.category=e.target.value;redraw()});
