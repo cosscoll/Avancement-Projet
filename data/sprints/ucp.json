@@ -427,5 +427,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T002639Z",
+    "started_at": "2026-10-17T00:26:39Z",
+    "ended_at": "2026-10-17T00:39:00Z",
+    "summary": "UCP-QA-16 : les suites backend et DOM simulé sont revalidées sur une copie dont les 57 blobs application/ correspondent exactement au HEAD distant.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat.",
+      "HEAD main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2 ; 57/57 blobs application/ comparés par hash Git, aucun manquant ni écart.",
+      "Exécutions réelles : 110 tests backend réussis (1 avertissement de dépréciation) et 8 tests DOM jsdom réussis après npm ci depuis le lockfile ; lot archivé (SHA256 ad73bacf85b95140270be951e81c84c3d3cd69a811f3512f8af9abbff6c1a1bf)."
+    ],
+    "blockers": [
+      "Aucun navigateur réel, appareil mobile, accessibilité, staging, charge ou déploiement testé.",
+      "La suite DOM a nécessité npm ci dans la copie isolée ; QA-15 reste non intégrée et aucune exécution GitHub Actions n'existe.",
+      "État du clone Windows dev/ucp-codex inconnu ; aucune lecture ni modification de ce clone."
+    ],
+    "next": "Comparer QA-15 au travail Codex local, ouvrir une pull request CI dédiée sans fusion automatique, obtenir un passage vert backend-tests/dom-tests, puis traiter séparément l'avertissement Starlette/AnyIO et la recette navigateur.",
+    "links": [
+      {
+        "label": "Révision UCP revalidée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
