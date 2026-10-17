@@ -27,3 +27,7 @@ test('worker treats project content as untrusted user data, not system instructi
 test('chat history clear is disabled during an active generation',()=>{
  assert.match(local,/\$\('#loc-clear'\)\.disabled=generating/);
 });
+
+test('project context consent cannot change during generation',()=>{
+ assert.match(local,/\$\('#loc-context'\)\.disabled=generating/);
+});
