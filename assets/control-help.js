@@ -116,6 +116,8 @@ function decide(q){
  if(hasLink&&g&&starts(q,['github','vercel','ionos','netlify','cloudflare','railway','firebase','render']))return cloudNote(answerFAQ(q,'integrations'),q);
  if(explicitTool&&!hasDeploy&&!hasLink)return cloudNote(toolAnswer(t),q);
  if(g&&(hasDeploy||hasPrices||starts(q,['github','ionos','vercel','netlify','cloudflare','railway','firebase','render'])))return cloudNote(guideAnswer(g,q),q);
+ if(/\b(sauvegard\w*|export\w*|import\w*|restaur\w*|backup)\b/.test(v))return cloudNote(answerFAQ(q,'sauvegarde')||defaultHelp(),q);
+ if(/\b(404|page blanche|build echoue|erreur de deploiement)\b/.test(v))return cloudNote(answerFAQ(q,'deploy-check')||defaultHelp(),q);
  if(/^(merci|super|ok|bonjour|salut|hello|bonsoir|hey|coucou)\b/.test(v))return defaultHelp();
  if(countRequest||statusRequest){
   const summary=typeof adapter.getSummary==='function'?adapter.getSummary():null;
@@ -123,6 +125,12 @@ function decide(q){
     if(countRequest)return {subject:'my-projects',title:'Tes projets CONTROL',answer:'CONTROL connaît actuellement '+summary.projects+' projet(s) dans cet espace'+(summary.current?' ; projet ouvert : '+summary.current:'')+'. Pour consulter leur contenu et les conversations associées, ouvre leur fiche. Les conversations privées des fournisseurs ne sont pas incluses dans ce décompte.',steps:[],actions:[action('Voir les projets','projects')],links:[],sources:['Vue locale de CONTROL'],suggestions:['Comment associer un projet ChatGPT ?']};
     return{subject:'my-tasks',title:'Tes actions et missions CONTROL',answer:'Cet espace contient '+(summary.openActions??'un nombre inconnu d’')+' action(s) ouverte(s) et '+(summary.missions??'un nombre inconnu de')+' mission(s) référencée(s). Ces chiffres proviennent des données accessibles dans CONTROL, pas des comptes IA externes.',steps:[],actions:[action('À traiter','inbox'),action('Missions','missions')],links:[],sources:['Vue locale de CONTROL'],suggestions:['Comment créer une automatisation ?']};
   }
+ }
+ if(!g&&!explicitTool&&(hasTool||starts(q,['creer','fabriquer','developper','apprendre']))&&/\b(3d|webgl|agent|agents|automatis\w*|productivite)\b/.test(v)){
+  let group=/\b(3d|webgl)\b/.test(v)?'3d':/\bagents?\b/.test(v)?'agents':/\bautomatis\w*\b/.test(v)?'automatisation':'quotidien';
+  const pick=group==='3d'?['Three.js','React Three Fiber','GSAP','Blender']:group==='agents'?['LangGraph','OpenAI Agents SDK','Flowise','Dify']:group==='automatisation'?['n8n','Activepieces','Make','Google Apps Script']:['NotebookLM','Ollama','Perplexity','LM Studio'];
+  const selected=pick.map(name=>tools.find(x=>x.name===name)).filter(Boolean);
+  if(selected.length)return cloudNote({subject:'course:'+group,title:'Outils conseillés pour '+(group==='3d'?'un site 3D':group==='agents'?'un agent IA':group==='automatisation'?'une automatisation':'améliorer ta productivité'),answer:selected.map((t,i)=>(i+1)+'. '+t.name+' — '+t.summary).join('\n')+'\n\nLes coûts et conditions d’utilisation dépendent de chaque éditeur. Les outils ne sont pas installés automatiquement dans CONTROL.',steps:['Commence par le parcours correspondant dans « Bibliothèques IA ».','Teste un outil sur un projet non sensible.','Vérifie les licences et les frais éventuels avant intégration.'],actions:[action('Ouvrir les bibliothèques IA','catalog')],links:selected.slice(0,2).map(t=>({label:t.name+' — site officiel',url:t.url})),sources:['Bibliothèque CONTROL · '+selected.map(t=>t.name).join(', ')],suggestions:['Comment utiliser les kits pratiques ?','Comment mettre un site en ligne ?']},q);
  }
  if(hasTool&&t&&!hasDeploy)return cloudNote(toolAnswer(t),q);
  
