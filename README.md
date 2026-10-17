@@ -1,5 +1,9 @@
 # CONTROL — Centre de pilotage des projets
 
+## Qualité et stabilisation après audit (17 octobre 2026)
+
+**Les tests Node sont désormais réellement exécutés dans GitHub Actions** à chaque changement de code sur `main` : syntaxe JavaScript, parcours de missions Claude/Gemini et rendez-vous, intégrité des ressources PWA, restrictions de sécurité Cloud. Le déploiement GitHub Pages reste indépendant du workflow de tests et nécessite une recette navigateur/Android. Une incohérence du compteur d'échéances CONTROL IA a été corrigée. Les scripts SQL CONTROL refusent désormais de s'exécuter sans confirmation explicite de la nouvelle base isolée ; la base IAgile Academy reste inchangée. [Feuille de route priorisée et critères de validation](docs/PLAN_STABILISATION_POST_AUDIT.md) · [Tests GitHub](https://github.com/cosscoll/Avancement-Projet/actions/workflows/quality.yml).
+
 ## Visios et rendez-vous — Équipe, clients et prospects (17 octobre 2026)
 
 CONTROL dispose d'un espace **Visios et rendez-vous** (`#/control/meetings`) : choix du projet, date/durée, liens Google Meet, Zoom et Microsoft Teams, invitations à partager manuellement, Google Agenda prérempli ou export .ics, notes post-réunion, suivi des rendez-vous dans le calendrier et mode **Jitsi intégré à l'écran pour des tests internes uniquement**. L'API Jitsi publique ne convient pas à une offre commerciale en production. Aucune réunion n'est créée automatiquement chez les fournisseurs, aucune invitation envoyée sans action de l'utilisateur, aucun appel n'est enregistré dans CONTROL. Le mode Cloud est préparé avec RLS mais reste désactivé. [Détails et limites](docs/VISIOS_RENDEZ_VOUS.md).
