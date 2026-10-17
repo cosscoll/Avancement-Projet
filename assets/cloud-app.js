@@ -12,7 +12,7 @@ const truncate=(s,n=210)=>String(s||'').length>n?String(s).slice(0,n)+'…':Stri
 const providers={ChatGPT:'https://chatgpt.com/',Claude:'https://claude.ai/',Gemini:'https://gemini.google.com/',Codex:'https://chatgpt.com/codex',Perplexity:'https://www.perplexity.ai/'};
 const names={ai_space:'Espaces IA',conversation:'Conversations',resource:'Ressources',task:'Actions',mission:'Missions',automation:'Automatisations',report:'Bilans',decision:'Décisions',note:'Notes',event:'Échéances',expense:'Dépenses',income:'Revenus'};
 const externalKinds=new Set(['ai_space','conversation','resource','automation']);
-let client=null,authUser=null,cache={projects:[],items:[],preferences:null},page='projects',picked='',tab='ai_space',waiting=false,waitingOwner=null,epoch=0,terms='',importing=false;
+let client=null,cloudConfig=null,authUser=null,cache={projects:[],items:[],preferences:null},page='projects',picked='',tab='ai_space',waiting=false,waitingOwner=null,epoch=0,terms='',importing=false;
 const getProject=x=>cache.projects.find(p=>p.id===x);
 const projectName=id=>getProject(id)?.name||'Sans projet';
 const items=(kind,projectId)=>cache.items.filter(x=>(!kind||x.kind===kind)&&(projectId===undefined||x.project_id===projectId));
@@ -36,7 +36,7 @@ const kindOpt=(current='task')=>choose('Type de contenu','kind',Object.entries(n
 const providerOpt=(current='ChatGPT')=>choose('IA / fournisseur','provider',[...Object.keys(providers),...new Set(cache.items.filter(x=>x.kind==='ai_space').map(x=>x.provider).filter(Boolean))].map(x=>[x,x]).concat([['Autre','Autre']]),current);
 function safeClientConfig(v){try{if(!v||v.enabled!==true)return false;const url=new URL(v.supabaseUrl);return url.protocol==='https:'&&/^[a-z0-9-]+\.supabase\.co$/.test(url.hostname)&&url.pathname==='/'&&typeof v.supabasePublishableKey==='string'&&/^(sb_publishable_[a-zA-Z0-9_-]+|eyJ[a-zA-Z0-9_.-]+)$/.test(v.supabasePublishableKey)&&!v.supabasePublishableKey.toLowerCase().includes('service_role')}catch{return false}}
 async function boot(){live('Vérification de la configuration privée…');let cfg;
- try{const r=await fetch(CONFIG_URL,{cache:'no-store'});if(!r.ok)throw Error('not ready');cfg=await r.json();if(!safeClientConfig(cfg))throw Error('not configured')}catch{visible('setup');return}
+ try{const r=await fetch(CONFIG_URL,{cache:'no-store'});if(!r.ok)throw Error('not ready');cfg=await r.json();if(!safeClientConfig(cfg))throw Error('not configured');cloudConfig=cfg}catch{visible('setup');return}
  try{live('Initialisation de la connexion sécurisée…');const {createClient}=await import(CDN);client=createClient(cfg.supabaseUrl,cfg.supabasePublishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}});
  client.auth.onAuthStateChange((event,s)=>{if(event==='SIGNED_OUT'){epoch++;authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');return}if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='USER_UPDATED'){setTimeout(()=>verifiedSession(),0)}});
  await verifiedSession();
@@ -185,7 +185,7 @@ function accountPage(){
  panel('Confidentialité','<p>Chaque projet est rattaché à son propriétaire via les règles d’accès RLS de la base de données.</p>'+
  '<p class="muted">Les liens vers les IA ne constituent pas une connexion API. Les droits Google ne sont pas accordés automatiquement par la connexion au compte.</p>')+
  panel('Données personnelles',btn('Exporter mes données','export-json')+' '+btn('Importer mon ancien espace','import-legacy')+
- '<p class="muted">La suppression complète d’un compte doit être mise en service après vérification de la procédure côté serveur ; les inscriptions publiques resteront désactivées tant qu’elle n’est pas prête.</p>');
+ (cloudConfig?.accountDeletionEnabled===true?'<div class="hint">Suppression définitive : le compte et ses données ne pourront pas être restaurés.</div>'+btn('Supprimer définitivement mon compte','delete-account','','danger'):'<p class="muted">La suppression complète d’un compte nécessite une procédure serveur vérifiée. Elle n’est pas encore activée.</p>'));
 }
 
 function itemPayload(form,existing=null){
@@ -386,6 +386,14 @@ async function action(button){
   case 'export-json':await exportMyData(false);return;
   case 'export-encrypted':await exportMyData(true);return;
   case 'import-legacy':await importLegacy();return;
+  case 'delete-account':{
+   if(cloudConfig?.accountDeletionEnabled!==true)throw Error('Suppression de compte non activée.');
+   if(prompt('Pour supprimer définitivement votre compte et ses données, écrivez : SUPPRIMER MON COMPTE')!=='SUPPRIMER MON COMPTE')return;
+   if(!confirm('Dernière confirmation : supprimer ce compte et tous ses projets de manière irréversible ?'))return;
+   const r=await client.functions.invoke('control-delete-account',{body:{confirmation:'SUPPRIMER MON COMPTE'}});
+   if(r.error||r.data?.deleted!==true)throw Error('Suppression non confirmée par le serveur. Aucune réussite ne peut être annoncée.');
+   await client.auth.signOut({scope:'local'});epoch++;authUser=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');message('Compte et données supprimés par le serveur.');return;
+  }
   default:return;
  }
 }
