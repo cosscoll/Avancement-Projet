@@ -22,6 +22,10 @@
           "done": false
         },
         {
+          "name": "Accessibilité clavier, contraste et lecteur d'écran validée",
+          "done": false
+        },
+        {
           "name": "Correctifs critiques intégrés",
           "done": false
         },
@@ -172,6 +176,11 @@
       "title": "Branche principale non protégée",
       "description": "UCP-QA-12 confirme que main n'est pas protégée, sans checks obligatoires ni ruleset. UCP-QA-13 prépare CODEOWNERS, SECURITY.md, un modèle de PR et un plan de protection ; lot testé 7 réussites/2 XFAIL, non intégré tant que le canal privé et les noms de checks CI ne sont pas validés.",
       "level": "critical"
+    },
+    {
+      "title": "Accessibilité de l’application partiellement auditée",
+      "description": "UCP-QA-18 confirme sur l’écran anonyme la langue, le lien d’évitement, le repère principal, les libellés et le focus visible. axe-core relève une barre de statut hors repère et le contrat détecte un dialogue sans nom accessible. Un patch isolé ramène axe de 1 violation à 0 et le contrat de 5 PASS + 1 TODO à 6 PASS, sans intégration. Quatre règles restent incomplètes sous JSDOM ; clavier, contrastes, zoom et lecteur d’écran exigent un navigateur réel.",
+      "level": "warning"
     }
   ],
   "decisions": [
@@ -186,6 +195,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-17 ; QA-16 revalide les suites locales et QA-17 prépare la recette navigateur",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-18 ; QA-16 revalide les suites, QA-17 prépare le navigateur et QA-18 audite l’accessibilité DOM",
   "baseline_date": "2026-10-17"
 }
