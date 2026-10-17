@@ -1,11 +1,11 @@
 {
   "id": "/Avancement-Projet/",
-  "name": "CONTROL — Tableau de bord ChatGPT",
+  "name": "CONTROL — Espaces projets et IA",
   "short_name": "CONTROL",
-  "description": "Pilotage des automatisations et projets, comptes rendus, alertes et consignes publiques.",
+  "description": "Projets, conversations et liens vers les IA centralisés",
   "lang": "fr",
   "dir": "ltr",
-  "start_url": "./#/automations",
+  "start_url": "./#/",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f5f7fa",
@@ -36,19 +36,12 @@
   ],
   "shortcuts": [
     {
-      "name": "Automatisations",
-      "short_name": "Tâches",
-      "url": "./#/automations"
+      "name": "Mes projets",
+      "url": "./#/"
     },
     {
-      "name": "Journal des sprints",
-      "short_name": "Sprints",
-      "url": "./#/activity"
-    },
-    {
-      "name": "Consignes et décisions",
-      "short_name": "Consignes",
-      "url": "./#/inbox"
+      "name": "Connexions",
+      "url": "./#/settings"
     }
   ],
   "prefer_related_applications": false
