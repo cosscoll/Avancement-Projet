@@ -106,8 +106,8 @@ function mount(root,adapter={}){
   save();render();$('#loc-question').value='';
   generating=true;state();
   ++requestId;
-  worker.postMessage({action:'generate',requestId,question:clamp(question,1400),
-    history:before.slice(-8),context});
+  try{worker.postMessage({action:'generate',requestId,question:clamp(question,1400),
+    history:before.slice(-8),context})}catch(error){generating=false;pendingProject=null;status('Impossible de transmettre la question au moteur IA.',true);state()}
  }
  $('#loc-load').addEventListener('click',start);
  $('#loc-stop').addEventListener('click',()=>stop());
