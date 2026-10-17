@@ -55,7 +55,7 @@ function nav(where,pid='',newTab='ai_space'){page=where;picked=pid;tab=newTab;wi
 function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [data-page]').forEach(b=>{const k=b.dataset.page;const active=k==='projects'&&(page==='projects'||page==='project')||k==='inbox'&&page==='inbox'||k==='manager'&&page==='manager'||k==='tools'&&!['projects','project','inbox','manager'].includes(page);b.setAttribute('aria-current',active?'page':'false')});const fns={projects:projectsPage,project:projectPage,inbox:inboxPage,missions:missionsPage,automations:automationsPage,manager:managerPage,tools:toolsPage,account:accountPage,catalog:catalogPage,deploy:deployPage,lab:labPage,command:commandPage,visios:visiosPage};byId('page').innerHTML=(fns[page]||projectsPage)();
  if(page==='visios'){
    const root=byId('visios-root');if(!window.CONTROL_VISIOS){root.textContent='Module visio indisponible. Actualise CONTROL.';return}
-   window.CONTROL_VISIOS.mount(root,{mode:'cloud',projectId:picked,projects:cache.projects,
+   window.CONTROL_VISIOS.mount(root,{mode:'cloud',allowInlineVideo:false,projectId:picked,projects:cache.projects,
     list:()=>cache.items.filter(i=>i.kind==='event'&&i.details?.controlVisio===true).map(i=>({
       id:i.id,title:i.title,projectId:i.project_id||'',type:i.details.type,provider:i.provider,
       startsAt:i.due_at,minutes:Number(i.details.minutes)||30,url:i.url,notes:i.body||'',updatedAt:i.updated_at
