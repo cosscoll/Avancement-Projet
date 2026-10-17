@@ -52,7 +52,7 @@ function ui(root,adapter={}){
      const link=u(m.url||adapter.providerURL?.(projectId,provider)||home[provider]);
      const origin=m.resultOrigin==='api'?'API CONTROL vérifiée':m.result?'Résultat saisi manuellement':'Aucun résultat remonté';
      return '<article class="cmd-item"><div class="cmd-item-head"><strong>'+E(m.title)+'</strong><span class="cmd-status">'+E(statuses[m.status]||'Statut non vérifié')+'</span></div><small class="cmd-meta">'+E(time(m.updatedAt))+' · '+E(origin)+'</small>'+
-      '<div class="cmd-actions"><button type="button" data-copy="'+E(m.id)+'">Copier la mission</button>'+(link?'<a href="'+E(link)+'" target="_blank" rel="noopener noreferrer">Ouvrir '+provider+' ↗</a>':'')+'<button type="button" data-edit="'+E(m.id)+'">'+(open?'Fermer':'Suivre / Résultat')+'</button></div>'+
+      '<div class="cmd-actions"><button type="button" data-copy="'+E(m.id)+'">Copier la mission</button>'+(adapter.canDispatch?.()&&m.status==='todo'?'<button type="button" class="cmd-api" data-dispatch="'+E(m.id)+'">Envoyer via API (validation requise)</button>':'')+(link?'<a href="'+E(link)+'" target="_blank" rel="noopener noreferrer">Ouvrir '+provider+' ↗</a>':'')+'<button type="button" data-edit="'+E(m.id)+'">'+(open?'Fermer':'Suivre / Résultat')+'</button></div>'+
       (m.result?'<details class="cmd-actual-result"><summary>Lire le résultat enregistré</summary><pre>'+E(m.result)+'</pre>'+(m.proofUrl&&u(m.proofUrl)?'<p><a href="'+E(u(m.proofUrl))+'" target="_blank" rel="noopener noreferrer">Preuve / livrable ↗</a></p>':'')+'</details>':'')+
       (open?'<form class="cmd-resultform" data-result="'+E(m.id)+'"><label>Statut déclaré<select name="status" class="cmd-input">'+Object.entries(statuses).map(([v,label])=>'<option value="'+v+'" '+(m.status===v?'selected':'')+'>'+E(label)+'</option>').join('')+'</select></label><label>Résultat de cette IA<textarea name="result" class="cmd-input" rows="6" maxlength="14000" placeholder="Copie la réponse obtenue…">'+E(m.result||'')+'</textarea></label><label>URL de preuve (facultatif)<input class="cmd-input" type="url" name="proof" maxlength="2000" placeholder="https://…" value="'+E(m.proofUrl||'')+'"></label><button type="submit" class="cmd-primary">Enregistrer le suivi</button><p class="cmd-small">Une réponse copiée est marquée « saisie manuellement », pas « récupérée automatiquement ».</p></form>':'')+
       '</article>'
@@ -75,7 +75,17 @@ function ui(root,adapter={}){
   }catch(e){alert('Enregistrement partiel possible : '+(e?.message||'échec')+'. Vérifie les missions avant de recommencer.',true);paint()}
   finally{busy=false;one('#cmd-prepare').disabled=false}
  });
- root.addEventListener('click',e=>{
+ root.addEventListener('click',async e=>{
+  const send=e.target.closest('[data-dispatch]');
+  if(send){
+   const m=getRuns().find(x=>x.id===send.dataset.dispatch);
+   if(!m||!adapter.canDispatch?.()||!adapter.dispatchMission||busy)return;
+   if(!confirm('Envoyer cette mission à '+m.provider+' via son API ? Cet appel peut entraîner une consommation facturée selon les quotas du fournisseur. Annuler si aucun coût n’est autorisé.'))return;
+   busy=true;send.disabled=true;
+   try{await adapter.dispatchMission(m);alert('Commande envoyée. Le résultat disponible sera affiché avec la mention « API CONTROL vérifiée ».');paint()}
+   catch(error){alert(error?.message||'Appel IA indisponible.',true);paint()}
+   finally{busy=false}return;
+  }
   const edit=e.target.closest('[data-edit]');if(edit){selectedRun=selectedRun===edit.dataset.edit?'':edit.dataset.edit;paint();return}
   const cp=e.target.closest('[data-copy]');if(cp){const m=getRuns().find(x=>x.id===cp.dataset.copy);if(m)copy(m.prompt);return}
  });
