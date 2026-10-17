@@ -209,7 +209,9 @@ function managerAnswer(question,proj){const chosen=proj?[getProject(proj)].filte
  out+=p.name+'\n• Actions : '+remaining+' ouvertes, '+done+' terminées dans CONTROL.\n• Missions : '+ms.filter(x=>x.status!=='done').length+' en cours/à lancer.\n';
  if(q.includes('priorit')||q.includes('faire')||q.includes('suite'))out+='• Priorités renseignées : '+group.filter(x=>x.kind==='task'&&x.status!=='done').slice(0,5).map(x=>x.title).join(' ; ')+'\n';
  for(const r of reports)out+='• Bilan '+r.provider+' ('+fmt(r.updated_at)+') : '+truncate(r.body,260)+'\n';
- if(!reports.length)out+='• Aucun compte rendu IA enregistré dans ce compte.\n';
+ const delivered=ms.filter(x=>x.details?.result).sort((a,b)=>String(b.updated_at||'').localeCompare(String(a.updated_at||''))).slice(0,4);
+ for(const m of delivered)out+='• Résultat mission '+m.provider+' ('+fmt(m.updated_at)+', '+(m.details?.origin==='api'?'réponse API CONTROL':'saisie manuelle')+', '+(m.status||'à vérifier')+') : '+truncate(m.details.result,330)+'\n';
+ if(!reports.length&&!delivered.length)out+='• Aucun bilan ni résultat IA enregistré dans ce compte.\n';
  out+='\n'}
  if(!chosen.length)out+='Aucun projet personnel disponible.\n';
  return out+'Source : données privées de ton compte CONTROL uniquement. Aucun accès automatique aux historiques privés des autres fournisseurs. Les résultats manuels nécessitent une vérification indépendante.'}
