@@ -139,7 +139,7 @@
     },
     {
       "title": "PWA et distribution mobile non validées",
-      "description": "UCP-QA-24 propose isolément l’interface d’installation. UCP-QA-25 compare cinq voies de distribution. UCP-QA-26 ajoute un générateur reproductible de cinq icônes depuis le logo officiel : 9/9 tests synthétiques réussis sur dimensions, proportions, zone sûre, couleur, déterminisme et empreintes. Les vraies icônes ne sont pas encore générées ni validées ; aucun appareil, paquet signé, compte store, intégration ou publication.",
+      "description": "UCP-QA-27 génère réellement, depuis le logo officiel du HEAD, cinq PNG PWA/iOS : 30 contrôles de fichiers et 9/9 tests du générateur réussissent, avec revue visuelle sans découpe apparente. Les fichiers restent isolés : manifeste/HTML non modifiés, aucune installation sur Android/Xiaomi/iOS, intégration, paquet signé, compte store ou publication.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-26 ; QA-26 prépare le générateur d’icônes PWA sans intégration",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-27 ; QA-27 génère et valide isolément les icônes PWA réelles sans intégration",
   "baseline_date": "2026-10-17"
 }
