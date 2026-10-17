@@ -28,3 +28,8 @@ test('CONTROL Coach does not claim external execution',()=>{
   assert.match(result.disclaimer,/aucune action/);
  }
 });
+
+test('CONTROL Coach recognizes accented troubleshooting and planning queries',()=>{
+ assert.equal(coach.advise('Je suis bloqué').category,'blocage');
+ assert.equal(coach.advise('Mes priorités sont floues').category,'priorite');
+});
