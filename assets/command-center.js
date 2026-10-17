@@ -290,16 +290,37 @@ async function pack(data,pw){const now=new Date().toISOString();if(!pw)return{fo
 async function unpack(data,pw){if(data?.format==='control-v2-plain')return data.data;
  if(data?.format==='control-v2-aes-gcm'){if(!pw)throw Error('Mot de passe manquant.');const key=await derive(pw,fromB64(data.salt));const bytes=await crypto.subtle.decrypt({name:'AES-GCM',iv:fromB64(data.iv)},key,fromB64(data.content));return JSON.parse(new TextDecoder().decode(bytes))}
  throw Error('Format inconnu.')}
+function validateBackupData(data){
+ const obj=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
+ if(!obj(data)||!obj(data.command)||!obj(data.hub)||!obj(data.automations))return false;
+ const command=data.command;
+ if(!Array.isArray(command.actions)||!Array.isArray(command.missions))return false;
+ for(const key of ['actions','missions','events','meetings','expenses','income','decisions','messages']){
+  if(command[key]!==undefined&&(!Array.isArray(command[key])||command[key].length>15000||command[key].some(x=>!obj(x))))return false;
+ }
+ // Reject prototype-mutating JSON keys, including inside imported project records.
+ const stack=[data];let visited=0;
+ while(stack.length){
+  const value=stack.pop();
+  if(value===null||typeof value!=='object')continue;
+  if(++visited>60000)return false;
+  for(const key of Object.keys(value)){
+   if(['__proto__','prototype','constructor'].includes(key))return false;
+   const child=value[key];if(child&&typeof child==='object')stack.push(child);
+  }
+ }
+ return true;
+}
 function backup(){
  $('#main').innerHTML=view('Sauvegarde et récupération','Protéger les données de CONTROL et changer d’appareil',note('Le stockage local peut disparaître lors d’un nettoyage du navigateur. Télécharge une sauvegarde régulière. Le fichier contient éventuellement des liens vers des espaces privés : utilise un mot de passe si tu le transfères.')+
  box('Exporter les informations','<p class="muted">Exporte les données de CONTROL, les liens de projets et les brouillons d’automatisations. Les conversations réelles des IA ne sont pas exportées.</p><form id="export-data">'+field('Mot de passe de chiffrement facultatif (12 caractères minimum)','password','','password','autocomplete="new-password"')+'<button class="primary">Télécharger ma sauvegarde</button></form>')+
  box('Importer une sauvegarde','<p class="muted">L’import remplace les trois espaces de stockage locaux du navigateur. Conserve auparavant une copie de l’état actuel.</p><form id="import-data"><label>Fichier JSON<input class="field" name="file" type="file" required accept=".json,application/json"></label>'+field('Mot de passe du fichier','password','','password')+'<button>Vérifier et restaurer</button></form><p class="muted" id="import-status"></p>'));
  registerForm('#export-data',async f=>{const pw=String(f.get('password')||'');if(pw&&pw.length<12)return toast('12 caractères minimum ou champ vide.');try{const data=await pack({command:db,hub:getStorage(HUB),automations:getStorage(AUTOS)},pw);const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='CONTROL-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Fichier téléchargé : conserve-le dans un emplacement sûr.')}catch{toast('Sauvegarde impossible sur ce navigateur.')}});
- registerForm('#import-data',async f=>{const file=f.get('file'),pw=String(f.get('password')||'');if(!file||typeof file.size!=='number'||file.size>4000000)return toast('Fichier requis, 4 Mo maximum.');try{const data=await unpack(JSON.parse(await file.text()),pw);if(!data?.command||!data?.hub||!data?.automations||!Array.isArray(data.command.actions)||!Array.isArray(data.command.missions))throw Error('Invalid');
+ registerForm('#import-data',async f=>{let rollbackUncertain=false;const file=f.get('file'),pw=String(f.get('password')||'');if(!file||typeof file.size!=='number'||file.size>4000000)return toast('Fichier requis, 4 Mo maximum.');try{const data=await unpack(JSON.parse(await file.text()),pw);if(!validateBackupData(data))throw Error('Invalid backup format');
  if(!confirm('Restaurer les données et remplacer les informations locales actuelles ?'))return;
  const old=[KEY,HUB,AUTOS].map(k=>[k,localStorage.getItem(k)]);
- try{localStorage.setItem(KEY,JSON.stringify(data.command));localStorage.setItem(HUB,JSON.stringify(data.hub));localStorage.setItem(AUTOS,JSON.stringify(data.automations))}catch(e){old.forEach(([k,v])=>{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)});throw e}
- init();$('#import-status').textContent='Données restaurées. Recharge CONTROL pour actualiser les projets.';toast('Sauvegarde importée.')}catch{$('#import-status').textContent='Import refusé : fichier incorrect, mot de passe erroné ou espace insuffisant. Aucun changement appliqué.'}});
+ try{localStorage.setItem(KEY,JSON.stringify(data.command));localStorage.setItem(HUB,JSON.stringify(data.hub));localStorage.setItem(AUTOS,JSON.stringify(data.automations))}catch(e){for(const [k,v] of old){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch{rollbackUncertain=true}}throw e}
+ init();$('#import-status').textContent='Données restaurées. Recharge CONTROL pour actualiser les projets.';toast('Sauvegarde importée.')}catch{$('#import-status').textContent=rollbackUncertain?'Restauration interrompue : le navigateur a aussi refusé le retour arrière. Certaines données locales ont pu changer. Ne supprime pas ton fichier de sauvegarde.':'Import refusé : fichier incorrect, mot de passe erroné ou espace insuffisant. Les anciennes données ont été conservées ou restaurées.'}});
 }
 function search(){const items=[...ctx.projects.map(p=>({t:p.name,s:'Projet',u:'#/project/'+encodeURIComponent(p.id)+'/ai'})),...db.actions.map(x=>({t:x.title,s:'Action · '+pname(x.project),u:'#/control/inbox'})),...db.missions.map(x=>({t:x.title,s:'Mission · '+pname(x.project),u:'#/control/missions'})),...db.decisions.map(x=>({t:x.title,s:'Décision · '+pname(x.project),u:'#/control/memory'})),...[...linksPage(),...(db.resources||[])].filter(x=>safe(x.url)).map(x=>({t:x.label,s:'Ressource · '+pname(x.project),u:x.url}))];
  $('#main').innerHTML=view('Recherche universelle','Trouver un projet, une mission, un document ou une décision',box('Chercher dans CONTROL','<label>Recherche<input id="global-search" type="search" class="field" placeholder="Un projet, une tâche, un fichier…"></label><div id="search-hits"></div>'+tiny('Ne recherche pas le texte privé des conversations ChatGPT, Claude ou Gemini.')));
