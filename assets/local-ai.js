@@ -28,7 +28,7 @@ function mount(root,adapter={}){
  let chosen=projects.some(p=>p.id===adapter.projectId)?adapter.projectId:
    projects.some(p=>p.id===search.get('project'))?search.get('project'):'general';
  const history=loadHistory(storage);
- let worker=null,ready=false,loading=false,generating=false,requestId=0,contextEnabled=false,disposed=false;
+ let worker=null,ready=false,loading=false,generating=false,requestId=0,contextEnabled=false,disposed=false,pendingProject=null;
  const opts=[['general','Conversation générale'],...projects.map(p=>[p.id,p.name])];
  root.innerHTML='<div class="loc-shell"><div class="loc-heading"><div><span class="loc-eyebrow">CONTROL / MODÈLE GÉNÉRATIF SUR TON APPAREIL</span><h1>CONTROL IA locale</h1><p>Une véritable IA qui génère ses réponses dans ton navigateur, sans clé API.</p></div><span class="loc-badge">Prototype local</span></div>'+
  '<div class="loc-hint"><strong>À savoir :</strong> petit modèle expérimental, bien moins puissant que Claude ou ChatGPT. Il peut se tromper, surtout en français. Aucun accès automatique à Internet, à GitHub ou aux outils de CONTROL.</div>'+
@@ -55,9 +55,9 @@ function mount(root,adapter={}){
   $('#loc-count').textContent=data.length+' message'+(data.length>1?'s':'');
   if(target.scrollTo)target.scrollTo({top:target.scrollHeight,behavior:'auto'});
  }
- const state=()=>{const disabled=!ready||generating;$('#loc-question').disabled=disabled;$('#loc-send').disabled=disabled;$('#loc-load').disabled=loading||ready||generating;$('#loc-stop').hidden=!loading&&!ready&&!generating;$('#loc-cancel').hidden=!generating;};
+ const state=()=>{const disabled=!ready||generating;$('#loc-question').disabled=disabled;$('#loc-send').disabled=disabled;$('#loc-load').disabled=loading||ready||generating;$('#loc-project').disabled=generating;$('#loc-stop').hidden=!loading&&!ready&&!generating;$('#loc-cancel').hidden=!generating;};
  function stop(message='Modèle arrêté. Tu peux le recharger.'){
-  ++requestId;worker?.terminate?.();worker=null;ready=false;loading=false;generating=false;
+  ++requestId;worker?.terminate?.();worker=null;ready=false;loading=false;generating=false;pendingProject=null;
   if(!disposed){$('#loc-progress').hidden=true;status(message);state()}
  }
  function handle(message){
@@ -73,13 +73,13 @@ function mount(root,adapter={}){
    generating=false;
    const text=clamp(message.text,3500).trim();
    if(text){
-    const list=messages();list.push({role:'assistant',content:text});history[key()]=list.slice(-14);save();render();
+    const targetProject=pendingProject||key();const list=history[targetProject]||[];list.push({role:'assistant',content:text});history[targetProject]=list.slice(-14);pendingProject=null;save();if(targetProject===key())render();
     status('Réponse générée localement. Vérifie les informations importantes.');
    }else status('La génération n’a pas produit de texte.',true);
    state();
   }else if(message.type==='error'){
    if(message.requestId&&message.requestId!==requestId)return;
-   generating=false;loading=false;status(clamp(message.message,260),true);state();
+   generating=false;loading=false;pendingProject=null;if(!ready){worker?.terminate?.();worker=null}status(clamp(message.message,260),true);state();
   }
  }
  function start(){
@@ -98,8 +98,9 @@ function mount(root,adapter={}){
   const question=$('#loc-question').value.trim();
   if(!question)return;
   const before=messages().slice();
-  const context=contextEnabled&&chosen!=='general'&&adapter.getContext?
-    clamp(adapter.getContext(chosen),1800):'Aucun contexte de projet transmis.';
+  let context='Aucun contexte de projet transmis.';
+  if(contextEnabled&&chosen!=='general'&&adapter.getContext){try{context=clamp(adapter.getContext(chosen),1800)}catch{context='Contexte du projet indisponible.'}}
+  pendingProject=key();
   const list=messages();
   list.push({role:'user',content:clamp(question,1400)});history[key()]=list.slice(-14);
   save();render();$('#loc-question').value='';
