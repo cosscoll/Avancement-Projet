@@ -325,3 +325,112 @@ async function importLegacy(){
  if(r.error)throw Error('Migration de projets réalisée, mais marqueur final refusé : '+r.error.message);
  await reload(true);nav('projects');message(done+' projets et '+added+' éléments historiques transférés.');
 }
+
+async function action(button){
+ const type=button.dataset.action,id=button.dataset.id||'';
+ switch(type){
+  case 'projects':nav('projects');return;
+  case 'tools':toolTab=id||'library';nav('tools');return;
+  case 'tool-tab':toolTab=id;searchFilter='';render();return;
+  case 'open-project':if(id&&!getProject(id))throw Error('Projet introuvable.');nav('project',id,'ai_space');return;
+  case 'project-tab':tab=id;render();return;
+  case 'toggle-project-form':{const el=byId('new-project');if(el)el.hidden=!el.hidden;return}
+  case 'toggle-item-form':{const el=byId('new-item');if(el)el.hidden=!el.hidden;return}
+  case 'edit-project':{
+   const p=getProject(id);if(!p)throw Error('Projet introuvable.');
+   const el=byId('project-editor');el.hidden=false;
+   el.innerHTML='<div class="row"><h2>Modifier le projet</h2>'+btn('Fermer','close-editor')+'</div>'+
+     '<form data-form="save-project" data-record="'+H(p.id)+'">'+input('Nom','name',p.name,'text','required maxlength="140"')+
+     input('Catégorie','category',p.category||'','text','maxlength="70"')+
+     area('Description','description',p.description||'','maxlength="6000"')+
+     '<div class="btnrow"><button class="primary">Enregistrer</button>'+btn('Supprimer définitivement le projet','delete-project',p.id,'danger')+'</div></form>';
+   el.scrollIntoView({behavior:'smooth',block:'nearest'});return
+  }
+  case 'close-editor':{const el=byId('project-editor')||byId('edit-slot')||byId('tool-editor');if(el){el.hidden=true;el.innerHTML=''}return}
+  case 'delete-project':{const p=getProject(id);if(p)await eraseProject(p);return}
+  case 'delete-item':{const x=cache.items.find(i=>i.id===id);if(x)await eraseItem(x);return}
+  case 'mark-done':{const x=cache.items.find(i=>i.id===id);if(x)await markDone(x);return}
+  case 'open-item':{
+   const x=cache.items.find(i=>i.id===id);if(!x)return;
+   if(x.project_id)nav('project',x.project_id,x.kind);else if(x.kind==='mission')nav('missions');else if(x.kind==='automation')nav('automations');else nav('tools');
+   await action({dataset:{action:'edit-item',id:x.id}});return;
+  }
+  case 'edit-item':{
+   const x=cache.items.find(i=>i.id===id);if(!x)throw Error('Cet élément a été supprimé. Actualisez.');
+   let el=byId('project-editor')||byId('edit-slot')||byId('tool-editor');
+   if(!el){el=document.createElement('section');el.id='tool-editor';byId('page').appendChild(el)}
+   el.hidden=false;el.innerHTML='<section class="surface"><div class="row"><h2>Modifier · '+H(x.title)+'</h2>'+btn('Fermer','close-editor')+'</div>'+itemForm(x.kind,x.project_id,x)+'</section>';
+   el.scrollIntoView({behavior:'smooth',block:'nearest'});return;
+  }
+  case 'copy-mission':{
+   const x=cache.items.find(i=>i.id===id);if(!x)return;
+   await copyText('MISSION — '+projectName(x.project_id)+'\nIA : '+x.provider+'\n'+x.title+'\n\n'+x.body+
+     '\n\nSignale les risques, évite les dépenses sans autorisation et fournis des preuves réelles des changements effectués.');
+   return;
+  }
+  case 'copy-context':{
+   const project=byId('manager-form')?.elements?.project?.value||'';
+   await copyText('DOSSIER DE CONTEXTE CONTROL\n'+managerAnswer('Où en est le projet, et quelles sont les prochaines étapes ?',project)+
+     '\n\nVérifie les résultats à leur source ; ne prétends pas accéder à des services privés non reliés.');
+   return;
+  }
+  case 'mission-template':await prepareFourMissions();return;
+  case 'refresh':await reload();return;
+  case 'account':nav('account');return;
+  case 'logout':{
+   if(!confirm('Se déconnecter de cet appareil ?'))return;
+   const r=await client.auth.signOut({scope:'local'});if(r.error)throw Error(r.error.message);
+   epoch++;authUser=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';
+   visible('auth');message('Déconnecté de cet appareil.');return;
+  }
+  case 'export-json':await exportMyData(false);return;
+  case 'export-encrypted':await exportMyData(true);return;
+  case 'import-legacy':await importLegacy();return;
+  default:return;
+ }
+}
+function wireEvents(){
+ document.addEventListener('click',async e=>{
+  const navButton=e.target.closest?.('[data-page]');if(navButton){nav(navButton.dataset.page);return}
+  const button=e.target.closest?.('[data-action]');if(!button||!authUser)return;
+  e.preventDefault();if(waiting&&button.dataset.action!=='close-editor')return;
+  try{button.disabled=true;await action(button)}catch(err){message(err?.message||'Action indisponible.',true)}finally{button.disabled=false}
+ });
+ document.addEventListener('submit',async e=>{
+  if(e.target?.id==='email-form'){
+   e.preventDefault();const b=e.target.querySelector('button'),email=String(new FormData(e.target).get('email')||'').trim().toLowerCase();if(!email)return;
+   b.disabled=true;try{const res=await client.auth.signInWithOtp({email,options:{emailRedirectTo:currentURL(),shouldCreateUser:true}});if(res.error)throw res.error;byId('auth-message').innerHTML='<p class="notice-ok">Vérifiez votre boîte mail. Un lien de connexion a été demandé. Si l’adresse est autorisée, vous le recevrez prochainement.</p>'}
+   catch(err){byId('auth-message').textContent='Demande refusée : '+(err?.message||'réessayez plus tard.')}
+   finally{b.disabled=false}
+   return;
+  }
+  if(!authUser)return;
+  if(e.target?.id==='manager-form'){
+   e.preventDefault();const fd=new FormData(e.target),question=String(fd.get('question')||'').trim(),p=String(fd.get('project')||'');
+   if(!question)return;byId('manager-output').innerHTML='<div class="message">'+H('Question : '+question+'\n\n'+managerAnswer(question,p))+'</div>';return;
+  }
+  if(e.target?.id==='project-form'||e.target?.dataset?.form==='save-project'||e.target?.dataset?.form==='save-item'){
+   e.preventDefault();if(waiting)return;const submit=e.target.querySelector('button[type="submit"],button.primary');submit.disabled=true;
+   try{const fd=new FormData(e.target);if(e.target.id==='project-form'||e.target.dataset.form==='save-project')await saveProject(fd,e.target.dataset.record||'');else await saveItem(fd,e.target.dataset.record||'')}
+   catch(err){message(err?.message||'Enregistrement impossible.',true)}
+   finally{submit.disabled=false}return;
+  }
+ });
+ document.addEventListener('input',e=>{
+  if(e.target?.id==='project-search'){
+   const query=e.target.value.toLowerCase();byId('project-list').innerHTML=cache.projects.filter(p=>(p.name+' '+p.category).toLowerCase().includes(query)).map(projectCard).join('')||empty('Aucun projet trouvé.');
+  }
+  if(e.target?.id==='tool-search'){
+   searchFilter=e.target.value;const pos=e.target.selectionStart;render();const box=byId('tool-search');box?.focus();try{box?.setSelectionRange(pos,pos)}catch{}
+  }
+ });
+ byId('refresh').onclick=()=>authUser&&reload();
+ byId('account').onclick=()=>authUser&&nav('account');
+ byId('google-login').onclick=async()=>{if(!client)return;const b=byId('google-login');b.disabled=true;
+  try{const r=await client.auth.signInWithOAuth({provider:'google',options:{redirectTo:currentURL(),scopes:'openid email profile'}});if(r.error)throw r.error;}
+  catch(e){byId('auth-message').textContent='Connexion Google indisponible : '+(e?.message||'configuration à vérifier.');b.disabled=false}
+ };
+}
+function currentURL(){return location.origin+location.pathname}
+wireEvents();
+boot();
