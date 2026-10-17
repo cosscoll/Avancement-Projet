@@ -915,6 +915,39 @@
         "Enregistre, puis utilise « Inviter » ou « Agenda » pour préparer ton invitation."
       ],
       "route": "meetings"
+    },
+    {
+      "id": "local-ai-generative",
+      "title": "Comment utiliser la vraie IA générative CONTROL locale ?",
+      "keywords": [
+        "IA",
+        "IA locale",
+        "modèle",
+        "générative",
+        "génération",
+        "SmolLM2",
+        "discuter",
+        "mémoire",
+        "Android",
+        "Hugging Face",
+        "Transformer",
+        "hors ligne",
+        "téléchargement",
+        "CPU",
+        "chatbot",
+        "WebAssembly",
+        "WASM",
+        "model"
+      ],
+      "answer": "CONTROL intègre désormais un vrai modèle génératif local SmolLM2 135M (bibliothèque Transformers.js) sous Outils → CONTROL IA locale. La première fois, clique sur « Charger le modèle » pour autoriser un téléchargement d’environ 180 Mo plus des dépendances. Ensuite, les réponses sont calculées dans le navigateur, sans clé ni facturation API. L’historique reste local et séparé par projet ; les informations de projet sont uniquement utilisées lorsque tu coches l’autorisation correspondante. Ce petit modèle peut être lent ou incompatible sur certains téléphones et commettre des erreurs. La compatibilité réelle doit être validée sur ton appareil.",
+      "steps": [
+        "Ouvre Outils → CONTROL IA locale ou le projet → Plus → CONTROL IA locale.",
+        "Vérifie les conditions de téléchargement et clique sur « Charger le modèle ».",
+        "Attends que l’état affiche « IA prête », puis pose une question.",
+        "Choisis un projet et autorise éventuellement son contexte en lecture seule.",
+        "Utilise « Effacer le chat » ou « Arrêter l’IA » si nécessaire."
+      ],
+      "route": "localai"
     }
   ]
 }
