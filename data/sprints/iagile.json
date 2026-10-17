@@ -113,5 +113,51 @@
         "url": "https://github.com/typicode/json-server/blob/main/LICENSE"
       }
     ]
+  },
+  {
+    "id": "iagile-20261017-123951-paris",
+    "started_at": "2026-10-17T12:39:51+02:00",
+    "ended_at": "2026-10-17T12:41:57+02:00",
+    "summary": "Audit ciblé et annotation de cinq licences racines P1 Agents dans Supabase ; aucune publication premium.",
+    "done": [
+      "Issues ouvertes [CONSIGNE][iagile] et [DECISION][iagile] recherchées dans Avancement-Projet : aucun résultat ; aucun numéro pris en compte.",
+      "Licences racines officielles vérifiées : Chroma G014 Apache-2.0, DeepEval G017 Apache-2.0, Docling G022 MIT, Ragas G025 Apache-2.0, Langflow G036 MIT.",
+      "Cinq lignes P1 Agents modifiées dans Supabase et relecture réussie : 105 contrôles ciblés, 177 non contrôlées, 1 partielle (283 références) ; 0 approuvée et 0 publiée.",
+      "13 tables Academy publiques avec RLS ; 0 compte Auth, 0 objet premium, 0 cours publié ; bucket premium privé.",
+      "PR IAgile #12 et #77 revérifiées ouvertes en brouillon, non fusionnées."
+    ],
+    "blockers": [
+      "V0.9.1 Processus non approuvée, ancienne référence S-PR au module 8 et importateur R3 non intégré.",
+      "Absence de tests Auth/RLS entre comptes réels et de fichiers premium de recette ; aucune diffusion autorisée.",
+      "Licences des composants tiers/dépendances non validées pour redistribution ; 177 références encore non contrôlées et 1 partielle.",
+      "Écriture du journal Google Docs refusée par les contrôles de sécurité."
+    ],
+    "next": "Poursuivre les audits de licences P1, résoudre la concordance Processus V0.9.1 et l'importateur R3, puis effectuer une recette privée multi-comptes autorisée avant tout lancement.",
+    "links": [
+      {
+        "label": "Centre de contrôle IAgile",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/iagile.json"
+      },
+      {
+        "label": "Licence Chroma",
+        "url": "https://github.com/chroma-core/chroma/blob/main/LICENSE"
+      },
+      {
+        "label": "Licence DeepEval",
+        "url": "https://github.com/confident-ai/deepeval/blob/main/LICENSE.md"
+      },
+      {
+        "label": "Licence Docling",
+        "url": "https://github.com/docling-project/docling/blob/main/LICENSE"
+      },
+      {
+        "label": "Licence Ragas",
+        "url": "https://github.com/vibrantlabsai/ragas/blob/main/LICENSE"
+      },
+      {
+        "label": "Licence Langflow",
+        "url": "https://github.com/langflow-ai/langflow/blob/main/LICENSE"
+      }
+    ]
   }
 ]
