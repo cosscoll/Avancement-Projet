@@ -81,7 +81,7 @@
     },
     {
       "title": "Licences et ressources en qualification",
-      "description": "Au 17/10/2026 : 286 références privées, dont 118 licences en contrôle ciblé, 164 non contrôlées et 4 partielles. Cinq licences racines Agents contrôlées et annotées ; aucune ressource approuvée/publiée. Vérifications des dépendances et des droits d'accès toujours requises.",
+      "description": "Au 17/10/2026 à 21h40 Paris : 286 références privées, 122 licences en contrôle ciblé, 159 non contrôlées et 5 partielles. Cinq licences Agents annotées (dont MCP TypeScript à licence composite). Aucune ressource approuvée/publiée ; dépendances et tests Auth/RLS réels encore à valider.",
       "level": "warning"
     }
   ],
