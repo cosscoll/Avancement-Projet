@@ -139,5 +139,34 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/pack-pro.json"
       }
     ]
+  },
+  {
+    "id": "pack-pro-20261017-180601-paris",
+    "started_at": "2026-10-17T18:06:01+02:00",
+    "ended_at": "2026-10-17T16:09:57.320Z",
+    "summary": "Prototype local non marchand de 14 pages : indicateur de progression accessible du flux, corrections de deux débordements visuels et suite QA de régression 484/484 ; aucun déploiement.",
+    "done": [
+      "Trois recherches GitHub Issues du dépôt central filtrées author:cosscoll et pack-pro sans résultat",
+      "Barre de progression native du flux fictif 1–5 synchronisée avec clics et clavier Home/End dans les fichiers locaux flux.html et flux.js",
+      "Dossier 3D de l'accueil redimensionné à 280–340 px et sceau décoratif Validation recentré pour supprimer un débordement à 1024 px",
+      "484/484 assertions QA réussies en Chromium par injection HTML sur 14 pages et six largeurs, tests clavier, impression, sans JS, captures et archives ZIP contrôlées",
+      "index.html public du dépôt vitrine relu : reste une page informative ancienne ; aucune publication du prototype prouvée"
+    ],
+    "blockers": [
+      "Écriture du dépôt vitrine refusée lors des sprints précédents ; aucun commit ni déploiement du site dans cette session",
+      "Accès HTTP public non vérifié : outil web inaccessible et DNS indisponible depuis le conteneur",
+      "15 procédures et 7 registres non validés, essai Microsoft Excel réel V0.6.1 absent, conformité, marque, prix et offre non approuvés"
+    ],
+    "next": "Conserver les livrables, publier le prototype informatif uniquement par une voie GitHub autorisée sans contourner les refus, vérifier HTTP public, puis poursuivre la validation métier/Excel et juridique.",
+    "links": [
+      {
+        "label": "Dépôt vitrine public non mis à jour",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro"
+      },
+      {
+        "label": "Statut public",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/pack-pro.json"
+      }
+    ]
   }
 ]
