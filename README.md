@@ -1,5 +1,11 @@
 # CONTROL — Centre de pilotage des projets
 
+## CONTROL Cloud — préparation du SaaS multi-utilisateurs (17 octobre 2026)
+
+Nouvelle entrée **[app.html](app.html)** préparée pour une future plateforme publique : inscription par lien e-mail, bouton de connexion Google (à configurer), données de projets stockées sur un backend privé Supabase avec isolation RLS par utilisateur, missions, liens IA, automatisations, ressources, décisions, budgets et sauvegardes. **Actuellement les inscriptions sont volontairement désactivées** dans [config/cloud.json](config/cloud.json), car aucune base CONTROL indépendante n'a encore été créée, migrée et testée. L'application personnelle existante reste accessible sur `index.html` et n'est pas coupée.
+
+Le schéma SQL de 6 tables / 22 politiques RLS et la fonction de suppression de compte (non déployée) sont préparés. Les API ChatGPT/Claude/Gemini et OAuth Drive/Gmail ne sont PAS connectés à cette nouvelle application ; les boutons sont des redirections. [Plan de mise en service et protocole de sécurité](docs/CONTROL_CLOUD_SAAS.md).
+
 ## CONTROL — Centre de commande multi-IA (17 octobre 2026)
 
 CONTROL est désormais organisé autour des **projets** et du menu **À traiter · Missions · Automatisations · CONTROL IA**, avec une page « Tous les outils » accessible depuis l'en-tête. Les modules couvrent le chef de projet central (synthèse locale et contextes), la boîte de réception des actions, les missions multi-IA et leur transfert manuel, l'activité GitHub publique à la demande, les échéances et les automatisations datées, la bibliothèque, la mémoire des décisions, le suivi des budgets et les sauvegardes locales éventuellement chiffrées.
