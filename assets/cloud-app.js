@@ -38,11 +38,11 @@ function safeClientConfig(v){try{if(!v||v.enabled!==true)return false;const url=
 async function boot(){live('Vérification de la configuration privée…');let cfg;
  try{const r=await fetch(CONFIG_URL,{cache:'no-store'});if(!r.ok)throw Error('not ready');cfg=await r.json();if(!safeClientConfig(cfg))throw Error('not configured');cloudConfig=cfg;byId('google-login').hidden=(cfg.allowGoogleLogin!==true);if(cfg.allowRegistration!==true){document.querySelector('.auth-box h2').textContent='Se connecter à la bêta';document.querySelector('.auth-box .muted').textContent='Accès sur invitation uniquement. Les inscriptions publiques ne sont pas encore ouvertes.'}}catch{visible('setup');return}
  try{live('Initialisation de la connexion sécurisée…');const {createClient}=await import(CDN);client=createClient(cfg.supabaseUrl,cfg.supabasePublishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}});
- client.auth.onAuthStateChange((event,s)=>{if(event==='SIGNED_OUT'){epoch++;authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');return}if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='USER_UPDATED'){setTimeout(()=>verifiedSession(),0)}});
+ client.auth.onAuthStateChange((event,s)=>{if(event==='SIGNED_OUT'){window.CONTROL_HELP?.reset();epoch++;authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');return}if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='USER_UPDATED'){setTimeout(()=>verifiedSession(),0)}});
  await verifiedSession();
  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&authUser)reload(true)});
  }catch{visible('setup');const p=byId('setup').querySelector('.muted');p.textContent='La configuration est prête, mais la bibliothèque sécurisée ou le fournisseur d’authentification n’est pas joignable. Aucun compte n’a été créé.'}}
-async function verifiedSession(){const token=++epoch;try{const r=await client.auth.getUser();if(token!==epoch)return;if(r.error||!r.data?.user){authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');return}const changed=authUser?.id!==r.data.user.id;authUser=r.data.user;if(changed){waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML=panel('Connexion sécurisée','<p class="muted">Chargement des données du compte…</p>');live('Chargement de votre espace privé…')}visible('workspace');await reload()}catch{if(token===epoch){authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth')}}}
+async function verifiedSession(){const token=++epoch;try{const r=await client.auth.getUser();if(token!==epoch)return;if(r.error||!r.data?.user){authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');return}const changed=authUser?.id!==r.data.user.id;authUser=r.data.user;if(changed){window.CONTROL_HELP?.reset();waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML=panel('Connexion sécurisée','<p class="muted">Chargement des données du compte…</p>');live('Chargement de votre espace privé…')}visible('workspace');await reload()}catch{if(token===epoch){authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth')}}}
 async function reload(silent=false){if(!authUser||!client)return;const owner=authUser.id;if(waiting&&waitingOwner===owner)return;waiting=true;waitingOwner=owner;byId('refresh').disabled=true;const token=epoch;
  try{const [p,i,pref]=await Promise.all([client.from('control_projects').select('*').order('created_at',{ascending:false}).limit(500),client.from('control_items').select('*').order('created_at',{ascending:false}).limit(2000),client.from('control_preferences').select('*').eq('owner_id',owner).maybeSingle()]);
  if(token!==epoch||!authUser||authUser.id!==owner)return;
@@ -404,7 +404,7 @@ async function action(button){
    if(!confirm('Se déconnecter de cet appareil ?'))return;
    const r=await client.auth.signOut({scope:'local'});if(r.error)throw Error(r.error.message);
    epoch++;authUser=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';
-   visible('auth');message('Déconnecté de cet appareil.');return;
+   window.CONTROL_HELP?.reset();visible('auth');message('Déconnecté de cet appareil.');return;
   }
   case 'export-json':await exportMyData(false);return;
   case 'export-encrypted':await exportMyData(true);return;
@@ -463,5 +463,17 @@ function wireEvents(){
  };
 }
 function currentURL(){return location.origin+location.pathname}
+window.CONTROL_HELP?.setAdapter({
+ mode:'cloud',
+ isAuthenticated:()=>!!authUser,
+ navigate:(screen,route)=>{
+  if(!authUser)return false;
+  if(screen==='tools'){toolTab=route==='backup'?'backup':route==='budget'?'budget':route==='library'?'library':'search';nav('tools');return true}
+  if(screen==='activity'){return false}
+  if(['projects','inbox','missions','automations','manager','catalog','deploy','account'].includes(screen)){nav(screen);return true}
+  return false;
+ },
+ getSummary:()=>authUser?{projects:cache.projects.length,current:page==='project'?getProject(picked)?.name:'',openActions:cache.items.filter(x=>x.kind==='task'&&x.status!=='done').length,missions:cache.items.filter(x=>x.kind==='mission').length}:null
+});
 wireEvents();
 boot();
