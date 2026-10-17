@@ -85,7 +85,7 @@ function manager(){
  '<section class="panel"><div class="sectionhead"><h2>Derniers sprints publics</h2>'+btn('Actualiser','refresh-sprints')+'</div><div id="sprint-overview"><p class="muted">Chargement des rapports enregistrés sur GitHub…</p></div></section>'+
  '<section class="panel"><div class="sectionhead"><h2>Chef de projet central</h2>'+tag('Sources vérifiables')+'</div><label>Périmètre<select id="c-project" class="field">'+options+'</select></label><div class="messages" id="c-messages">'+(db.messages.length?db.messages.slice(-12).map(m=>'<div class="pilot-message '+(m.role==='user'?'pilot-user':'pilot-answer')+'"><span class="muted">'+h(m.role==='user'?'Vous':'CONTROL · synthèse locale')+' · '+date(m.at)+'</span><p>'+h(m.text)+'</p></div>').join(''):'<p class="empty">Demande « Où en sont mes projets ? » ou « Quelles sont les prochaines priorités ? ».</p>')+'</div>'+
  '<form id="c-ask"><label>Question<input class="field" name="question" required maxlength="900" placeholder="Où en est UCP sur chaque IA ?"></label><div class="actions"><button class="primary">Interroger CONTROL</button>'+btn('Préparer un briefing ChatGPT','brief')+href('https://chatgpt.com/','Ouvrir ChatGPT')+'</div></form></section>'+
- box('Accès rapide', '<div class="quicktiles">'+[['command','Commander Claude & Gemini'],['inbox','À traiter'],['missions','Missions multi-IA'],['activity','Activité GitHub'],['calendar','Calendrier'],['library','Bibliothèque'],['budget','Coûts et quotas'],['memory','Mémoire et décisions'],['backup','Sauvegardes'],['settings','Règles et sécurité']].map(([url,label])=>'<a href="#/control/'+url+'" class="quicktile">'+h(label)+' →</a>').join('')+'</div>');
+ box('Accès rapide', '<div class="quicktiles">'+[['localai','CONTROL IA locale'],['command','Commander Claude & Gemini'],['inbox','À traiter'],['missions','Missions multi-IA'],['activity','Activité GitHub'],['calendar','Calendrier'],['library','Bibliothèque'],['budget','Coûts et quotas'],['memory','Mémoire et décisions'],['backup','Sauvegardes'],['settings','Règles et sécurité']].map(([url,label])=>'<a href="#/control/'+url+'" class="quicktile">'+h(label)+' →</a>').join('')+'</div>');
  $('#main').innerHTML=view('CONTROL IA','Centre de pilotage et de synthèse de tous tes projets',content);
  registerForm('#c-ask',(f)=>{const q=String(f.get('question')||'').trim(),pid=subject();if(!q)return;db.messages.push({id:id(),role:'user',text:q,project:pid,at:new Date().toISOString()},{id:id(),role:'assistant',text:reply(q,pid),project:pid,at:new Date().toISOString()});db.messages=db.messages.slice(-80);save();manager();$('#c-project').value=pid});
  paintSprints('#sprint-overview');fetchSprints().then(()=>paintSprints('#sprint-overview')).catch(()=>{});$('#main [data-act="refresh-sprints"]')?.addEventListener('click',()=>fetchSprints(true).then(()=>paintSprints('#sprint-overview')));
@@ -202,6 +202,21 @@ function deploy(){
  return true;}
  });
 }
+function localai(){
+ const root=$('#main');
+ if(!window.CONTROL_LOCAL_AI){root.innerHTML=note('IA locale indisponible : actualise CONTROL.');return}
+ const selected=new URLSearchParams(location.hash.split('?')[1]||'').get('project')||'';
+ window.CONTROL_LOCAL_AI.mount(root,{projects:ctx.projects,projectId:selected,
+  getContext:projectId=>{
+   const p=ctx.projects.find(p=>p.id===projectId);
+   if(!p)return'Projet introuvable ou accès non accordé.';
+   const tasks=db.actions.filter(x=>x.project===projectId).slice(-5).map(x=>'Tâche : '+cap(x.title,110)+' / statut '+cap(x.status,25));
+   const missions=db.missions.filter(x=>x.project===projectId).slice(-4).map(x=>'Mission '+cap(x.provider,28)+' : '+cap(x.title,110)+' / statut '+cap(x.status,25));
+   // Résumés en lecture seule : jamais de liens sensibles, secrets, données d'autres projets ou historique des IA.
+   return ['Projet : '+cap(p.name,130),p.summary?'Résumé fourni : '+cap(p.summary,320):'',...tasks,...missions].filter(Boolean).join('\n').slice(0,1800);
+  }
+ });
+}
 function lab(){
  const target=$('#main');if(!window.CONTROL_LAB){target.innerHTML=note('Laboratoire IA indisponible : actualise CONTROL.');return}
  const selected=new URLSearchParams(location.hash.split('?')[1]||'').get('project')||'';
@@ -265,7 +280,7 @@ function meetings(){
 }
 function tools(){
  const groups=[
-  {name:'Essentiels',subtitle:'Ce que tu utilises au quotidien',open:true,tools:[['command','Claude & Gemini','Préparer et centraliser les missions'],['lab','Laboratoire IA','Créer des briefs et contrôler les réponses'],['library','Ressources','Tes liens et documents'],['search','Rechercher','Retrouver un projet ou un fichier']]},
+  {name:'Essentiels',subtitle:'Ce que tu utilises au quotidien',open:true,tools:[['localai','CONTROL IA locale','Discuter avec un vrai modèle gratuit'],['command','Claude & Gemini','Préparer et centraliser les missions'],['lab','Laboratoire IA','Créer des briefs et contrôler les réponses'],['library','Ressources','Tes liens et documents'],['search','Rechercher','Retrouver un projet ou un fichier']]},
   {name:'Explorer',subtitle:'Apprendre, créer et publier',open:false,tools:[['catalog','Bibliothèques IA','87 outils et 12 kits pratiques'],['deploy','Mise en ligne','Guides GitHub, IONOS et autres'],['activity','GitHub et tests','Suivi des dépôts publics']]},
   {name:'Organiser',subtitle:'Planifier et garder le contrôle',open:false,tools:[['missions','Toutes les missions','Suivi détaillé et historique'],['meetings','Visios et rendez-vous','Équipe, clients et prospects'],['calendar','Calendrier','Échéances enregistrées'],['memory','Décisions','Historique de projet'],['budget','Budget et quotas','Suivi déclaratif des coûts'],['backup','Sauvegardes','Exporter ou importer tes données'],['settings','Paramètres','Règles et confidentialité'],['inbox','À traiter','Actions prioritaires']]}
  ];
@@ -344,6 +359,6 @@ function paintSprints(selector,onlyBlockers=false){const out=$(selector);if(!out
  '</div>'+href('https://github.com/'+OWNER+'/Avancement-Projet/blob/main/data/sprints/'+encodeURIComponent(id)+'.json','Preuve')+'</div>').join(''):tiny(onlyBlockers?'Aucun blocage dans les derniers rapports accessibles.':'Aucun sprint accessible.');
  const n=Object.keys(sprintLoaded).length;if(n<SPRINT_IDS.length)out.innerHTML+=tiny((SPRINT_IDS.length-n)+' source(s) non vérifiée(s), information potentiellement partielle.');
 }
-function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,meetings,command,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,budget,backup,settings,search};(pages[page]||manager)()}
+function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,meetings,command,localai,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,budget,backup,settings,search};(pages[page]||manager)()}
 window.CONTROL_CENTER={render};
 })();
