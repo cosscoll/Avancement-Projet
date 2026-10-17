@@ -52,6 +52,17 @@ Les bibliothèques, tutoriels, calendriers et visios sont utiles dans la mesure 
 
 **Critère de sortie :** aucune exception JavaScript bloquante sur les 4 destinations principales ni les 3 workflows projet/mission/rendez-vous, les données restent disponibles après rechargement et export/restauration.
 
+## Extension intégrée — CONTROL IA locale générative (17 octobre 2026)
+
+**Statut du produit : première version testable, moteur réel implémenté, génération sur appareil physique non encore vérifiée.**
+
+- Le nouveau module `#/control/localai` offre un modèle open source quantifié SmolLM2 135M réellement exécuté en WebAssembly dans le navigateur via Transformers.js (Worker isolé, chargement volontaire).
+- Un écran mobile épuré présente chargement, chat, mémoire locale par projet, contexte en lecture seule opt-in, arrêt et effacement.
+- La PWA inclut ses fichiers légers ; **les 180 Mo environ de poids IA ne sont téléchargés qu'après action de l'utilisateur**, jamais pendant l'ouverture de CONTROL.
+- Des tests Node valident le parcours de conversation avec worker simulé et le protocole d'inférence ; ces tests ne permettent pas de certifier une génération réelle sur Android.
+- **Avant de présenter le module comme pleinement opérationnel sur mobile**, exécuter la recette de `docs/IA_LOCALE_GENERATIVE.md` : compatibilité, durée de première réponse, mémoire, stabilité des téléchargements, français, persistance, sécurité et fermeture.
+- Aucun backend CONTROL Cloud créé, aucun paiement/API de modèle engagé ; rien n'a été modifié dans IAgile Academy.
+
 ## Itération 3 — CONTROL Cloud indépendant : bloqué par autorisation et vérification de coût
 
 - **Ne jamais réutiliser** le projet Supabase IAgile Academy.
