@@ -69,7 +69,10 @@ Deno.serve(async (req)=>{
    (data.content||[]).filter((x:{type:string})=>x.type==="text").map((x:{text:string})=>x.text).join("\n"):
    (data.candidates?.[0]?.content?.parts||[]).map((x:{text?:string})=>x.text||"").join("\n");
   if(!answer||typeof answer!=="string")throw new Error("empty_provider_response");
-  answer=answer.slice(0,14000);
+  // Keep the entire JSONB details object below CONTROL's 30KB database constraint.
+  answer=answer.slice(0,12000);
+  const encoder=new TextEncoder();
+  while(encoder.encode(answer).byteLength>18000)answer=answer.slice(0,Math.floor(answer.length*.8));
   const now=new Date().toISOString();
   const update=await admin.from("control_items").update({status:"review",updated_at:now,
    details:{...(m.details||{}),dispatchState:"returned",result:answer,origin:"api",resultUpdatedAt:now,model,
