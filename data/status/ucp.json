@@ -115,7 +115,7 @@
   "alerts": [
     {
       "title": "Environnement de production non validé",
-      "description": "UCP-QA-16 revalide sur les 57 blobs application/ hash-identiques au HEAD : 110/110 tests backend et 8/8 tests DOM simulés réussissent. Aucun navigateur réel, appareil, staging, charge ou déploiement n'est néanmoins validé.",
+      "description": "QA-16 revalide 110/110 tests backend et 8/8 DOM sur application/ hash-identique au HEAD. QA-17 confirme le démarrage local, les en-têtes de sécurité et la garde Host, puis prépare une recette Playwright bureau/mobile ; aucun moteur Chromium n'a pu être téléchargé, donc aucun navigateur réel, appareil, staging, charge ou déploiement n'est validé.",
       "level": "warning"
     },
     {
@@ -186,6 +186,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-16 ; QA-16 revalide les suites locales sur application/ hash-identique au HEAD",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-17 ; QA-16 revalide les suites locales et QA-17 prépare la recette navigateur",
   "baseline_date": "2026-10-17"
 }
