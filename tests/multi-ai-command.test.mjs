@@ -18,7 +18,7 @@ test('A common objective generates independent Claude and Gemini instructions',(
 test('Command module separates manual outcomes and future API dispatch',()=>{
  assert.match(source,/Saisie manuelle|saisie manuellement|saisi manuellement/i);
  assert.match(source,/canDispatch\?\.\(\)/);
- assert.match(source,/Validation requise/);
+ assert.match(source,/validation requise/i);
  assert.match(source,/confirm\(/);
  assert.match(source,/Aucun.*envoyée.*facturée/);
  assert.doesNotMatch(source,/api\.anthropic\.com|generativelanguage\.googleapis\.com|sk-[a-zA-Z0-9]{20}/);
