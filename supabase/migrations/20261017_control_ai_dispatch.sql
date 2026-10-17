@@ -1,6 +1,18 @@
 -- CONTROL Cloud only. DO NOT apply this to the existing IAgile Academy project.
 -- Private atomic daily AI invocation cap. Calls to this function require the
 -- Supabase service role and an explicit server-side dispatch allowlist.
+-- Safe-by-default: intentionally refuses execution in any database until
+-- the operator has separately verified the Supabase project ID and set:
+--   SET app.control_isolated_project = 'confirmed';
+-- This setting is session-local. Never set it in IAgile Academy.
+do $control_isolation_guard$
+begin
+  if current_setting('app.control_isolated_project', true) is distinct from 'confirmed' then
+    raise exception 'CONTROL migration refused: verify isolated CONTROL Cloud project and set app.control_isolated_project=confirmed in this SQL session';
+  end if;
+end
+$control_isolation_guard$;
+
 create table if not exists public.control_ai_daily_usage (
   owner_id uuid not null references auth.users(id) on delete cascade,
   day_utc date not null default (now() at time zone 'utc')::date,
