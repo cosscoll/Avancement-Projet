@@ -63,6 +63,17 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
      resultOrigin:x.details?.origin==='api'?'api':'manual',updatedAt:x.updated_at,url:x.url||''
    })),
    providerURL:(projectId,provider)=>cache.items.find(x=>x.project_id===projectId&&x.kind==='ai_space'&&x.provider===provider&&safeURL(x.url))?.url||providers[provider]||'',
+   canDispatch:()=>cloudConfig?.aiDispatchEnabled===true,
+   dispatchMission:async(m)=>{
+     if(cloudConfig?.aiDispatchEnabled!==true||!authUser)throw Error('Envoi API non autorisé.');
+     const owner=authUser.id;
+     const q=await client.functions.invoke('control-ai-dispatch',{body:{missionId:m.id,approved:true}});
+     if(q.error||q.data?.ok!==true)throw Error(q.data?.error||q.error?.message||'Erreur de connexion au backend.');
+     if(authUser?.id!==owner)throw Error('Compte changé. Actualise la page.');
+     const fresh=await client.from('control_items').select('*').eq('id',m.id).eq('owner_id',owner).single();
+     if(fresh.error||!fresh.data)throw Error('Réponse exécutée, mais relecture du résultat indisponible. Actualise le projet.');
+     const local=cache.items.find(x=>x.id===m.id);if(local)Object.assign(local,fresh.data);return true;
+   },
    createMission:async({projectId,provider,title,prompt})=>{
      const owner=authUser?.id;if(!owner||!getProject(projectId))throw Error('Projet indisponible pour ce compte.');
      if(!['Claude','Gemini'].includes(provider)||prompt.length>30000)throw Error('Mission non valide.');
