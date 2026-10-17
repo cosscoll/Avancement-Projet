@@ -1,0 +1,45 @@
+/* CONTROL IA locale — simple, responsive, device-local assistant. */
+.loc-shell{max-width:920px;margin:0 auto 40px;color:#263d56}
+.loc-shell *{box-sizing:border-box}
+.loc-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:10px 0 18px}
+.loc-heading h1{font-size:clamp(27px,4.5vw,36px);letter-spacing:-.8px;margin:5px 0}
+.loc-heading p{font-size:14px;color:#60788f;margin:6px 0;line-height:1.5}
+.loc-eyebrow{font-size:10px;letter-spacing:1px;color:#50718f;font-weight:850}
+.loc-badge{white-space:nowrap;color:#315775;border:1px solid #d8e4f0;background:#eef5fb;padding:8px 11px;border-radius:10px;font-weight:750;font-size:11px}
+.loc-hint{background:#edf3f9;border:1px solid #d4e2f0;color:#476380;border-radius:12px;padding:13px 15px;font-size:12px;line-height:1.55;margin-bottom:16px}
+.loc-settings,.loc-model,.loc-chat{border:1px solid #dce6ef;border-radius:14px;background:#fff;padding:18px;margin:14px 0}
+.loc-topline{display:flex;align-items:end;justify-content:space-between;gap:12px}
+.loc-topline label{flex:1;max-width:460px;font-weight:750;font-size:12px;color:#4d6882}
+.loc-topline select{display:block;min-height:43px;border:1px solid #cbd9e7;border-radius:10px;padding:9px 11px;width:100%;margin-top:7px;background:white;color:#24415c}
+.loc-topline button,.loc-model-actions button,.loc-chat-actions button{font-size:12px;min-height:42px;padding:10px 13px;border:1px solid #cbdbea;border-radius:10px;background:#fff;color:#355e82;cursor:pointer}
+.loc-topline button:disabled,.loc-model-actions button:disabled,.loc-chat-actions button:disabled{opacity:.55;cursor:not-allowed}
+.loc-checkbox{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:650;color:#466782;margin:15px 0 4px}
+.loc-checkbox input{appearance:auto;width:18px;height:18px;min-height:auto;margin:0}
+.loc-small{color:#778ba0;font-size:11px;line-height:1.5;margin:7px 0}
+.loc-model{display:grid;gap:11px}
+.loc-model strong{font-size:15px}
+.loc-model p{font-size:12px;color:#688198;line-height:1.5;margin:8px 0}
+.loc-model-actions{display:flex;gap:9px;flex-wrap:wrap}
+.loc-shell .loc-primary{background:#294e72;border-color:#294e72;color:#fff;font-weight:770}
+.loc-progress progress{display:block;width:100%;height:14px;accent-color:#426c99}
+.loc-status{min-height:18px;color:#3e7281;font-size:12px;margin:2px 0;overflow-wrap:anywhere}
+.loc-status[data-error=true]{color:#a34646}
+.loc-chathead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.loc-chathead h2{font-size:19px;margin:0}
+.loc-chathead span{font-size:11px;color:#7c90a6}
+.loc-stream{min-height:180px;max-height:440px;overflow-y:auto;background:#f7f9fc;border:1px solid #e6edf5;border-radius:13px;padding:14px}
+.loc-empty{font-size:13px;color:#73889e;line-height:1.6;margin:6px}
+.loc-message{border:1px solid #e1e9f1;background:white;border-radius:12px;padding:12px 14px;margin:10px 0;max-width:92%}
+.loc-message>span{display:block;font-size:10px;font-weight:820;color:#527591;margin-bottom:7px}
+.loc-message p{font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6;margin:0}
+.loc-user{background:#eaf1f8;border-color:#dae6f3;margin-left:auto}
+#loc-form{margin-top:13px}
+#loc-form label{display:block;color:#435e78;font-size:12px;font-weight:750;margin-bottom:6px}
+#loc-form textarea{display:block;width:100%;min-height:85px;resize:vertical;border:1px solid #cddceb;border-radius:10px;padding:11px;font:400 13px/1.55 system-ui;color:#233e59;background:white}
+#loc-form textarea:disabled{background:#f3f6fa}
+.loc-chat-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+.loc-details{font-size:12px;color:#607a95;border:1px solid #dce6ef;background:#f9fbfe;border-radius:12px;padding:13px 15px;line-height:1.6;margin:15px 0}
+.loc-details summary{color:#3a5c7e;font-weight:770;cursor:pointer}
+.loc-shell :is(button,textarea,select,input):focus-visible{outline:3px solid #89acdd;outline-offset:2px}
+@media(max-width:640px){.loc-heading{align-items:flex-start;flex-direction:column}.loc-badge{display:none}.loc-settings,.loc-model,.loc-chat{padding:13px}.loc-stream{max-height:380px}.loc-message{max-width:100%}.loc-topline{align-items:stretch;flex-direction:column}.loc-topline label{width:100%;max-width:none}.loc-model-actions button,.loc-chat-actions button{flex:1}}
+@media(prefers-reduced-motion:reduce){.loc-shell *{scroll-behavior:auto!important}}
