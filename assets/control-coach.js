@@ -34,11 +34,23 @@ function mount(root,options={}){
  wrap.querySelector('form').addEventListener('submit',e=>{
   e.preventDefault();const q=wrap.querySelector('textarea').value;
   const answer=advise(q);
-  wrap.querySelector('[data-coach-result]').innerHTML='<h3>'+esc(answer.title)+'</h3><ol>'+answer.steps.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol><p><strong>Pour préciser :</strong> '+esc(answer.question)+'</p><small>'+esc(answer.disclaimer)+'</small><div class="loc-chat-actions"><button type="button" data-coach-use>Approfondir avec l’IA</button><button type="button" data-coach-copy>Copier le plan</button></div>';
+  wrap.querySelector('[data-coach-result]').innerHTML='<h3>'+esc(answer.title)+'</h3><ol>'+answer.steps.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol><p><strong>Pour préciser :</strong> '+esc(answer.question)+'</p><small>'+esc(answer.disclaimer)+'</small><div class="loc-chat-actions"><button type="button" data-coach-use>Approfondir avec l’IA</button><button type="button" data-coach-copy>Copier le plan</button><button type="button" data-coach-task>Ajouter une tâche</button></div>';
   const plan=answer.title+'\n'+answer.steps.map((step,i)=>(i+1)+'. '+step).join('\n')+'\nQuestion : '+answer.question;
   wrap.querySelector('[data-coach-copy]').addEventListener('click',async()=>{
    try{await navigator.clipboard.writeText(plan)}
    catch{const field=wrap.querySelector('textarea');field.value=plan;field.focus();field.select()}
+  });
+  const taskButton=wrap.querySelector('[data-coach-task]');
+  if(typeof options.onCreateAction!=='function')taskButton.hidden=true;
+  else taskButton.addEventListener('click',()=>{
+   const title=('Suivi : '+answer.title).slice(0,180);
+   if(!confirm('Ajouter cette tâche à CONTROL ?\\n'+title))return;
+   try{
+    const result=options.onCreateAction(title);
+    if(result===false)throw Error('Impossible d’enregistrer la tâche.');
+    taskButton.textContent='Tâche ajoutée';
+    taskButton.disabled=true;
+   }catch(error){wrap.querySelector('[data-coach-result] small').textContent='Tâche non enregistrée : '+String(error?.message||error).slice(0,140)}
   });
   wrap.querySelector('[data-coach-use]').addEventListener('click',()=>{
    const field=root.querySelector('#loc-question');if(!field)return;
