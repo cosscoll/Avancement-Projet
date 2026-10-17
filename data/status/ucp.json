@@ -179,7 +179,7 @@
     },
     {
       "title": "Accessibilité de l’application partiellement auditée",
-      "description": "UCP-QA-18 contrôle l’écran anonyme et UCP-QA-20 corrige isolément la hiérarchie des 16 vues authentifiées. UCP-QA-21 prouve que les deux propositions se composent : écran anonyme et 16/16 vues sans violation axe, 7/7 contrats ciblés et 8/8 tests DOM historiques adaptés réussis. Proposition non intégrée ; quatre règles axe restent incomplètes et aucun clavier réel, contraste, zoom, lecteur d’écran ou navigateur natif n’est validé.",
+      "description": "UCP-QA-21 prouve que les propositions QA-18/20 se composent sans violation axe. UCP-QA-22 ajoute isolément le focus sur le h1 après navigation, l’entrée dans les dialogues et le retour au déclencheur : 4/4 contrats focus, 8/8 tests DOM historiques et audits des 16 vues réussis. Aucun navigateur natif, clavier réel, contraste, zoom ou lecteur d’écran n’est validé ; propositions non intégrées.",
       "level": "warning"
     }
   ],
@@ -195,6 +195,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-21 ; QA-21 valide isolément la composition des correctifs d’accessibilité QA-18 et QA-20",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-22 ; QA-22 propose et teste isolément la gestion du focus clavier",
   "baseline_date": "2026-10-17"
 }
