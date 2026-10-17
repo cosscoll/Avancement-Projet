@@ -78,6 +78,11 @@
       "title": "Import du parcours pilote non prêt",
       "description": "Le contrôle hors ligne du corpus candidat a réussi (12 fichiers), mais l'importateur existant n'accepte pas encore son format versionné. Aucun fichier privé n'est téléversé et les tests d'accès réels restent à effectuer.",
       "level": "warning"
+    },
+    {
+      "title": "Nouvelles bibliothèques en qualification",
+      "description": "Consigne publique #3 prise en compte le 17/10/2026 : quatre bibliothèques supplémentaires identifiées et licences racines vérifiées. Exercices préparés en privé, mais aucun import Supabase, test d'exécution ou accord de diffusion.",
+      "level": "warning"
     }
   ],
   "decisions": [
