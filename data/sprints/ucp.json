@@ -925,5 +925,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T233355Z",
+    "started_at": "2026-10-17T23:33:55Z",
+    "ended_at": "2026-10-17T23:41:00Z",
+    "summary": "UCP-QA-32 : écarts de lisibilité et de cibles tactiles mobiles documentés ; correctif CSS isolé et matrice de recette préparés sans intégration.",
+    "done": [
+      "Issues centrales #1/#2 inchangées, déjà lues et bloquées ; main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Audit QA-28 : bandeau mobile à 9 px, navigation à 11 px et petites actions à 36/38/40 px ; seuil ergonomique interne UCP fixé à 44 px pour la proposition.",
+      "Correctif CSS limité au média ≤680 px validé par 17/17 contrôles statiques ; champs 16 px et prefers-reduced-motion préservés. Archive Drive SHA256 d511b7f5aba6df5b969a3ee4c9d00015d7cf8a06ee81594f5a50bab085f8a850."
+    ],
+    "blockers": [
+      "Contrat statique sans rendu : aucun chevauchement, contraste, clavier virtuel ou zone sûre iOS réellement mesuré.",
+      "Aucun essai Chrome Android/Xiaomi, Safari iPhone/iPad, zoom 200 % ou lecteur d’écran.",
+      "Correctif non intégré ; état du clone Windows dev/ucp-codex inconnu."
+    ],
+    "next": "Comparer QA-32 à dev/ucp-codex, appliquer sur une branche dédiée puis exécuter la matrice 320/360/390/680 px et appareils réels avant toute PR.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Livrable QA-32 sur Drive",
+        "url": "https://drive.google.com/file/d/16yUpTVbKIe4cH7gaaVgK_9sV5XDVYdsC/view"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
