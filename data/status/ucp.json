@@ -115,7 +115,7 @@
   "alerts": [
     {
       "title": "Environnement de production non validé",
-      "description": "Les tests locaux ne démontrent pas la sécurité d'une plateforme ouverte au public.",
+      "description": "UCP-QA-16 revalide sur les 57 blobs application/ hash-identiques au HEAD : 110/110 tests backend et 8/8 tests DOM simulés réussissent. Aucun navigateur réel, appareil, staging, charge ou déploiement n'est néanmoins validé.",
       "level": "warning"
     },
     {
@@ -186,6 +186,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-15 ; QA-14 rectifie QA-11 sur l'existence du verrou Python",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-16 ; QA-16 revalide les suites locales sur application/ hash-identique au HEAD",
   "baseline_date": "2026-10-17"
 }
