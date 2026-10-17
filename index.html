@@ -31,7 +31,7 @@
 const $=s=>document.querySelector(s), base='control-hub-v2', OWNER='cosscoll';
 const load=()=>{try{return JSON.parse(localStorage.getItem(base)||'{}')}catch{return{}}};
 let state=load(),projects=[],active=null,tab='discussions',showAllProjects=false;
-const persist=()=>{try{localStorage.setItem(base,JSON.stringify(state))}catch{notify('Stockage local indisponible')}};
+const persist=()=>{try{localStorage.setItem(base,JSON.stringify(state));return true}catch{notify('Stockage local indisponible : tes modifications ne sont pas enregistrées.');return false}};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const attr=esc;
 const link=u=>{try{const x=new URL(u);return x.protocol==='https:'&&!x.username&&!x.password?x.href:''}catch{return''}};
@@ -62,7 +62,7 @@ function home(){
  draw();$('#search').oninput=draw;
  $('#more-projects').onclick=()=>{showAllProjects=!showAllProjects;draw()};
  $('#add-project').onclick=()=>{$('#add-box').classList.toggle('hidden');if(!$('#add-box').classList.contains('hidden'))$('#add-box input[name="name"]').focus()};
- $('#new-project').onsubmit=e=>{e.preventDefault();const fd=new FormData(e.target),name=String(fd.get('name')).trim(),url=String(fd.get('url')).trim();if(!name)return;if(url&&!chatHost(url)){notify('Utilise un lien ChatGPT valide.');return}const id='custom-'+Date.now();const p={id,name,symbol:name.slice(0,2).toUpperCase(),category:'Projet personnalisé'};state.custom??=[];state.custom.push(p);scoped(id).projectUrl=url;persist();projects.push(p);go(id)};
+ $('#new-project').onsubmit=e=>{e.preventDefault();const fd=new FormData(e.target),name=String(fd.get('name')).trim(),url=String(fd.get('url')).trim();if(!name)return;if(url&&!chatHost(url)){notify('Utilise un lien ChatGPT valide.');return}const id='custom-'+(globalThis.crypto?.randomUUID?.()||Date.now());const p={id,name,symbol:name.slice(0,2).toUpperCase(),category:'Projet personnalisé'};const previous=Array.isArray(state.custom)?state.custom.slice():[];state.custom=[...previous,p];scoped(id).projectUrl=url;if(!persist()){state.custom=previous;delete state[id];notify('Projet non créé : impossible d’enregistrer sur cet appareil. Libère de l’espace ou vérifie les paramètres du navigateur.');return}projects.push(p);go(id)};
 }
 function workspace(p,t){
  active=p.id;tab=t;
