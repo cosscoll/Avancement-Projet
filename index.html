@@ -201,6 +201,10 @@ function connections(p,d,el){
 }
 function settings(){active=null;$('#main').innerHTML='<a class="back" href="#/">← Mes projets</a><h1>Connexions</h1><section class="panel"><h2>Fonctionnement</h2><p>CONTROL centralise les liens de tes projets, tes discussions et tes ressources. Les conversations restent ouvertes dans leur application d’origine. Pour les modifier sans quitter CONTROL, une infrastructure authentifiée et les API officielles seraient nécessaires.</p><div class="notice">Aucune clé API n’est demandée ni stockée. Aucune dépense n’est engagée.</div></section><section class="panel"><h2>Accès rapides</h2><div class="links">'+external('https://chatgpt.com/','ChatGPT · Projets')+external('https://chatgpt.com/codex','Codex')+external('https://drive.google.com/','Google Drive')+'</div></section>'}
 function render(){
+ // CONTROL uses the same #main across screens: release delegated handlers and camera/microphone when leaving.
+ const workspaceRoot=document.querySelector('#main');
+ window.CONTROL_VISIOS?.unmount?.(workspaceRoot);
+ window.CONTROL_MULTI_AI?.unmount?.(workspaceRoot);
  const current=location.hash;
  document.querySelectorAll('.mobilefoot [data-go]').forEach(b=>{
   const k=b.dataset.go,selected=k==='home'&&(current==='#/'||!current||current.startsWith('#/project/'))||k==='inbox'&&current.startsWith('#/control/inbox')||k==='manager'&&current.startsWith('#/control/manager')||k==='tools'&&(current.startsWith('#/control/')&&!current.startsWith('#/control/inbox')&&!current.startsWith('#/control/manager')||current.startsWith('#/automations'));
