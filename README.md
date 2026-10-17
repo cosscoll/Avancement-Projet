@@ -1,5 +1,9 @@
 # CONTROL — Centre de pilotage des projets
 
+## Mise en ligne — GitHub, IONOS, Vercel et autres hébergeurs (17 octobre 2026)
+
+**10 tutoriels pas à pas**, avec prérequis, publication, diagnostic, contrôles HTTPS/DNS, bonnes pratiques de sécurité, accès aux consoles officielles et **prompt IA de préparation de déploiement**. Disponible sous `#/control/deploy`, depuis l'onglet **Mise en ligne** de chaque projet et depuis la bibliothèque IAgile. Pour les dépôts GitHub publics, un bouton renvoie à l'activité réelle des workflows ; aucun déploiement n'est lancé automatiquement. Les liens vers IONOS, Vercel, Netlify, Cloudflare, Render, Railway et Firebase **ne valent pas autorisation API**. Aucun achat ou abonnement engagé. [Guide de fonctionnement et limitations](docs/TUTORIELS_MISE_EN_LIGNE.md).
+
 ## Bibliothèques d'outils IA — Complément IAgile (17 octobre 2026)
 
 **87 outils et ressources officielles** répartis en **9 catégories** et **4 parcours** (sites web 3D, agents personnalisés, automatisation, IA/productivité), avec **12 kits pratiques et prompts de départ**. Rechercher par outil/cas d'usage, filtrer par parcours et niveau, conserver des favoris et **ajouter une ressource à un projet CONTROL**. Accès direct à `#/control/catalog` depuis CONTROL et à « Outils IA » depuis un projet. La future interface multi-utilisateurs propose le même catalogue et un enregistrement de ressources dans les projets privés **seulement après activation sécurisée de Cloud**. Les conditions d'accès/prix/licences sont à vérifier chez chaque éditeur ; aucune intégration externe automatique. [Documentation](docs/BIBLIOTHEQUES_OUTILS_IA.md).
