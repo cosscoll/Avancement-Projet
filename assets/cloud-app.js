@@ -12,7 +12,7 @@ const truncate=(s,n=210)=>String(s||'').length>n?String(s).slice(0,n)+'…':Stri
 const providers={ChatGPT:'https://chatgpt.com/',Claude:'https://claude.ai/',Gemini:'https://gemini.google.com/',Codex:'https://chatgpt.com/codex',Perplexity:'https://www.perplexity.ai/'};
 const names={ai_space:'Espaces IA',conversation:'Conversations',resource:'Ressources',task:'Actions',mission:'Missions',automation:'Automatisations',report:'Bilans',decision:'Décisions',note:'Notes',event:'Échéances',expense:'Dépenses',income:'Revenus'};
 const externalKinds=new Set(['ai_space','conversation','resource','automation']);
-let client=null,cloudConfig=null,authUser=null,cache={projects:[],items:[],preferences:null},page='projects',picked='',tab='ai_space',waiting=false,waitingOwner=null,epoch=0,terms='',importing=false;
+let client=null,cloudConfig=null,authUser=null,cache={projects:[],items:[],preferences:null},page='projects',picked='',tab='ai_space',waiting=false,waitingOwner=null,epoch=0,terms='',importing=false,cloudProjectsAll=false;
 const getProject=x=>cache.projects.find(p=>p.id===x);
 const projectName=id=>getProject(id)?.name||'Sans projet';
 const items=(kind,projectId)=>cache.items.filter(x=>(!kind||x.kind===kind)&&(projectId===undefined||x.project_id===projectId));
@@ -52,7 +52,7 @@ async function reload(silent=false){if(!authUser||!client)return;const owner=aut
  }catch(e){if(token!==epoch||authUser?.id!==owner)return;if(!silent)message(e.message||'Impossible de synchroniser vos données.',true);if(!cache.projects.length&&!cache.items.length)byId('page').innerHTML=panel('Connexion indisponible','<p>Les données privées n’ont pas pu être chargées. Réessaie après vérification de la configuration et des règles d’accès.</p>'+btn('Réessayer','refresh'))}
  finally{if(waitingOwner===owner){waiting=false;waitingOwner=null;byId('refresh').disabled=false}}}
 function nav(where,pid='',newTab='ai_space'){page=where;picked=pid;tab=newTab;window.scrollTo?.(0,0);render()}
-function render(){if(!authUser)return;const fns={projects:projectsPage,project:projectPage,inbox:inboxPage,missions:missionsPage,automations:automationsPage,manager:managerPage,tools:toolsPage,account:accountPage,catalog:catalogPage,deploy:deployPage,lab:labPage};byId('page').innerHTML=(fns[page]||projectsPage)();
+function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [data-page]').forEach(b=>{const k=b.dataset.page;const active=k==='projects'&&(page==='projects'||page==='project')||k==='inbox'&&page==='inbox'||k==='manager'&&page==='manager'||k==='tools'&&!['projects','project','inbox','manager'].includes(page);b.setAttribute('aria-current',active?'page':'false')});const fns={projects:projectsPage,project:projectPage,inbox:inboxPage,missions:missionsPage,automations:automationsPage,manager:managerPage,tools:toolsPage,account:accountPage,catalog:catalogPage,deploy:deployPage,lab:labPage};byId('page').innerHTML=(fns[page]||projectsPage)();
  if(page==='lab'){
   const root=byId('lab-root');if(!window.CONTROL_LAB){root.textContent='Laboratoire IA indisponible. Actualise la page.';return}
   window.CONTROL_LAB.mount(root,{mode:'cloud',projectId:picked,projects:cache.projects,
@@ -97,20 +97,31 @@ function render(){if(!authUser)return;const fns={projects:projectsPage,project:p
  }for(const b of document.querySelectorAll('#bottomnav button'))b.classList.toggle('active',(page==='project'?'projects':page)===b.dataset.page)}
 function projectCard(p){const related=items(null,p.id),open=related.filter(x=>x.kind==='task'&&x.status!=='done').length;return card(p.name,(p.category||'Projet')+' · '+related.length+' élément(s) · '+open+' action(s)','open-project',p.id)}
 function projectForm(){return '<form id="project-form">'+input('Nom du projet','name','','text','required minlength="2" maxlength="140"')+input('Catégorie','category','','text','maxlength="70" placeholder="Entreprise, formation, personnel…"')+area('Description et objectifs','description','','maxlength="6000"')+'<button class="primary" type="submit">Créer le projet</button></form>'}
-function projectsPage(){return header('Mes projets','Chaque compte dispose de ses propres projets, ressources et IA.',btn('+ Nouveau projet','toggle-project-form')+' '+btn('Bibliothèques IA','catalog')+' '+btn('Tous les outils','tools'))+
- '<div class="row"><input class="search" id="project-search" placeholder="Rechercher un projet…" type="search" aria-label="Rechercher"></div>'+
+function projectsPage(){
+ const recent=cache.projects.slice().sort((a,b)=>(b.updated_at||'').localeCompare(a.updated_at||''));
+ const visible=cloudProjectsAll?recent:recent.slice(0,6);
+ return header('Mes projets','Retrouve ton travail et tes IA.',btn('+ Nouveau projet','toggle-project-form')+' '+btn('Tous les outils','tools'))+
+ '<section class="clarity-shortcuts"><button class="clarity-shortcut" data-action="inbox"><strong>À traiter</strong><span>Mes priorités →</span></button><button class="clarity-shortcut" data-action="lab"><strong>Créer avec une IA</strong><span>Préparer un brief →</span></button><button class="clarity-shortcut" data-action="tools"><strong>Tous les outils</strong><span>Explorer à mon rythme →</span></button></section>'+
+ '<div class="row clarity-listhead"><h2>Projets <span class="clarity-count">'+cache.projects.length+'</span></h2></div>'+
+ '<div class="row"><input class="search" id="project-search" placeholder="Rechercher un projet…" type="search" aria-label="Rechercher un projet"></div>'+
  '<section id="new-project" class="surface" hidden><h2>Créer un projet</h2>'+projectForm()+'</section>'+
- '<div id="project-list" class="grid">'+(cache.projects.length?cache.projects.map(projectCard).join(''):'')+'</div>'+
- (!cache.projects.length?panel('Bienvenue dans CONTROL Cloud',empty('Commence par créer un projet. Aucun projet personnel ne t’est attribué automatiquement.')+btn('Créer mon premier projet','toggle-project-form','', 'primary')):'')+
- panel('Accès rapide','<div class="btnrow">'+btn('Recherche universelle','tools','search')+btn('Ressources','tools','library')+btn('Calendrier','tools','calendar')+btn('Budgets','tools','budget')+btn('Mémoire','tools','memory')+'</div>')}
-function projectPage(){const p=getProject(picked);if(!p)return projectsPage();const t=tab;const choices=[['ai_space','Espaces IA'],['conversation','Conversations'],['resource','Ressources'],['task','Actions'],['mission','Missions'],['automation','Automatisations'],['report','Bilans'],['decision','Décisions'],['note','Notes'],['event','Calendrier'],['expense','Budget'],['income','Revenus']];
+ '<div id="project-list" class="grid clarity-cards">'+(visible.length?visible.map(projectCard).join(''):'')+'</div>'+
+ (!cache.projects.length?panel('Commencer dans CONTROL',empty('Crée ton premier projet pour y organiser tes IA et ressources.')+btn('Créer mon projet','toggle-project-form','', 'primary')):'')+
+ (cache.projects.length>6?'<div class="clarity-more">'+btn(cloudProjectsAll?'Afficher moins de projets':'Afficher tous les projets ('+cache.projects.length+')','projects-more')+'</div>':'');
+}
+function projectPage(){
+ const p=getProject(picked);if(!p)return projectsPage();const t=tab;
+ const choices=[['ai_space','Espaces IA'],['conversation','Conversations'],['task','Actions'],['resource','Ressources']];
+ const additional=[['mission','Missions'],['automation','Automatisations'],['report','Bilans'],['decision','Décisions'],['note','Notes'],['event','Calendrier'],['expense','Budget'],['income','Revenus']];
+ const advanced=additional.some(x=>x[0]===t);
  const relevant=items(t,p.id);return '<a class="back" href="#" data-action="projects">← Tous les projets</a>'+header(p.name,p.description||p.category||'Espace de travail privé',
- btn('+ Ajouter','toggle-item-form')+' '+btn('Outils IA','catalog',p.id)+' '+btn('Laboratoire IA','lab',p.id)+' '+btn('Mise en ligne','deploy',p.id)+' '+btn('Modifier','edit-project',p.id))+
- '<div class="tabbar">'+choices.map(([key,label])=>'<button type="button" data-action="project-tab" data-id="'+key+'" class="'+(key===t?'selected':'')+'">'+label+'</button>').join('')+'</div>'+
+ btn('+ Ajouter','toggle-item-form')+' '+btn('Modifier','edit-project',p.id))+
+ '<div class="clarity-work-nav"><div class="tabbar">'+choices.map(([key,label])=>'<button type="button" data-action="project-tab" data-id="'+key+'" class="'+(key===t?'selected':'')+'">'+label+'</button>').join('')+'</div>'+ '<details class="clarity-more-tabs" '+(advanced?'open':'')+'><summary>Plus'+(advanced?' · '+H(additional.find(x=>x[0]===t)?.[1]):'')+'</summary><div class="clarity-advanced">'+additional.map(([key,label])=>'<button type="button" data-action="project-tab" data-id="'+key+'" aria-current="'+(key===t?'page':'false')+'">'+label+'</button>').join('')+'</div></details></div>'+
  '<section id="new-item" class="surface" hidden><h2>Nouvel élément · '+H(names[t])+'</h2>'+itemForm(t,p.id)+'</section>'+
  '<div class="surface"><div class="row"><h2>'+H(names[t])+'</h2>'+pill(relevant.length+' élément(s)')+'</div>'+
  (relevant.length?relevant.map(itemRow).join(''):empty('Aucun élément dans cette catégorie. Ajoute une conversation, un dossier ou une tâche pour démarrer.'))+'</div>'+
  (t==='ai_space'?panel('Connecter vos projets ChatGPT, Claude et Gemini','<p class="muted">Associe ici les URL de tes espaces privés. Leur contenu reste dans l’application officielle du fournisseur. Les abonnements ChatGPT, Claude et Gemini ne donnent pas automatiquement accès à leurs API.</p><div class="btnrow">'+Object.entries(providers).map(([p,u])=>ext(u,'Ouvrir '+p)).join('')+'</div>'):'')+
+ panel('Outils du projet','<details class="clarity-project-toolset"><summary>Outils supplémentaires et mise en ligne</summary><div class="btnrow">'+btn('Laboratoire IA','lab',p.id)+btn('Bibliothèques IA','catalog',p.id)+btn('Mettre en ligne','deploy',p.id)+'</div></details>')+
  '<section id="project-editor" class="surface" hidden></section>'}
 function itemForm(kind,proj='',item=null){const i=item||{},type=kind||'task',p=proj||i.project_id||'';
  return '<form data-form="save-item" data-record="'+H(i.id||'')+'"><input type="hidden" name="kind" value="'+H(type)+'"><input type="hidden" name="project_id" value="'+H(p)+'">'+
@@ -379,6 +390,8 @@ async function action(button){
  switch(type){
   case 'projects':nav('projects');return;
   case 'lab':nav('lab',id||'');return;
+  case 'projects-more':cloudProjectsAll=!cloudProjectsAll;render();return;
+  case 'inbox':nav('inbox');return;
   case 'catalog':nav('catalog',id||'');return;
   case 'deploy':nav('deploy',id||'');return;
   case 'tools':toolTab=id||'library';nav('tools');return;
@@ -477,7 +490,7 @@ function wireEvents(){
  });
  document.addEventListener('input',e=>{
   if(e.target?.id==='project-search'){
-   const query=e.target.value.toLowerCase();byId('project-list').innerHTML=cache.projects.filter(p=>(p.name+' '+p.category).toLowerCase().includes(query)).map(projectCard).join('')||empty('Aucun projet trouvé.');
+   const query=e.target.value.toLowerCase();const filtered=cache.projects.filter(p=>(p.name+' '+p.category).toLowerCase().includes(query)).sort((a,b)=>(b.updated_at||'').localeCompare(a.updated_at||''));byId('project-list').innerHTML=(query||cloudProjectsAll?filtered:filtered.slice(0,6)).map(projectCard).join('')||empty('Aucun projet trouvé.');
   }
   if(e.target?.id==='tool-search'){
    searchFilter=e.target.value;const pos=e.target.selectionStart;render();const box=byId('tool-search');box?.focus();try{box?.setSelectionRange(pos,pos)}catch{}
