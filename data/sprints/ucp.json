@@ -489,5 +489,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T022636Z",
+    "started_at": "2026-10-17T02:26:36Z",
+    "ended_at": "2026-10-17T02:32:58.476Z",
+    "summary": "UCP-QA-18 : audit d’accessibilité DOM de l’écran anonyme et correctif isolé validé, sans intégration ni navigateur réel.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat ; HEAD main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Base 4.0.2 auditée avec axe-core 4.14.0/JSDOM 26.1.0 : 36 règles réussies, 1 violation modérée (barre de statut hors repère), 4 contrôles incomplets ; contrat sémantique 5 PASS et 1 TODO (dialogue sans nom accessible).",
+      "Patch isolé sur index.html et app.js validé sur copie : 0 violation axe, 6 PASS, 0 TODO ; npm audit sans vulnérabilité déclarée ; archive SHA256 0df310b4d1086e3575218d991ecdd21adc5e184527e9017bc7590332e03df488."
+    ],
+    "blockers": [
+      "JSDOM ne rend pas CSS ni l’arbre d’accessibilité natif ; quatre règles axe restent incomplètes.",
+      "Aucun navigateur réel, clavier complet, contraste calculé, zoom, lecteur d’écran ou staging testé ; Chromium reste indisponible.",
+      "Patch non intégré et état du clone Windows dev/ucp-codex inconnu."
+    ],
+    "next": "Comparer QA-18 à dev/ucp-codex, puis exécuter QA-17/QA-18 sous Chromium avec clavier, zoom, contraste et lecteur d’écran avant toute PR ou fusion.",
+    "links": [
+      {
+        "label": "Révision UCP auditée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
