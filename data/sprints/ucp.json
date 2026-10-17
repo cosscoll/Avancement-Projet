@@ -801,5 +801,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T192728Z",
+    "started_at": "2026-10-17T19:27:28Z",
+    "ended_at": "2026-10-17T19:37:00Z",
+    "summary": "UCP-QA-28 : socle PWA, interface d’installation et cinq icônes officielles assemblés et testés sur copie isolée ; patch binaire livré sans push applicatif.",
+    "done": [
+      "Issues centrales #1/#2 inchangées, déjà lues et bloquées ; main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Proposition isolée complète : manifeste any/maskable 192/512, icône Apple 180, service worker à liste blanche/cache v2 et aide d’installation Android/Xiaomi/iOS.",
+      "Exécutions réelles : 35 contrôles d’intégration, 30 contrôles d’icônes, 8/8 tests DOM et git apply --check réussis ; archive SHA256 66ae8e2df96aa3c87d1d69419819c4b46df221fea67fe0d6441f5752e9c9bbe2."
+    ],
+    "blockers": [
+      "Patch non intégré, aucun commit ou push applicatif ; état du clone Windows dev/ucp-codex inconnu.",
+      "Aucun navigateur réel, appareil Android/Xiaomi/iOS, Lighthouse, hors-ligne ou cycle installation–mise à jour–désinstallation.",
+      "pytest absent de l’environnement courant ; les assertions déterministes ont été exécutées avec Python standard/Pillow sans nouvelle dépendance."
+    ],
+    "next": "Comparer QA-28 au clone local, appliquer le patch sur une branche dédiée, puis exécuter la recette multi-appareils avec données fictives avant toute pull request.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut central QA-28",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/3b0dcdbbd55566d92b1cbbc38aaa735eb561c122"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
