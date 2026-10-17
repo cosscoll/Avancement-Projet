@@ -36,7 +36,7 @@ const kindOpt=(current='task')=>choose('Type de contenu','kind',Object.entries(n
 const providerOpt=(current='ChatGPT')=>choose('IA / fournisseur','provider',[...new Set([...Object.keys(providers),...cache.items.filter(x=>x.kind==='ai_space').map(x=>x.provider).filter(Boolean),'Autre'])].map(x=>[x,x]),current);
 function safeClientConfig(v){try{if(!v||v.enabled!==true)return false;const url=new URL(v.supabaseUrl);return url.protocol==='https:'&&/^[a-z0-9-]+\.supabase\.co$/.test(url.hostname)&&url.pathname==='/'&&typeof v.supabasePublishableKey==='string'&&/^(sb_publishable_[a-zA-Z0-9_-]+|eyJ[a-zA-Z0-9_.-]+)$/.test(v.supabasePublishableKey)&&!v.supabasePublishableKey.toLowerCase().includes('service_role')}catch{return false}}
 async function boot(){live('Vérification de la configuration privée…');let cfg;
- try{const r=await fetch(CONFIG_URL,{cache:'no-store'});if(!r.ok)throw Error('not ready');cfg=await r.json();if(!safeClientConfig(cfg))throw Error('not configured');cloudConfig=cfg}catch{visible('setup');return}
+ try{const r=await fetch(CONFIG_URL,{cache:'no-store'});if(!r.ok)throw Error('not ready');cfg=await r.json();if(!safeClientConfig(cfg))throw Error('not configured');cloudConfig=cfg;byId('google-login').hidden=(cfg.allowGoogleLogin!==true);if(cfg.allowRegistration!==true){document.querySelector('.auth-box h2').textContent='Se connecter à la bêta';document.querySelector('.auth-box .muted').textContent='Accès sur invitation uniquement. Les inscriptions publiques ne sont pas encore ouvertes.'}}catch{visible('setup');return}
  try{live('Initialisation de la connexion sécurisée…');const {createClient}=await import(CDN);client=createClient(cfg.supabaseUrl,cfg.supabasePublishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}});
  client.auth.onAuthStateChange((event,s)=>{if(event==='SIGNED_OUT'){epoch++;authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');return}if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='USER_UPDATED'){setTimeout(()=>verifiedSession(),0)}});
  await verifiedSession();
@@ -407,7 +407,7 @@ function wireEvents(){
  document.addEventListener('submit',async e=>{
   if(e.target?.id==='email-form'){
    e.preventDefault();const b=e.target.querySelector('button'),email=String(new FormData(e.target).get('email')||'').trim().toLowerCase();if(!email)return;
-   b.disabled=true;try{const res=await client.auth.signInWithOtp({email,options:{emailRedirectTo:currentURL(),shouldCreateUser:true}});if(res.error)throw res.error;byId('auth-message').innerHTML='<p class="notice-ok">Vérifiez votre boîte mail. Un lien de connexion a été demandé. Si l’adresse est autorisée, vous le recevrez prochainement.</p>'}
+   b.disabled=true;try{const res=await client.auth.signInWithOtp({email,options:{emailRedirectTo:currentURL(),shouldCreateUser:cloudConfig?.allowRegistration===true}});if(res.error)throw res.error;byId('auth-message').innerHTML='<p class="notice-ok">Vérifiez votre boîte mail. Un lien de connexion a été demandé. Si l’adresse est autorisée, vous le recevrez prochainement.</p>'}
    catch(err){byId('auth-message').textContent='Demande refusée : '+(err?.message||'réessayez plus tard.')}
    finally{b.disabled=false}
    return;
@@ -434,7 +434,7 @@ function wireEvents(){
  });
  byId('refresh').onclick=()=>authUser&&reload();
  byId('account').onclick=()=>authUser&&nav('account');
- byId('google-login').onclick=async()=>{if(!client)return;const b=byId('google-login');b.disabled=true;
+ byId('google-login').onclick=async()=>{if(!client||cloudConfig?.allowGoogleLogin!==true)return;const b=byId('google-login');b.disabled=true;
   try{const r=await client.auth.signInWithOAuth({provider:'google',options:{redirectTo:currentURL(),scopes:'openid email profile'}});if(r.error)throw r.error;}
   catch(e){byId('auth-message').textContent='Connexion Google indisponible : '+(e?.message||'configuration à vérifier.');b.disabled=false}
  };
