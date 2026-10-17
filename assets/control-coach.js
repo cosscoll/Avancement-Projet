@@ -20,7 +20,9 @@ const rules=[
 ];
 function advise(question,context=''){
  const q=clean(question).trim();if(!q)return null;
- const rule=rules.find(r=>r.match.test(q)||r.match.test(normalize(q)))||{id:'general',title:'Clarifier et avancer',steps:['Définis le résultat précis que tu souhaites obtenir.','Décompose-le en une action immédiate et une vérification simple.','Identifie les informations ou autorisations manquantes.','Note la prochaine étape dans ton projet.'],question:'Quel résultat concret souhaites-tu obtenir ?'};
+ const matched=rules.filter(r=>r.match.test(q)||r.match.test(normalize(q)));
+ const specificity=['blocage','securite','budget','donnees','equipe','client','livraison','priorite'];
+ const rule=matched.sort((a,b)=>specificity.indexOf(a.id)-specificity.indexOf(b.id))[0]||{id:'general',title:'Clarifier et avancer',steps:['Définis le résultat précis que tu souhaites obtenir.','Décompose-le en une action immédiate et une vérification simple.','Identifie les informations ou autorisations manquantes.','Note la prochaine étape dans ton projet.'],question:'Quel résultat concret souhaites-tu obtenir ?'};
  return {category:rule.id,title:rule.title,steps:rule.steps.slice(),question:rule.question,contextUsed:false,disclaimer:'Conseils préparés localement : aucune action n’a été exécutée ni aucun service externe consulté.'};
 }
 function mount(root,options={}){
