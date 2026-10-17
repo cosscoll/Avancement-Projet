@@ -1,0 +1,62 @@
+name: CONTROL — Qualité et régressions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/**'
+      - 'data/**'
+      - 'config/**'
+      - 'supabase/**'
+      - 'tests/**'
+      - '*.html'
+      - 'service-worker.js'
+      - 'manifest.webmanifest'
+      - '.github/workflows/quality.yml'
+  pull_request:
+    paths:
+      - 'assets/**'
+      - 'data/**'
+      - 'config/**'
+      - 'supabase/**'
+      - 'tests/**'
+      - '*.html'
+      - 'service-worker.js'
+      - 'manifest.webmanifest'
+      - '.github/workflows/quality.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: control-quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Test et sécurité du frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Lire le dépôt
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: ''
+      - name: Vérifier la syntaxe du JavaScript
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            node --check "$file"
+          done < <(find assets -type f -name '*.js' -print0)
+          node --check service-worker.js
+      - name: Exécuter les tests Node natifs
+        run: node --test tests/*.test.mjs
+      - name: Vérifier les routes, ressources et modes sécurisés
+        run: node --test tests/production-readiness.test.mjs
