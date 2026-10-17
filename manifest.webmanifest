@@ -1,8 +1,8 @@
 {
   "id": "/Avancement-Projet/",
-  "name": "CONTROL — Espaces projets et IA",
+  "name": "CONTROL — Centre de pilotage multi-IA",
   "short_name": "CONTROL",
-  "description": "Centraliser projets, espaces IA, ressources et automatisations",
+  "description": "Projets, assistant central, boîte de réception, missions, automatisations, calendriers et ressources",
   "lang": "fr",
   "dir": "ltr",
   "start_url": "./#/",
@@ -40,12 +40,20 @@
       "url": "./#/"
     },
     {
+      "name": "À traiter",
+      "url": "./#/control/inbox"
+    },
+    {
+      "name": "Missions IA",
+      "url": "./#/control/missions"
+    },
+    {
       "name": "Automatisations",
       "url": "./#/automations"
     },
     {
-      "name": "Connexions",
-      "url": "./#/settings"
+      "name": "CONTROL IA",
+      "url": "./#/control/manager"
     }
   ],
   "prefer_related_applications": false
