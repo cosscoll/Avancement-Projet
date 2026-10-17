@@ -139,7 +139,7 @@
     },
     {
       "title": "PWA non installable",
-      "description": "UCP-QA-23 prépare isolément un manifeste relié, un worker à la racine et un cache limité à six actifs statiques, avec exclusion des navigations et de /api/ ; 6 contrats réussissent et 2 critères restent XFAIL. Icônes carrées dédiées, HTTPS autorisé et essais Android/Xiaomi/iOS réels manquent ; rien n’est intégré.",
+      "description": "UCP-QA-24 complète le socle QA-23 par un bouton d’installation, beforeinstallprompt/appinstalled et une aide Android/Xiaomi/iOS ; 12 contrats réussissent et 4 XFAIL stricts répètent les deux blocages icônes/appareils. Le code reste isolé ; aucune installation réelle, intégration ou publication n’est validée.",
       "level": "warning"
     },
     {
@@ -181,6 +181,11 @@
       "title": "Accessibilité de l’application partiellement auditée",
       "description": "UCP-QA-21 prouve que les propositions QA-18/20 se composent sans violation axe. UCP-QA-22 ajoute isolément le focus sur le h1 après navigation, l’entrée dans les dialogues et le retour au déclencheur : 4/4 contrats focus, 8/8 tests DOM historiques et audits des 16 vues réussis. Aucun navigateur natif, clavier réel, contraste, zoom ou lecteur d’écran n’est validé ; propositions non intégrées.",
       "level": "warning"
+    },
+    {
+      "title": "Connexion CONTROL–Codex non autorisée",
+      "description": "Les issues publiques #1 et #2 demandent une connexion de CONTROL à Codex. Elles sont lues mais bloquées : l’automatisation ne peut ni accorder, ni connecter, ni déclencher Codex. Aucun accès ou automatisme n’a été créé.",
+      "level": "warning"
     }
   ],
   "decisions": [
@@ -195,6 +200,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-23 ; QA-23 propose et teste isolément le socle PWA sécurisé",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-24 ; QA-24 propose et teste isolément l’interface d’installation PWA",
   "baseline_date": "2026-10-17"
 }
