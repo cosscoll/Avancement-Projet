@@ -18,6 +18,8 @@ Les bibliothèques, tutoriels, calendriers et visios sont utiles dans la mesure 
 | ✅ | Ajout de la suite `tests/production-readiness.test.mjs` | Vérifie assets du HTML/PWA, liens de navigation, documents publics, Cloud inactif, politique de sécurité Cloud et blocage SQL |
 | ✅ | Résolution de l'incohérence Jitsi Cloud : l'iframe de test n'est plus proposée là où la CSP l'interdit | `allowInlineVideo:false` dans le client Cloud ; le lien du fournisseur demeure, aucune règle CSP assouplie |
 | ✅ | Protections d'isolation **dans les migrations SQL elles-mêmes** | Toutes les migrations CONTROL échouent sans confirmation préalable `app.control_isolated_project='confirmed'` **dans la bonne session et exclusivement sur le futur projet CONTROL** |
+| ✅ | Test de vrais parcours simulés avec création de 2 missions Claude/Gemini, import du livrable et isolation par projet | `tests/project-flows.test.mjs` exécuté dans GitHub Actions Node |
+| ✅ | Correction d'un compteur trompeur de CONTROL IA : une réunion et deux visios affichaient « 12 » au lieu de « 3 » | Parenthèses arithmétiques dans `assets/command-center.js`, régression `tests/dashboard-counts.test.mjs` |
 | ✅ | Aucune activation de `CONTROL_AI_DISPATCH_ENABLED`, de création de compte Cloud, de clé API ou de facturation | Les interruptions techniques restent fermées |
 | ⚠️ | Vérification UI sur appareil Android réel | Non effectuée. Les tests JavaScript/Node et une publication Pages verte ne garantissent pas l'UX mobile ni le fonctionnement des appels vidéo |
 | ⚠️ | Blocage automatique du déploiement Pages en cas de CI rouge | Non configuré. GitHub Pages construit depuis la branche indépendamment du workflow Qualité ; ne pas prétendre que la publication est conditionnée aux tests |
