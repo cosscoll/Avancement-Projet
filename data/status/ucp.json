@@ -138,8 +138,8 @@
       "level": "warning"
     },
     {
-      "title": "PWA non installable",
-      "description": "UCP-QA-24 complète le socle QA-23 par un bouton d’installation, beforeinstallprompt/appinstalled et une aide Android/Xiaomi/iOS ; 12 contrats réussissent et 4 XFAIL stricts répètent les deux blocages icônes/appareils. Le code reste isolé ; aucune installation réelle, intégration ou publication n’est validée.",
+      "title": "PWA et distribution mobile non validées",
+      "description": "UCP-QA-24 propose isolément l’interface d’installation PWA. UCP-QA-25 compare cinq voies : PWA/WebAPK, APK Android direct, Google Play, Capacitor et TestFlight/App Store. La PWA reste recommandée à court terme ; 8 assertions documentaires réussissent. Aucun appareil réel, paquet signé, compte store, intégration ou publication n’est validé.",
       "level": "warning"
     },
     {
@@ -198,8 +198,13 @@
       "title": "Synchronisation de dev/ucp-codex",
       "description": "Inventorier et sauvegarder le travail local, confirmer les tests, puis choisir explicitement la stratégie de rapprochement avec main sans fusion automatique.",
       "state": "blocked"
+    },
+    {
+      "title": "Canal de distribution mobile",
+      "description": "Prioriser la PWA gratuite ; ne choisir APK public, Capacitor ou stores qu’après validation sécurité, juridique, financière et tests sur appareils réels.",
+      "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-24 ; QA-24 propose et teste isolément l’interface d’installation PWA",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-25 ; QA-25 documente les voies d’installation sans intégration ni publication",
   "baseline_date": "2026-10-17"
 }
