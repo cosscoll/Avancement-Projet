@@ -102,7 +102,7 @@ function decide(q){
  const v=norm(q);const hasDeploy=starts(q,['heberg','publier','publication','deploy','deploiement','mettre en ligne','mise en ligne','site web','domaine','hosting','404','build','dns','certificat']);
  const hasLink=starts(q,['connecter','connecte','connectee','lier','synchroniser','synchronisation','api','acces','acceder','historique','chats','conversations']);
  const hasPrices=starts(q,['cout','prix','payer','payant','abonnement','tarif','tokens','credits','facturation']);
- const hasTool=starts(q,['outil','bibliotheque','framework','librairie','plugin','extension','software']);
+ const hasTool=starts(q,['outils?','bibliotheques?','frameworks?','librairies?','plugins?','extensions?','software']);
  const g=guideMatch(q);
  const t=relevantTool(q);
  const explicitTool=t&&norm(q).includes(norm(t.name));
