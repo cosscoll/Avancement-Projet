@@ -52,7 +52,44 @@ async function reload(silent=false){if(!authUser||!client)return;const owner=aut
  }catch(e){if(token!==epoch||authUser?.id!==owner)return;if(!silent)message(e.message||'Impossible de synchroniser vos données.',true);if(!cache.projects.length&&!cache.items.length)byId('page').innerHTML=panel('Connexion indisponible','<p>Les données privées n’ont pas pu être chargées. Réessaie après vérification de la configuration et des règles d’accès.</p>'+btn('Réessayer','refresh'))}
  finally{if(waitingOwner===owner){waiting=false;waitingOwner=null;byId('refresh').disabled=false}}}
 function nav(where,pid='',newTab='ai_space'){page=where;picked=pid;tab=newTab;window.scrollTo?.(0,0);render()}
-function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [data-page]').forEach(b=>{const k=b.dataset.page;const active=k==='projects'&&(page==='projects'||page==='project')||k==='inbox'&&page==='inbox'||k==='manager'&&page==='manager'||k==='tools'&&!['projects','project','inbox','manager'].includes(page);b.setAttribute('aria-current',active?'page':'false')});const fns={projects:projectsPage,project:projectPage,inbox:inboxPage,missions:missionsPage,automations:automationsPage,manager:managerPage,tools:toolsPage,account:accountPage,catalog:catalogPage,deploy:deployPage,lab:labPage,command:commandPage};byId('page').innerHTML=(fns[page]||projectsPage)();
+function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [data-page]').forEach(b=>{const k=b.dataset.page;const active=k==='projects'&&(page==='projects'||page==='project')||k==='inbox'&&page==='inbox'||k==='manager'&&page==='manager'||k==='tools'&&!['projects','project','inbox','manager'].includes(page);b.setAttribute('aria-current',active?'page':'false')});const fns={projects:projectsPage,project:projectPage,inbox:inboxPage,missions:missionsPage,automations:automationsPage,manager:managerPage,tools:toolsPage,account:accountPage,catalog:catalogPage,deploy:deployPage,lab:labPage,command:commandPage,visios:visiosPage};byId('page').innerHTML=(fns[page]||projectsPage)();
+ if(page==='visios'){
+   const root=byId('visios-root');if(!window.CONTROL_VISIOS){root.textContent='Module visio indisponible. Actualise CONTROL.';return}
+   window.CONTROL_VISIOS.mount(root,{mode:'cloud',projectId:picked,projects:cache.projects,
+    list:()=>cache.items.filter(i=>i.kind==='event'&&i.details?.controlVisio===true).map(i=>({
+      id:i.id,title:i.title,projectId:i.project_id||'',type:i.details.type,provider:i.provider,
+      startsAt:i.due_at,minutes:Number(i.details.minutes)||30,url:i.url,notes:i.body||'',updatedAt:i.updated_at
+    })),
+    create:async(m)=>{
+      const owner=authUser?.id;if(!owner)throw Error('Connexion requise.');
+      if(m.projectId&&!getProject(m.projectId))throw Error('Projet inaccessible.');
+      const payload={owner_id:owner,project_id:m.projectId||null,kind:'event',provider:m.provider,title:m.title,
+       url:m.url,body:'',status:'todo',due_at:m.startsAt,details:{controlVisio:true,type:m.type,minutes:m.minutes}};
+      const result=await client.from('control_items').insert(payload).select('*').single();
+      if(result.error)throw Error('Enregistrement refusé : '+result.error.message);
+      if(authUser?.id!==owner)throw Error('Compte modifié : recharge ton espace.');
+      cache.items.unshift(result.data);return true;
+    },
+    update:async(m,fields)=>{
+      const owner=authUser?.id,row=cache.items.find(i=>i.id===m.id&&i.owner_id===owner&&i.details?.controlVisio===true);
+      if(!owner||!row)throw Error('Rendez-vous non accessible.');
+      const q=await client.from('control_items').update({body:fields.notes,updated_at:new Date().toISOString()})
+        .eq('id',row.id).eq('owner_id',owner).eq('updated_at',row.updated_at).select('*').single();
+      if(q.error||!q.data)throw Error('Fiche modifiée ailleurs ou autorisation refusée. Actualise.');
+      if(authUser?.id!==owner)throw Error('Compte modifié : recharge.');
+      Object.assign(row,q.data);return true;
+    },
+    remove:async(m)=>{
+      const owner=authUser?.id,row=cache.items.find(i=>i.id===m.id&&i.owner_id===owner&&i.details?.controlVisio===true);
+      if(!owner||!row)throw Error('Fiche non accessible.');
+      const q=await client.from('control_items').delete().eq('id',row.id).eq('owner_id',owner)
+        .eq('updated_at',row.updated_at).select('id').single();
+      if(q.error||!q.data)throw Error('Suppression refusée ou fiche modifiée ailleurs.');
+      if(authUser?.id!==owner)throw Error('Compte modifié : recharge.');
+      cache.items=cache.items.filter(x=>x.id!==row.id);return true;
+    }
+   });return;
+ }
  if(page==='command'){
   const target=byId('command-root');
   if(!window.CONTROL_MULTI_AI){target.textContent='Poste de commande indisponible. Actualise CONTROL.';return}
@@ -166,7 +203,7 @@ function projectPage(){
  '<div class="surface"><div class="row"><h2>'+H(names[t])+'</h2>'+pill(relevant.length+' élément(s)')+'</div>'+
  (relevant.length?relevant.map(itemRow).join(''):empty('Aucun élément dans cette catégorie. Ajoute une conversation, un dossier ou une tâche pour démarrer.'))+'</div>'+
  (t==='ai_space'?panel('Connecter vos projets ChatGPT, Claude et Gemini','<p class="muted">Associe ici les URL de tes espaces privés. Leur contenu reste dans l’application officielle du fournisseur. Les abonnements ChatGPT, Claude et Gemini ne donnent pas automatiquement accès à leurs API.</p><div class="btnrow">'+Object.entries(providers).map(([p,u])=>ext(u,'Ouvrir '+p)).join('')+'</div>'):'')+
- '<details class="clarity-helpnote"><summary>Outils du projet · Laboratoire IA, bibliothèques et publication</summary><div class="btnrow" style="margin-top:12px">'+btn('Commander mes IA','command',p.id)+btn('Laboratoire IA','lab',p.id)+btn('Bibliothèques IA','catalog',p.id)+btn('Mettre en ligne','deploy',p.id)+'</div></details>'+
+ '<details class="clarity-helpnote"><summary>Outils du projet · Laboratoire IA, bibliothèques et publication</summary><div class="btnrow" style="margin-top:12px">'+btn('Visios','visios',p.id)+btn('Commander mes IA','command',p.id)+btn('Laboratoire IA','lab',p.id)+btn('Bibliothèques IA','catalog',p.id)+btn('Mettre en ligne','deploy',p.id)+'</div></details>'+
  '<section id="project-editor" class="surface" hidden></section>'}
 function itemForm(kind,proj='',item=null){const i=item||{},type=kind||'task',p=proj||i.project_id||'';
  return '<form data-form="save-item" data-record="'+H(i.id||'')+'"><input type="hidden" name="kind" value="'+H(type)+'"><input type="hidden" name="project_id" value="'+H(p)+'">'+
@@ -220,14 +257,15 @@ let toolTab='lab',searchFilter='';
 function toolsPage(){
  const groups=[
   ['Créer et publier',[['command','Commander Claude & Gemini'],['lab','Laboratoire IA'],['catalog','Bibliothèques IA'],['deploy','Mise en ligne']]],
-  ['Organiser',[['library','Ressources'],['calendar','Calendrier'],['memory','Décisions']]],
+  ['Organiser',[['visios','Visios et rendez-vous'],['library','Ressources'],['calendar','Calendrier'],['memory','Décisions']]],
   ['Suivre et protéger',[['budget','Finances'],['search','Recherche'],['backup','Sauvegardes']]]
  ];
  let body='<div class="clarity-cloud-tools">'+groups.map(([group,links])=>
   '<details class="clarity-toolgroup" '+(links.some(([key])=>key===toolTab)?'open':'')+'><summary><strong>'+H(group)+'</strong><span class="clarity-chevron">⌄</span></summary><div class="clarity-toolcards">'+
   links.map(([key,label])=>'<button type="button" class="clarity-tool-link" data-action="tool-tab" data-id="'+key+'" aria-current="'+(toolTab===key?'page':'false')+'"><strong>'+H(label)+'</strong><span aria-hidden="true">→</span></button>').join('')+'</div></details>'
  ).join('')+'</div>';
- if(toolTab==='command'){body+=panel('Commander Claude et Gemini','<p>Prépare les missions, ouvre les IA concernées et centralise les résultats.</p>'+btn('Ouvrir le poste multi-IA','command','','primary'));}
+ if(toolTab==='visios'){body+=panel('Visioconférences et rendez-vous','<p>Réunions internes, appels clients et prospects. Partage des invitations et liens Google Meet, Zoom ou Teams.</p>'+btn('Organiser une visio','visios','','primary'));}
+ else if(toolTab==='command'){body+=panel('Commander Claude et Gemini','<p>Prépare les missions, ouvre les IA concernées et centralise les résultats.</p>'+btn('Ouvrir le poste multi-IA','command','','primary'));}
  else if(toolTab==='lab'){body+=panel('Atelier de production IA','<p>Briefs avec contexte, comparaison des réponses, audit HTML, contrôle JSON, versions, recettes et masquage des secrets.</p>'+btn('Ouvrir le Laboratoire','lab','','primary'));}
  else if(toolTab==='catalog'){body+=panel('Bibliothèques IAgile','<p>Explore 87 outils IA : moteurs 3D, agents, automatisations, recherche et productivité.</p>'+btn('Explorer les bibliothèques','catalog','','primary'));}
  else if(toolTab==='deploy'){body+=panel('Guides de publication','<p>10 tutoriels détaillés pour GitHub Pages, IONOS, Vercel, Netlify, Cloudflare Pages et autres hébergeurs. Prompts IA et checklist de production.</p>'+btn('Voir les guides de mise en ligne','deploy','','primary'));}
@@ -291,6 +329,7 @@ function toolsPage(){
  return header('Tous les outils','Ressources, agenda, budgets, décisions, sauvegardes.')+body+'<div id="tool-editor"></div>';
 }
 function deployPage(){return header('Mettre mon site en ligne','Tutoriels GitHub Pages, IONOS, Vercel et autres hébergeurs.')+'<div id="deploy-root"></div>'}
+function visiosPage(){return header('Visios et rendez-vous','Organiser les réunions d’équipe et les appels clients ou prospects.')+'<div id="visios-root"></div>'}
 function commandPage(){return header('Commander Claude & Gemini','Suivre les missions et consolider leurs résultats, sans mélanger les projets.')+'<div id="command-root"></div>'}
 function labPage(){return header('Laboratoire IA','Outils de production, de contrôle qualité et de comparaison des réponses.')+'<div id="lab-root"></div>'}
 function catalogPage(){return header('Bibliothèques IA','Outils pratiques et frameworks, en complément des quatre formations IAgile.')+'<div id="catalog-root"></div>'}
@@ -447,6 +486,7 @@ async function action(button){
  switch(type){
   case 'projects':nav('projects');return;
   case 'lab':nav('lab',id||'');return;
+  case 'visios':nav('visios',id||'');return;
   case 'command':nav('command',id||'');return;
   case 'projects-more':cloudProjectsAll=!cloudProjectsAll;render();return;
   case 'inbox':nav('inbox');return;
@@ -569,7 +609,7 @@ window.CONTROL_HELP?.setAdapter({
   if(!authUser)return false;
   if(screen==='tools'){toolTab=route==='backup'?'backup':route==='budget'?'budget':route==='library'?'library':'search';nav('tools');return true}
   if(screen==='activity'){return false}
-  if(['projects','inbox','missions','automations','manager','lab','catalog','deploy','account'].includes(screen)){nav(screen);return true}
+  if(['projects','inbox','missions','automations','manager','lab','catalog','deploy','visios','account'].includes(screen)){nav(screen);return true}
   return false;
  },
  getSummary:()=>authUser?{projects:cache.projects.length,current:page==='project'?getProject(picked)?.name:'',openActions:cache.items.filter(x=>x.kind==='task'&&x.status!=='done').length,missions:cache.items.filter(x=>x.kind==='mission').length}:null
