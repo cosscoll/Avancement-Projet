@@ -139,7 +139,7 @@
     },
     {
       "title": "PWA non installable",
-      "description": "UCP-QA-05 a confirmé sur main 2034e115 que les interfaces ont viewport et theme-color, mais aucun Web App Manifest relié, service worker ni jeu d'icônes installables ; 2 contrôles réussis et 4 exigences XFAIL.",
+      "description": "UCP-QA-23 prépare isolément un manifeste relié, un worker à la racine et un cache limité à six actifs statiques, avec exclusion des navigations et de /api/ ; 6 contrats réussissent et 2 critères restent XFAIL. Icônes carrées dédiées, HTTPS autorisé et essais Android/Xiaomi/iOS réels manquent ; rien n’est intégré.",
       "level": "warning"
     },
     {
@@ -195,6 +195,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-22 ; QA-22 propose et teste isolément la gestion du focus clavier",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-23 ; QA-23 propose et teste isolément le socle PWA sécurisé",
   "baseline_date": "2026-10-17"
 }
