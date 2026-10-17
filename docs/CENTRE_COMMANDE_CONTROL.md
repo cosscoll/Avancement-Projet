@@ -10,8 +10,8 @@ Les données du centre sont enregistrées sous la clé navigateur `control-comma
 
 | Module | Route | Fonctionnement |
 |---|---|---|
-| Chef de projet central | `#/control/manager` | Synthèse locale et questions orientées projet fondées sur les comptes rendus IA renseignés, les actions, les missions, les décisions et les états GitHub vérifiés **dans la session courante**. Préparation d'un contexte à copier dans ChatGPT. **Ce n'est pas un modèle LLM connecté en direct aux chats privés.** |
-| Boîte universelle | `#/control/inbox` | Liste des actions locales ouvertes, échéances dépassées, missions « à vérifier », alertes du référentiel daté et raccourcis Gmail/Agenda/ChatGPT. **Aucune récupération des messages Gmail ou notifications externes.** |
+| Chef de projet central | `#/control/manager` | Synthèse locale et questions orientées projet fondées sur les comptes rendus IA renseignés, les actions, les missions, les décisions, les **derniers sprints publics effectivement chargés depuis data/sprints/*.json** et les états GitHub vérifiés **dans la session courante**. Préparation d'un contexte à copier dans ChatGPT. **Ce n'est pas un modèle LLM connecté en direct aux chats privés.** |
+| Boîte universelle | `#/control/inbox` | Liste des actions locales ouvertes, échéances dépassées, missions « à vérifier », **blocages des derniers sprints publics vérifiés**, alertes du référentiel daté et raccourcis Gmail/Agenda/ChatGPT. **Aucune récupération des messages Gmail ou notifications externes.** |
 | Missions multi-IA | `#/control/missions` | Création, répartition (ChatGPT, Claude, Codex, Gemini), états à lancer/en cours/à vérifier/terminée, préparation de prompt, copie, redirection vers le fournisseur, résultats déclarés et avertissement de conflits de périmètre. Bouton pour créer un plan de quatre missions coordonnées. **Pas d'exécution directe sur les IA.** |
 | Calendrier | `#/control/calendar` | Événements locaux avec échéances, relevé **daté** des quatre automatisations connues et liens Google Agenda / ChatGPT / Claude. **Pas de connexion aux calendriers privés.** |
 | Activité et développement | `#/control/activity` | Requêtes à la demande sur l'API GitHub **publique** pour commits, PR ouvertes et workflows, avec état partiel signalé. Accès branches/tests/déploiements/versions. Pas de merge, déploiement ou rollback automatique. |
@@ -20,7 +20,7 @@ Les données du centre sont enregistrées sous la clé navigateur `control-comma
 | Budget | `#/control/budget` | Dépenses et budgets indicatifs renseignés manuellement ; comparaison au seuil. Aucune mesure des coûts réels, tokens ou quotas fournisseurs. |
 | Recherche | `#/control/search` | Recherche des projets, actions, missions, décisions et ressources référencés. Pas d'indexation des conversations privées. |
 | Sauvegarde | `#/control/backup` | Export/import de toutes les données navigateur de CONTROL en JSON, option AES-256-GCM avec dérivation PBKDF2-SHA256 et mot de passe de 12 caractères minimum ; le fichier est téléchargé localement. |
-| Règles et sécurité | `#/control/settings` | Configuration locale des règles globales ajoutées aux prompts de mission, consultation des limites et demande facultative de permission Notification Web. Pas de push hors application. |
+| Règles et sécurité | `#/control/settings` | Configuration locale des règles globales ajoutées aux prompts de mission, consultation des limites et demande facultative de permission Notification Web. Rappel d'actions en retard au prochain accès à CONTROL, une fois par jour au maximum après opt-in ; pas de push hors application. |
 | Automatisations | `#/automations` | Gestion des fiches datées / fournisseurs et brouillons manuels livrée précédemment. Aucune écriture directe dans les tâches privées. |
 
 ### Contraintes de sécurité
@@ -50,3 +50,7 @@ Aucun de ces services n'est annoncé comme installé. Ne pas réutiliser la base
 - Simulations de rendu de chacune des 12 routes du centre ; toutes ont produit du HTML sans exception avec DOM simulé.
 - Mise à jour de la navigation responsive et du cache PWA, sans changer le routage du catalogue existant.
 - Aucune confirmation de disponibilité du site GitHub Pages : l'environnement de vérification HTTP extérieur n'a pas pu accéder à son URL. Test visuel et fonctionnel Android nécessaire, particulièrement la PWA et le stockage local.
+
+## Amélioration postérieure : remontée des sprints
+
+Le centre lit **à la demande et dans le navigateur** les derniers rapports réellement enregistrés dans `data/sprints/{pack-pro,banque-ia,ucp,iagile,tcg}.json`. Chaque rapport est identifié par sa date d'exécution et lié à sa source publique. Les comptes rendus non accessibles, incomplets ou absents ne sont jamais considérés comme des preuves de réussite. Ce flux n'accorde aucun accès aux conversations privées : seules les automatisations qui écrivent effectivement des rapports dans le dépôt public alimentent ce canal.
