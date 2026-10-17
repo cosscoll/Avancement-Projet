@@ -60,9 +60,15 @@ function home(){
  $('#add-project').onclick=()=>{$('#add-box').classList.toggle('hidden');if(!$('#add-box').classList.contains('hidden'))$('#add-box input[name="name"]').focus()};
  $('#new-project').onsubmit=e=>{e.preventDefault();const fd=new FormData(e.target),name=String(fd.get('name')).trim(),url=String(fd.get('url')).trim();if(!name)return;if(url&&!chatHost(url)){notify('Utilise un lien ChatGPT valide.');return}const id='custom-'+Date.now();const p={id,name,symbol:name.slice(0,2).toUpperCase(),category:'Projet personnalisé'};state.custom??=[];state.custom.push(p);scoped(id).projectUrl=url;persist();projects.push(p);go(id)};
 }
-function workspace(p,t){active=p.id;tab=t;const d=scoped(p.id),tabs=[['ai','Espaces IA'],['pilot','Gestion'],['resources','Ressources'],['library','Outils IA'],['deploy','Mise en ligne'],['lab','Laboratoire IA'],['discussions','Conversations'],['connect','Connexions']];
+function workspace(p,t){
+ active=p.id;tab=t;
+ if(!Array.isArray(state.uxRecent))state.uxRecent=[];
+ if(state.uxRecent[0]!==p.id){state.uxRecent=[p.id,...state.uxRecent.filter(x=>x!==p.id)].slice(0,8);persist()}
+ const d=scoped(p.id),tabs=[['ai','Espaces IA'],['discussions','Conversations'],['pilot','Gestion'],['resources','Ressources']],moreTabs=[['library','Outils IA'],['deploy','Mise en ligne'],['lab','Laboratoire IA'],['connect','Connexions']];
+ const advanced=moreTabs.some(x=>x[0]===t);
 const nav=tabs.map(([id,label])=>'<button data-tab="'+id+'" role="tab" aria-selected="'+(id===t)+'">'+label+'</button>').join('');
-$('#main').innerHTML='<a class="back" href="#/">← Tous les projets</a><div class="toprow"><div><span class="quiet">'+esc(p.category||'Projet')+'</span><h1>'+esc(nameOf(p))+'</h1><p class="muted">'+esc(p.tagline||p.summary||'Centralisez vos espaces de travail.')+'</p></div><div class="actions"><a class="button primary" href="#/control/manager?project='+encodeURIComponent(p.id)+'">CONTROL IA · Projet</a><a class="button" href="#/control/missions">Missions</a>'+external(d.projectUrl,'ChatGPT','button')+'</div></div><div class="tabs" role="tablist">'+nav+'</div><div id="section"></div>';
+const advancedNav='<details class="clarity-more-tabs" '+(advanced?'open':'')+'><summary>Plus'+(advanced?' · '+esc(moreTabs.find(x=>x[0]===t)?.[1]):'')+'</summary><div class="clarity-advanced">'+moreTabs.map(([id,label])=>'<button type="button" data-tab="'+id+'" aria-current="'+(id===t?'page':'false')+'">'+label+'</button>').join('')+'</div></details>';
+$('#main').innerHTML='<a class="back" href="#/">← Tous les projets</a><div class="toprow"><div><span class="quiet">'+esc(p.category||'Projet')+'</span><h1>'+esc(nameOf(p))+'</h1><p class="muted">'+esc(p.tagline||p.summary||'Centralisez vos espaces de travail.')+'</p></div><div class="actions"><a class="button primary" href="#/control/manager?project='+encodeURIComponent(p.id)+'">CONTROL IA · Projet</a><a class="button" href="#/control/missions">Missions</a>'+external(d.projectUrl,'ChatGPT','button')+'</div></div><div class="clarity-work-nav"><div class="tabs" role="tablist">'+nav+'</div>'+advancedNav+'</div><div id="section"></div>';
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>go(p.id,b.dataset.tab));
 const target=$('#section');
 if(t==='resources')resources(p,d,target);
