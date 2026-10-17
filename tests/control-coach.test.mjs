@@ -39,3 +39,8 @@ test('CONTROL Coach handles costs, recovery and collaboration',()=>{
  assert.equal(coach.advise('J’ai perdu une sauvegarde').category,'donnees');
  assert.equal(coach.advise('Organiser une visio avec mon équipe').category,'equipe');
 });
+
+test('CONTROL Coach never claims to consume project context',()=>{
+ const answer=coach.advise('Aide-moi à organiser ma journée','Projet confidentiel');
+ assert.equal(answer.contextUsed,false);
+});
