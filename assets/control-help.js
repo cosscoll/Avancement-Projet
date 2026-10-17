@@ -58,7 +58,9 @@ function answerFAQ(q,id){const f=kb.find(x=>x.id===id);if(!f)return null;return{
 function pickFAQ(q){if(!kb.length)return null;
  const matches=kb.map(f=>({f,score:rankEntry(f,q)})).sort((a,b)=>b.score-a.score);
  const match=matches[0];const count=words(q).length;
- if(!match||match.score<Math.max(2.7,count>4?4:2.7))return null;
+ if(!match||match.score<Math.max(3.6,count>4?5:3.6))return null;
+ const overlaps=words(q).filter(w=>new Set([...words(match.f.title),...(match.f.keywords||[]).map(norm)]).has(w)).length;
+ if(count>=3&&overlaps/Math.max(1,count)<.35)return null;
  return answerFAQ(q,match.f.id);
 }
 function guideMatch(q){
@@ -84,6 +86,7 @@ function guideAnswer(g,q){const isCost=starts(q,['prix','cout','tarif','gratuit'
  let answer=isCost?'Concernant le prix : '+g.pricing+'. Les tarifs évoluent et doivent être confirmés sur le site officiel. ':g.summary+' ';
  answer+='Le guide contient les étapes, les erreurs fréquentes et une checklist de vérification. Il prépare les actions mais ne publie pas automatiquement ton site.';
  const steps=(g.steps||[]).map(([title,text],i)=>(i+1)+'. '+title+' — '+text);
+ if(starts(q,['404','erreur','probleme','build','vide','css','image','https','dns'])){const tips=(g.issues||[]).slice(0,2).map(([problem,solution])=>problem+' : '+solution);steps.unshift(...tips)}
  return{subject:'guide:'+g.id,title:'Publier avec '+g.name,answer,steps,actions:[action('Afficher le guide complet','deploy')],links:[{label:'Documentation officielle '+g.name,url:g.official}],sources:['Guide CONTROL · '+g.name],suggestions:['Comment vérifier mon site après publication ?','Comment protéger mes clés API ?','Quel hébergeur choisir ?']};
 }
 function toolAnswer(t){return{subject:'tool:'+t.id,title:t.name+' — ressource IA',answer:t.summary+'\n\nCas pratique : '+t.useCase+'\n\nL’outil peut nécessiter un compte, une installation, une clé API ou des frais. Vérifie les conditions auprès de l’éditeur. CONTROL référence cet outil mais ne l’installe pas automatiquement.',steps:[],actions:[action('Explorer les bibliothèques IA','catalog')],links:[{label:'Site officiel '+t.name,url:t.url}],sources:['Catalogue d’outils IA CONTROL · '+t.name],suggestions:['Quels autres outils IA puis-je utiliser ?','Comment mettre mon site en ligne ?']} }
@@ -102,24 +105,29 @@ function decide(q){
  const hasTool=starts(q,['outil','bibliotheque','framework','librairie','plugin','extension','software']);
  const g=guideMatch(q);
  const t=relevantTool(q);
+ const explicitTool=t&&norm(q).includes(norm(t.name));
+ const countRequest=/\b(combien de projets?|nombre de projets?|liste de mes projets|voir mes projets|ou sont mes projets)\b/.test(v);
+ const statusRequest=/\b(combien de (taches|missions)|nombre de (taches|missions)|mes actions ouvertes)\b/.test(v);
  // A request about provider permissions must never masquerade as a deploy action.
  if(hasLink&&starts(q,['conversation','synchron','chatgpt','claude','gemini','codex','acces','api'])){
   const name=/\bclaude\b/.test(v)?'claude':/\bgemini\b/.test(v)?'gemini':/\bcodex\b/.test(v)?'codex':/\bchatgpt\b/.test(v)?'chatgpt':'ia-connexion';
   return cloudNote(answerFAQ(q,name)||defaultHelp(),q);
  }
+ if(hasLink&&g&&starts(q,['github','vercel','ionos','netlify','cloudflare','railway','firebase','render']))return cloudNote(answerFAQ(q,'integrations'),q);
+ if(explicitTool&&!hasDeploy&&!hasLink)return cloudNote(toolAnswer(t),q);
  if(g&&(hasDeploy||hasPrices||starts(q,['github','ionos','vercel','netlify','cloudflare','railway','firebase','render'])))return cloudNote(guideAnswer(g,q),q);
  if(/^(merci|super|ok|bonjour|salut|hello|bonsoir|hey|coucou)\b/.test(v))return defaultHelp();
- if(starts(q,['mes projets','combien de projet','nombre projet','mes taches','mes missions','mon compte'])){
+ if(countRequest||statusRequest){
   const summary=typeof adapter.getSummary==='function'?adapter.getSummary():null;
   if(summary&&(summary.projects!==undefined)){
-    if(starts(q,['combien de projet','nombre projet','mes projets']))return {subject:'my-projects',title:'Tes projets CONTROL',answer:'CONTROL connaît actuellement '+summary.projects+' projet(s) dans cet espace'+(summary.current?' ; projet ouvert : '+summary.current:'')+'. Pour consulter leur contenu et les conversations associées, ouvre leur fiche. Les conversations privées des fournisseurs ne sont pas incluses dans ce décompte.',steps:[],actions:[action('Voir les projets','projects')],links:[],sources:['Vue locale de CONTROL'],suggestions:['Comment associer un projet ChatGPT ?']};
+    if(countRequest)return {subject:'my-projects',title:'Tes projets CONTROL',answer:'CONTROL connaît actuellement '+summary.projects+' projet(s) dans cet espace'+(summary.current?' ; projet ouvert : '+summary.current:'')+'. Pour consulter leur contenu et les conversations associées, ouvre leur fiche. Les conversations privées des fournisseurs ne sont pas incluses dans ce décompte.',steps:[],actions:[action('Voir les projets','projects')],links:[],sources:['Vue locale de CONTROL'],suggestions:['Comment associer un projet ChatGPT ?']};
     return{subject:'my-tasks',title:'Tes actions et missions CONTROL',answer:'Cet espace contient '+(summary.openActions??'un nombre inconnu d’')+' action(s) ouverte(s) et '+(summary.missions??'un nombre inconnu de')+' mission(s) référencée(s). Ces chiffres proviennent des données accessibles dans CONTROL, pas des comptes IA externes.',steps:[],actions:[action('À traiter','inbox'),action('Missions','missions')],links:[],sources:['Vue locale de CONTROL'],suggestions:['Comment créer une automatisation ?']};
   }
  }
  if(hasTool&&t&&!hasDeploy)return cloudNote(toolAnswer(t),q);
- if(g&&hasLink&&starts(q,['github','vercel']))return cloudNote(answerFAQ(q,'integrations'),q);
+ 
  if(g)return cloudNote(guideAnswer(g,q),q);
- if(t&&hasTool)return cloudNote(toolAnswer(t),q);
+ if(t&&(hasTool||explicitTool))return cloudNote(toolAnswer(t),q);
  if(/(outil|bibliotheque|framework|librairie|plugin)/.test(v)&&!t)return cloudNote(answerFAQ(q,'outils')||defaultHelp(),q);
  if(starts(q,['ionos','vercel','netlify','cloudflare','github','firebase','railway','render']))return cloudNote(answerFAQ(q,'hebergeur-choisir')||defaultHelp(),q);
  if(starts(q,['mise en ligne','publier','publication','deployer','heberger','deploy','hebergement','domaine','site web']))return cloudNote(answerFAQ(q,'hebergeur-choisir')||defaultHelp(),q);
