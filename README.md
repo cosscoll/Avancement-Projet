@@ -1,5 +1,10 @@
 # CONTROL — Centre de pilotage des projets
 
+## CONTROL — Nouvelle navigation par projets (17 octobre 2026)
+
+La page d'accueil place les projets en premier. Chaque espace donne accès aux véritables projets de ChatGPT, Claude, Gemini Notebooks et Codex **après association locale d'une URL propre à l'utilisateur** ; ajout possible d'autres IA. L'onglet Gestion permet de consolider les comptes rendus IA fournis volontairement dans l'interface, avec dates et absence explicite de lecture directe des chats privés. [Guide et limitations](docs/ESPACES_MULTI_IA.md).
+
+
 ## Codex — commandes et résultats depuis le téléphone
 
 Un nouvel onglet **Codex** (`#/codex`) est disponible sur le site et dans la barre mobile. Il offre un **pilotage assisté, sans exécution directe** :
