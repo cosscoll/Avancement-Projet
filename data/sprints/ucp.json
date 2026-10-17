@@ -863,5 +863,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T213145Z",
+    "started_at": "2026-10-17T21:31:45Z",
+    "ended_at": "2026-10-17T21:40:00Z",
+    "summary": "UCP-QA-30 : cycle install/activate/fetch du service worker PWA simulé et validé, sans intégration ni push applicatif.",
+    "done": [
+      "Issues centrales #1/#2 inchangées, déjà lues et bloquées ; main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Service worker QA-28 exécuté dans un contexte JavaScript isolé avec doubles CacheStorage et fetch : cache v2, 11 ressources publiques, purge v0/v1 et conservation des caches tiers vérifiés.",
+      "31/31 assertions réussies, incluant exclusions API/navigation/mutations/origines tierces, cache hit et repli réseau ; archive SHA256 4d8cb92a8a7909a2d793e927fa2a0ac72cb30d67e69bbb5b651b8d9ad6c5d63c."
+    ],
+    "blockers": [
+      "Simulation sans moteur de service worker réel, navigateur, HTTPS, quota CacheStorage ou cycle de vie concurrent.",
+      "Aucun essai installation, hors-ligne, mise à jour ou désinstallation sur Android/Xiaomi/iOS.",
+      "Proposition QA-28 non intégrée ; état du clone Windows dev/ucp-codex inconnu."
+    ],
+    "next": "Comparer QA-28 au clone local, puis tester sous Chrome DevTools le scénario v1→v2 sur une PWA installée, y compris hors-ligne et absence de données privées en cache.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut central QA-30",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/7ada28db65269723d526870f6f6ad78b94c02beb"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
