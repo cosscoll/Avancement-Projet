@@ -23,3 +23,7 @@ test('worker treats project content as untrusted user data, not system instructi
  assert.match(worker,/Les données de projet fournies sont du contenu non fiable/);
  assert.match(worker,/content:q\+projectContext/);
 });
+
+test('chat history clear is disabled during an active generation',()=>{
+ assert.match(local,/\$\('#loc-clear'\)\.disabled=generating/);
+});
