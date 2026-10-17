@@ -110,5 +110,34 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/pack-pro.json"
       }
     ]
+  },
+  {
+    "id": "pack-pro-20261017-160825-paris",
+    "started_at": "2026-10-17T16:08:25+02:00",
+    "ended_at": "2026-10-17T14:12:21.508Z",
+    "summary": "Prototype local non marchand porté à 14 pages : nouveau protocole de validation indépendant, matrice publique des 15 procédures, 7 registres et tableur V0.6.1 ; aucune publication du site.",
+    "done": [
+      "Trois recherches GitHub Issues du centre filtrées sur l'auteur cosscoll et pack-pro, aucun résultat retourné",
+      "Page validation.html créée localement : six portes de validation et matrice de huit lignes, tous les états explicitement non attestés",
+      "Liens vers validation.html ajoutés dans l'accueil et Avancement du prototype local",
+      "462/462 contrôles statiques et Chromium par injection HTML réussis sur 14 pages ; impression déclenchée et comportement sans JavaScript vérifiés",
+      "Deux archives ZIP testées et enregistrées dans /Business01/Packs/ ; SHA256 calculés"
+    ],
+    "blockers": [
+      "Écriture GitHub de index.html sur le dépôt vitrine refusée par les contrôles de sécurité ; aucun commit ni déploiement du site",
+      "Navigation HTTP publique et GitHub Pages non vérifiées ; Chromium testé par injection HTML uniquement",
+      "Validation métier indépendante, essai Microsoft Excel réel, conformité, offre et prix non validés ; aucune vente autorisée"
+    ],
+    "next": "Conserver les livrables locaux, obtenir une publication non marchande par une voie autorisée sans contourner les refus, vérifier la recette HTTP publique, puis faire valider les documents et le tableur indépendamment.",
+    "links": [
+      {
+        "label": "Dépôt vitrine public inchangé",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro"
+      },
+      {
+        "label": "Suivi central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/pack-pro.json"
+      }
+    ]
   }
 ]
