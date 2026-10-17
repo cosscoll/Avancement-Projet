@@ -179,7 +179,7 @@
     },
     {
       "title": "Accessibilité de l’application partiellement auditée",
-      "description": "UCP-QA-21 prouve que les propositions QA-18/20 se composent sans violation axe. UCP-QA-22 ajoute isolément le focus sur le h1 après navigation, l’entrée dans les dialogues et le retour au déclencheur : 4/4 contrats focus, 8/8 tests DOM historiques et audits des 16 vues réussis. Aucun navigateur natif, clavier réel, contraste, zoom ou lecteur d’écran n’est validé ; propositions non intégrées.",
+      "description": "UCP-QA-21/22 couvrent la sémantique et le focus en simulation DOM. UCP-QA-32 relève sur la proposition PWA QA-28 des microtextes à 9–11 px et des actions à 36–40 px ; un correctif mobile isolé impose un seuil ergonomique interne de 44 px et passe 17/17 contrôles statiques. Aucun navigateur natif, clavier réel, contraste, zoom, lecteur d’écran, chevauchement ou appareil n’est validé ; propositions non intégrées.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-31 ; QA-31 corrige isolément le repli réseau après erreur CacheStorage, sans push applicatif",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-32 ; QA-32 prépare isolément la lisibilité et les cibles tactiles mobiles, sans push applicatif",
   "baseline_date": "2026-10-18"
 }
