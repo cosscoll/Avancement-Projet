@@ -19,7 +19,7 @@ const DEST={
  settings:['Règles et connexions','#/control/settings','account'],account:['Mon compte','#/settings','account'],
 };
 let adapter={mode:MODE},kb=[],guides=[],tools=[],ready=null,lastSubject=null,history=[],isOpen=false,lastFocus=null;
-let launch,box,list,input,actions,body,status;
+let launch,box,list,input,actions,body,status,generation=0;
 function getHelp(){
  if(ready)return ready;
  ready=Promise.allSettled([
@@ -176,12 +176,13 @@ function go(route){
 }
 async function send(message){
  const q=String(message||'').trim().slice(0,750);if(!q)return;
+ const requestGeneration=generation;
  input.value='';quick([]);
  addMsg('user',q);
  const wait=addMsg('assistant','Recherche de la réponse dans l’aide intégrée…');
  status.textContent='Recherche documentaire en cours';
- try{await getHelp();const result=decide(q);lastSubject=result.subject||null;wait.remove();addMsg('assistant',result.title+'\n\n'+result.answer,result);quick(result.suggestions?.length?result.suggestions:routeLabel());status.textContent='Réponse issue de la documentation CONTROL'}
- catch{wait.remove();addMsg('assistant','Le centre d’aide n’a pas pu charger ses ressources. Réessaie quand la connexion est disponible.');quick(routeLabel());status.textContent='Aide partiellement disponible'}
+ try{await getHelp();if(requestGeneration!==generation)return;const result=decide(q);lastSubject=result.subject||null;wait.remove();addMsg('assistant',result.title+'\n\n'+result.answer,result);quick(result.suggestions?.length?result.suggestions:routeLabel());status.textContent='Réponse issue de la documentation CONTROL'}
+ catch{if(requestGeneration!==generation)return;wait.remove();addMsg('assistant','Le centre d’aide n’a pas pu charger ses ressources. Réessaie quand la connexion est disponible.');quick(routeLabel());status.textContent='Aide partiellement disponible'}
  input.focus();
 }
 function close(){isOpen=false;box.hidden=true;launch.setAttribute('aria-expanded','false');launch.focus()}
@@ -189,7 +190,7 @@ function open(){
  if(!box){return}lastFocus=document.activeElement;isOpen=true;box.hidden=false;launch.setAttribute('aria-expanded','true');input.focus();
  if(list.childElementCount===0){addMsg('assistant','Bonjour ! Je suis l’assistant CONTROL. Je peux t’expliquer les fonctionnalités, t’aider à choisir des outils IA et te guider pour publier un site. Mes réponses sont documentaires et je n’accède pas à tes conversations privées.');quick(routeLabel())}
 }
-function reset(){history=[];lastSubject=null;if(list)list.replaceChildren();if(actions)actions.replaceChildren();if(isOpen)open()}
+function reset(){generation++;history=[];lastSubject=null;if(input)input.value='';if(list)list.replaceChildren();if(actions)actions.replaceChildren();if(isOpen)open()}
 function init(){
  if(document.getElementById('control-help-launch'))return;
  launch=document.createElement('button');launch.id='control-help-launch';launch.className='ch-launch';launch.type='button';launch.setAttribute('aria-label','Ouvrir le chatbot d’assistance CONTROL');launch.setAttribute('aria-controls','control-help-panel');launch.setAttribute('aria-expanded','false');launch.innerHTML='<span class="ch-launch-icon" aria-hidden="true">◈</span><span>Assistance</span>';
