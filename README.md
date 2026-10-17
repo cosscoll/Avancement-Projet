@@ -1,5 +1,9 @@
 # CONTROL — Centre de pilotage des projets
 
+## Visios et rendez-vous — Équipe, clients et prospects (17 octobre 2026)
+
+CONTROL dispose d'un espace **Visios et rendez-vous** (`#/control/meetings`) : choix du projet, date/durée, liens Google Meet, Zoom et Microsoft Teams, invitations à partager manuellement, Google Agenda prérempli ou export .ics, notes post-réunion, suivi des rendez-vous dans le calendrier et mode **Jitsi intégré à l'écran pour des tests internes uniquement**. L'API Jitsi publique ne convient pas à une offre commerciale en production. Aucune réunion n'est créée automatiquement chez les fournisseurs, aucune invitation envoyée sans action de l'utilisateur, aucun appel n'est enregistré dans CONTROL. Le mode Cloud est préparé avec RLS mais reste désactivé. [Détails et limites](docs/VISIOS_RENDEZ_VOUS.md).
+
 ## Commander Claude et Gemini depuis CONTROL (17 octobre 2026)
 
 Nouveau **poste de commande multi-IA** sous `#/control/command`, dans Tous les outils et dans chaque projet : création de missions Claude et Gemini à partir d'un objectif unique, instructions dédiées, liens vers les services officiels, suivi par fournisseur, résultat et URL de preuve, dates et provenance des informations. Ces fonctions sont réellement enregistrées dans CONTROL personnel, sans dépense. L'envoi direct via les API Claude/Gemini est **préparé mais NON actif** : la nouvelle Edge Function sécurisée est uniquement versionnée, sans déploiement ni clé API. Il faudra créer et auditer la base CONTROL Cloud indépendante, autoriser explicitement les appels et les coûts, puis activer séparément les fournisseurs. Les historiques privés des applications Claude/Gemini ne sont pas accessibles automatiquement. [Architecture et procédure d'activation](docs/COMMANDER_CLAUDE_GEMINI.md).
