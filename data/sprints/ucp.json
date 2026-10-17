@@ -520,5 +520,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T032701Z",
+    "started_at": "2026-10-17T03:27:01Z",
+    "ended_at": "2026-10-17T03:32:17.745Z",
+    "summary": "UCP-QA-19 : audit DOM des 16 vues authentifiées des trois rôles ; défaut systémique de hiérarchie des titres démontré et expérience régressive rejetée.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat ; HEAD main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Audit isolé JSDOM 26.1.0/axe-core 4.14.0 : 16 vues rendues, une navigation active par vue et aucun contrôle rendu sans libellé structurel ; 0/16 possède un titre de niveau 1 et 4/16 n’ont aucun titre de page.",
+      "Contrat 4 PASS/2 TODO et npm audit 0 vulnérabilité sur 41 dépendances de production ; expérience de correction rejetée après 15/16 violations heading-order ; lot archivé SHA256 4d1009001f0076a9ddcc89d1042423db69d18291a51f57b246a5623b3a469264."
+    ],
+    "blockers": [
+      "La hiérarchie de titres doit être refondue par écran ; le correctif minimal testé n’est pas intégrable en l’état.",
+      "JSDOM ne prouve ni clavier réel, contrastes, zoom, lecteur d’écran ni comportement navigateur ; aucun staging ou déploiement.",
+      "Aucun code UCP intégré ou poussé ; état du clone Windows dev/ucp-codex inconnu."
+    ],
+    "next": "Concevoir une hiérarchie h1/h2/h3 cohérente pour chaque écran authentifié, puis exécuter QA-17/18/19 sous Chromium avec clavier, zoom, contraste et lecteur d’écran avant toute pull request.",
+    "links": [
+      {
+        "label": "Révision UCP auditée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
