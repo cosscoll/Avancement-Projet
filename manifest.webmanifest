@@ -2,7 +2,7 @@
   "id": "/Avancement-Projet/",
   "name": "CONTROL — Espaces projets et IA",
   "short_name": "CONTROL",
-  "description": "Projets, conversations et liens vers les IA centralisés",
+  "description": "Centraliser projets, espaces IA, ressources et automatisations",
   "lang": "fr",
   "dir": "ltr",
   "start_url": "./#/",
@@ -38,6 +38,10 @@
     {
       "name": "Mes projets",
       "url": "./#/"
+    },
+    {
+      "name": "Automatisations",
+      "url": "./#/automations"
     },
     {
       "name": "Connexions",
