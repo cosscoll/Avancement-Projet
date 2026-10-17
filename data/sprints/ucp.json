@@ -832,5 +832,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T203432Z",
+    "started_at": "2026-10-17T20:34:32Z",
+    "ended_at": "2026-10-17T20:43:00Z",
+    "summary": "UCP-QA-29 : pré-recette HTTP/ASGI du lot PWA QA-28 réussie à travers l’application FastAPI réelle, sans push applicatif ni données réelles.",
+    "done": [
+      "Issues centrales #1/#2 inchangées, déjà lues et bloquées ; main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Application FastAPI chargée avec base SQLite synthétique temporaire, puis base supprimée ; routes accueil, service worker, manifeste et cinq icônes exercées via TestClient.",
+      "41/41 contrôles réussis : codes HTTP, MIME, no-store, CSP/nosniff/anti-framing, garde Host 403, scope service worker et SHA-256 des cinq PNG ; archive SHA256 b373377c885ad203f51d5b4bd3422efa25da9047357ee24002e9a59c8a542212."
+    ],
+    "blockers": [
+      "Le port loopback Uvicorn n’était pas joignable depuis une seconde session d’outil isolée ; validation finale via FastAPI TestClient/ASGI, sans navigateur.",
+      "Aucun HTTPS, Lighthouse, mode hors ligne, migration de cache, installation réelle Android/Xiaomi/iOS ou cycle mise à jour–désinstallation.",
+      "Proposition QA-28 non intégrée ; état du clone Windows dev/ucp-codex inconnu."
+    ],
+    "next": "Comparer QA-28 au clone local, appliquer sur une branche dédiée, puis exécuter la recette HTTPS multi-appareils avec données fictives avant toute pull request.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut central QA-29",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/e739104d72193358dcb07839d14f9a769c9f44bb"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
