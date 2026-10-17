@@ -74,5 +74,44 @@
         "url": "https://www.francenum.gouv.fr/guides-et-conseils/strategie-numerique/comprendre-le-numerique/barometre-france-num-2026-le"
       }
     ]
+  },
+  {
+    "id": "iagile-20261017-114045-paris",
+    "started_at": "2026-10-17T11:40:45+02:00",
+    "ended_at": "2026-10-17T09:43:10.279Z",
+    "summary": "Relecture du journal IAgile, contrôle de sécurité Supabase et vérification de deux licences MIT ; aucune diffusion premium.",
+    "done": [
+      "Aucune issue ouverte [CONSIGNE][iagile] ou [DECISION][iagile] trouvée dans Avancement-Projet ; aucun numéro pris en compte.",
+      "PR IAgile #12 et #77 confirmées ouvertes en brouillon, non fusionnées.",
+      "Supabase vérifié en lecture seule : 4 cours, 47 modules, 283 références externes, 0 compte Auth, 0 objet premium, 0 cours publié.",
+      "Licences racines MIT de Mermaid et json-server vérifiées sur leurs dépôts officiels ; annotation Supabase refusée, statuts inchangés.",
+      "13 tables publiques Academy avec RLS active ; bucket iagile-course-files privé ; contrôles réels inter-comptes non réalisés."
+    ],
+    "blockers": [
+      "V0.9.1 non approuvée, importateur R3 non intégré et module 8 à aligner.",
+      "182 références de licence non contrôlées, 1 partiellement contrôlée ; 0 ressource approuvée pour diffusion.",
+      "Écriture des annotations de licence Supabase refusée par le contrôle de sécurité.",
+      "Absence de comptes de recette et de fichiers premium ; tests Auth/RLS et liens signés réels manquants.",
+      "Accès HTTPS public de la vitrine non confirmé depuis cette session."
+    ],
+    "next": "Valider les ressources Processus et la version pédagogique canonique, intégrer le correctif R3 dans un flux autorisé, puis exécuter une recette privée multi-comptes avant toute publication.",
+    "links": [
+      {
+        "label": "PR Academy #12",
+        "url": "https://github.com/cosscoll/IAgile/pull/12"
+      },
+      {
+        "label": "PR ressources #77",
+        "url": "https://github.com/cosscoll/IAgile/pull/77"
+      },
+      {
+        "label": "Licence Mermaid",
+        "url": "https://github.com/mermaid-js/mermaid/blob/develop/LICENSE"
+      },
+      {
+        "label": "Licence json-server",
+        "url": "https://github.com/typicode/json-server/blob/main/LICENSE"
+      }
+    ]
   }
 ]
