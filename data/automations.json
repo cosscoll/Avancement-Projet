@@ -1,48 +1,72 @@
 {
-  "version": 1,
-  "verified_at": "2026-10-16T10:10:20Z",
-  "source": "Relevé des tâches ChatGPT : instantané, pas d'API temps réel depuis GitHub Pages. Les exécutions et statuts peuvent changer.",
+  "version": 2,
+  "verified_at": "2026-10-17T14:23:07Z",
+  "source": "Instantané des tâches ChatGPT actives observées à la date ci-dessus. Métadonnées publiquement résumées, jamais des instructions privées complètes. Aucun accès temps réel depuis GitHub Pages.",
   "tasks": [
     {
       "id": "pack-pro",
       "title": "Pack Procédures Pro",
-      "schedule": "Chaque heure à XXh10",
+      "projectName": "Pack Procédures Pro",
+      "schedule": "Toutes les heures · XXh10, heure de Paris",
+      "objective": "Construire, tester et améliorer la vitrine et les produits numériques du business Pack Procédures Pro en pré-lancement.",
+      "rules": "Avancer sur le site, les supports, l’accessibilité, les tests et le suivi GitHub. Produire des comptes rendus factuels à chaque session. Respecter les consignes du projet confirmées.",
+      "constraints": "Aucune dépense, paiement réel, commercialisation ni prospection non autorisée. Aucun Work, Codex, agent workspace ou Excel consommant un quota partagé ; ne pas modifier l’automatisation sans instruction directe.",
+      "usage": "Quotas partagés interdits (selon les consignes)",
       "active_at_last_check": true,
       "push_at_last_check": false,
-      "email_at_last_check": false
+      "email_at_last_check": false,
+      "model": "Modèle effectif non vérifié",
+      "conversation": "",
+      "manageUrl": ""
     },
     {
       "id": "banque-ia",
       "title": "Banque Outils IA",
-      "schedule": "Chaque heure à XXh20",
+      "projectName": "Banque Outils IA",
+      "schedule": "Toutes les heures · XXh20, heure de Paris",
+      "objective": "Développer la boutique et les produits numériques Banque Outils IA, vérifier leur utilité et préparer les tests avant lancement.",
+      "rules": "Documenter les changements, effectuer les tests possibles, ne pas inventer de validations terrain et publier un bilan de sprint factuel.",
+      "constraints": "Aucune dépense ni facturation ; pas de vente réelle ou collecte de données personnelles. Work, Codex, agents workspace et outils consommant un quota partagé interdits à la tâche.",
+      "usage": "Quotas partagés interdits (selon les consignes)",
       "active_at_last_check": true,
       "push_at_last_check": false,
-      "email_at_last_check": false
+      "email_at_last_check": false,
+      "model": "Modèle effectif non vérifié",
+      "conversation": "",
+      "manageUrl": ""
     },
     {
       "id": "ucp",
       "title": "UCP — Construction autonome",
-      "schedule": "Chaque heure à XXh30",
+      "projectName": "Un Coup de Pouce",
+      "schedule": "Toutes les heures · XXh30, heure de Paris",
+      "objective": "Préparer et améliorer la plateforme Un Coup de Pouce tout en préservant l'isolation des travaux de développement Codex effectués en parallèle.",
+      "rules": "Vérifier les éléments GitHub et les consignes autorisées ; se limiter aux actions non conflictuelles, audits, conception et suivi ; fournir un bilan vérifiable après chaque session.",
+      "constraints": "Ne pas écraser le travail local Codex, ne pas utiliser Work/Codex via l’automatisation. Aucun achat, paiement réel, données privées publiées, campagne ou contact externe non autorisé.",
+      "usage": "Quotas partagés interdits (selon les consignes)",
       "active_at_last_check": true,
       "push_at_last_check": false,
-      "email_at_last_check": false
+      "email_at_last_check": false,
+      "model": "Modèle effectif non vérifié",
+      "conversation": "",
+      "manageUrl": ""
     },
     {
       "id": "iagile",
       "title": "IAgile — Pilotage autonome",
-      "schedule": "Chaque heure à XXh40",
+      "projectName": "IAgile",
+      "schedule": "Toutes les heures · XXh40, heure de Paris",
+      "objective": "Terminer les quatre formations premium IAgile, les ressources pédagogiques et les contrôles d’accès aux contenus privés.",
+      "rules": "Vérifier licences, sécurité, accès et contenus avant publication. Tenir une trace des travaux effectués et des blocages, sans inventer de tests.",
+      "constraints": "Ne jamais diffuser les formations premium dans le dépôt public ; aucune dépense, vente, campagne ni contact externe non autorisé. Work, Codex, agents workspace et autres quotas partagés interdits.",
+      "usage": "Quotas partagés interdits (selon les consignes)",
       "active_at_last_check": true,
       "push_at_last_check": false,
-      "email_at_last_check": false
-    },
-    {
-      "id": "tcg",
-      "title": "TCG Thomas Deseur",
-      "schedule": "Chaque jour à 11h05",
-      "active_at_last_check": true,
-      "push_at_last_check": false,
-      "email_at_last_check": false
+      "email_at_last_check": false,
+      "model": "Modèle effectif non vérifié",
+      "conversation": "",
+      "manageUrl": ""
     }
   ],
-  "notifications_note": "Au dernier relevé du 16/10/2026, push et emails des tâches étaient désactivés. L'utilisateur peut changer ces réglages depuis ChatGPT. Ce JSON n'est PAS un inventaire temps réel."
+  "notes": "Données datées ; une tâche peut être modifiée ou désactivée depuis ChatGPT. L’application ne modifie ni la programmation, ni les instructions du fournisseur. Les modèles précis ne sont pas accessibles dans ce relevé."
 }
