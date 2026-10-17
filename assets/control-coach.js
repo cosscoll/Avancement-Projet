@@ -21,7 +21,7 @@ const rules=[
 function advise(question,context=''){
  const q=clean(question).trim();if(!q)return null;
  const rule=rules.find(r=>r.match.test(q)||r.match.test(normalize(q)))||{id:'general',title:'Clarifier et avancer',steps:['Définis le résultat précis que tu souhaites obtenir.','Décompose-le en une action immédiate et une vérification simple.','Identifie les informations ou autorisations manquantes.','Note la prochaine étape dans ton projet.'],question:'Quel résultat concret souhaites-tu obtenir ?'};
- return {category:rule.id,title:rule.title,steps:rule.steps.slice(),question:rule.question,contextUsed:!!clean(context).trim(),disclaimer:'Conseils préparés localement : aucune action n’a été exécutée ni aucun service externe consulté.'};
+ return {category:rule.id,title:rule.title,steps:rule.steps.slice(),question:rule.question,contextUsed:false,disclaimer:'Conseils préparés localement : aucune action n’a été exécutée ni aucun service externe consulté.'};
 }
 function mount(root,options={}){
  if(!root||root.querySelector('[data-control-coach]'))return;
@@ -31,8 +31,7 @@ function mount(root,options={}){
  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
  wrap.querySelector('form').addEventListener('submit',e=>{
   e.preventDefault();const q=wrap.querySelector('textarea').value;
-  let context='';if(options.getContext&&options.hasConsent?.()){try{context=clean(options.getContext())}catch{}}
-  const answer=advise(q,context);
+  const answer=advise(q);
   wrap.querySelector('[data-coach-result]').innerHTML='<h3>'+esc(answer.title)+'</h3><ol>'+answer.steps.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol><p><strong>Pour préciser :</strong> '+esc(answer.question)+'</p><small>'+esc(answer.disclaimer)+'</small><div class="loc-chat-actions"><button type="button" data-coach-use>Approfondir avec l’IA</button><button type="button" data-coach-copy>Copier le plan</button></div>';
   const plan=answer.title+'\n'+answer.steps.map((step,i)=>(i+1)+'. '+step).join('\n')+'\nQuestion : '+answer.question;
   wrap.querySelector('[data-coach-copy]').addEventListener('click',async()=>{
