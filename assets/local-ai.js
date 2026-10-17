@@ -125,7 +125,7 @@ function mount(root,adapter={}){
  });
  root.__controlLocalStop=()=>{disposed=true;stop();worker?.terminate?.();worker=null};
  render();state();
- window.CONTROL_COACH?.mount(root,{hasConsent:()=>contextEnabled&&chosen!=='general',getContext:()=>adapter.getContext?.(chosen)||''});
+ window.CONTROL_COACH?.mount(root,{onCreateAction:typeof adapter.createAction==='function'?title=>adapter.createAction(chosen,title):undefined});
 }
 function unmount(root){const stop=root?.__controlLocalStop;if(typeof stop==='function'){stop();delete root.__controlLocalStop}}
 window.CONTROL_LOCAL_AI={mount,unmount,loadHistory};
