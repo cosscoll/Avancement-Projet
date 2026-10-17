@@ -1,0 +1,36 @@
+/* CONTROL Coach : aide contextuelle instantanée, gratuite, sans réseau.
+   Moteur de conseils déterministe complémentaire au modèle génératif local. */
+(()=>{'use strict';
+const clean=s=>String(s??'').slice(0,2000);
+const rules=[
+ {id:'blocage',match:/bloqu|erreur|bug|marche pas|fonctionne pas|impossible|plant|échec|failed|404|500/i,
+ title:'Débloquer un problème',steps:['Reproduis le problème une fois et note le résultat attendu et le résultat obtenu.','Relève le message exact, la page concernée et les dernières modifications.','Teste sur un autre navigateur ou en navigation privée sans supprimer tes données.','Isole une seule cause possible, teste une correction et note le résultat.'],question:'Quel est le message d’erreur exact et sur quelle page apparaît-il ?'},
+ {id:'priorite',match:/priorit|commencer|organis|planif|débord|trop de tâches|urgent/i,
+ title:'Retrouver les priorités',steps:['Liste les trois résultats les plus importants pour ce projet.','Classe les tâches selon impact, urgence et dépendances.','Choisis une action faisable en moins de 30 minutes.','Fixe un point de contrôle et note le prochain blocage.'],question:'Quel résultat doit absolument être atteint en premier ?'},
+ {id:'client',match:/client|prospect|devis|relance|rendez.vous|commercial/i,
+ title:'Avancer avec un client',steps:['Clarifie le besoin et le résultat attendu.','Vérifie les informations manquantes avant de promettre un délai.','Prépare une réponse courte avec prochaine action et échéance.','Enregistre le suivi dans le projet concerné.'],question:'S’agit-il d’une prise de contact, d’un devis ou d’un suivi ?'},
+ {id:'securite',match:/api|clé|token|secret|permission|connexion|authent|sécur/i,
+ title:'Vérifier une intégration',steps:['Identifie le service et les permissions strictement nécessaires.','Ne colle jamais de clé secrète dans un dépôt public ou dans une conversation.','Teste la connexion avec un compte et des données de test.','Vérifie les accès refusés et la révocation des permissions.'],question:'Quel service veux-tu connecter et quelle action doit-il effectuer ?'},
+ {id:'livraison',match:/publier|déploi|github|production|mise en ligne|site|application/i,
+ title:'Préparer une mise en ligne',steps:['Vérifie les modifications et l’état des tests automatisés.','Teste les parcours essentiels sur ordinateur et téléphone.','Contrôle les secrets, les accès et les données privées.','Publie puis vérifie l’URL publique et le retour arrière possible.'],question:'Quelle URL ou fonctionnalité doit être validée ?'}
+];
+function advise(question,context=''){
+ const q=clean(question).trim();if(!q)return null;
+ const rule=rules.find(r=>r.match.test(q))||{id:'general',title:'Clarifier et avancer',steps:['Définis le résultat précis que tu souhaites obtenir.','Décompose-le en une action immédiate et une vérification simple.','Identifie les informations ou autorisations manquantes.','Note la prochaine étape dans ton projet.'],question:'Quel résultat concret souhaites-tu obtenir ?'};
+ return {category:rule.id,title:rule.title,steps:rule.steps.slice(),question:rule.question,contextUsed:!!clean(context).trim(),disclaimer:'Conseils préparés localement : aucune action n’a été exécutée ni aucun service externe consulté.'};
+}
+function mount(root,options={}){
+ if(!root||root.querySelector('[data-control-coach]'))return;
+ const wrap=document.createElement('section');wrap.dataset.controlCoach='';wrap.className='loc-settings';wrap.style.marginBlock='16px';
+ wrap.innerHTML='<h2>Assistant de dépannage et de tâches</h2><p>Une aide immédiate, même sans charger le modèle IA. Les conseils restent sur cet appareil.</p><form data-coach-form><label for="control-coach-question">Que souhaites-tu résoudre ?</label><textarea id="control-coach-question" rows="2" maxlength="1200" placeholder="Ex. Je suis bloqué pour publier mon site" required></textarea><button type="submit" class="loc-primary">Obtenir un plan d’action</button></form><div data-coach-result role="status" aria-live="polite"></div>';
+ const anchor=root.querySelector('.loc-model');if(anchor)anchor.before(wrap);else root.append(wrap);
+ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+ wrap.querySelector('form').addEventListener('submit',e=>{
+  e.preventDefault();const q=wrap.querySelector('textarea').value;
+  let context='';if(options.getContext&&options.hasConsent?.()){try{context=clean(options.getContext())}catch{}}
+  const answer=advise(q,context);
+  wrap.querySelector('[data-coach-result]').innerHTML='<h3>'+esc(answer.title)+'</h3><ol>'+answer.steps.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol><p><strong>Pour préciser :</strong> '+esc(answer.question)+'</p><small>'+esc(answer.disclaimer)+'</small>';
+ });
+}
+window.CONTROL_COACH={advise,mount};
+})();
