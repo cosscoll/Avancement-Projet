@@ -121,7 +121,7 @@ function projectPage(){
  '<div class="surface"><div class="row"><h2>'+H(names[t])+'</h2>'+pill(relevant.length+' élément(s)')+'</div>'+
  (relevant.length?relevant.map(itemRow).join(''):empty('Aucun élément dans cette catégorie. Ajoute une conversation, un dossier ou une tâche pour démarrer.'))+'</div>'+
  (t==='ai_space'?panel('Connecter vos projets ChatGPT, Claude et Gemini','<p class="muted">Associe ici les URL de tes espaces privés. Leur contenu reste dans l’application officielle du fournisseur. Les abonnements ChatGPT, Claude et Gemini ne donnent pas automatiquement accès à leurs API.</p><div class="btnrow">'+Object.entries(providers).map(([p,u])=>ext(u,'Ouvrir '+p)).join('')+'</div>'):'')+
- panel('Outils du projet','<details class="clarity-project-toolset"><summary>Outils supplémentaires et mise en ligne</summary><div class="btnrow">'+btn('Laboratoire IA','lab',p.id)+btn('Bibliothèques IA','catalog',p.id)+btn('Mettre en ligne','deploy',p.id)+'</div></details>')+
+ '<details class="clarity-helpnote"><summary>Outils du projet · Laboratoire IA, bibliothèques et publication</summary><div class="btnrow" style="margin-top:12px">'+btn('Laboratoire IA','lab',p.id)+btn('Bibliothèques IA','catalog',p.id)+btn('Mettre en ligne','deploy',p.id)+'</div></details>'+
  '<section id="project-editor" class="surface" hidden></section>'}
 function itemForm(kind,proj='',item=null){const i=item||{},type=kind||'task',p=proj||i.project_id||'';
  return '<form data-form="save-item" data-record="'+H(i.id||'')+'"><input type="hidden" name="kind" value="'+H(type)+'"><input type="hidden" name="project_id" value="'+H(p)+'">'+
