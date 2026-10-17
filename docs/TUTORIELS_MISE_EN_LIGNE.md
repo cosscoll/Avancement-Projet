@@ -51,7 +51,7 @@ Les tutoriels sont **complémentaires** des quatre formations. Le parcours « Cr
 - Relecture de la documentation officielle GitHub, IONOS, Vercel, Netlify, Cloudflare, Render, Railway, Firebase.
 - Validation du catalogue : 10 guides, étapes complètes, liens HTTPS et intégrations explicitement qualifiées.
 - Syntaxe JavaScript des modules modifiés.
-- Simulation de rendu : **10 cartes et 10 tutoriels visibles**, filtre « serveur » produisant 2 guides, prompt IA copie les avertissements de déploiement.
+- Simulation de rendu : **10 guides dans la base, dont 4 cartes affichées initialement**, filtre « serveur » produisant 2 guides, prompt IA copie les avertissements de déploiement.
 - Vérification du lien entre le guide GitHub et la route d'activité de l'application.
 - Tests automatiques structurels ajoutés au dépôt mais **non exécutés dans une vraie session Node/CI** au moment de l'intégration.
 - Non vérifié sur appareil Android réel et publication GitHub Pages non confirmée : il faut valider le déploiement et la mise à jour de la PWA dans le navigateur.
