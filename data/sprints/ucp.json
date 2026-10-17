@@ -551,5 +551,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T072817Z",
+    "started_at": "2026-10-17T07:28:17Z",
+    "ended_at": "2026-10-17T07:29:26.468Z",
+    "summary": "UCP-QA-20 : proposition isolée de hiérarchie sémantique fermant les défauts de titres de QA-19, avec contrats et suite DOM réussis.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat ; HEAD main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Deux diffs applicables préparés pour app.js et deux sélecteurs de frontend.test.cjs : 16/16 vues authentifiées ont exactement un titre de niveau 1, aucune violation heading-order, navigation active et libellés structurels conservés.",
+      "Exécutions réelles : 6/6 tests QA-20 et 8/8 tests DOM historiques adaptés réussis ; npm audit 0 vulnérabilité déclarée sur 41 dépendances de production ; archive SHA256 d7638a59e90becd8b4a4b7f8a31d8d76fd7ebc1dfc31a752882b19d791476255."
+    ],
+    "blockers": [
+      "Proposition non intégrée, non poussée et non testée en navigateur réel ; JSDOM ne valide pas clavier, contrastes, zoom ou lecteur d’écran.",
+      "La violation region de la barre de statut, déjà décrite par QA-18, reste hors périmètre.",
+      "État du clone Windows dev/ucp-codex inconnu ; aucun rapprochement automatique effectué."
+    ],
+    "next": "Comparer QA-20 à dev/ucp-codex lorsqu’il sera publié, puis exécuter QA-17 à QA-20 sous Chromium avec clavier, zoom, contrastes et lecteur d’écran avant toute pull request.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
