@@ -78,7 +78,7 @@ function mount(root,a={}){
  const byId=id=>list().find(m=>m.id===id);
  const card=m=>'<article class="vs-card"><div class="vs-card-head"><span class="vs-category">'+E(types[m.type])+'</span><h3>'+E(m.title)+'</h3><p>'+E(fmt(m.startsAt))+' · '+E(m.minutes)+' min · '+E(m.provider)+'</p><small>'+E(projectName(m))+'</small></div>'+
  '<div class="vs-actions"><a href="'+E(m.url)+'" class="vs-join" target="_blank" rel="noopener noreferrer">Rejoindre ↗</a><button type="button" data-invite="'+E(m.id)+'">Inviter</button><button type="button" data-calendar="'+E(m.id)+'">Agenda</button><button type="button" data-ics="'+E(m.id)+'">.ics</button></div>'+
- (m.provider==='Jitsi (test)'?'<p class="vs-hint">Test uniquement : meet.jit.si n’est pas recommandé pour une intégration commerciale.</p><button type="button" data-embed="'+E(m.id)+'">Tester la visio intégrée</button>':'')+
+ (m.provider==='Jitsi (test)'?'<p class="vs-hint">Test uniquement : meet.jit.si n’est pas recommandé pour une intégration commerciale.</p>'+(a.allowInlineVideo===false?'<p class="vs-hint">Visio intégrée indisponible dans CONTROL Cloud pour respecter la politique de sécurité. Utilise « Rejoindre ».</p>':'<button type="button" data-embed="'+E(m.id)+'">Tester la visio intégrée</button>'):'')+
  '<details class="vs-notes" '+(active===m.id?'open':'')+'><summary>Compte rendu et gestion</summary><form data-update="'+E(m.id)+'"><label>Notes après réunion<textarea class="vs-input" name="notes" maxlength="4000" rows="3">'+E(m.notes||'')+'</textarea></label><div class="vs-actions"><button type="submit">Enregistrer les notes</button><button type="button" data-remove="'+E(m.id)+'">Supprimer la fiche</button></div></form></details></article>';
  function paint(){
   const now=Date.now(),entries=list().filter(ok).sort((x,y)=>Date.parse(x.startsAt)-Date.parse(y.startsAt));
@@ -117,6 +117,7 @@ function mount(root,a={}){
   notice('Fichier calendrier téléchargé. Ajoute-le dans l’agenda de ton choix.');
  }
  async function embed(m){
+  if(a.allowInlineVideo===false){notice('La visio intégrée est désactivée dans cet espace. Ouvre la réunion chez le fournisseur.',true);return}
   if(m.provider!=='Jitsi (test)')return;
   const panel=root.querySelector('#vs-video'),host=root.querySelector('#vs-frame');leave();panel.hidden=false;host.replaceChildren();panel.scrollIntoView({block:'start'});
   notice('Chargement du module Jitsi. Micro et caméra nécessitent ton autorisation.');
