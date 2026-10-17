@@ -44,3 +44,8 @@ test('CONTROL Coach never claims to consume project context',()=>{
  const answer=coach.advise('Aide-moi à organiser ma journée','Projet confidentiel');
  assert.equal(answer.contextUsed,false);
 });
+
+test('specific coordination intent wins over generic organization keyword',()=>{
+ assert.equal(coach.advise('Organiser une visio avec mon équipe').category,'equipe');
+ assert.equal(coach.advise('Comment organiser mes priorités ?').category,'priorite');
+});
