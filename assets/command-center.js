@@ -18,7 +18,7 @@ function sourceLink(project,provider){const x=openProject(project);return provid
 function availableAgents(){const ids=new Set(agents.map(a=>a.id));for(const p of ctx.projects){const d=openProject(p.id);for(const key of Object.keys(d.spaces||{}))ids.add(key);for(const key of (d.customProviders||[]))ids.add(key)}return [...ids]}
 function providerURL(project,provider){return safe(sourceLink(project,provider))||agents.find(x=>x.id===provider)?.url||''}
 function storage(){try{const a=JSON.parse(localStorage.getItem(KEY)||'{}');return a&&typeof a==='object'&&!Array.isArray(a)?a:{}}catch{return{}}}
-function init(){db=Object.assign({version:1,actions:[],missions:[],events:[],expenses:[],decisions:[],messages:[],globalRules:'Aucune dépense, abonnement, achat de crédits ou action engageante sans autorisation explicite. Ne pas utiliser de quotas partagés interdits par les consignes du projet. Ne pas publier de données sensibles. Vérifier les résultats avant de les annoncer terminés.',notifications:false},storage());for(const key of ['actions','missions','events','expenses','income','decisions','messages'])if(!Array.isArray(db[key]))db[key]=[]}
+function init(){db=Object.assign({version:1,actions:[],missions:[],events:[],expenses:[],decisions:[],messages:[],globalRules:'Aucune dépense, abonnement, achat de crédits ou action engageante sans autorisation explicite. Ne pas utiliser de quotas partagés interdits par les consignes du projet. Ne pas publier de données sensibles. Vérifier les résultats avant de les annoncer terminés.',notifications:false},storage());for(const key of ['actions','missions','events','meetings','expenses','income','decisions','messages'])if(!Array.isArray(db[key]))db[key]=[]}
 function save(){try{db.lastChanged=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(db));return true}catch{toast('Stockage indisponible ou plein. Effectue une sauvegarde.');return false}}
 function toast(m){const e=$('#toast');if(e){e.textContent=m;e.classList.remove('hidden');setTimeout(()=>e.classList.add('hidden'),4200)}}
 function cap(s,n=320){s=String(s||'');return s.length>n?s.slice(0,n)+'…':s}
@@ -122,6 +122,7 @@ function missions(){const cards=db.missions.slice().reverse(),counts=['todo','do
 function calendar(){const now=new Date().toISOString().slice(0,10),future=db.events.slice().sort((a,b)=>a.date.localeCompare(b.date));
  const content='<div class="two">'+box('Agenda des projets',future.length?future.map(e=>'<div class="inbox-item"><div><strong>'+h(e.title)+'</strong><small>'+h(pname(e.project))+' · '+h(e.date)+(e.details?' · '+h(cap(e.details,90)):'')+'</small></div>'+btn('Supprimer','delete-event:'+e.id)+'</div>').join(''):'<p class="empty">Aucun événement enregistré.</p>')+
  box('Ajouter un événement','<form id="new-event">'+field('Intitulé','title','','text','required maxlength="160"')+selectProject('')+field('Date et heure','date',now+'T09:00','datetime-local','required')+textarea('Détails','details','','rows="3"')+'<button class="primary">Ajouter à CONTROL</button></form>')+'</div>'+
+ box('Visios et rendez-vous','<p class="muted">Réunions internes et rendez-vous clients : lien, invitation à partager, calendrier et compte rendu. Les visioconférences utilisent le fournisseur choisi.</p><a class="button primary" href="#/control/meetings">Ouvrir les visios →</a>')+
  box('Calendriers externes','<p class="muted">Google Agenda et les calendriers des IA restent gérés dans leurs services respectifs. CONTROL n’affiche pas leurs rendez-vous privés sans authentification dédiée.</p><div class="actions">'+href('https://calendar.google.com/calendar/u/0/r/','Google Agenda')+href('https://chatgpt.com/scheduled','Tâches ChatGPT')+href('https://claude.ai/','Claude')+'</div>')+
  box('Automatisations connues','<div id="c-auto-preview"><p class="muted">Accéder à la programmation des tâches depuis le catalogue daté.</p><a class="button" href="#/automations">Ouvrir les automatisations →</a></div>');
  $('#main').innerHTML=view('Calendrier','Échéances, événements et automatisations',content);
@@ -252,11 +253,21 @@ function command(){
  }
  });
 }
+function meetings(){
+ const target=$('#main');if(!window.CONTROL_VISIOS){target.innerHTML=note('Les visios ne sont pas chargées. Actualise CONTROL.');return}
+ const project=new URLSearchParams(location.hash.split('?')[1]||'').get('project')||'';
+ window.CONTROL_VISIOS.mount(target,{mode:'personal',projectId:project,projects:ctx.projects,
+ list:()=>db.meetings,
+ create:async m=>{if(m.projectId&&!ctx.projects.some(x=>x.id===m.projectId))throw Error('Projet introuvable.');db.meetings.push(m);if(!save()){db.meetings.pop();throw Error('Impossible de sauvegarder le rendez-vous.')}return true},
+ update:async(m,values)=>{const row=db.meetings.find(x=>x.id===m.id);if(!row)throw Error('Fiche introuvable.');const previous={...row};Object.assign(row,values);if(!save()){Object.assign(row,previous);throw Error('Échec du stockage.')}return true},
+ remove:async m=>{const index=db.meetings.findIndex(x=>x.id===m.id);if(index<0)throw Error('Fiche introuvable.');const old=db.meetings.splice(index,1)[0];if(!save()){db.meetings.splice(index,0,old);throw Error('Suppression impossible.')}return true}
+ });
+}
 function tools(){
  const groups=[
   {name:'Essentiels',subtitle:'Ce que tu utilises au quotidien',open:true,tools:[['command','Commander Claude & Gemini','Missions et résultats centralisés'],['missions','Missions IA','Préparer et suivre le travail'],['lab','Laboratoire IA','Créer des briefs et contrôler les réponses'],['library','Ressources','Tes liens et documents'],['search','Rechercher','Retrouver un projet ou un fichier']]},
   {name:'Explorer',subtitle:'Apprendre, créer et publier',open:false,tools:[['catalog','Bibliothèques IA','87 outils et 12 kits pratiques'],['deploy','Mise en ligne','Guides GitHub, IONOS et autres'],['activity','GitHub et tests','Suivi des dépôts publics']]},
-  {name:'Organiser',subtitle:'Planifier et garder le contrôle',open:false,tools:[['calendar','Calendrier','Échéances enregistrées'],['memory','Décisions','Historique de projet'],['budget','Budget et quotas','Suivi déclaratif des coûts'],['backup','Sauvegardes','Exporter ou importer tes données'],['settings','Paramètres','Règles et confidentialité'],['inbox','À traiter','Actions prioritaires']]}
+  {name:'Organiser',subtitle:'Planifier et garder le contrôle',open:false,tools:[['meetings','Visios et rendez-vous','Équipe, clients et prospects'],['calendar','Calendrier','Échéances enregistrées'],['memory','Décisions','Historique de projet'],['budget','Budget et quotas','Suivi déclaratif des coûts'],['backup','Sauvegardes','Exporter ou importer tes données'],['settings','Paramètres','Règles et confidentialité'],['inbox','À traiter','Actions prioritaires']]}
  ];
  const markup=groups.map((group,index)=>'<details class="clarity-toolgroup" '+(group.open?'open':'')+'><summary><span><strong>'+h(group.name)+'</strong><small>'+h(group.subtitle)+'</small></span><span class="clarity-chevron">⌄</span></summary><div class="clarity-toolcards">'+group.tools.map(([route,title,description])=>'<a class="clarity-tool-link" href="#/control/'+h(route)+'"><strong>'+h(title)+'</strong><small>'+h(description)+'</small><span aria-hidden="true">→</span></a>').join('')+'</div></details>').join('');
  $('#main').innerHTML=view('Tous les outils','Les essentiels d’abord. Le reste est rangé par usage.',markup);
@@ -312,6 +323,6 @@ function paintSprints(selector,onlyBlockers=false){const out=$(selector);if(!out
  '</div>'+href('https://github.com/'+OWNER+'/Avancement-Projet/blob/main/data/sprints/'+encodeURIComponent(id)+'.json','Preuve')+'</div>').join(''):tiny(onlyBlockers?'Aucun blocage dans les derniers rapports accessibles.':'Aucun sprint accessible.');
  const n=Object.keys(sprintLoaded).length;if(n<SPRINT_IDS.length)out.innerHTML+=tiny((SPRINT_IDS.length-n)+' source(s) non vérifiée(s), information potentiellement partielle.');
 }
-function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,command,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,budget,backup,settings,search};(pages[page]||manager)()}
+function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,meetings,command,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,budget,backup,settings,search};(pages[page]||manager)()}
 window.CONTROL_CENTER={render};
 })();
