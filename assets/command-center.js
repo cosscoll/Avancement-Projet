@@ -138,6 +138,7 @@ function library(){const refs=[...linksPage(),...(db.resources||[])].filter(x=>s
  $('#main').innerHTML=view('Bibliothèque','Documents, Drive, GitHub et liens de projet',note('La recherche ne lit pas le contenu privé des fichiers Drive : elle explore uniquement les liens enregistrés.')+
  box('Rechercher','<div class="formgrid"><label>Mot clé<input class="field" id="lib-search" type="search" placeholder="Drive, document, site…"></label><label>Projet<select class="field" id="lib-project">'+projopts()+'</select></label></div><div id="lib-list"></div>')+
  box('Ajouter une ressource','<form id="new-resource">'+field('Nom','label','','text','required maxlength="140"')+selectProject('')+field('URL','url','','url','required')+'<div class="actions"><button class="primary">Ajouter</button>'+btn('Coller depuis le presse-papiers','paste-link')+'</div></form>')+
+ box('Laboratoire IA intégré','<p class="muted">Briefs de missions avec contexte, comparaison de réponses, audit HTML, validation JSON, comparaison de versions, plans de recette et masquage de secrets. Les IA ne sont pas exécutées automatiquement.</p><a class="button primary" href="#/control/lab">Ouvrir le Laboratoire IA →</a>')+
  box('Explorer les bibliothèques IA','<p class="muted">87 outils à découvrir : 3D, agents, automatisations et productivité, en complément des formations IAgile.</p><a class="button primary" href="#/control/catalog">Découvrir les outils IA →</a>')+
  box('Mettre un site en ligne','<p class="muted">Tutoriels pas à pas pour GitHub Pages, IONOS, Vercel, Netlify, Cloudflare, Render, Railway et Firebase. Aide IA pour préparer les déploiements.</p><a class="button primary" href="#/control/deploy">Voir les guides de publication →</a>')+
  box('Liens généraux','<div class="actions">'+href('https://drive.google.com/drive/u/0/my-drive','Google Drive')+href('https://github.com/'+OWNER,'GitHub')+'</div>'));
@@ -193,7 +194,33 @@ function deploy(){
  return true;}
  });
 }
-function tools(){const tiles=[['inbox','Boîte universelle','Actions et validations'],['missions','Missions IA','Coordination et transmission'],['activity','GitHub et tests','Code et déploiement'],['calendar','Calendrier','Dates et échéances'],['library','Bibliothèque','Documents et liens'],['catalog','Bibliothèques IA','87 outils classés par formation IAgile'],['deploy','Mettre un site en ligne','10 guides GitHub, IONOS, Vercel et autres'],['memory','Mémoire des projets','Décisions et contexte'],['budget','Budget et quotas','Dépenses et restrictions'],['backup','Sauvegarde','Exporter ou restaurer'],['search','Recherche universelle','Retrouver un élément'],['settings','Règles et sécurité','Garde-fous et connexions']];
+function lab(){
+ const target=$('#main');if(!window.CONTROL_LAB){target.innerHTML=note('Laboratoire IA indisponible : actualise CONTROL.');return}
+ const selected=new URLSearchParams(location.hash.split('?')[1]||'').get('project')||'';
+ window.CONTROL_LAB.mount(target,{mode:'personal',projectId:selected,projects:ctx.projects,
+  getProject:(key)=>{
+   const p=ctx.projects.find(p=>p.id===key);if(!p)return{};
+   const d=ctx.state?.[key]||{};
+   const localActions=db.actions.filter(x=>x.project===key&&x.status!=='done').slice(0,5);
+   const localMissions=db.missions.filter(x=>x.project===key&&x.status!=='done').slice(0,5);
+   const decisions=db.decisions.filter(x=>x.project===key).slice(-3);
+   const context=[...localActions.map(x=>'Action ouverte : '+x.title+' ('+x.status+')'),...localMissions.map(x=>'Mission '+x.provider+' : '+x.title+' ('+x.status+')'),...decisions.map(x=>'Décision : '+x.title+' — '+String(x.details||'').slice(0,150))];
+   if(p.status)context.unshift('Statut déclaré au '+(p.last_verified||'16/10/2026')+' : '+p.status);
+   if(p.repo)context.push('Dépôt public : https://github.com/'+OWNER+'/'+encodeURIComponent(p.repo));
+   return{context,reports:Object.entries(d.reports||{}).filter(([name,x])=>x?.text).slice(0,3).map(([name,x])=>name+' : '+x.text)};
+  },
+  providerURL:(project,provider)=>providerURL(project,provider),
+  saveMission:async ({projectId,provider,title,instruction})=>{
+    if(!ctx.projects.some(x=>x.id===projectId))throw Error('Projet inconnu.');
+    if(instruction.length>8000)throw Error('Consignes trop longues pour une mission (8000 caractères). Raccourcis le brief ou copie-le directement.');
+    if(db.missions.some(m=>m.project===projectId&&m.provider===provider&&m.instruction===instruction))return false;
+    const mission={id:id(),title:String(title).slice(0,180),project:projectId,provider,files:'',instruction,status:'todo',result:'',at:new Date().toISOString()};
+    db.missions.push(mission);if(!save()){db.missions.pop();throw Error('Enregistrement impossible sur cet appareil.')}
+    return true;
+  }
+ });
+}
+function tools(){const tiles=[['lab','Laboratoire IA','7 outils pour préparer et vérifier'],['inbox','Boîte universelle','Actions et validations'],['missions','Missions IA','Coordination et transmission'],['activity','GitHub et tests','Code et déploiement'],['calendar','Calendrier','Dates et échéances'],['library','Bibliothèque','Documents et liens'],['catalog','Bibliothèques IA','87 outils classés par formation IAgile'],['deploy','Mettre un site en ligne','10 guides GitHub, IONOS, Vercel et autres'],['memory','Mémoire des projets','Décisions et contexte'],['budget','Budget et quotas','Dépenses et restrictions'],['backup','Sauvegarde','Exporter ou restaurer'],['search','Recherche universelle','Retrouver un élément'],['settings','Règles et sécurité','Garde-fous et connexions']];
  $('#main').innerHTML=view('Tous les outils','Modules CONTROL disponibles', '<div class="grid">'+tiles.map(([k,t,sub])=>'<a href="#/control/'+k+'" class="card toolcard"><strong>'+h(t)+'</strong><small>'+h(sub)+'</small></a>').join('')+'</div>');
 }
 function settings(){$('#main').innerHTML=view('Règles et sécurité','Protection des projets et limites des intégrations',box('Règles globales',note('Ces règles sont ajoutées aux demandes de mission copiées depuis CONTROL. Elles ne sont pas automatiquement appliquées sur les comptes Claude, ChatGPT ou Gemini.')+'<form id="global-rules">'+textarea('Règles générales','rules',db.globalRules||'','rows="8" maxlength="10000"')+'<button class="primary">Enregistrer</button></form>')+
@@ -247,6 +274,6 @@ function paintSprints(selector,onlyBlockers=false){const out=$(selector);if(!out
  '</div>'+href('https://github.com/'+OWNER+'/Avancement-Projet/blob/main/data/sprints/'+encodeURIComponent(id)+'.json','Preuve')+'</div>').join(''):tiny(onlyBlockers?'Aucun blocage dans les derniers rapports accessibles.':'Aucun sprint accessible.');
  const n=Object.keys(sprintLoaded).length;if(n<SPRINT_IDS.length)out.innerHTML+=tiny((SPRINT_IDS.length-n)+' source(s) non vérifiée(s), information potentiellement partielle.');
 }
-function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,budget,backup,settings,search};(pages[page]||manager)()}
+function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,budget,backup,settings,search};(pages[page]||manager)()}
 window.CONTROL_CENTER={render};
 })();
