@@ -83,7 +83,7 @@ function inspectHTML(input){
  const links=[...doc.querySelectorAll('a[target="_blank"]')];
  check('Liens externes sécurisés',links.every(a=>/noopener/.test(a.getAttribute('rel')||'')),'rel="noopener" sur les nouveaux onglets');
  const forms=[...doc.querySelectorAll('input:not([type="hidden"]), textarea, select')].filter(el=>!el.hasAttribute('aria-label'));
- check('Formulaires identifiés',forms.every(el=>!!el.labels?.length||!!el.closest('label')||!!(el.id&&doc.querySelector('label[for="'+CSS.escape(el.id)+'"]'))),'Labels ou aria-label sur les champs');
+ check('Formulaires identifiés',forms.every(el=>!!el.labels?.length||!!el.closest('label')||!!(el.id&&[...doc.querySelectorAll('label[for]')].some(label=>label.getAttribute('for')===el.id))),'Labels ou aria-label sur les champs');
  const ids=[...doc.querySelectorAll('[id]')].map(x=>x.id);
  check('IDs HTML uniques',new Set(ids).size===ids.length,'Éviter les identifiants dupliqués');
  check('Pas de clés évidentes dans le code',!/(?:sk-(?:proj-)?|sb_secret_|github_pat_|ghp_)[A-Za-z0-9_-]{12,}/.test(html),'Un scan simple ne remplace pas un audit de secrets');
@@ -107,10 +107,8 @@ function compareText(a,b){
  }
  return{lines:lines.slice(0,90),identical,left:l.length,right:r.length,isTruncated:lines.length>90,notice:'Comparaison ligne par ligne, pas une analyse sémantique ni un diff Git.'};
 }
-let session=0;
 function mount(root,adapter={}){
  if(!root)return;
- const generation=++session;
  const projects=(typeof adapter.projects==='function'?adapter.projects():adapter.projects||[]).filter(p=>p?.id&&p?.name).slice(0,120);
  const selected=projects.some(p=>p.id===adapter.projectId)?adapter.projectId:projects[0]?.id||'';
  const modelChoices=MODELS.map(x=>x);
