@@ -673,5 +673,40 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T132922Z",
+    "started_at": "2026-10-17T13:29:22Z",
+    "ended_at": "2026-10-17T13:41:00Z",
+    "summary": "UCP-QA-24 : interface d’installation PWA Android/Xiaomi/iOS préparée et testée isolément ; deux demandes CONTROL–Codex lues mais bloquées par les interdictions permanentes.",
+    "done": [
+      "Issues #1 et #2 [CONSIGNE][ucp] de cosscoll lues : connexion CONTROL–Codex non exécutée ; aucun accès ou déclenchement Codex créé. HEAD main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Proposition isolée : bouton « Installer UCP sur ce téléphone », gestion beforeinstallprompt/appinstalled, retour accepted/dismissed et aide Chrome Android/Xiaomi ou Safari iPhone/iPad.",
+      "Exécutions réelles : contrats UI+PWA 12 PASS/4 XFAIL stricts, suite DOM 8/8 PASS, syntaxes JavaScript validées ; archive SHA256 23845c9a9f0ad1a81ff5e3f268c51d9eeb6c9107a46ab1169c655cf3514ebe60."
+    ],
+    "blockers": [
+      "Les issues #1/#2 sont incompatibles avec l’interdiction d’utiliser ou connecter Codex depuis cette automatisation ; elles restent lues mais bloquées.",
+      "Icônes UCP carrées 192×192/512×512 et Apple 180×180 absentes ; aucun essai Chrome Android, Xiaomi, Safari iOS/iPadOS ou HTTPS autorisé.",
+      "Proposition non intégrée ; état du clone Windows dev/ucp-codex inconnu."
+    ],
+    "next": "Produire les icônes officielles sans déformation, comparer QA-24 au clone local, puis exécuter la recette multi-appareils avant toute pull request.",
+    "links": [
+      {
+        "label": "Consigne UCP #1",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues/1"
+      },
+      {
+        "label": "Consigne UCP #2",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues/2"
+      },
+      {
+        "label": "Statut UCP central QA-24",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/75a9209312187a7a19d3846395ea885f7cb78097"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
