@@ -207,6 +207,13 @@ function localai(){
  if(!window.CONTROL_LOCAL_AI){root.innerHTML=note('IA locale indisponible : actualise CONTROL.');return}
  const selected=new URLSearchParams(location.hash.split('?')[1]||'').get('project')||'';
  window.CONTROL_LOCAL_AI.mount(root,{projects:ctx.projects,projectId:selected,
+  createAction:(projectId,title)=>{
+   if(!projectId||projectId==='general'||!ctx.projects.some(p=>p.id===projectId))throw Error('Sélectionne un projet avant d’ajouter une tâche.');
+   const action={id:id(),project:projectId,title:cap(title,180),priority:'Normale',status:'todo',due:'',url:'',at:new Date().toISOString()};
+   db.actions.push(action);
+   if(!save()){db.actions.pop();throw Error('Stockage local indisponible.')}
+   return true;
+  },
   getContext:projectId=>{
    const p=ctx.projects.find(p=>p.id===projectId);
    if(!p)return'Projet introuvable ou accès non accordé.';
