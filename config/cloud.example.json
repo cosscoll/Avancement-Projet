@@ -1,0 +1,5 @@
+{
+  "enabled": false,
+  "supabaseUrl": "https://PROJECT_REF.supabase.co",
+  "supabasePublishableKey": "sb_publishable_REPLACE_WITH_NEW_CONTROL_PROJECT_PUBLIC_KEY"
+}
