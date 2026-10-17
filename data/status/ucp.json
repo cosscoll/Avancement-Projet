@@ -179,7 +179,7 @@
     },
     {
       "title": "Accessibilité de l’application partiellement auditée",
-      "description": "UCP-QA-18 contrôle l’écran anonyme. UCP-QA-19 démontre que les 16 vues authentifiées n’ont aucun titre de niveau 1 et que quatre n’ont aucun titre de page. UCP-QA-20 prépare sur copie isolée une hiérarchie h1/h2 cohérente et deux diffs applicables : 16/16 vues ont exactement un niveau 1, aucune violation heading-order, 6 tests ciblés et 8 tests DOM historiques réussis. Proposition non intégrée ; JSDOM ne valide ni clavier réel, contrastes, zoom ni lecteur d’écran.",
+      "description": "UCP-QA-18 contrôle l’écran anonyme et UCP-QA-20 corrige isolément la hiérarchie des 16 vues authentifiées. UCP-QA-21 prouve que les deux propositions se composent : écran anonyme et 16/16 vues sans violation axe, 7/7 contrats ciblés et 8/8 tests DOM historiques adaptés réussis. Proposition non intégrée ; quatre règles axe restent incomplètes et aucun clavier réel, contraste, zoom, lecteur d’écran ou navigateur natif n’est validé.",
       "level": "warning"
     }
   ],
@@ -195,6 +195,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-20 ; QA-20 propose et teste isolément la fermeture de la hiérarchie des titres",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-21 ; QA-21 valide isolément la composition des correctifs d’accessibilité QA-18 et QA-20",
   "baseline_date": "2026-10-17"
 }
