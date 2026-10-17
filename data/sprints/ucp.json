@@ -708,5 +708,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T142934Z",
+    "started_at": "2026-10-17T14:29:34Z",
+    "ended_at": "2026-10-17T14:42:00Z",
+    "summary": "UCP-QA-25 : cinq voies d’installation mobile comparées avec coûts, risques et recommandation progressive ; aucune distribution ni dépense engagée.",
+    "done": [
+      "Issues centrales #1/#2 inchangées, déjà lues et bloquées ; HEAD UCP main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Matrice documentée pour PWA/WebAPK, APK Android signé direct, Google Play, Capacitor et TestFlight/App Store ; PWA retenue comme voie gratuite prioritaire.",
+      "8 assertions documentaires réussies avec Python standard ; archive QA-25 SHA256 4c5f89c98c3d6c5a1e77ccd9d2c85380678df3fc4b598cca1580d28d4372d37e."
+    ],
+    "blockers": [
+      "pytest absent de l’environnement ; aucun test applicatif ou appareil réel exécuté.",
+      "Icônes PWA, gouvernance de clé APK et tests Android/Xiaomi/iOS restent à faire ; état du clone Windows dev/ucp-codex inconnu.",
+      "Frais et publication Google Play/Apple non approuvés ; aucun paquet APK/AAB/IPA produit ou signé."
+    ],
+    "next": "Finaliser les icônes et recetter la PWA sur Android/Xiaomi et iOS ; n’évaluer un prototype Capacitor Android privé qu’après stabilisation du backend et validation sécurité.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut central QA-25",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/0a26495fcb7e742084c10a63644d80d6bcc92667"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
