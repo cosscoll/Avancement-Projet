@@ -2,7 +2,7 @@
 
 ## Fonction et périmètre
 
-Nouvelle bibliothèque publique de **87 outils** sélectionnés, organisée en **9 catégories** et **4 parcours** correspondant aux formations IAgile. Elle inclut **12 kits pratiques** contenant des combinaisons d'outils et un prompt de démarrage personnalisable.
+Nouvelle bibliothèque publique de **87 outils** sélectionnés, organisée en **9 catégories** et **4 parcours** correspondant aux formations IAgile. Elle inclut **12 kits pratiques (repliés par défaut)** contenant des combinaisons d'outils et un prompt de démarrage personnalisable.
 
 Le catalogue est un **complément pratique des formations** : aucun contenu pédagogique premium, aucune correction ou ressource privée d'IAgile n'est publiée dans GitHub.
 
@@ -22,7 +22,7 @@ Catégories : moteurs/scènes 3D, animations/interactions, modèles/ressources 3
 
 - Recherche texte (accent-insensible), filtres par parcours, catégorie, complexité et conditions d'accès.
 - Fiches avec résumé, cas pratique, type d'accès, niveau, lien vers le **site officiel**.
-- Affichage progressif de 24 cartes pour la performance mobile.
+- Affichage progressif de 8 cartes pour la performance mobile.
 - Favoris locaux uniquement dans CONTROL personnel (clé `control-tool-favorites-v1`).
 - **Ajouter au projet** dans CONTROL personnel : ajoute un lien dédoublonné au stockage déjà existant `control-hub-v2`; visible dans l'onglet Ressources du projet.
 - **Ajouter au projet** dans CONTROL Cloud **une fois l'inscription et l'infrastructure activées** : crée une ressource privée `control_items` du compte, vérifiée par les règles de propriété et RLS.
