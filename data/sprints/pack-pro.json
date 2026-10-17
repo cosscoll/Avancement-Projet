@@ -54,5 +54,33 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/pack-pro.json"
       }
     ]
+  },
+  {
+    "id": "pack-pro-20261017-090946-paris",
+    "started_at": "2026-10-17T09:09:46+02:00",
+    "ended_at": "2026-10-17T09:13:49+02:00",
+    "summary": "Prototype non marchand de 12 pages amélioré localement : correction d'un débordement à 280 px sur la page Procédures et recette de sécurité/accessibilité ciblée ; aucune publication démontrée.",
+    "done": [
+      "Trois recherches GitHub Issues filtrées par auteur cosscoll et pack-pro effectuées, sans résultat",
+      "Débordement de procédures.html à 280 px corrigé localement ; reflow vérifié à 280, 320, 390, 768 et 1440 px",
+      "287/287 contrôles ciblés réussis : liens locaux, absence de scripts externes et de paiement réel, scénarios fictifs et interactions Chromium par injection HTML/JS",
+      "Deux archives ZIP locales construites, intégrité ZIP et SHA256 vérifiés"
+    ],
+    "blockers": [
+      "Navigation Chromium HTTP et file:// refusée par l'environnement (ERR_BLOCKED_BY_ADMINISTRATOR) ; aucune recette HTTP publique",
+      "Version locale non intégrée au dépôt vitrine ; aucun commit ni déploiement vérifié",
+      "15 procédures brouillons, validation métier indépendante, tests Microsoft Excel réel, conformité et offre commerciale non validés"
+    ],
+    "next": "Conserver les archives de recette, intégrer la vitrine non marchande seulement par une écriture autorisée, vérifier le site public en navigation réelle et poursuivre les validations métier/Excel.",
+    "links": [
+      {
+        "label": "Dépôt vitrine",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro"
+      },
+      {
+        "label": "Suivi central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/pack-pro.json"
+      }
+    ]
   }
 ]
