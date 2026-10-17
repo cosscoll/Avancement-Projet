@@ -1,5 +1,9 @@
 # CONTROL — Centre de pilotage des projets
 
+## Automatisations multi-IA — 17 octobre 2026
+
+Nouvelle page `#/automations` dans la navigation mobile : index des IA, fiches des quatre tâches ChatGPT actives au relevé daté, détails objectif/règles/contraintes/fréquence/modèle et quotas lorsque connus, saisie manuelle des autres IA, brouillons de modification locaux et liens vers la gestion native du fournisseur. **Pas de contrôle réel ni synchronisation de tâches privées depuis le site public.** [Guide](docs/AUTOMATISATIONS_MULTI_IA.md).
+
 ## CONTROL — Nouvelle navigation par projets (17 octobre 2026)
 
 La page d'accueil place les projets en premier. Chaque espace donne accès aux véritables projets de ChatGPT, Claude, Gemini Notebooks et Codex **après association locale d'une URL propre à l'utilisateur** ; ajout possible d'autres IA. L'onglet Gestion permet de consolider les comptes rendus IA fournis volontairement dans l'interface, avec dates et absence explicite de lecture directe des chats privés. [Guide et limitations](docs/ESPACES_MULTI_IA.md).
