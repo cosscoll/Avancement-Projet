@@ -139,7 +139,7 @@
     },
     {
       "title": "PWA et distribution mobile non validées",
-      "description": "UCP-QA-24 propose isolément l’interface d’installation PWA. UCP-QA-25 compare cinq voies : PWA/WebAPK, APK Android direct, Google Play, Capacitor et TestFlight/App Store. La PWA reste recommandée à court terme ; 8 assertions documentaires réussissent. Aucun appareil réel, paquet signé, compte store, intégration ou publication n’est validé.",
+      "description": "UCP-QA-24 propose isolément l’interface d’installation. UCP-QA-25 compare cinq voies de distribution. UCP-QA-26 ajoute un générateur reproductible de cinq icônes depuis le logo officiel : 9/9 tests synthétiques réussis sur dimensions, proportions, zone sûre, couleur, déterminisme et empreintes. Les vraies icônes ne sont pas encore générées ni validées ; aucun appareil, paquet signé, compte store, intégration ou publication.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-25 ; QA-25 documente les voies d’installation sans intégration ni publication",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-26 ; QA-26 prépare le générateur d’icônes PWA sans intégration",
   "baseline_date": "2026-10-17"
 }
