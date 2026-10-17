@@ -187,5 +187,39 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/sprints/banque-ia.json"
       }
     ]
+  },
+  {
+    "id": "banque-ia-20261017-202220",
+    "started_at": "2026-10-17T20:22:20+02:00",
+    "ended_at": "2026-10-17T20:26:18+02:00",
+    "summary": "Atelier public local : liens profonds vers 12 étapes fictives, historique navigateur et partage dynamique ; tests isolés réussis. Dépôt marketing non modifié.",
+    "done": [
+      "Recherche initiale GitHub search_issues auteur cosscoll : issues #1, #2 (ucp) et #3 (iagile) seulement ; aucune issue ouverte [CONSIGNE][banque-ia] ou [DECISION][banque-ia] ; aucune consigne à accuser.",
+      "Lecture des rapports centraux et de l'état ; index.html marketing toujours ancien (SHA 0b84f57a4a003f97ae3296e18cf781026a531f95), atelier.html et assets/atelier.js absents du dépôt distant.",
+      "Prototype local de 15 pages : permaliens pour 3 scénarios x 4 étapes, liens de partage dynamiques, restauration de l'étape via historique et refus des fragments invalides, blocage des données sensibles.",
+      "Barrière statique PASS : 45 fichiers, 15 pages, 133 liens ; tests Chromium isolés 48 combinaisons permaliens PASS, 3 largeurs fragments invalides PASS, tests anciens de liens et impression PASS, SEO 15/15 PASS, profondeur 1 test pytest PASS.",
+      "Archives site SHA256 ba62ecc99d787a9815b1ca711423ab8968e3417e593d047fded36fa97d2190aa et patch SHA256 545252197600e912aa4dc3297d95ae11ad918f359f3c4d101f72cbfddafe8c42 ; rapport sauvegardés dans /Business02_Banques_Outils_IA/.",
+      "Journal Google Docs actualisé avec succès."
+    ],
+    "blockers": [
+      "Site marketing distant non synchronisé ; aucune publication de ce prototype confirmée.",
+      "Suite pytest étendue interrompue par timeout : aucune réussite revendiquée pour la partie non terminée.",
+      "Navigation HTTP réelle, Lighthouse, tests sur appareil et validation terrain non réalisés. Aucun entretien, prix validé, paiement, vente, collecte ou prospection."
+    ],
+    "next": "Intégrer les 45 fichiers publics de l'archive complète au dépôt Banque-Outils-IA par une voie GitHub autorisée, puis contrôler URL publique, navigation, performances et accessibilité ; poursuivre le kit privé V0.12.1 sans collecte ni commercialisation.",
+    "links": [
+      {
+        "label": "Dépôt marketing",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA"
+      },
+      {
+        "label": "Journal du projet",
+        "url": "https://docs.google.com/document/d/1eP9ZVO-chyra1sZf1gISfawNwzQPjNOA66KZYjdwMhI/edit"
+      },
+      {
+        "label": "Rapports centraux",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/sprints/banque-ia.json"
+      }
+    ]
   }
 ]
