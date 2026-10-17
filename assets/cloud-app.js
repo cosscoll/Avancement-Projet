@@ -58,6 +58,7 @@ function render(){if(!authUser)return;const fns={projects:projectsPage,project:p
   const extension=page==='catalog'?window.CONTROL_TOOL_CATALOG:window.CONTROL_DEPLOY_GUIDES;
   if(!extension){root.innerHTML='<div class="hint">Les ressources sont momentanément indisponibles. Réessaie plus tard.</div>';return}
   extension.mount(root,{mode:'cloud',projectId:picked,projects:cache.projects,
+   onOpenDeploy:(project)=>nav('deploy',project||''),
    isSaved:(tool,project)=>cache.items.some(x=>x.project_id===project&&x.kind==='resource'&&(x.details?.catalogToolId===tool.id||x.url===tool.url)),
    onAdd:async (tool,project)=>{
     if(!authUser||!cache.projects.some(p=>p.id===project))throw Error('Sélectionne un projet de ton compte.');
