@@ -17,7 +17,7 @@ function mount(root,params={}){
  if(!root)return;
  const projects=(params.projects||[]).filter(p=>p?.id&&p?.name);
  const getSaved=typeof params.isSaved==='function'?params.isSaved:()=>false;
- const state={q:'',type:'all',level:'all',project:projects.find(p=>p.id===params.projectId)?.id||projects[0]?.id||'',loading:false};
+ const state={q:'',type:'all',level:'all',project:projects.find(p=>p.id===params.projectId)?.id||projects[0]?.id||'',loading:false,limit:4};
  const loader=document.createElement('p');loader.className='deploy-loading';loader.textContent='Chargement des tutoriels de mise en ligne…';
  root.replaceChildren(loader);
  load().then(data=>{
@@ -31,7 +31,7 @@ function mount(root,params={}){
    '<label>Type de site<select id="deploy-type" class="tool-field">'+opts([['all','Tous les sites'],...Object.entries(data.types)],'all')+'</select></label>'+
    '<label>Difficulté<select id="deploy-level" class="tool-field">'+opts([['all','Tous les niveaux'],...Object.entries(styles)],'all')+'</select></label>'+
    (projects.length?'<label>Projet CONTROL<select id="deploy-project" class="tool-field">'+opts(projects.map(p=>[p.id,p.name]),state.project)+'</select></label>':'<div class="deploy-helper">Crée un projet CONTROL pour y ajouter des tutoriels.</div>')+
-   '</div><p class="deploy-count" id="deploy-count" aria-live="polite"></p><div id="deploy-list" class="deploy-list"></div>'+
+   '</div><p class="deploy-count" id="deploy-count" aria-live="polite"></p><div id="deploy-list" class="deploy-list"></div><div class="clarity-more"><button id="deploy-more" type="button" hidden>Afficher d’autres hébergeurs</button></div>'+
    '<section class="deploy-checklist"><h2>Vérifications avant toute publication</h2><div class="deploy-check-grid"><label><input type="checkbox"> Pas de clé privée, .env, base ou données clients dans les fichiers publics</label><label><input type="checkbox"> Version mobile, desktop, images et navigation testées</label><label><input type="checkbox"> Domaine, HTTPS et DNS prévus</label><label><input type="checkbox"> Coûts et autorisations validés</label><label><input type="checkbox"> Tests, sauvegarde et plan de retour arrière préparés</label><label><input type="checkbox"> Autorisation de mise en production accordée</label></div></section>'+
    '<div id="deploy-status" class="tool-feedback" role="status" aria-live="polite"></div></div>';
   const container=root.querySelector('.deploy-page');if(!container)return;const find=q=>container.querySelector(q);
@@ -56,10 +56,11 @@ function mount(root,params={}){
    (projects.length?'<button type="button" data-deploy-save="'+esc(g.id)+'" '+(saved?'disabled':'')+'>'+(saved?'Guide déjà enregistré':'+ Ajouter au projet')+'</button>':'')+
    '</div></article>';
   }
-  function render(){const filtered=data.guides.filter(g=>(state.type==='all'||g.fit.includes(state.type))&&(state.level==='all'||g.level===state.level)&&(!state.q||norm(g.name+' '+g.summary+' '+g.fit.join(' ')).includes(norm(state.q))));find('#deploy-list').innerHTML=filtered.length?filtered.map(makeCard).join(''):'<div class="tool-no-results">Aucun hébergeur ne correspond aux filtres. Essaie un autre type de site.</div>';find('#deploy-count').textContent=filtered.length+' guide(s) disponibles';}
+  function render(){const filtered=data.guides.filter(g=>(state.type==='all'||g.fit.includes(state.type))&&(state.level==='all'||g.level===state.level)&&(!state.q||norm(g.name+' '+g.summary+' '+g.fit.join(' ')).includes(norm(state.q))));find('#deploy-list').innerHTML=filtered.length?filtered.slice(0,state.limit).map(makeCard).join(''):'<div class="tool-no-results">Aucun hébergeur ne correspond aux filtres. Essaie un autre type de site.</div>';find('#deploy-count').textContent=Math.min(filtered.length,state.limit)+' sur '+filtered.length+' guide(s)';find('#deploy-more').hidden=filtered.length<=state.limit;}
   const info=(s,failed=false)=>{const el=find('#deploy-status');el.textContent=s;el.dataset.error=failed?'true':'false'};
   render();
   container.addEventListener('click',async e=>{
+   if(e.target.closest('#deploy-more')){state.limit+=4;render();return}
    const statusBtn=e.target.closest('[data-deploy-status]');if(statusBtn&&container.contains(statusBtn)&&typeof params.onOpenStatus==='function'){params.onOpenStatus(state.project,statusBtn.dataset.deployStatus);return}
    const promptBtn=e.target.closest('[data-deploy-prompt]');
    if(promptBtn&&container.contains(promptBtn)){const g=data.guides.find(x=>x.id===promptBtn.dataset.deployPrompt);if(!g)return;try{await navigator.clipboard.writeText(makePrompt(g));info('Prompt de préparation « '+g.name+' » copié. Colle-le dans ton IA.')}catch{info('Copie impossible, vérifie l’autorisation du presse-papiers.',true)}return}
@@ -67,9 +68,9 @@ function mount(root,params={}){
    if(saveBtn&&container.contains(saveBtn)){const g=data.guides.find(x=>x.id===saveBtn.dataset.deploySave);if(!g||!state.project||typeof params.onAdd!=='function')return;saveBtn.disabled=true;
     try{const result=await params.onAdd({id:'hosting-'+g.id,name:'Tutoriel · '+g.name,url:g.official,category:'hebergement',summary:g.summary,courses:['3d']},state.project);info(result===false?'Le guide est déjà présent dans les ressources du projet.':'Tutoriel '+g.name+' ajouté au projet.');render()}catch(err){info(err?.message||'Ajout impossible',true);saveBtn.disabled=false}return}
   });
-  find('#deploy-query').addEventListener('input',e=>{state.q=e.target.value;render()});
-  find('#deploy-type').addEventListener('change',e=>{state.type=e.target.value;render()});
-  find('#deploy-level').addEventListener('change',e=>{state.level=e.target.value;render()});
+  find('#deploy-query').addEventListener('input',e=>{state.q=e.target.value;state.limit=4;render()});
+  find('#deploy-type').addEventListener('change',e=>{state.type=e.target.value;state.limit=4;render()});
+  find('#deploy-level').addEventListener('change',e=>{state.level=e.target.value;state.limit=4;render()});
   find('#deploy-project')?.addEventListener('change',e=>{state.project=e.target.value;render()});
  }).catch(()=>{if(root.isConnected&&loader.isConnected)root.innerHTML='<div class="tool-info">Les guides sont temporairement inaccessibles. Actualise CONTROL une fois connecté.</div>'});
 }
