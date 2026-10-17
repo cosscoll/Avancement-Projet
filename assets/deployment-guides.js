@@ -51,7 +51,7 @@ function mount(root,params={}){
    '<ol>'+g.steps.map(([name,info])=>'<li><strong>'+esc(name)+'</strong><p>'+esc(info)+'</p></li>').join('')+'</ol>'+
    '<h3>Checklist de recette</h3><ul>'+g.check.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>'+
    '<h3>Problèmes fréquents</h3>'+g.issues.map(([problem,solution])=>'<p><strong>'+esc(problem)+'</strong> — '+esc(solution)+'</p>').join('')+'</div></details>'+
-   '<div class="deploy-buttons">'+link(g.official,'Documentation officielle')+link(g.setup,'Configurer '+g.name)+
+   '<div class="deploy-buttons">'+link(g.official,'Documentation officielle')+link(g.setup,'Configurer '+g.name)+link(g.dashboard,'Ouvrir mon tableau de bord')+(typeof params.onOpenStatus==='function'&&['github_public','github_actions'].includes(g.integration)?'<button type="button" data-deploy-status="'+esc(g.id)+'">Voir les déploiements GitHub</button>':'')+
    '<button type="button" data-deploy-prompt="'+esc(g.id)+'">Copier le prompt IA</button>'+
    (projects.length?'<button type="button" data-deploy-save="'+esc(g.id)+'" '+(saved?'disabled':'')+'>'+(saved?'Guide déjà enregistré':'+ Ajouter au projet')+'</button>':'')+
    '</div></article>';
@@ -60,6 +60,7 @@ function mount(root,params={}){
   const info=(s,failed=false)=>{const el=find('#deploy-status');el.textContent=s;el.dataset.error=failed?'true':'false'};
   render();
   container.addEventListener('click',async e=>{
+   const statusBtn=e.target.closest('[data-deploy-status]');if(statusBtn&&container.contains(statusBtn)&&typeof params.onOpenStatus==='function'){params.onOpenStatus(state.project,statusBtn.dataset.deployStatus);return}
    const promptBtn=e.target.closest('[data-deploy-prompt]');
    if(promptBtn&&container.contains(promptBtn)){const g=data.guides.find(x=>x.id===promptBtn.dataset.deployPrompt);if(!g)return;try{await navigator.clipboard.writeText(makePrompt(g));info('Prompt de préparation « '+g.name+' » copié. Colle-le dans ton IA.')}catch{info('Copie impossible, vérifie l’autorisation du presse-papiers.',true)}return}
    const saveBtn=e.target.closest('[data-deploy-save]');
