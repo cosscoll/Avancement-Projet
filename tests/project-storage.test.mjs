@@ -9,7 +9,7 @@ const end="window.CONTROL_HELP?.setAdapter({";
 const start=code.indexOf(end);
 const initCall="});init();";
 assert.ok(start>=0&&code.includes(initCall));
-code=code.replace(initCall,"});window.__CONTROL_TEST__={home,persist,state:()=>state,projects:()=>projects};");
+code=code.replace(initCall,"});window.__CONTROL_TEST__={home,persist,scoped,state:()=>state,projects:()=>projects};");
 
 test('Failed local storage never creates a phantom user project',()=>{
  const nodes=new Map();
@@ -40,4 +40,16 @@ test('Failed local storage never creates a phantom user project',()=>{
 test('Personal persistent saves acknowledge success only after write',()=>{
  assert.match(code,/localStorage\.setItem\(base,JSON\.stringify\(state\)\);return true/);
  assert.match(code,/if\(!persist\(\)\)\{state\.custom=previous;delete state\[id\]/);
+});
+
+test('Invalid persisted JSON primitives do not crash CONTROL initialization',()=>{
+ for(const raw of ['null','[]','42','"invalid"','not-json']){
+  const node=()=>({classList:{add(){},remove(){}},textContent:'',addEventListener(){},setAttribute(){}});
+  const win={addEventListener(){},CONTROL_HELP:{setAdapter(){}}},document={querySelector:node,querySelectorAll:()=>[]};
+  const storage={getItem:()=>raw,setItem(){}};
+  new Function('window','document','localStorage','location','FormData',code)(win,document,storage,{hash:'#/'},class{});
+  const h=win.__CONTROL_TEST__;
+  assert.ok(h.state()&&!Array.isArray(h.state())&&typeof h.state()==='object',raw);
+  const d=h.scoped('ucp');assert.deepEqual(d.chats,[]);
+ }
 });
