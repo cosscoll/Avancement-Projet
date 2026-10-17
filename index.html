@@ -29,7 +29,7 @@
 (()=>{
 "use strict";
 const $=s=>document.querySelector(s), base='control-hub-v2', OWNER='cosscoll';
-const load=()=>{try{return JSON.parse(localStorage.getItem(base)||'{}')}catch{return{}}};
+const load=()=>{try{const data=JSON.parse(localStorage.getItem(base)||'{}');return data&&typeof data==='object'&&!Array.isArray(data)?data:{}}catch{return{}}};
 let state=load(),projects=[],active=null,tab='discussions',showAllProjects=false;
 const persist=()=>{try{localStorage.setItem(base,JSON.stringify(state));return true}catch{notify('Stockage local indisponible : tes modifications ne sont pas enregistrées.');return false}};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -38,7 +38,7 @@ const link=u=>{try{const x=new URL(u);return x.protocol==='https:'&&!x.username&
 const chatHost=u=>{try{const x=new URL(u);return x.protocol==='https:'&&!x.username&&!x.password&&['chatgpt.com','claude.ai','gemini.google.com','notebooklm.google.com','aistudio.google.com','github.com','perplexity.ai','www.perplexity.ai','poe.com'].includes(x.hostname)}catch{return false}};
 const nameOf=p=>p.name||p.short||p.id;
 function notify(msg){const n=$('#toast');n.textContent=msg;n.classList.remove('hidden');clearTimeout(window.toastTimeout);window.toastTimeout=setTimeout(()=>n.classList.add('hidden'),3600)}
-function scoped(id){state[id]??={chats:[],links:[],memo:'',projectUrl:'',agents:[]};return state[id]}
+function scoped(id){const d=state[id];if(!d||typeof d!=='object'||Array.isArray(d))state[id]={chats:[],links:[],memo:'',projectUrl:'',agents:[]};return state[id]}
 function external(url,label,cls='link'){const safe=link(url);return safe?'<a class="'+cls+'" href="'+attr(safe)+'" target="_blank" rel="noopener noreferrer">'+esc(label)+' <span aria-hidden="true">↗</span></a>':''}
 function go(id,t='ai'){tab=t;location.hash='#/project/'+encodeURIComponent(id)+'/'+t;render()}
 function route(){const s=decodeURIComponent(location.hash.slice(1));const m=s.match(/^\/project\/([^/]+)(?:\/([^/]+))?/);return m?{id:m[1],tab:m[2]||'ai'}:{id:null,tab:s==='/settings'?'settings':'home'}}
@@ -211,7 +211,7 @@ function render(){
   b.setAttribute('aria-current',selected?'page':'false');
  });
  if(location.hash.startsWith('#/control/')){active=null;window.CONTROL_CENTER.render({projects,state});return}if(location.hash.startsWith('#/automations')){active=null;window.CONTROL_AUTOMATIONS.render({projects,state});return}let r=route();if(r.id){let p=projects.find(p=>p.id===r.id);if(p)return workspace(p,r.tab);location.hash='#/';return}r.tab==='settings'?settings():home()}
-async function init(){const data=await Promise.allSettled(['data/projects.json','data/catalog.json'].map(u=>fetch(u,{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(r.status);return r.json()})));const baseProjects=data[0].status==='fulfilled'?(data[0].value.projects||[]):[],catalog=data[1].status==='fulfilled'?(data[1].value.projects||[]):[];projects=[...baseProjects,...catalog,...(state.custom||[])];if(!projects.length)$('#main').innerHTML='<div class="notice">Catalogue inaccessible. Vérifie ta connexion réseau puis recharge la page.</div>';else render()}
+async function init(){const data=await Promise.allSettled(['data/projects.json','data/catalog.json'].map(u=>fetch(u,{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(r.status);return r.json()})));const baseProjects=data[0].status==='fulfilled'?(data[0].value.projects||[]):[],catalog=data[1].status==='fulfilled'?(data[1].value.projects||[]):[];projects=[...baseProjects,...catalog,...(Array.isArray(state.custom)?state.custom.filter(p=>p&&typeof p.id==='string'&&typeof p.name==='string'):[])];if(!projects.length)$('#main').innerHTML='<div class="notice">Catalogue inaccessible. Vérifie ta connexion réseau puis recharge la page.</div>';else render()}
 window.addEventListener('hashchange',render);document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{if(b.dataset.go==='home')location.hash='#/';if(b.dataset.go==='settings')location.hash='#/settings';if(b.dataset.go==='automations')location.hash='#/automations';if(['inbox','manager','tools'].includes(b.dataset.go))location.hash='#/control/'+b.dataset.go;if(b.dataset.go==='current'){if(active)go(active,tab);else location.hash='#/'}});window.CONTROL_HELP?.setAdapter({mode:'personal',isAuthenticated:()=>true,getSummary:()=>({projects:projects.length,current:active?projects.find(p=>p.id===active)?.name:'',openActions:JSON.parse(localStorage.getItem('control-command-v1')||'{}').actions?.filter(x=>x.status!=='done')?.length||0,missions:JSON.parse(localStorage.getItem('control-command-v1')||'{}').missions?.length||0})});init();
 })();
 </script><script defer src="assets/pwa.js"></script></body></html>
