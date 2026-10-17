@@ -27,6 +27,19 @@ Les bibliothèques, tutoriels, calendriers et visios sont utiles dans la mesure 
 
 **Important :** le statut de réussite du workflow Qualité prouve que les tests déclarés ont tourné sur le runner. Il ne prouve pas qu'un compte Cloud, un appel IA ou une visioconférence réelle fonctionne.
 
+## Itération 2 — Avancement du 17 octobre, deuxième session
+
+- ✅ **Visio / confidentialité :** lors d'un changement d'écran, CONTROL libère les écouteurs d'événements et demande l'arrêt du module Jitsi si une visio de test était ouverte. La disparition de la fenêtre vidéo déclenche également sa destruction. Un retour vers la même page ne duplique plus les actions « Inviter ».
+- ✅ **Missions multi-IA :** les anciens écouteurs sont supprimés lorsque le poste de commande est rouvert ; les actions « Copier la mission » et les imports de résultats ne sont plus déclenchés plusieurs fois par des anciens écrans.
+- ✅ **Provenance des IA :** l'étiquette d'un résultat reçu via API indique qu'il reste **à vérifier**, plutôt que de suggérer que son contenu est validé.
+- ✅ **Accueil personnel :** un projet personnalisé n'est plus annoncé créé lorsque `localStorage` refuse l'écriture (quota ou restriction de navigateur). La restauration de l'état est vérifiée par test.
+- ✅ **Données corrompues :** valeurs locales nulles, tableaux ou JSON invalide ne doivent plus empêcher l'initialisation du tableau de bord.
+- ✅ **PWA Android :** précache limité à six requêtes simultanées (au lieu de téléchargements strictement séquentiels) ; visite d'une page historique ou inconnue ne peut plus remplacer la page d'accueil dans le cache hors ligne.
+- ✅ **UX/UI :** suppression du doublon « Missions IA » de la section essentielle ; son historique complet est conservé dans **Organiser**.
+- ✅ **Régressions automatiques :** suites `lifecycle-navigation.test.mjs`, `project-storage.test.mjs` et `service-worker-navigation.test.mjs` ajoutées et exécutées par GitHub Actions.
+
+**Éléments toujours ouverts :** tests Android physiques, performance réseau réelle, adaptation tablette, recette visio caméra/micro, authentification et Cloud multi-utilisateurs. Une réussite GitHub Actions ne vaut pas recette mobile physique.
+
 ## Itération 2 — Stabiliser les parcours personnels (sans backend)
 
 **P0 / à poursuivre en priorité :**
