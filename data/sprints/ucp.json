@@ -612,5 +612,35 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T093253Z",
+    "started_at": "2026-10-17T09:32:53Z",
+    "ended_at": "2026-10-17T09:36:12.858Z",
+    "summary": "UCP-QA-22 : proposition isolée de gestion du focus après navigation et dans les dialogues, avec contrats et non-régression DOM réussis.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat ; HEAD main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Diff isolé préparé sur app.js : focus du h1 après changement de vue, focus dans le dialogue et restitution au déclencheur sur l’événement close.",
+      "Exécutions réelles : 4/4 contrats focus, 8/8 tests DOM historiques, audits anonyme et 16 vues authentifiées sans violation axe, npm audit production sans vulnérabilité déclarée ; archive SHA256 9db2883ffd0cec8085171edea0046d1f80be9c8b31cf925b435fe51bdd45f8bd."
+    ],
+    "blockers": [
+      "JSDOM ne valide pas l’ordre de tabulation natif, le piège de focus, Échap dans Chromium, le focus visible, le contraste, le zoom ou les annonces d’un lecteur d’écran.",
+      "Proposition non intégrée ; aucun staging ou déploiement ; état du clone Windows dev/ucp-codex inconnu."
+    ],
+    "next": "Comparer QA-22 au clone local, puis exécuter le parcours clavier complet sous Chromium avec NVDA ou TalkBack avant toute pull request.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut UCP central QA-22",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/f71592ddca38257ca4f83605e13a58470a3e137e"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
