@@ -139,7 +139,7 @@
     },
     {
       "title": "PWA et distribution mobile non validées",
-      "description": "UCP-QA-28 assemble isolément le socle PWA QA-24 et les cinq PNG QA-27 : manifeste any/maskable, icône Apple, cache statique v2 et bouton d’installation. Contrôles réussis : 35 intégration, 30 icônes, 8/8 DOM et git apply --check. Le patch reste non intégré ; aucun navigateur réel, Android/Xiaomi/iOS, cycle installation–mise à jour–désinstallation, paquet signé, compte store ou publication.",
+      "description": "UCP-QA-29 pré-recette réellement la proposition QA-28 via l’application FastAPI et ses middlewares : 41/41 contrôles réussis sur routes, MIME, no-store, en-têtes de sécurité, garde Host, manifeste, service worker et empreintes des cinq PNG. Le test reste ASGI sans navigateur/socket externe ; aucun Android/Xiaomi/iOS, HTTPS, Lighthouse, hors-ligne, migration de cache, paquet signé, compte store ou publication.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-28 ; QA-28 prépare et teste l’intégration PWA complète sans push applicatif",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-29 ; QA-29 pré-recette le lot PWA complet via FastAPI/ASGI sans push applicatif",
   "baseline_date": "2026-10-17"
 }
