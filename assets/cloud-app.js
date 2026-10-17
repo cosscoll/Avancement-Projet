@@ -187,3 +187,74 @@ function accountPage(){
  panel('Données personnelles',btn('Exporter mes données','export-json')+' '+btn('Importer mon ancien espace','import-legacy')+
  '<p class="muted">La suppression complète d’un compte doit être mise en service après vérification de la procédure côté serveur ; les inscriptions publiques resteront désactivées tant qu’elle n’est pas prête.</p>');
 }
+
+function itemPayload(form,existing=null){
+ const kind=String(form.get('kind')||'').trim(),title=String(form.get('title')||'').trim(),url=String(form.get('url')||'').trim();
+ if(!names[kind]||!title||title.length>200)throw Error('Nom ou type invalide.');
+ if(url&&!safeURL(url))throw Error('URL HTTPS sans jeton nécessaire.');
+ const project_id=String(form.get('project_id')||'').trim()||null;
+ if(project_id&&!getProject(project_id))throw Error('Projet indisponible sur ce compte.');
+ const body=String(form.get('body')||'');if(body.length>30000)throw Error('Description trop longue.');
+ const details={...(existing?.details||{})};
+ if(kind==='automation'){details.model=String(form.get('model')||'Non vérifié').slice(0,100);details.quota=String(form.get('quota')||'Non vérifié').slice(0,160);details.constraints=String(form.get('constraints')||'').slice(0,6000)}
+ if(kind==='income'||kind==='expense'){const amount=Number(form.get('amount')??details.amount??0);if(!Number.isFinite(amount)||amount<0||amount>1000000)throw Error('Montant invalide.');details.amount=amount}
+ return {owner_id:authUser.id,project_id,kind,title,url:url?safeURL(url):'',body,provider:String(form.get('provider')||'').slice(0,60),status:String(form.get('status')||'').slice(0,35),due_at:toISO(form.get('due_at')),details,updated_at:new Date().toISOString()};
+}
+async function audit(action,kind,id){try{await client.from('control_audit_events').insert({owner_id:authUser.id,action,entity_type:kind,entity_id:id})}catch{/* best-effort client log only */}}
+async function saveItem(form,editing=''){
+ const old=editing?cache.items.find(i=>i.id===editing):null;
+ if(editing&&!old)throw Error('Fiche introuvable : actualise les données.');
+ const payload=itemPayload(form,old);
+ if(old&&old.kind!==payload.kind)throw Error('Il faut créer un nouvel élément pour changer de type.');
+ let q;
+ if(old)q=await client.from('control_items').update(payload).eq('id',old.id).eq('owner_id',authUser.id).eq('updated_at',old.updated_at).select('*').single();
+ else q=await client.from('control_items').insert(payload).select('*').single();
+ if(q.error)throw Error(old?'Conflit ou écriture refusée : actualise et recommence.':q.error.message);
+ await audit(old?'item_updated':'item_created','item',q.data.id);
+ await reload(true);message('Enregistré dans votre compte privé.');
+}
+async function saveProject(form,editing=''){
+ const name=String(form.get('name')||'').trim(),description=String(form.get('description')||'').trim(),category=String(form.get('category')||'').trim();
+ if(!name||name.length>140||description.length>6000||category.length>70)throw Error('Champs du projet invalides.');
+ const payload={owner_id:authUser.id,name,description,category,updated_at:new Date().toISOString()};
+ const old=editing?getProject(editing):null;
+ let q;
+ if(editing&&!old)throw Error('Projet introuvable.');
+ if(old)q=await client.from('control_projects').update(payload).eq('id',old.id).eq('owner_id',authUser.id).eq('updated_at',old.updated_at).select('*').single();
+ else q=await client.from('control_projects').insert(payload).select('*').single();
+ if(q.error)throw Error(old?'Conflit de modification : actualise le projet.':q.error.message);
+ await audit(old?'project_updated':'project_created','project',q.data.id);
+ await reload(true);nav('project',q.data.id);message('Projet enregistré.');
+}
+async function eraseItem(item){
+ if(!confirm('Supprimer cet élément ? Cette opération est irréversible.'))return;
+ const q=await client.from('control_items').delete().eq('id',item.id).eq('owner_id',authUser.id);
+ if(q.error)throw Error(q.error.message);
+ await audit('item_removed','item',item.id);await reload(true);message('Élément supprimé.');
+}
+async function eraseProject(p){
+ if(prompt('Cette opération supprime ce projet et TOUS ses éléments. Pour confirmer, écrivez le nom exact : '+p.name)!==p.name)return;
+ const q=await client.from('control_projects').delete().eq('id',p.id).eq('owner_id',authUser.id);
+ if(q.error)throw Error(q.error.message);
+ await audit('project_removed','project',p.id);await reload(true);nav('projects');message('Projet supprimé.');
+}
+async function markDone(item){
+ const q=await client.from('control_items').update({status:'done',updated_at:new Date().toISOString()}).eq('id',item.id).eq('owner_id',authUser.id).eq('updated_at',item.updated_at).select('id').single();
+ if(q.error)throw Error('Conflit : actualise avant de modifier.');
+ await audit('item_done','item',item.id);await reload(true);message('Action terminée dans CONTROL.');
+}
+async function copyText(text){
+ try{await navigator.clipboard.writeText(text);message('Copié. Ouvrez votre IA pour poursuivre.')}
+ catch{message('Copie impossible sur cet appareil.',true)}
+}
+async function prepareFourMissions(){
+ if(!cache.projects.length)throw Error('Créez d’abord un projet.');
+ const selected=prompt('Nom exact du projet pour ces missions :',cache.projects[0].name);
+ const p=cache.projects.find(x=>x.name===selected);if(!p)throw Error('Projet non trouvé.');
+ const task=prompt('Quel travail faut-il répartir ?');if(!task?.trim())return;
+ const plan=[['ChatGPT','Spécifications et critères de réussite'],['Claude','Analyse des risques et propositions UX'],['Codex','Implémentation isolée, tests et preuves'],['ChatGPT','Validation des livrables et synthèse']];
+ // One atomic insert; no partial task creation.
+ const rows=plan.map(([provider,title])=>({owner_id:authUser.id,project_id:p.id,kind:'mission',title,provider,status:'todo',body:'Objectif : '+task+'\nMission : '+title+'\nAucune dépense ni action engageante sans autorisation.\nJustifier chaque résultat par des preuves.',updated_at:new Date().toISOString()}));
+ const q=await client.from('control_items').insert(rows);if(q.error)throw Error(q.error.message);
+ await reload(true);message('Quatre missions créées. Aucune IA déclenchée.');
+}
