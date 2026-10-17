@@ -46,6 +46,7 @@ function loadAPI(){if(window.JitsiMeetExternalAPI)return Promise.resolve(window.
  }).catch(e=>{loadingAPI=null;throw e});
  return loadingAPI;
 }
+function unmount(root){if(root){handlers.get(root)?.abort();handlers.delete(root)}leave()}
 function mount(root,a={}){
  if(!root)return;leave();
  handlers.get(root)?.abort();
@@ -152,5 +153,5 @@ function mount(root,a={}){
  },{signal:listeners.signal});
  paint();
 }
-window.CONTROL_VISIOS={mount,roomLink,allowedLink,parseLocal,invitation,calendarURL,ics,leave};
+window.CONTROL_VISIOS={mount,unmount,roomLink,allowedLink,parseLocal,invitation,calendarURL,ics,leave};
 })();
