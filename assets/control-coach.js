@@ -2,6 +2,7 @@
    Moteur de conseils déterministe complémentaire au modèle génératif local. */
 (()=>{'use strict';
 const clean=s=>String(s??'').slice(0,2000);
+const normalize=s=>clean(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 const rules=[
  {id:'blocage',match:/bloqu|erreur|bug|marche pas|fonctionne pas|impossible|plant|échec|failed|404|500/i,
  title:'Débloquer un problème',steps:['Reproduis le problème une fois et note le résultat attendu et le résultat obtenu.','Relève le message exact, la page concernée et les dernières modifications.','Teste sur un autre navigateur ou en navigation privée sans supprimer tes données.','Isole une seule cause possible, teste une correction et note le résultat.'],question:'Quel est le message d’erreur exact et sur quelle page apparaît-il ?'},
@@ -16,7 +17,7 @@ const rules=[
 ];
 function advise(question,context=''){
  const q=clean(question).trim();if(!q)return null;
- const rule=rules.find(r=>r.match.test(q))||{id:'general',title:'Clarifier et avancer',steps:['Définis le résultat précis que tu souhaites obtenir.','Décompose-le en une action immédiate et une vérification simple.','Identifie les informations ou autorisations manquantes.','Note la prochaine étape dans ton projet.'],question:'Quel résultat concret souhaites-tu obtenir ?'};
+ const rule=rules.find(r=>r.match.test(q)||r.match.test(normalize(q)))||{id:'general',title:'Clarifier et avancer',steps:['Définis le résultat précis que tu souhaites obtenir.','Décompose-le en une action immédiate et une vérification simple.','Identifie les informations ou autorisations manquantes.','Note la prochaine étape dans ton projet.'],question:'Quel résultat concret souhaites-tu obtenir ?'};
  return {category:rule.id,title:rule.title,steps:rule.steps.slice(),question:rule.question,contextUsed:!!clean(context).trim(),disclaimer:'Conseils préparés localement : aucune action n’a été exécutée ni aucun service externe consulté.'};
 }
 function mount(root,options={}){
