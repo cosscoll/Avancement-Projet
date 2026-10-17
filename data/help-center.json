@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "updated_at": "2026-10-17",
   "scope": "CONTROL personal and staged Cloud help; informational, no model API.",
   "greeting": "Bonjour ! Je suis l’assistant CONTROL. Je peux te guider dans l’application, expliquer les fonctionnalités, les outils IA et la mise en ligne de sites. Pose-moi une question.",
@@ -880,6 +880,41 @@
         "Enregistre ensuite les réponses dans CONTROL avec leur source et leur preuve."
       ],
       "route": "command"
+    },
+    {
+      "id": "visios",
+      "title": "Organiser une visioconférence dans CONTROL",
+      "keywords": [
+        "visio",
+        "visioconference",
+        "vidéo",
+        "reunion",
+        "réunions",
+        "appel",
+        "équipe",
+        "interne",
+        "rendez-vous",
+        "client",
+        "prospect",
+        "google",
+        "meet",
+        "zoom",
+        "teams",
+        "jitsi",
+        "invitation",
+        "calendrier",
+        "agenda",
+        "enregistrement"
+      ],
+      "answer": "CONTROL contient un espace « Visios et rendez-vous » pour organiser les réunions internes ou avec des clients et prospects. Tu choisis un projet, un créneau et la plateforme (Google Meet, Zoom ou Microsoft Teams), puis tu colles le lien réellement créé chez le fournisseur. CONTROL peut préparer une invitation, ouvrir le service officiel, proposer un événement Google Agenda et télécharger un fichier .ics. Le test vidéo Jitsi peut être affiché dans l’application sur action volontaire, mais son serveur public n’est pas prévu pour un service de production. Les invitations ne sont pas envoyées automatiquement et CONTROL ne crée pas de rendez-vous chez Google Meet/Zoom/Teams.",
+      "steps": [
+        "Ouvre « Tous les outils » → « Visios et rendez-vous ».",
+        "Choisis « Équipe interne » ou « Clients / prospects ».",
+        "Indique le sujet, le projet, l’heure et la durée.",
+        "Crée ton lien chez Google Meet, Teams ou Zoom et colle-le dans la fiche.",
+        "Enregistre, puis utilise « Inviter » ou « Agenda » pour préparer ton invitation."
+      ],
+      "route": "meetings"
     }
   ]
 }
