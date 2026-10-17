@@ -64,3 +64,10 @@
 .tool-kit button{margin-top:auto;background:#2c496e;border-color:#2c496e;color:#fff;font-size:12px;padding:9px 13px;min-height:39px;border-radius:10px}
 .tool-kit button:hover{background:#3b5e89;color:#fff}
 @media(max-width:520px){.tool-kit-grid{grid-template-columns:1fr}.tool-kit{padding:14px}}
+
+/* Bridge from IAgile tools to the hosting and publication tutorials. */
+.tool-deploy-cta{display:flex;justify-content:space-between;align-items:center;gap:14px;border:1px solid #cfddec;background:linear-gradient(100deg,#eef5fd,#f8faff);border-radius:15px;padding:18px 20px;margin:18px 0}
+.tool-deploy-cta strong{display:block;font-size:15px;color:#2a4667;margin-bottom:5px}
+.tool-deploy-cta span{display:block;font-size:12px;color:#526e8b;line-height:1.5}
+.tool-deploy-cta button{border:1px solid #294d77;background:#294d77;color:white;border-radius:10px;min-height:42px;padding:10px 14px;font-size:12px;white-space:nowrap;font-weight:750;cursor:pointer}
+@media(max-width:550px){.tool-deploy-cta{flex-direction:column;align-items:stretch}.tool-deploy-cta button{width:100%;white-space:normal}}
