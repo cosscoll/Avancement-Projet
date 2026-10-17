@@ -1,5 +1,9 @@
 # CONTROL — Centre de pilotage des projets
 
+## UX/UI — Une interface plus claire, sans supprimer les fonctionnalités (17 octobre 2026)
+
+Refonte des parcours de CONTROL personnel et de la future interface Cloud : **quatre destinations mobiles**, **six projets maximum affichés par défaut**, trois actions rapides, regroupement des options avancées dans **Plus**, bibliothèques/outils organisés par finalité, hiérarchie visuelle et tons sobres sur mobile. Les missions, automatisations, formations, bibliothèques IA et tutoriels de publication restent disponibles ; ils ne monopolisent simplement plus l'écran d'accueil. La version multi-utilisateurs reste désactivée en attente de son infrastructure séparée. [Décisions et protocole UX](docs/UX_CLARTE_CONTROL.md).
+
 ## Laboratoire IA — Outils intégrés de qualité (17 octobre 2026)
 
 Nouvelle page `#/control/lab`, accessible depuis l'en-tête, les projets et Tous les outils : **7 outils internes réellement utilisables** (générateur de briefs contextualisés, comparaison textuelle de deux IA, audit HTML indicatif, validation/formatage JSON, différences entre versions, checklist de recette et masquage de secrets). Les briefs peuvent être copiés pour ChatGPT/Claude/Codex/Gemini ou enregistrés comme missions dans CONTROL. Tout fonctionne côté navigateur sans clé API ni dépense supplémentaire ; **aucun modèle IA externe n'est exécuté, et les analyses textuelles ne certifient ni véracité ni qualité sémantique**. L'espace CONTROL Cloud intègre le même module, sans activer les comptes. [Guide du Laboratoire IA](docs/LABORATOIRE_IA.md).
