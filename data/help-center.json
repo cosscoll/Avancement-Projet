@@ -852,6 +852,34 @@
         "Utilise Audit HTML, Vérifier JSON ou Plan de recette selon le livrable."
       ],
       "route": "lab"
+    },
+    {
+      "id": "commander-claude-gemini",
+      "title": "Commander Claude et Gemini depuis CONTROL",
+      "keywords": [
+        "commande",
+        "mission",
+        "envoi",
+        "claude",
+        "gemini",
+        "progrès",
+        "avancement",
+        "résultats",
+        "centraliser",
+        "API",
+        "orchestration",
+        "synchroniser",
+        "ia"
+      ],
+      "answer": "Le Poste de commande multi-IA permet actuellement de préparer des missions Claude et Gemini depuis un projet CONTROL, puis de copier les consignes, ouvrir le fournisseur et enregistrer séparément son résultat, les preuves et le statut. L’envoi directement par API et la récupération automatique des réponses sont techniquement préparés pour CONTROL Cloud, mais désactivés tant que la base privée, les clés API, les limites et les autorisations ne sont pas opérationnelles. Les conversations historiques des applications Claude/Gemini ne sont pas lues automatiquement.",
+      "steps": [
+        "Ouvre Tous les outils → Commander Claude & Gemini.",
+        "Sélectionne le projet et écris l’objectif.",
+        "Choisis Claude, Gemini ou les deux.",
+        "Prépare les missions et copie les consignes dans chaque IA.",
+        "Enregistre ensuite les réponses dans CONTROL avec leur source et leur preuve."
+      ],
+      "route": "command"
     }
   ]
 }
