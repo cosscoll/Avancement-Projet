@@ -139,7 +139,7 @@
     },
     {
       "title": "PWA et distribution mobile non validées",
-      "description": "UCP-QA-30 exécute la logique du service worker QA-28 : 31/31 assertions réussies. Cache v2 et ses 11 ressources publiques, suppression des caches UCP anciens, préservation des caches tiers, exclusions API/navigation/mutations/origines tierces et repli cache→réseau sont vérifiés. La preuve reste simulée sans vrai navigateur/service worker ; aucun Android/Xiaomi/iOS, HTTPS, Lighthouse, hors-ligne réel, paquet signé, compte store ou publication.",
+      "description": "UCP-QA-31 reproduit un défaut résiduel de QA-28 : si caches.match rejette, le réseau n’est pas essayé. Un correctif minimal isolé ajoute ce repli et passe 18/18 contrôles injectés tout en conservant les exclusions API/navigation/mutations/origines tierces/hors liste. La preuve reste simulée sans vrai navigateur/service worker ; aucun Android/Xiaomi/iOS, HTTPS, Lighthouse, hors-ligne réel, paquet signé, compte store ou publication.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-30 ; QA-30 valide isolément le cycle logique du cache PWA sans push applicatif",
-  "baseline_date": "2026-10-17"
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-31 ; QA-31 corrige isolément le repli réseau après erreur CacheStorage, sans push applicatif",
+  "baseline_date": "2026-10-18"
 }
