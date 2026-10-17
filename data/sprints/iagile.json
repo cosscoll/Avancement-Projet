@@ -159,5 +159,47 @@
         "url": "https://github.com/langflow-ai/langflow/blob/main/LICENSE"
       }
     ]
+  },
+  {
+    "id": "iagile-20261017-153607-paris",
+    "started_at": "2026-10-17T15:36:07+02:00",
+    "ended_at": "2026-10-17T15:39:45+02:00",
+    "summary": "Issue IAgile #3 vérifiée et prise en compte ; quatre bibliothèques GitHub supplémentaires qualifiées au niveau licence racine et ateliers privés préparés, sans intégration ni diffusion premium.",
+    "done": [
+      "Issue ouverte #3 [CONSIGNE][iagile] vérifiée : auteur cosscoll, créée le 17/10/2026 à 13:07:25Z ; consigne lue et prise en compte, non exécutée en totalité. Aucune [DECISION][iagile] ouverte retournée.",
+      "Quatre dépôts GitHub absents du catalogue Supabase existant identifiés et leurs licences racines lues : MarkItDown MIT, Prefect Apache-2.0, Agent Lightning MIT, MeshLine MIT.",
+      "Document pédagogique privé créé, permissions privées vérifiées et contenu relu : fiches par module, exercices fictifs, critères d'échec, barèmes et restrictions.",
+      "Supabase contrôlé après tentative d'ajout refusée : 47 modules, 283 liens, 0 utilisateur Auth, 0 objet premium, 0 ressource approuvée ou publiée.",
+      "PR IAgile #12 et #77 vérifiées ouvertes en brouillon, non fusionnées."
+    ],
+    "blockers": [
+      "Ajout des quatre références candidates dans Supabase refusé par les contrôles de sécurité : aucune ligne intégrée.",
+      "Écriture du journal Google Docs refusée ; synthèse conservée dans un document Drive privé.",
+      "V0.9.1 Processus non approuvée ; importateur R3 et module 8 non corrigés ; tests Auth/RLS inter-comptes réels absents.",
+      "Licences des dépendances, assets et versions exactes non auditées ; aucun test d'exécution des quatre outils."
+    ],
+    "next": "Poursuivre l'inventaire sans doublons, faire tester les quatre ateliers sur données fictives et intégrer les références privées par voie autorisée ; valider Processus et recette Auth/RLS avant toute diffusion.",
+    "links": [
+      {
+        "label": "Consigne IAgile #3",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues/3"
+      },
+      {
+        "label": "Licence MarkItDown",
+        "url": "https://github.com/microsoft/markitdown/blob/main/LICENSE"
+      },
+      {
+        "label": "Licence Prefect",
+        "url": "https://github.com/PrefectHQ/prefect/blob/main/LICENSE"
+      },
+      {
+        "label": "Licence Agent Lightning",
+        "url": "https://github.com/microsoft/agent-lightning/blob/main/LICENSE"
+      },
+      {
+        "label": "Licence MeshLine",
+        "url": "https://github.com/pmndrs/meshline/blob/master/LICENSE"
+      }
+    ]
   }
 ]
