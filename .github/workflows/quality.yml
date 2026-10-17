@@ -58,5 +58,3 @@ jobs:
           node --check service-worker.js
       - name: Exécuter les tests Node natifs
         run: node --test tests/*.test.mjs
-      - name: Vérifier les routes, ressources et modes sécurisés
-        run: node --test tests/production-readiness.test.mjs
