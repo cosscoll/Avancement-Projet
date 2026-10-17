@@ -498,7 +498,7 @@ window.CONTROL_HELP?.setAdapter({
   if(!authUser)return false;
   if(screen==='tools'){toolTab=route==='backup'?'backup':route==='budget'?'budget':route==='library'?'library':'search';nav('tools');return true}
   if(screen==='activity'){return false}
-  if(['projects','inbox','missions','automations','manager','catalog','deploy','account'].includes(screen)){nav(screen);return true}
+  if(['projects','inbox','missions','automations','manager','lab','catalog','deploy','account'].includes(screen)){nav(screen);return true}
   return false;
  },
  getSummary:()=>authUser?{projects:cache.projects.length,current:page==='project'?getProject(picked)?.name:'',openActions:cache.items.filter(x=>x.kind==='task'&&x.status!=='done').length,missions:cache.items.filter(x=>x.kind==='mission').length}:null
