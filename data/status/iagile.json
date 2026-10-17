@@ -76,7 +76,7 @@
     },
     {
       "title": "Import du parcours pilote non prêt",
-      "description": "Le contrôle hors ligne du corpus candidat a réussi (12 fichiers), mais l'importateur existant n'accepte pas encore son format versionné. Aucun fichier privé n'est téléversé et les tests d'accès réels restent à effectuer.",
+      "description": "Référence héritée du module 8 corrigée en base privée et relue le 17/10/2026. La V0.9.1, l'importateur R3, le stockage et les tests Auth/RLS multi-comptes restent non validés.",
       "level": "warning"
     },
     {
