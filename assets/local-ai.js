@@ -73,13 +73,13 @@ function mount(root,adapter={}){
    generating=false;
    const text=clamp(message.text,3500).trim();
    if(text){
-    const targetProject=pendingProject||key();const list=history[targetProject]||[];list.push({role:'assistant',content:text});history[targetProject]=list.slice(-14);pendingProject=null;save();if(targetProject===key())render();
-    status('Réponse générée localement. Vérifie les informations importantes.');
+    const targetProject=pendingProject||key();const list=history[targetProject]||[];list.push({role:'assistant',content:text});history[targetProject]=list.slice(-14);pendingProject=null;const stored=save();if(targetProject===key())render();
+    status(stored?'Réponse générée localement. Vérifie les informations importantes.':'Réponse générée, mais non enregistrée : le stockage local est indisponible.',!stored);
    }else status('La génération n’a pas produit de texte.',true);
    state();
   }else if(message.type==='error'){
    if(message.requestId&&message.requestId!==requestId)return;
-   generating=false;loading=false;pendingProject=null;if(!ready){worker?.terminate?.();worker=null}status(clamp(message.message,260),true);state();
+   generating=false;loading=false;pendingProject=null;if(!ready){worker?.terminate?.();worker=null;$('#loc-progress').hidden=true}status(clamp(message.message,260),true);state();
   }
  }
  function start(){
@@ -121,7 +121,7 @@ function mount(root,adapter={}){
  });
  $('#loc-clear').addEventListener('click',()=>{
   if(!confirm('Supprimer l’historique de cette conversation locale ?'))return;
-  history[key()]=[];save();render();status('Historique effacé pour ce projet.');
+  history[key()]=[];const stored=save();render();status(stored?'Historique effacé pour ce projet.':'Conversation effacée à l’écran, mais la suppression n’a pas pu être enregistrée.',!stored);
  });
  root.__controlLocalStop=()=>{disposed=true;stop();worker?.terminate?.();worker=null};
  render();state();
