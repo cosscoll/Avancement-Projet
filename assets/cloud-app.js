@@ -52,7 +52,41 @@ async function reload(silent=false){if(!authUser||!client)return;const owner=aut
  }catch(e){if(token!==epoch||authUser?.id!==owner)return;if(!silent)message(e.message||'Impossible de synchroniser vos données.',true);if(!cache.projects.length&&!cache.items.length)byId('page').innerHTML=panel('Connexion indisponible','<p>Les données privées n’ont pas pu être chargées. Réessaie après vérification de la configuration et des règles d’accès.</p>'+btn('Réessayer','refresh'))}
  finally{if(waitingOwner===owner){waiting=false;waitingOwner=null;byId('refresh').disabled=false}}}
 function nav(where,pid='',newTab='ai_space'){page=where;picked=pid;tab=newTab;window.scrollTo?.(0,0);render()}
-function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [data-page]').forEach(b=>{const k=b.dataset.page;const active=k==='projects'&&(page==='projects'||page==='project')||k==='inbox'&&page==='inbox'||k==='manager'&&page==='manager'||k==='tools'&&!['projects','project','inbox','manager'].includes(page);b.setAttribute('aria-current',active?'page':'false')});const fns={projects:projectsPage,project:projectPage,inbox:inboxPage,missions:missionsPage,automations:automationsPage,manager:managerPage,tools:toolsPage,account:accountPage,catalog:catalogPage,deploy:deployPage,lab:labPage};byId('page').innerHTML=(fns[page]||projectsPage)();
+function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [data-page]').forEach(b=>{const k=b.dataset.page;const active=k==='projects'&&(page==='projects'||page==='project')||k==='inbox'&&page==='inbox'||k==='manager'&&page==='manager'||k==='tools'&&!['projects','project','inbox','manager'].includes(page);b.setAttribute('aria-current',active?'page':'false')});const fns={projects:projectsPage,project:projectPage,inbox:inboxPage,missions:missionsPage,automations:automationsPage,manager:managerPage,tools:toolsPage,account:accountPage,catalog:catalogPage,deploy:deployPage,lab:labPage,command:commandPage};byId('page').innerHTML=(fns[page]||projectsPage)();
+ if(page==='command'){
+  const target=byId('command-root');
+  if(!window.CONTROL_MULTI_AI){target.textContent='Poste de commande indisponible. Actualise CONTROL.';return}
+  window.CONTROL_MULTI_AI.mount(target,{mode:'cloud',projectId:picked,projects:cache.projects,
+   listMissions:projectId=>cache.items.filter(x=>x.project_id===projectId&&x.kind==='mission'&&['Claude','Gemini'].includes(x.provider)).map(x=>({
+     id:x.id,provider:x.provider,projectId:x.project_id,title:x.title,prompt:x.body,
+     status:x.status||'todo',result:String(x.details?.result||''),proofUrl:String(x.details?.proofUrl||''),
+     resultOrigin:x.details?.origin==='api'?'api':'manual',updatedAt:x.updated_at,url:x.url||''
+   })),
+   providerURL:(projectId,provider)=>cache.items.find(x=>x.project_id===projectId&&x.kind==='ai_space'&&x.provider===provider&&safeURL(x.url))?.url||providers[provider]||'',
+   createMission:async({projectId,provider,title,prompt})=>{
+     const owner=authUser?.id;if(!owner||!getProject(projectId))throw Error('Projet indisponible pour ce compte.');
+     if(!['Claude','Gemini'].includes(provider)||prompt.length>30000)throw Error('Mission non valide.');
+     if(cache.items.some(x=>x.project_id===projectId&&x.provider===provider&&x.kind==='mission'&&x.body===prompt))return false;
+     const payload={owner_id:owner,project_id:projectId,kind:'mission',provider,title:title.slice(0,200),body:prompt,status:'todo',details:{origin:'manual',source:'CONTROL: préparée non envoyée'}};
+     const q=await client.from('control_items').insert(payload).select('*').single();
+     if(q.error)throw Error('Enregistrement refusé : '+q.error.message);
+     if(authUser?.id!==owner)throw Error('Compte changé pendant la création. Actualise.');
+     cache.items.unshift(q.data);return true;
+   },
+   updateMission:async(m,patch)=>{
+     const owner=authUser?.id,original=cache.items.find(x=>x.id===m.id&&x.owner_id===owner&&x.kind==='mission');
+     if(!owner||!original)throw Error('Mission inaccessible dans ce compte.');
+     if(patch.result.length>14000)throw Error('Résultat trop long.');
+     const updated_at=new Date().toISOString();
+     const details={...(original.details||{}),result:patch.result,proofUrl:patch.proofUrl,origin:'manual',resultUpdatedAt:updated_at};
+     const q=await client.from('control_items').update({status:patch.status,details,updated_at})
+       .eq('id',original.id).eq('owner_id',owner).eq('updated_at',original.updated_at).select('*').single();
+     if(q.error||!q.data)throw Error('Modification concurrente ou refusée. Actualise les données puis réessaie.');
+     if(authUser?.id!==owner)throw Error('Compte changé pendant la sauvegarde. Actualise.');
+     Object.assign(original,q.data);return true;
+   }
+  });return;
+ }
  if(page==='lab'){
   const root=byId('lab-root');if(!window.CONTROL_LAB){root.textContent='Laboratoire IA indisponible. Actualise la page.';return}
   window.CONTROL_LAB.mount(root,{mode:'cloud',projectId:picked,projects:cache.projects,
@@ -121,7 +155,7 @@ function projectPage(){
  '<div class="surface"><div class="row"><h2>'+H(names[t])+'</h2>'+pill(relevant.length+' élément(s)')+'</div>'+
  (relevant.length?relevant.map(itemRow).join(''):empty('Aucun élément dans cette catégorie. Ajoute une conversation, un dossier ou une tâche pour démarrer.'))+'</div>'+
  (t==='ai_space'?panel('Connecter vos projets ChatGPT, Claude et Gemini','<p class="muted">Associe ici les URL de tes espaces privés. Leur contenu reste dans l’application officielle du fournisseur. Les abonnements ChatGPT, Claude et Gemini ne donnent pas automatiquement accès à leurs API.</p><div class="btnrow">'+Object.entries(providers).map(([p,u])=>ext(u,'Ouvrir '+p)).join('')+'</div>'):'')+
- '<details class="clarity-helpnote"><summary>Outils du projet · Laboratoire IA, bibliothèques et publication</summary><div class="btnrow" style="margin-top:12px">'+btn('Laboratoire IA','lab',p.id)+btn('Bibliothèques IA','catalog',p.id)+btn('Mettre en ligne','deploy',p.id)+'</div></details>'+
+ '<details class="clarity-helpnote"><summary>Outils du projet · Laboratoire IA, bibliothèques et publication</summary><div class="btnrow" style="margin-top:12px">'+btn('Commander mes IA','command',p.id)+btn('Laboratoire IA','lab',p.id)+btn('Bibliothèques IA','catalog',p.id)+btn('Mettre en ligne','deploy',p.id)+'</div></details>'+
  '<section id="project-editor" class="surface" hidden></section>'}
 function itemForm(kind,proj='',item=null){const i=item||{},type=kind||'task',p=proj||i.project_id||'';
  return '<form data-form="save-item" data-record="'+H(i.id||'')+'"><input type="hidden" name="kind" value="'+H(type)+'"><input type="hidden" name="project_id" value="'+H(p)+'">'+
@@ -144,6 +178,7 @@ function inboxPage(){const list=items('task').filter(x=>x.status!=='done').sort(
  panel('Nouvelle action','<form data-form="save-item">'+input('Action','title','','text','required maxlength="200"')+projSelect('','Aucun projet')+'<input type="hidden" name="kind" value="task">'+input('Échéance','due_at','','datetime-local')+area('Instructions et preuve','body','','maxlength="30000"')+'<button class="primary" type="submit">Ajouter à la boîte</button></form>')+
  '<div class="hint">Il s’agit d’une boîte de réception CONTROL ; l’accès aux messages Gmail, aux tâches privées ChatGPT et aux alertes Claude exige des connexions supplémentaires.</div>'}
 function missionsPage(){const list=items('mission');return header('Missions multi-IA','Préparer les missions et retrouver leur statut dans tous les projets.')+summary()+
+ panel('Piloter Claude et Gemini','<p>Prépare une mission commune et rassemble chaque résultat dans son projet.</p>'+btn('Ouvrir le poste multi-IA','command','','primary'))+
  panel('Nouvelle mission','<form data-form="save-item">'+input('Mission','title','','text','required maxlength="200"')+projSelect('', 'Choisir un projet')+'<input type="hidden" name="kind" value="mission">'+providerOpt()+area('Consignes à transmettre','body','','required maxlength="30000"')+'<input type="hidden" name="status" value="todo"><button type="submit" class="primary">Enregistrer la mission</button></form>')+
  panel('Suivi des missions',list.length?list.map(i=>'<div class="item"><div><strong>'+H(i.title)+'</strong><span class="muted">'+H(projectName(i.project_id))+' · '+H(i.provider||'IA')+' · '+H(status(i.status))+'</span><p>'+H(truncate(i.body,300))+'</p></div><div class="btnrow">'+btn('Copier','copy-mission',i.id)+btn('Modifier','edit-item',i.id)+ext(providers[i.provider]||'',i.provider||'IA')+'</div></div>').join(''):empty('Aucune mission enregistrée.'))+'<div id="edit-slot"></div>'+
  panel('Orchestration','<p class="muted">Lance une IA depuis son application officielle. CONTROL ne dispose pas ici d’accès API aux abonnements privés et ne peut pas envoyer automatiquement des instructions à tous les fournisseurs.</p>'+btn('Préparer la répartition de quatre missions','mission-template'))}
@@ -171,7 +206,7 @@ function managerAnswer(question,proj){const chosen=proj?[getProject(proj)].filte
 let toolTab='lab',searchFilter='';
 function toolsPage(){
  const groups=[
-  ['Créer et publier',[['lab','Laboratoire IA'],['catalog','Bibliothèques IA'],['deploy','Mise en ligne']]],
+  ['Créer et publier',[['command','Commander Claude & Gemini'],['lab','Laboratoire IA'],['catalog','Bibliothèques IA'],['deploy','Mise en ligne']]],
   ['Organiser',[['library','Ressources'],['calendar','Calendrier'],['memory','Décisions']]],
   ['Suivre et protéger',[['budget','Finances'],['search','Recherche'],['backup','Sauvegardes']]]
  ];
@@ -179,7 +214,8 @@ function toolsPage(){
   '<details class="clarity-toolgroup" '+(links.some(([key])=>key===toolTab)?'open':'')+'><summary><strong>'+H(group)+'</strong><span class="clarity-chevron">⌄</span></summary><div class="clarity-toolcards">'+
   links.map(([key,label])=>'<button type="button" class="clarity-tool-link" data-action="tool-tab" data-id="'+key+'" aria-current="'+(toolTab===key?'page':'false')+'"><strong>'+H(label)+'</strong><span aria-hidden="true">→</span></button>').join('')+'</div></details>'
  ).join('')+'</div>';
- if(toolTab==='lab'){body+=panel('Atelier de production IA','<p>Briefs avec contexte, comparaison des réponses, audit HTML, contrôle JSON, versions, recettes et masquage des secrets.</p>'+btn('Ouvrir le Laboratoire','lab','','primary'));}
+ if(toolTab==='command'){body+=panel('Commander Claude et Gemini','<p>Prépare les missions, ouvre les IA concernées et centralise les résultats.</p>'+btn('Ouvrir le poste multi-IA','command','','primary'));}
+ else if(toolTab==='lab'){body+=panel('Atelier de production IA','<p>Briefs avec contexte, comparaison des réponses, audit HTML, contrôle JSON, versions, recettes et masquage des secrets.</p>'+btn('Ouvrir le Laboratoire','lab','','primary'));}
  else if(toolTab==='catalog'){body+=panel('Bibliothèques IAgile','<p>Explore 87 outils IA : moteurs 3D, agents, automatisations, recherche et productivité.</p>'+btn('Explorer les bibliothèques','catalog','','primary'));}
  else if(toolTab==='deploy'){body+=panel('Guides de publication','<p>10 tutoriels détaillés pour GitHub Pages, IONOS, Vercel, Netlify, Cloudflare Pages et autres hébergeurs. Prompts IA et checklist de production.</p>'+btn('Voir les guides de mise en ligne','deploy','','primary'));}
  else if(toolTab==='library'){
@@ -242,6 +278,7 @@ function toolsPage(){
  return header('Tous les outils','Ressources, agenda, budgets, décisions, sauvegardes.')+body+'<div id="tool-editor"></div>';
 }
 function deployPage(){return header('Mettre mon site en ligne','Tutoriels GitHub Pages, IONOS, Vercel et autres hébergeurs.')+'<div id="deploy-root"></div>'}
+function commandPage(){return header('Commander Claude & Gemini','Suivre les missions et consolider leurs résultats, sans mélanger les projets.')+'<div id="command-root"></div>'}
 function labPage(){return header('Laboratoire IA','Outils de production, de contrôle qualité et de comparaison des réponses.')+'<div id="lab-root"></div>'}
 function catalogPage(){return header('Bibliothèques IA','Outils pratiques et frameworks, en complément des quatre formations IAgile.')+'<div id="catalog-root"></div>'}
 function accountPage(){
@@ -397,6 +434,7 @@ async function action(button){
  switch(type){
   case 'projects':nav('projects');return;
   case 'lab':nav('lab',id||'');return;
+  case 'command':nav('command',id||'');return;
   case 'projects-more':cloudProjectsAll=!cloudProjectsAll;render();return;
   case 'inbox':nav('inbox');return;
   case 'catalog':nav('catalog',id||'');return;
