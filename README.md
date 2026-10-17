@@ -1,5 +1,19 @@
 # CONTROL — Centre de pilotage des projets
 
+## Codex — commandes et résultats depuis le téléphone
+
+Un nouvel onglet **Codex** (`#/codex`) est disponible sur le site et dans la barre mobile. Il offre un **pilotage assisté, sans exécution directe** :
+- choix d'un projet associé à un dépôt GitHub ;
+- formulaire de mission, prompt structuré et bouton de copie ;
+- ouverture de ChatGPT pour soumettre manuellement la mission dans un environnement Codex Cloud publié ;
+- consultation des pull requests publiques du dépôt, quel que soit leur auteur ;
+- enregistrement local du lien d'une tâche Codex pour la retrouver.
+
+**Important :** CONTROL ne lance pas encore les tâches Codex, ne lit pas les tâches non publiées et ne consomme pas de crédits. Le site ne stocke aucun secret. Les PR ne sont pas assimilées à tort à des sorties Codex. Les tâches et leurs journaux privés se consultent directement dans Codex. Aucune automatisation existante n'est modifiée.
+
+Documentation détaillée : [docs/CODEX_MOBILE.md](docs/CODEX_MOBILE.md).
+
+
 Tableau de bord du pilotage ChatGPT, avec suivi de cinq automatisations et catalogue des autres projets : Pack Procédures Pro, Banque Outils IA, UCP, IAgile et TCG Thomas Deseur.
 
 
