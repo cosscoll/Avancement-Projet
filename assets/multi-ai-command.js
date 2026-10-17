@@ -7,6 +7,7 @@ const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt
 const norm=s=>String(s??'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 const supported=['Claude','Gemini'];
 const home={Claude:'https://claude.ai/',Gemini:'https://gemini.google.com/'};
+const handlers=new WeakMap();
 const statuses={todo:'À envoyer',doing:'En cours (déclaré)',review:'À vérifier',done:'Validé par vous',error:'Échec signalé'};
 const time=s=>{try{return s?new Date(s).toLocaleString('fr-FR'):'Date non renseignée'}catch{return'Date non renseignée'}};
 const u=s=>{try{const t=new URL(s);return t.protocol==='https:'&&!t.username&&!t.password&&!Array.from(t.searchParams.keys()).some(x=>/^(code|api_key|access_token|token|password|secret)$/i.test(x))?t.href:''}catch{return''}};
@@ -23,6 +24,8 @@ function missionPrompt(project,task,provider){
 }
 function ui(root,adapter={}){
  if(!root)return;
+ handlers.get(root)?.abort();
+ const listeners=new AbortController();handlers.set(root,listeners);
  const projects=(typeof adapter.projects==='function'?adapter.projects():adapter.projects||[]).filter(p=>p?.id&&p?.name).slice(0,150);
  let projectId=projects.find(x=>x.id===adapter.projectId)?.id||projects[0]?.id||'';
  let selected={Claude:true,Gemini:true},selectedRun='',busy=false;
@@ -61,7 +64,7 @@ function ui(root,adapter={}){
  }
  const copy=async content=>{try{await navigator.clipboard.writeText(content);alert('Mission copiée. Ouvre l’IA pour l’exécuter.')}catch{alert('Copie indisponible dans ce navigateur.',true)}};
  if(projects.length)one('#cmd-project').addEventListener('change',e=>{projectId=e.target.value;selectedRun='';paint()});
- root.addEventListener('change',e=>{const ai=e.target.closest('[data-ai]');if(ai)selected[ai.dataset.ai]=ai.checked});
+ root.addEventListener('change',e=>{const ai=e.target.closest('[data-ai]');if(ai)selected[ai.dataset.ai]=ai.checked},{signal:listeners.signal});
  one('#cmd-prepare')?.addEventListener('click',async()=>{
   if(busy)return;const objective=clean(one('#cmd-task')?.value,6000);if(!projectId||objective.length<12){alert('Choisis un projet et décris un objectif d’au moins 12 caractères.',true);return}
   const providers=supported.filter(x=>selected[x]);if(!providers.length){alert('Choisis au moins une IA.',true);return}
@@ -88,7 +91,7 @@ function ui(root,adapter={}){
   }
   const edit=e.target.closest('[data-edit]');if(edit){selectedRun=selectedRun===edit.dataset.edit?'':edit.dataset.edit;paint();return}
   const cp=e.target.closest('[data-copy]');if(cp){const m=getRuns().find(x=>x.id===cp.dataset.copy);if(m)copy(m.prompt);return}
- });
+ },{signal:listeners.signal});
  root.addEventListener('submit',async e=>{
   const form=e.target.closest('[data-result]');if(!form)return;e.preventDefault();
   if(busy)return;const id=form.dataset.result,m=getRuns().find(x=>x.id===id);if(!m||!adapter.updateMission){alert('Mission introuvable.',true);return}
@@ -98,7 +101,7 @@ function ui(root,adapter={}){
   busy=true;try{await adapter.updateMission(m,{status,result,proofUrl:proof,resultOrigin:'manual'});selectedRun='';alert('Suivi enregistré pour '+m.provider+'. Il ne reflète pas automatiquement son historique natif.');paint()}
   catch(error){alert(error?.message||'Enregistrement impossible.',true)}
   finally{busy=false}
- });
+ },{signal:listeners.signal});
  paint();
 }
 window.CONTROL_MULTI_AI={mount:ui,missionPrompt};
