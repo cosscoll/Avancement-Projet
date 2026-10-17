@@ -82,5 +82,33 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/pack-pro.json"
       }
     ]
+  },
+  {
+    "id": "pack-pro-20261017-131036-paris",
+    "started_at": "2026-10-17T13:10:36+02:00",
+    "ended_at": "2026-10-17T11:13:24.256Z",
+    "summary": "Amélioration locale du diagnostic fictif : barre de progression accessible, invalidation immédiate d'un résultat après modification, réinitialisation et focus; aucun déploiement du site.",
+    "done": [
+      "Trois recherches GitHub Issues filtrées sur le dépôt central, auteur cosscoll et identifiant pack-pro, sans résultat",
+      "Prototype local 13 pages : progression 0–6 et état du résultat corrigés dans diagnostic.html et diagnostic.js",
+      "8 tests unitaires, 64 scénarios Chromium existants, 25 assertions Chromium supplémentaires de progression/invalidation/réinitialisation/reflow, 18 ressources HTTP locales vérifiées",
+      "Deux archives ZIP locales vérifiées, SHA256 calculés"
+    ],
+    "blockers": [
+      "Écriture du nouveau index.html dans le dépôt vitrine refusée par les contrôles de sécurité ; aucun commit de site",
+      "Navigation HTTP publique non vérifiée ; essais Chromium par injection HTML uniquement",
+      "Validation métier des 15 procédures, tests Excel réel, conformité et offre commerciale toujours en attente"
+    ],
+    "next": "Poursuivre la recette du prototype non marchand, ne pas contourner les refus GitHub, vérifier la publication par une voie autorisée et réaliser les validations métier et Excel avant toute commercialisation.",
+    "links": [
+      {
+        "label": "Dépôt vitrine public non mis à jour",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro"
+      },
+      {
+        "label": "Suivi central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/pack-pro.json"
+      }
+    ]
   }
 ]
