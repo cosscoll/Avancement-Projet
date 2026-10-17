@@ -168,10 +168,17 @@ function managerAnswer(question,proj){const chosen=proj?[getProject(proj)].filte
  if(!chosen.length)out+='Aucun projet personnel disponible.\n';
  return out+'Source : données privées de ton compte CONTROL uniquement. Aucun accès automatique aux historiques privés des autres fournisseurs. Les résultats manuels nécessitent une vérification indépendante.'}
 
-let toolTab='library',searchFilter='';
+let toolTab='lab',searchFilter='';
 function toolsPage(){
- const tabs=[['lab','Laboratoire IA'],['catalog','Outils IA'],['deploy','Mise en ligne'],['library','Ressources'],['calendar','Calendrier'],['budget','Finances'],['memory','Décisions'],['search','Recherche'],['backup','Sauvegardes']];
- let body='<div class="tabbar">'+tabs.map(([key,label])=>'<button data-action="tool-tab" data-id="'+key+'" class="'+(toolTab===key?'selected':'')+'">'+label+'</button>').join('')+'</div>';
+ const groups=[
+  ['Créer et publier',[['lab','Laboratoire IA'],['catalog','Bibliothèques IA'],['deploy','Mise en ligne']]],
+  ['Organiser',[['library','Ressources'],['calendar','Calendrier'],['memory','Décisions']]],
+  ['Suivre et protéger',[['budget','Finances'],['search','Recherche'],['backup','Sauvegardes']]]
+ ];
+ let body='<div class="clarity-cloud-tools">'+groups.map(([group,links])=>
+  '<details class="clarity-toolgroup" '+(links.some(([key])=>key===toolTab)?'open':'')+'><summary><strong>'+H(group)+'</strong><span class="clarity-chevron">⌄</span></summary><div class="clarity-toolcards">'+
+  links.map(([key,label])=>'<button type="button" class="clarity-tool-link" data-action="tool-tab" data-id="'+key+'" aria-current="'+(toolTab===key?'page':'false')+'"><strong>'+H(label)+'</strong><span aria-hidden="true">→</span></button>').join('')+'</div></details>'
+ ).join('')+'</div>';
  if(toolTab==='lab'){body+=panel('Atelier de production IA','<p>Briefs avec contexte, comparaison des réponses, audit HTML, contrôle JSON, versions, recettes et masquage des secrets.</p>'+btn('Ouvrir le Laboratoire','lab','','primary'));}
  else if(toolTab==='catalog'){body+=panel('Bibliothèques IAgile','<p>Explore 87 outils IA : moteurs 3D, agents, automatisations, recherche et productivité.</p>'+btn('Explorer les bibliothèques','catalog','','primary'));}
  else if(toolTab==='deploy'){body+=panel('Guides de publication','<p>10 tutoriels détaillés pour GitHub Pages, IONOS, Vercel, Netlify, Cloudflare Pages et autres hébergeurs. Prompts IA et checklist de production.</p>'+btn('Voir les guides de mise en ligne','deploy','','primary'));}
