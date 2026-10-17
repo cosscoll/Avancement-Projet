@@ -739,5 +739,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T152525Z",
+    "started_at": "2026-10-17T15:25:25Z",
+    "ended_at": "2026-10-17T15:36:00Z",
+    "summary": "UCP-QA-26 : générateur reproductible des icônes PWA préparé et testé isolément à partir du logo officiel, sans intégration ni création d’icônes prétendument finales.",
+    "done": [
+      "Issues centrales #1/#2 inchangées, déjà lues et bloquées ; main confirmé identique à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Actifs distants inventoriés : logo officiel PNG présent, logo SVG 158×176 et palette Ydays confirmée ; format social 1200×630 écarté comme source d’icône directe.",
+      "Générateur de cinq sorties any/maskable/Apple et métadonnées SHA préparé ; 9/9 tests unittest réussis sur source synthétique, archive SHA256 cc0291995cb610f619fda0ab649c86dc6fa58cf7e3f68b1a161498e7a3cc3262."
+    ],
+    "blockers": [
+      "Le PNG officiel binaire n’est pas inspectable par le connecteur textuel ; les vraies icônes n’ont donc pas été générées ni validées dans ce sprint.",
+      "Aucun test Chrome Android/Xiaomi, Safari iOS, installation HTTPS ou revue visuelle de la marque.",
+      "Proposition non intégrée ; état du clone Windows dev/ucp-codex inconnu."
+    ],
+    "next": "Exécuter le générateur dans le clone autorisé après comparaison avec dev/ucp-codex, valider visuellement les sorties, puis les relier au manifeste sur branche dédiée et recetter les appareils avant toute PR.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut central QA-26",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/49696e44d437543775c008abdb1abeb59709011b"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
