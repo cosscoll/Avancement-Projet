@@ -33,3 +33,9 @@ test('CONTROL Coach recognizes accented troubleshooting and planning queries',()
  assert.equal(coach.advise('Je suis bloqué').category,'blocage');
  assert.equal(coach.advise('Mes priorités sont floues').category,'priorite');
 });
+
+test('CONTROL Coach handles costs, recovery and collaboration',()=>{
+ assert.equal(coach.advise('Je dépasse mon quota gratuit').category,'budget');
+ assert.equal(coach.advise('J’ai perdu une sauvegarde').category,'donnees');
+ assert.equal(coach.advise('Organiser une visio avec mon équipe').category,'equipe');
+});
