@@ -401,7 +401,7 @@ async function action(button){
   case 'inbox':nav('inbox');return;
   case 'catalog':nav('catalog',id||'');return;
   case 'deploy':nav('deploy',id||'');return;
-  case 'tools':toolTab=id||'library';nav('tools');return;
+  case 'tools':toolTab=id||'lab';nav('tools');return;
   case 'tool-tab':toolTab=id;searchFilter='';render();return;
   case 'open-project':if(id&&!getProject(id))throw Error('Projet introuvable.');nav('project',id,'ai_space');return;
   case 'project-tab':tab=id;render();return;
