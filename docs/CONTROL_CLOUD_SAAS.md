@@ -16,6 +16,19 @@ Demander à l'utilisateur **dans quelle organisation Supabase** installer CONTRO
 
 Avant toute création, consulter le prix réel avec `get_cost`, prévenir l'utilisateur et respecter les éventuelles demandes de confirmation. Ne jamais lancer une ressource facturée ni contourner une limite de projet gratuit.
 
+## Verrou de sécurité des migrations (ajouté après l'audit)
+
+Les deux migrations SQL CONTROL sont désormais **bloquées par défaut**. Si elles sont lancées sans confirmation explicite de l'instance PostgreSQL, elles lèvent une exception et n'effectuent aucune création de table.
+
+**Avant d'exécuter une migration**, vérifier sur la console Supabase que l'identifiant et le nom du projet correspondent bien à la nouvelle base **CONTROL Cloud indépendante**, et jamais à la base **IAgile Academy**. Sur cette nouvelle base uniquement, dans **la même session SQL que la migration**, exécuter :
+
+```sql
+SET app.control_isolated_project = 'confirmed';
+-- ensuite exécuter le contenu de la migration CONTROL choisie
+```
+
+Ne jamais inscrire cette confirmation par défaut dans les fichiers de migrations, les scripts de production ou le projet IAgile. Si le mode d'exécution choisi n'autorise pas une confirmation de session sûre, interrompre la migration : mieux vaut attendre que risquer d'affecter une base existante. Ce verrou est un garde-fou supplémentaire, **pas une preuve** que la bonne instance est sélectionnée. Les comptes Cloud restent désactivés.
+
 ## Installation contrôlée après validation de l'organisation
 
 1. Créer un nouveau projet Supabase **CONTROL Cloud** dans la région européenne retenue par le propriétaire. Ne jamais migrer le schéma dans la base IAgile existante.
