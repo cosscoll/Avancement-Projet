@@ -178,7 +178,7 @@ try{
 function otherView(p){
 const chat=localChatLink(p.id),repourl=p.repo?'https://github.com/cosscoll/'+encodeURIComponent(p.repo):'';
 const saved=(()=>{try{return localStorage.getItem('control-notes-'+p.id)||''}catch{return''}})();
-q('#main').innerHTML=mainHeading('MES AUTRES PROJETS / '+String(p.category||'projet').toUpperCase(),p.name,p.summary||'Espace projet à compléter.',`<div class="project-heading-meta">${badge(p.repo?'Dépôt GitHub relié':'Sans dépôt GitHub',p.repo?'neutral':'warning')}${websiteLink(p)}${repourl?`<a class="btn" href="${repourl}" target="_blank" rel="noopener noreferrer">Code GitHub ↗</a>`:''}${chat?`<a class="btn primary" href="${safe(chat)}" target="_blank" rel="noopener noreferrer">Ouvrir dans ChatGPT ↗</a>`:''}</div>`)+
+q('#main').innerHTML=mainHeading('MES AUTRES PROJETS / '+String(p.category||'projet').toUpperCase(),p.name,p.summary||'Espace projet à compléter.',`<div class="project-heading-meta">${badge(p.repo?'Dépôt GitHub relié':'Sans dépôt GitHub',p.repo?'neutral':'warning')}${p.repo?`<a class="btn primary" data-codex-project="${safe(p.id)}" href="#/codex">Commander Codex ↗</a>`:''}${websiteLink(p)}${repourl?`<a class="btn" href="${repourl}" target="_blank" rel="noopener noreferrer">Code GitHub ↗</a>`:''}${chat?`<a class="btn primary" href="${safe(chat)}" target="_blank" rel="noopener noreferrer">Ouvrir dans ChatGPT ↗</a>`:''}</div>`)+
 `<div class="hint"><strong>Projet sans automatisation dédiée.</strong> Les notes enregistrées ici ne déclenchent aucune conversation ChatGPT. Une issue GitHub publique peut servir de trace, mais pour demander à ChatGPT de travailler, ouvre le projet dans ChatGPT et transmets-lui l'instruction.</div>
 <div class="layout"><div class="stack">
 <section class="panel"><div class="panel-heading"><h2>Mon espace de travail</h2>${badge('Notes locales','warning')}</div><form class="note-form" id="other-note-form"><label for="other-note">Commentaire, conseil ou consigne</label><textarea id="other-note" maxlength="8000" placeholder="Écris une note pour ce projet (conservée seulement dans ce navigateur).">${safe(saved)}</textarea><div class="foot"><p>Pas de synchronisation automatique avec ChatGPT.</p><div class="extra-links"><button type="submit" class="btn">Enregistrer localement</button><button type="button" id="copy-other" class="btn primary">Copier pour ChatGPT</button><button type="button" id="publish-other" class="btn">Créer une issue GitHub ↗</button></div></div></form></section>
@@ -193,6 +193,7 @@ q('#publish-other')?.addEventListener('click',()=>{const body=q('#other-note').v
 q('#chat-link-form')?.addEventListener('submit',e=>{e.preventDefault();let value=q('#chat-link').value.trim();if(value&&!safeChatLink(value)){toast('Seules les URL HTTPS ChatGPT sont acceptées.');return}try{value?localStorage.setItem('control-chat-link-'+p.id,safeChatLink(value)):localStorage.removeItem('control-chat-link-'+p.id);toast('Lien enregistré dans ton navigateur.');otherView(p)}catch{toast('Stockage du navigateur indisponible.')}});
 if(p.repo)loadOtherCommits(p);
 bindWebsite(p);
+q('[data-codex-project]')?.addEventListener('click',()=>{try{sessionStorage.setItem('control-codex-project',p.id)}catch{}});
 }
 
 function inboxView(){
