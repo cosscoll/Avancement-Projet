@@ -770,5 +770,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T182908Z",
+    "started_at": "2026-10-17T18:29:08Z",
+    "ended_at": "2026-10-17T18:41:00Z",
+    "summary": "UCP-QA-27 : cinq icônes PWA/iOS réelles générées depuis le logo officiel et validées sur copie distante isolée, sans intégration ni push applicatif.",
+    "done": [
+      "Issues centrales #1/#2 inchangées, déjà lues et bloquées ; main confirmé identique à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Logo officiel 550×660 inspecté sur clone public isolé ; cinq PNG générés : 192/512 any, 192/512 maskable et Apple 180, avec planche visuelle contrôlée.",
+      "30 contrôles sur les fichiers réels et 9/9 tests du générateur réussis ; archive SHA256 8e158e425e769e0efaa6563cfc60ca0a35bf717edaa15e28b24f8c1971967737."
+    ],
+    "blockers": [
+      "Fichiers non intégrés ; manifeste et HTML inchangés ; aucun commit ni push applicatif.",
+      "Aucun test Chrome Android/Xiaomi, Safari iOS/iPadOS, installation HTTPS, mise à jour ou désinstallation.",
+      "État du clone Windows dev/ucp-codex inconnu ; aucune comparaison ou fusion automatique."
+    ],
+    "next": "Comparer les cinq PNG au clone local, les relier au manifeste et au HTML sur une branche dédiée, puis recetter installation, mise à jour et désinstallation sur appareils réels avant toute PR.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut central QA-27",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/0967b742ce1d291abac85de6c11a048cb7c2395b"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
