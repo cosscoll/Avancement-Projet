@@ -33,7 +33,7 @@ const area=(label,name,val='',rest='')=>'<label>'+H(label)+'<textarea name="'+H(
 const choose=(label,name,xs,current='')=>'<label>'+H(label)+'<select name="'+H(name)+'">'+options(xs,current)+'</select></label>';
 const projSelect=(current='',emptyLabel='Sans projet')=>'<label>Projet<select name="project_id">'+projectsOpts(current,emptyLabel)+'</select></label>';
 const kindOpt=(current='task')=>choose('Type de contenu','kind',Object.entries(names).map(([k,v])=>[k,v]),current);
-const providerOpt=(current='ChatGPT')=>choose('IA / fournisseur','provider',[...Object.keys(providers),...new Set(cache.items.filter(x=>x.kind==='ai_space').map(x=>x.provider).filter(Boolean))].map(x=>[x,x]).concat([['Autre','Autre']]),current);
+const providerOpt=(current='ChatGPT')=>choose('IA / fournisseur','provider',[...new Set([...Object.keys(providers),...cache.items.filter(x=>x.kind==='ai_space').map(x=>x.provider).filter(Boolean),'Autre'])].map(x=>[x,x]),current);
 function safeClientConfig(v){try{if(!v||v.enabled!==true)return false;const url=new URL(v.supabaseUrl);return url.protocol==='https:'&&/^[a-z0-9-]+\.supabase\.co$/.test(url.hostname)&&url.pathname==='/'&&typeof v.supabasePublishableKey==='string'&&/^(sb_publishable_[a-zA-Z0-9_-]+|eyJ[a-zA-Z0-9_.-]+)$/.test(v.supabasePublishableKey)&&!v.supabasePublishableKey.toLowerCase().includes('service_role')}catch{return false}}
 async function boot(){live('Vérification de la configuration privée…');let cfg;
  try{const r=await fetch(CONFIG_URL,{cache:'no-store'});if(!r.ok)throw Error('not ready');cfg=await r.json();if(!safeClientConfig(cfg))throw Error('not configured');cloudConfig=cfg}catch{visible('setup');return}
