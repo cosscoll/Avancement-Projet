@@ -171,6 +171,7 @@ function catalog(){
  const el=$('#main'),query=location.hash.split('?')[1]||'',params=new URLSearchParams(query),pid=params.get('project')||'';
  if(!window.CONTROL_TOOL_CATALOG){el.innerHTML=note('Le catalogue d’outils IA est momentanément indisponible. Recharge CONTROL.');return}
  window.CONTROL_TOOL_CATALOG.mount(el,{mode:'personal',projectId:pid,projects:ctx.projects,
+ onOpenDeploy:(project)=>{location.hash='#/control/deploy'+(project?'?project='+encodeURIComponent(project):'')},
  isSaved:(tool,project)=>Array.isArray(ctx.state?.[project]?.links)&&ctx.state[project].links.some(x=>x.catalogToolId===tool.id||x.url===tool.url),
  onAdd:async(tool,project)=>{if(!ctx.projects.some(x=>x.id===project))throw Error('Projet introuvable.');if(!ctx.state)throw Error('Stockage indisponible.');const d=ctx.state[project]??={chats:[],links:[],memo:'',agents:[]};d.links??=[];if(d.links.some(x=>x.catalogToolId===tool.id||x.url===tool.url))return false;
  d.links.push({label:'Outil IA · '+tool.name,url:tool.url,catalogToolId:tool.id,category:tool.category});
