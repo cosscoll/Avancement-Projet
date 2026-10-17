@@ -28,7 +28,7 @@ function mount(root,adapter={}){
  let chosen=projects.some(p=>p.id===adapter.projectId)?adapter.projectId:
    projects.some(p=>p.id===search.get('project'))?search.get('project'):'general';
  const history=loadHistory(storage);
- let worker=null,ready=false,loading=false,generating=false,requestId=0,contextEnabled=false,disposed=false,pendingProject=null;
+ let worker=null,ready=false,loading=false,generating=false,requestId=0,contextEnabled=false,disposed=false,pendingProject=null,loadTimer=null;
  const opts=[['general','Conversation générale'],...projects.map(p=>[p.id,p.name])];
  root.innerHTML='<div class="loc-shell"><div class="loc-heading"><div><span class="loc-eyebrow">CONTROL / MODÈLE GÉNÉRATIF SUR TON APPAREIL</span><h1>CONTROL IA locale</h1><p>Une véritable IA qui génère ses réponses dans ton navigateur, sans clé API.</p></div><span class="loc-badge">Prototype local</span></div>'+
  '<div class="loc-hint"><strong>À savoir :</strong> petit modèle expérimental, bien moins puissant que Claude ou ChatGPT. Il peut se tromper, surtout en français. Aucun accès automatique à Internet, à GitHub ou aux outils de CONTROL.</div>'+
@@ -57,7 +57,7 @@ function mount(root,adapter={}){
  }
  const state=()=>{const disabled=!ready||generating;$('#loc-question').disabled=disabled;$('#loc-send').disabled=disabled;$('#loc-load').disabled=loading||ready||generating;$('#loc-project').disabled=generating;$('#loc-clear').disabled=generating;$('#loc-context').disabled=generating;$('#loc-stop').hidden=!loading&&!ready&&!generating;$('#loc-cancel').hidden=!generating;};
  function stop(message='Modèle arrêté. Tu peux le recharger.'){
-  ++requestId;worker?.terminate?.();worker=null;ready=false;loading=false;generating=false;pendingProject=null;
+  ++requestId;if(loadTimer){clearTimeout(loadTimer);loadTimer=null}worker?.terminate?.();worker=null;ready=false;loading=false;generating=false;pendingProject=null;
   if(!disposed){$('#loc-progress').hidden=true;status(message);state()}
  }
  function handle(message){
@@ -67,7 +67,7 @@ function mount(root,adapter={}){
    if(Number.isFinite(value)){$('#loc-progress').hidden=false;$('#loc-bar').value=Math.min(100,Math.max(0,value))}
    status('Chargement : '+(message.file||'fichiers IA')+' · '+(Number.isFinite(value)?Math.round(value)+' %':'en cours'));
   }else if(message.type==='status'){status(clamp(message.message,150))}
-  else if(message.type==='ready'){ready=true;loading=false;$('#loc-progress').hidden=true;status('IA prête : la génération s’effectue sur ton appareil.');state()}
+  else if(message.type==='ready'){if(loadTimer){clearTimeout(loadTimer);loadTimer=null}ready=true;loading=false;$('#loc-progress').hidden=true;status('IA prête : la génération s’effectue sur ton appareil.');state()}
   else if(message.type==='thinking'){if(message.requestId===requestId)status('Le modèle prépare sa réponse. Cette étape peut durer plusieurs minutes sur mobile.')}
   else if(message.type==='answer'&&message.requestId===requestId){
    generating=false;
@@ -89,7 +89,7 @@ function mount(root,adapter={}){
    worker=new Worker(new URL('./assets/local-ai-worker.js',document.baseURI),{type:'module'});
    worker.onmessage=event=>handle(event.data);
    worker.onerror=()=>{stop('Le moteur local s’est arrêté. Essaie avec un navigateur plus récent ou sur ordinateur.')};
-   loading=true;state();status('Téléchargement demandé. L’IA peut occuper plusieurs centaines de Mo de mémoire.');
+   loading=true;loadTimer=setTimeout(()=>{if(loading&&!disposed)stop('Chargement trop long (10 minutes). Vérifie ta connexion et la mémoire disponible.')},600000);state();status('Téléchargement demandé. L’IA peut occuper plusieurs centaines de Mo de mémoire.');
    worker.postMessage({action:'load'});
   }catch{stop('Impossible de lancer le moteur IA dans ce navigateur.')}
  }
