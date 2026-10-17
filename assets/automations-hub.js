@@ -21,7 +21,8 @@ let local=getLocal();
 function save(){try{localStorage.setItem(localKey,JSON.stringify(local));return true}catch{alert('Stockage local indisponible.');return false}}
 function all(ctx){return [...seeded,...(Array.isArray(local.extra)?local.extra:[])];}
 function activeProviders(ctx){
- const ids=new Set([...providers.map(x=>x.id),...((ctx.state?.customProviders)||[])]);
+ const custom=(ctx.projects||[]).flatMap(p=>ctx.state?.[p.id]?.customProviders||[]);
+ const ids=new Set([...providers.map(x=>x.id),...custom]);
  for(const t of all(ctx))ids.add(t.provider||'Autre');
  return [...ids].map(id=>providers.find(p=>p.id===id)||{id,name:id,url:'',hint:'Ouvre le fournisseur et consulte ses automatisations.'});
 }
@@ -99,7 +100,7 @@ form.onsubmit=e=>{e.preventDefault();const v=values();for(const k of ['conversat
 get('#auto-copy').onclick=async()=>{const v=values();const draft='DEMANDE DE MODIFICATION — '+id+'\nAutomatisation : '+(v.title||task.title)+'\nFréquence : '+v.schedule+'\nProjet : '+(project?.name||'Non associé')+'\nModèle souhaité/indiqué : '+v.model+'\nType d’utilisation : '+v.usage+'\nObjectif :\n'+v.objective+'\nRègles :\n'+v.rules+'\nContraintes :\n'+v.constraints+'\n\nIMPORTANT : vérifier l’automatisation existante et ses limites, ne pas créer de doublon. Appliquer uniquement après mon approbation explicite et ne jamais engager de dépense.';try{await navigator.clipboard.writeText(draft);toast('Demande copiée. Ouvre ensuite '+id+' pour modifier réellement la tâche.')}catch{toast('Impossible de copier automatiquement : vérifie les permissions du navigateur.')}};
 }
 async function ensure(){if(fetched)return;if(!fetching)fetching=fetch('./data/automations.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('missing');return r.json()}).then(d=>{if(Array.isArray(d.tasks))seeded=d.tasks.filter(x=>x.active_at_last_check===true).map(t=>({...t,uid:'chatgpt-'+t.id,provider:'ChatGPT',project:t.id,projectName:t.projectName||t.title,snapshotStatus:'active',verified_at:d.verified_at,source:'Relevé daté'}));fetched=true}).catch(()=>{seeded=[];fetched=true}).finally(()=>{fetching=null});await fetching;}
-async function render(ctx){const hash=decodeURIComponent(location.hash.slice(1)),parts=hash.split('/').filter(Boolean);if(parts[0]!=='automations')return;get('#main').innerHTML='<p class="muted">Chargement du registre d’automatisations…</p>';await ensure();if(!location.hash.startsWith('#/automations'))return;
+async function render(ctx){const hash=decodeURIComponent(location.hash.slice(1)),parts=hash.split('/').filter(Boolean);if(parts[0]!=='automations')return;get('#main').innerHTML='<p class="muted">Chargement du registre d’automatisations…</p>';await ensure();if(decodeURIComponent(location.hash.slice(1))!==hash)return;
 if(parts.length===1)return overview(ctx);
 if(parts.length===2)return provider(ctx,parts[1]);
 return detail(ctx,parts[1],parts.slice(2).join('/'));
