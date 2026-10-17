@@ -11,9 +11,9 @@ const types={team:'Équipe interne',external:'Clients / prospects'};
 const allowedLink=(s,p)=>{
  try{const x=new URL(s);if(x.protocol!=='https:'||x.username||x.password||!Object.hasOwn(providers,p))return '';
  const h=x.hostname.toLowerCase();
- if(p==='Google Meet'&&h!=='meet.google.com')return '';
- if(p==='Zoom'&&!(h==='zoom.us'||h.endsWith('.zoom.us')||h==='zoom.com'||h.endsWith('.zoom.com')))return '';
- if(p==='Teams'&&!['teams.microsoft.com','teams.live.com'].includes(h))return '';
+ if(p==='Google Meet'&&(h!=='meet.google.com'||!/^\/[a-z]{3}-[a-z]{4}-[a-z]{3}\/?$/i.test(x.pathname)))return '';
+ if(p==='Zoom'&&(!(h==='zoom.us'||h.endsWith('.zoom.us')||h==='zoom.com'||h.endsWith('.zoom.com'))||!/^\/(?:j|w|s|my|wc\/join)\//i.test(x.pathname)))return '';
+ if(p==='Teams'&&(!['teams.microsoft.com','teams.live.com'].includes(h)||!x.pathname.includes('meet')))return '';
  if(p==='Jitsi (test)'&&(h!=='meet.jit.si'||!/^CONTROL-Test-[a-f0-9]{36}$/.test(x.pathname.slice(1))))return '';
  return x.href;
  }catch{return ''}
@@ -97,7 +97,7 @@ function mount(root,a={}){
   if(title.length<3||title.length>160||!Object.hasOwn(types,type)||!Object.hasOwn(providers,provider)||!startsAt||![15,30,45,60,90,120].includes(minutes)||p&&!projects.some(x=>x.id===p)){notice('Vérifie le sujet, le projet, la date et la durée.',true);return}
   if(type==='external'&&provider==='Jitsi (test)'){notice('Pour les clients et prospects, utilise une plateforme de production.',true);return}
   let url;try{url=provider==='Jitsi (test)'?roomLink():allowedLink(String(f.get('url')||''),provider)}catch(err){notice(err.message,true);return}
-  if(!url){notice('Crée une vraie réunion chez '+provider+' et colle son URL HTTPS officielle.',true);return}
+  if(!url){notice('Colle le lien d’invitation à la réunion (et non l’adresse d’accueil ou de planification) chez '+provider+'.',true);return}
   const m={id:newId(),projectId:p,title,type,provider,startsAt,minutes,url,notes:'',createdAt:new Date().toISOString()};
   if(!a.create){notice('Enregistrement non disponible.',true);return}
   busy=true;const submit=form.querySelector('button[type="submit"]');submit.disabled=true;
