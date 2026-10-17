@@ -1,5 +1,9 @@
 # CONTROL — Centre de pilotage des projets
 
+## Bibliothèques d'outils IA — Complément IAgile (17 octobre 2026)
+
+**87 outils et ressources officielles** répartis en **9 catégories** et **4 parcours** (sites web 3D, agents personnalisés, automatisation, IA/productivité), avec **12 kits pratiques et prompts de départ**. Rechercher par outil/cas d'usage, filtrer par parcours et niveau, conserver des favoris et **ajouter une ressource à un projet CONTROL**. Accès direct à `#/control/catalog` depuis CONTROL et à « Outils IA » depuis un projet. La future interface multi-utilisateurs propose le même catalogue et un enregistrement de ressources dans les projets privés **seulement après activation sécurisée de Cloud**. Les conditions d'accès/prix/licences sont à vérifier chez chaque éditeur ; aucune intégration externe automatique. [Documentation](docs/BIBLIOTHEQUES_OUTILS_IA.md).
+
 ## CONTROL Cloud — préparation du SaaS multi-utilisateurs (17 octobre 2026)
 
 Nouvelle entrée **[app.html](app.html)** préparée pour une future plateforme publique : inscription par lien e-mail, bouton de connexion Google (à configurer), données de projets stockées sur un backend privé Supabase avec isolation RLS par utilisateur, missions, liens IA, automatisations, ressources, décisions, budgets et sauvegardes. **Actuellement les inscriptions sont volontairement désactivées** dans [config/cloud.json](config/cloud.json), car aucune base CONTROL indépendante n'a encore été créée, migrée et testée. L'application personnelle existante reste accessible sur `index.html` et n'est pas coupée.
