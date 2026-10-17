@@ -1,5 +1,9 @@
 # CONTROL — Centre de pilotage des projets
 
+## Chatbot d'assistance intégré à CONTROL (17 octobre 2026)
+
+Nouvelle bulle **« Assistance »** dans CONTROL personnel et dans la version Cloud en préparation : réponses contextuelles sur les projets, automatisations, IA et bibliothèques, 32 rubriques d'aide, 10 guides de mise en ligne, 87 fiches d'outils IA, recommandations pratiques et boutons ouvrant les bonnes rubriques. L'historique du chat reste **uniquement dans la mémoire de l'onglet**, sans API ni dépense. L'outil est **un chatbot documentaire fonctionnel et non un modèle IA génératif relié à des comptes privés** : pour une question inconnue, il indique la limite plutôt que d'inventer. Les projets privés Cloud restent protégés et les inscriptions restent désactivées. [Documentation et recette](docs/ASSISTANT_CONTROL.md).
+
 ## Mise en ligne — GitHub, IONOS, Vercel et autres hébergeurs (17 octobre 2026)
 
 **10 tutoriels pas à pas**, avec prérequis, publication, diagnostic, contrôles HTTPS/DNS, bonnes pratiques de sécurité, accès aux consoles officielles et **prompt IA de préparation de déploiement**. Disponible sous `#/control/deploy`, depuis l'onglet **Mise en ligne** de chaque projet et depuis la bibliothèque IAgile. Pour les dépôts GitHub publics, un bouton renvoie à l'activité réelle des workflows ; aucun déploiement n'est lancé automatiquement. Les liens vers IONOS, Vercel, Netlify, Cloudflare, Render, Railway et Firebase **ne valent pas autorisation API**. Aucun achat ou abonnement engagé. [Guide de fonctionnement et limitations](docs/TUTORIELS_MISE_EN_LIGNE.md).
