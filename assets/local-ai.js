@@ -22,7 +22,7 @@ function loadHistory(storage){
 function mount(root,adapter={}){
  if(!root)return;
  window.CONTROL_LOCAL_AI?.unmount?.(root);
- const storage=adapter.storage||localStorage;
+ let storage=adapter.storage;try{storage=storage||localStorage}catch{storage={getItem:()=>null,setItem:()=>{throw Error('Stockage indisponible')}}}
  const projects=(adapter.projects||[]).filter(p=>p?.id&&p?.name).slice(0,200);
  const search=new URLSearchParams(location.hash.split('?')[1]||'');
  let chosen=projects.some(p=>p.id===adapter.projectId)?adapter.projectId:
