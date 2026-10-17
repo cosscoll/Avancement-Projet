@@ -1,5 +1,9 @@
 # CONTROL — Centre de pilotage des projets
 
+## Laboratoire IA — Outils intégrés de qualité (17 octobre 2026)
+
+Nouvelle page `#/control/lab`, accessible depuis l'en-tête, les projets et Tous les outils : **7 outils internes réellement utilisables** (générateur de briefs contextualisés, comparaison textuelle de deux IA, audit HTML indicatif, validation/formatage JSON, différences entre versions, checklist de recette et masquage de secrets). Les briefs peuvent être copiés pour ChatGPT/Claude/Codex/Gemini ou enregistrés comme missions dans CONTROL. Tout fonctionne côté navigateur sans clé API ni dépense supplémentaire ; **aucun modèle IA externe n'est exécuté, et les analyses textuelles ne certifient ni véracité ni qualité sémantique**. L'espace CONTROL Cloud intègre le même module, sans activer les comptes. [Guide du Laboratoire IA](docs/LABORATOIRE_IA.md).
+
 ## Chatbot d'assistance intégré à CONTROL (17 octobre 2026)
 
 Nouvelle bulle **« Assistance »** dans CONTROL personnel et dans la version Cloud en préparation : réponses contextuelles sur les projets, automatisations, IA et bibliothèques, 32 rubriques d'aide, 10 guides de mise en ligne, 87 fiches d'outils IA, recommandations pratiques et boutons ouvrant les bonnes rubriques. L'historique du chat reste **uniquement dans la mémoire de l'onglet**, sans API ni dépense. L'outil est **un chatbot documentaire fonctionnel et non un modèle IA génératif relié à des comptes privés** : pour une question inconnue, il indique la limite plutôt que d'inventer. Les projets privés Cloud restent protégés et les inscriptions restent désactivées. [Documentation et recette](docs/ASSISTANT_CONTROL.md).
