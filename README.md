@@ -1,5 +1,9 @@
 # CONTROL — Centre de pilotage des projets
 
+## Commander Claude et Gemini depuis CONTROL (17 octobre 2026)
+
+Nouveau **poste de commande multi-IA** sous `#/control/command`, dans Tous les outils et dans chaque projet : création de missions Claude et Gemini à partir d'un objectif unique, instructions dédiées, liens vers les services officiels, suivi par fournisseur, résultat et URL de preuve, dates et provenance des informations. Ces fonctions sont réellement enregistrées dans CONTROL personnel, sans dépense. L'envoi direct via les API Claude/Gemini est **préparé mais NON actif** : la nouvelle Edge Function sécurisée est uniquement versionnée, sans déploiement ni clé API. Il faudra créer et auditer la base CONTROL Cloud indépendante, autoriser explicitement les appels et les coûts, puis activer séparément les fournisseurs. Les historiques privés des applications Claude/Gemini ne sont pas accessibles automatiquement. [Architecture et procédure d'activation](docs/COMMANDER_CLAUDE_GEMINI.md).
+
 ## UX/UI — Une interface plus claire, sans supprimer les fonctionnalités (17 octobre 2026)
 
 Refonte des parcours de CONTROL personnel et de la future interface Cloud : **quatre destinations mobiles**, **six projets maximum affichés par défaut**, trois actions rapides, regroupement des options avancées dans **Plus**, bibliothèques/outils organisés par finalité, hiérarchie visuelle et tons sobres sur mobile. Les missions, automatisations, formations, bibliothèques IA et tutoriels de publication restent disponibles ; ils ne monopolisent simplement plus l'écran d'accueil. La version multi-utilisateurs reste désactivée en attente de son infrastructure séparée. [Décisions et protocole UX](docs/UX_CLARTE_CONTROL.md).
