@@ -1,7 +1,7 @@
 /* CONTROL PWA — public static shell only; no private instructions, secrets or GitHub API responses. */
 'use strict';
-const CACHE_SHELL='control-shell-v10';
-const CACHE_PUBLIC='control-public-data-v10';
+const CACHE_SHELL='control-shell-v11';
+const CACHE_PUBLIC='control-public-data-v11';
 const ROOT=new URL(self.registration.scope);
 const ASSETS=['./','./index.html','./legacy.html','./assets/automations-hub.js','./assets/command-center.js','./assets/command-center.css','./assets/app.js','./assets/codex.js','./assets/style.css','./assets/theme.css','./assets/pwa.js','./assets/icon.svg','./assets/icon-192.png','./assets/icon-512.png','./manifest.webmanifest'];
 const PUBLIC_DATA=/^data\/(?:projects|catalog|automations)\.json$|^data\/(?:sprints|status)\/[a-z0-9-]+\.json$/;
@@ -26,6 +26,11 @@ self.addEventListener('fetch',e=>{
  const path=url.pathname.slice(ROOT.pathname.length);
  // Never cache private pages, auth callbacks, requests with query credentials or external APIs.
  if(path==='prive.html'||path.startsWith('config/')||url.searchParams.has('access_token')||url.searchParams.has('code'))return;
+ if(path==='app.html'){
+  // Authenticated cloud entry: always request from network; never serve the legacy personal dashboard as an offline fallback.
+  e.respondWith(fetch(request,{cache:'no-store'}).catch(()=>new Response('<!doctype html><html lang="fr"><meta charset="utf-8"><title>CONTROL hors ligne</title><body style="font-family:system-ui;padding:2rem">Connexion requise : rétablissez votre réseau pour ouvrir CONTROL Cloud.</body></html>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}})));
+  return;
+ }
  if(path===''||path==='index.html'||request.mode==='navigate'){
    e.respondWith((async()=>{
       try{const response=await fetch(request);if(response.ok){const cache=await caches.open(CACHE_SHELL);await cache.put(new URL('./index.html',ROOT),response.clone())}return response}catch{
