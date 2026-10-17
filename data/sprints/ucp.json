@@ -642,5 +642,36 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261017T123040Z",
+    "started_at": "2026-10-17T12:30:40Z",
+    "ended_at": "2026-10-17T12:42:00Z",
+    "summary": "UCP-QA-23 : socle PWA sécurisé et guide d’installation multi-appareils préparés et testés sur copie isolée, sans intégration.",
+    "done": [
+      "Recherche des issues [CONSIGNE][ucp] et [DECISION][ucp] de cosscoll : aucun résultat ; HEAD main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Proposition isolée : manifeste relié, worker servi à la racine, enregistrement réservé à HTTPS/localhost et cache limité à six actifs statiques, excluant navigations et /api/.",
+      "Exécutions réelles : 6 PASS/2 XFAIL stricts au contrat PWA, 8/8 tests DOM, syntaxes Python et service worker validées ; archive SHA256 51fbfa3a38506189d8c613a2bb4db4b38d5a8b381cedf04376fc931d91853a5a."
+    ],
+    "blockers": [
+      "Icônes UCP carrées 192×192/512×512 et Apple 180×180 non produites ; la PWA ne doit pas encore être annoncée comme installable.",
+      "Aucun test Chrome Android, appareil Xiaomi, Safari iOS/iPadOS, HTTPS, hors ligne, mise à jour ou désinstallation ; proposition non intégrée.",
+      "État du clone Windows dev/ucp-codex inconnu ; aucun rapprochement automatique effectué."
+    ],
+    "next": "Produire les icônes officielles sans déformation, comparer QA-23 au clone local, puis exécuter la recette d’installation sur Android/Xiaomi et iOS/iPadOS avant toute pull request.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Statut UCP central QA-23",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/12c12ba0a24174fdf6ac8c94ad7fd23c44c59a3e"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
