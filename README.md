@@ -1,5 +1,11 @@
 # CONTROL — Centre de pilotage des projets
 
+## CONTROL — Centre de commande multi-IA (17 octobre 2026)
+
+CONTROL est désormais organisé autour des **projets** et du menu **À traiter · Missions · Automatisations · CONTROL IA**, avec une page « Tous les outils » accessible depuis l'en-tête. Les modules couvrent le chef de projet central (synthèse locale et contextes), la boîte de réception des actions, les missions multi-IA et leur transfert manuel, l'activité GitHub publique à la demande, les échéances et les automatisations datées, la bibliothèque, la mémoire des décisions, le suivi des budgets et les sauvegardes locales éventuellement chiffrées.
+
+**Limitations explicites :** ni accès direct aux conversations privées des différentes IA, ni contrôle automatique de leurs tâches, ni synchronisation entre appareils, ni accès aux mails ou fichiers Google privés depuis le site GitHub Pages. Le centre conserve ses données dans le navigateur, et les liens de fournisseur restent des redirections. Il n'effectue aucune dépense. [Architecture, guide et recette](docs/CENTRE_COMMANDE_CONTROL.md).
+
 ## Automatisations multi-IA — 17 octobre 2026
 
 Nouvelle page `#/automations` dans la navigation mobile : index des IA, fiches des quatre tâches ChatGPT actives au relevé daté, détails objectif/règles/contraintes/fréquence/modèle et quotas lorsque connus, saisie manuelle des autres IA, brouillons de modification locaux et liens vers la gestion native du fournisseur. **Pas de contrôle réel ni synchronisation de tâches privées depuis le site public.** [Guide](docs/AUTOMATISATIONS_MULTI_IA.md).
