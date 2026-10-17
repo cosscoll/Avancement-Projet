@@ -31,3 +31,9 @@ test('chat history clear is disabled during an active generation',()=>{
 test('project context consent cannot change during generation',()=>{
  assert.match(local,/\$\('#loc-context'\)\.disabled=generating/);
 });
+
+test('model loading has a timeout and clears its timer on termination',()=>{
+ assert.match(local,/loadTimer=setTimeout/);
+ assert.match(local,/600000/);
+ assert.match(local,/clearTimeout\(loadTimer\)/);
+});
