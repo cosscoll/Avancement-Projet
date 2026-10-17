@@ -56,10 +56,11 @@ const IA_PROVIDERS=[
  {id:'Codex',base:'https://chatgpt.com/codex',hint:'Ouvre la tâche ou l’espace Codex lié à ce projet et copie son adresse.',type:'Tâche Codex'},
  {id:'Perplexity',base:'https://www.perplexity.ai/',hint:'Ouvre l’espace ou la recherche associée à ce projet et copie son adresse.',type:'Espace externe'}
 ];
-function platformLinkValid(id,url){
+function providerDefs(d){return IA_PROVIDERS.concat((d.customProviders||[]).map(id=>({id,base:'',hint:'Ouvre ton espace de travail dans cette IA et copie son URL.',type:'IA personnalisée'})))}
+function platformLinkValid(id,url,d){
  try{const u=new URL(url);if(u.protocol!=='https:'||u.username||u.password)return false;
  const hosts={ChatGPT:['chatgpt.com'],Codex:['chatgpt.com'],Claude:['claude.ai'],Gemini:['gemini.google.com','notebooklm.google.com'],Perplexity:['perplexity.ai','www.perplexity.ai']};
- return (hosts[id]||[]).includes(u.hostname);
+ return (hosts[id]||[]).includes(u.hostname)||(d?.customProviders||[]).includes(id);
  }catch{return false}
 }
 function providerUrl(d,id){return id==='ChatGPT'?(d.projectUrl||d.spaces?.ChatGPT||''):(d.spaces?.[id]||'')}
@@ -76,7 +77,7 @@ function reportPrompt(p,id){
 }
 async function copyText(content){try{await navigator.clipboard.writeText(content);notify('Texte copié.');return true}catch{notify('Copie indisponible : ouvre la page depuis HTTPS.');return false}}
 function aiOverview(p,d,selected){
- const keys=selected?[selected]:IA_PROVIDERS.map(x=>x.id);
+ const keys=selected?[selected]:providerDefs(d).map(x=>x.id);
  return keys.map(id=>{const r=d.reports?.[id],u=providerUrl(d,id),label=esc(id);
  return '<div class="report-entry"><div class="row"><strong>'+label+'</strong><span class="muted">'+(r?.updatedAt?'Bilan du '+esc(new Date(r.updatedAt).toLocaleString('fr-FR')):'Aucun bilan')+'</span></div>'+
  (r?.text?'<p class="report-body">'+esc(r.text)+'</p>':'<p class="muted">Aucune information de progression transmise par '+label+'.</p>')+
@@ -86,7 +87,7 @@ function aiOverview(p,d,selected){
 
 function ai(p,d,el){
  d.spaces??={};d.reports??={};d.chats??=[];
- const card=IA_PROVIDERS.map(x=>{
+ const card=providerDefs(d).map(x=>{
  const url=providerUrl(d,x.id),r=d.reports[x.id];
  const rel=d.chats.filter(c=>(c.ai||'ChatGPT').toLowerCase()===x.id.toLowerCase());
  return '<article class="panel ia-card"><div class="row"><div class="ia-heading"><div class="badge">'+esc(x.id.slice(0,2))+'</div><div><h2>'+esc(x.id)+'</h2><span class="muted">'+esc(x.type)+'</span></div></div><span class="chip">'+(url?'Lien enregistré':'À relier')+'</span></div>'+
@@ -95,21 +96,23 @@ function ai(p,d,el){
  '<div class="ia-report">'+(r?.text?'<span class="muted">Dernier bilan · '+esc(new Date(r.updatedAt).toLocaleDateString('fr-FR'))+'</span><p class="report-preview">'+esc(r.text)+'</p>':'<span class="muted">Aucun compte rendu de cette IA.</span>')+'</div>'+
  (rel.length?'<details><summary>'+rel.length+' conversation(s) épinglée(s)</summary>'+rel.map(c=>external(c.url,c.title)).join('')+'</details>':'')+'</article>';
  }).join('');
- el.innerHTML='<section class="hint"><h2>Espaces IA du projet</h2><p class="muted">Un clic ouvre directement le véritable projet dans l’IA concernée. Les conversations s’affichent dans cette IA, avec ta session habituelle. Les liens et bilans sont conservés sur cet appareil.</p></section><div class="ia-grid">'+card+'</div>'+
+ el.innerHTML='<section class="hint"><h2>Espaces IA du projet</h2><p class="muted">Un clic ouvre directement le véritable projet dans l’IA concernée. Les conversations s’affichent dans cette IA, avec ta session habituelle. Les liens et bilans sont conservés sur cet appareil.</p><button id="add-provider">+ Ajouter une autre IA</button></section><div class="ia-grid">'+card+'</div><section class="panel hidden" id="provider-editor"><h2>Ajouter une IA</h2><form id="provider-form"><label>Nom de l’IA<input class="field" name="name" required maxlength="50" placeholder="Ex. Mistral ou Grok"></label><button class="primary">Ajouter cet espace IA</button></form></section>'+
  '<section class="panel hidden" id="space-editor"><h2 id="space-editor-title">Associer un projet</h2><p class="muted" id="space-hint"></p><form id="space-form"><input type="hidden" name="provider" id="space-provider"><label>URL de cet espace<input class="field" type="url" name="url" id="space-url" required placeholder="https://…"></label><div class="actions"><button class="primary">Enregistrer</button><button type="button" id="space-cancel">Annuler</button><a id="space-start" class="button" target="_blank" rel="noopener noreferrer">Ouvrir l’IA ↗</a></div></form><p class="muted">Ne colle jamais un lien de partage public si tu souhaites conserver le projet privé : privilégie l’URL du projet dans la barre d’adresse.</p></section>'+
  '<section class="panel hidden" id="report-editor"><h2 id="report-editor-title">Compte rendu</h2><p class="muted">Le compte rendu ne se met pas à jour tout seul : récupère le bilan depuis l’IA, puis colle-le ci-dessous. N’inclus aucun secret.</p><button id="copy-report-prompt">Copier la demande de bilan pour cette IA</button><form id="report-form"><input type="hidden" name="provider" id="report-provider"><label>Dernier bilan vérifié<textarea class="field" name="text" id="report-text" maxlength="20000" rows="9" required placeholder="Travaux terminés, en cours, blocages et prochaines étapes…"></textarea></label><div class="actions"><button class="primary">Enregistrer le bilan</button><button id="report-cancel" type="button">Annuler</button></div></form></section>';
- function editSpace(id){const x=IA_PROVIDERS.find(p=>p.id===id);if(!x)return;$('#space-editor').classList.remove('hidden');$('#report-editor').classList.add('hidden');$('#space-provider').value=id;$('#space-url').value=providerUrl(d,id);$('#space-editor-title').textContent='Associer '+x.type;$('#space-hint').textContent=x.hint;$('#space-start').href=x.base;$('#space-start').textContent='Ouvrir '+id+' ↗';$('#space-editor').scrollIntoView({block:'nearest',behavior:'smooth'})}
- function editReport(id){if(!IA_PROVIDERS.some(x=>x.id===id))return;$('#report-editor').classList.remove('hidden');$('#space-editor').classList.add('hidden');$('#report-provider').value=id;$('#report-text').value=d.reports[id]?.text||'';$('#report-editor-title').textContent='Bilan · '+id;$('#report-editor').scrollIntoView({block:'nearest',behavior:'smooth'})}
+ function editSpace(id){const x=providerDefs(d).find(p=>p.id===id);if(!x)return;$('#space-editor').classList.remove('hidden');$('#report-editor').classList.add('hidden');$('#space-provider').value=id;$('#space-url').value=providerUrl(d,id);$('#space-editor-title').textContent='Associer '+x.type;$('#space-hint').textContent=x.hint;$('#space-start').href=x.base;$('#space-start').textContent='Ouvrir '+id+' ↗';$('#space-editor').scrollIntoView({block:'nearest',behavior:'smooth'})}
+ function editReport(id){if(!providerDefs(d).some(x=>x.id===id))return;$('#report-editor').classList.remove('hidden');$('#space-editor').classList.add('hidden');$('#report-provider').value=id;$('#report-text').value=d.reports[id]?.text||'';$('#report-editor-title').textContent='Bilan · '+id;$('#report-editor').scrollIntoView({block:'nearest',behavior:'smooth'})}
  el.querySelectorAll('[data-edit-space]').forEach(b=>b.onclick=()=>editSpace(b.dataset.editSpace));
  el.querySelectorAll('[data-write-report]').forEach(b=>b.onclick=()=>editReport(b.dataset.writeReport));
+ $('#add-provider').onclick=()=>$('#provider-editor').classList.toggle('hidden');
+ $('#provider-form').onsubmit=e=>{e.preventDefault();const name=String(new FormData(e.target).get('name')||'').trim();if(!name||!/[a-z0-9]/i.test(name))return notify('Nom invalide.');d.customProviders??=[];if(providerDefs(d).some(x=>x.id.toLowerCase()===name.toLowerCase()))return notify('Cet espace existe déjà.');d.customProviders.push(name);persist();ai(p,d,el);notify('Nouvelle IA ajoutée.')};
  $('#space-cancel').onclick=()=>$('#space-editor').classList.add('hidden');
  $('#report-cancel').onclick=()=>$('#report-editor').classList.add('hidden');
- $('#space-form').onsubmit=e=>{e.preventDefault();const id=$('#space-provider').value,url=$('#space-url').value.trim();if(!platformLinkValid(id,url)){notify('Lien non valide pour '+id+'. Vérifie l’adresse HTTPS du projet.');return}if(id==='ChatGPT')d.projectUrl=url;d.spaces[id]=url;persist();ai(p,d,el);notify('Projet '+id+' associé sur cet appareil.')};
+ $('#space-form').onsubmit=e=>{e.preventDefault();const id=$('#space-provider').value,url=$('#space-url').value.trim();if(!platformLinkValid(id,url,d)){notify('Lien non valide pour '+id+'. Vérifie l’adresse HTTPS du projet.');return}if(id==='ChatGPT')d.projectUrl=url;d.spaces[id]=url;persist();ai(p,d,el);notify('Projet '+id+' associé sur cet appareil.')};
  $('#report-form').onsubmit=e=>{e.preventDefault();const id=$('#report-provider').value,txt=$('#report-text').value.trim();if(!txt)return;d.reports[id]={text:txt,updatedAt:new Date().toISOString(),source:'manual'};persist();ai(p,d,el);notify('Bilan '+id+' enregistré.')};
  $('#copy-report-prompt').onclick=()=>copyText(reportPrompt(p,$('#report-provider').value));
 }
 function resources(p,d,el){
-const defaults=[...(p.repo?[{label:'Dépôt GitHub',url:'https://github.com/'+OWNER+'/'+encodeURIComponent(p.repo)}]:[]),...(p.website?.url?[{label:p.website.label||'Site web',url:p.website.url}]:[]),...(p.other_sites||[]),...IA_PROVIDERS.filter(x=>providerUrl(d,x.id)).map(x=>({label:'Espace '+x.id,url:providerUrl(d,x.id)}))],links=[...defaults,...(d.links||[])];
+const defaults=[...(p.repo?[{label:'Dépôt GitHub',url:'https://github.com/'+OWNER+'/'+encodeURIComponent(p.repo)}]:[]),...(p.website?.url?[{label:p.website.label||'Site web',url:p.website.url}]:[]),...(p.other_sites||[]),...providerDefs(d).filter(x=>providerUrl(d,x.id)).map(x=>({label:'Espace '+x.id,url:providerUrl(d,x.id)}))],links=[...defaults,...(d.links||[])];
 el.innerHTML='<section class="panel"><div class="sectionhead"><h2>Ressources et accès</h2><button class="primary" id="show-link">+ Ajouter</button></div><div class="links">'+(links.length?links.map((x,i)=>'<div class="row">'+external(x.url,x.label,'link')+(i>=defaults.length?'<button data-del="'+(i-defaults.length)+'" aria-label="Supprimer">×</button>':'')+'</div>').join(''):'<div class="empty">Aucune ressource enregistrée.</div>')+'</div><form class="hidden" id="link-form" style="margin-top:17px"><label>Nom de la ressource<input class="field" required name="label" placeholder="Drive du projet"></label><label>Adresse HTTPS<input class="field" required type="url" name="url" placeholder="https://drive.google.com/…"></label><button class="primary">Ajouter</button></form></section>';
 $('#show-link').onclick=()=>$('#link-form').classList.toggle('hidden');
 $('#link-form').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target),url=link(f.get('url'));if(!url)return notify('Adresse HTTPS obligatoire.');d.links.push({label:String(f.get('label')).trim(),url});persist();resources(p,d,el)};
@@ -117,9 +120,9 @@ el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{d.links.splice(+b.da
 }
 function pilot(p,d,el){
  d.reports??={};d.pilotChat??=[];d.spaces??={};
- const hasReport=IA_PROVIDERS.some(x=>d.reports[x.id]?.text);
+ const hasReport=providerDefs(d).some(x=>d.reports[x.id]?.text);
  function answer(question){
-  const q=question.toLowerCase();const x=IA_PROVIDERS.find(v=>q.includes(v.id.toLowerCase()));
+  const q=question.toLowerCase();const x=providerDefs(d).find(v=>q.includes(v.id.toLowerCase()));
   if(!hasReport)return 'Aucun bilan IA enregistré pour '+nameOf(p)+'. Dans « Espaces IA », demande un bilan à ChatGPT, Claude, Gemini ou Codex, puis colle-le. Je ne peux pas lire leurs conversations privées en direct.';
   const targets=x?[x.id]:IA_PROVIDERS.map(t=>t.id);
   return 'État de '+nameOf(p)+(x?' sur '+x.id:' par IA')+' (bilans enregistrés, pas de synchronisation en direct) :\n\n'+targets.map(id=>{
