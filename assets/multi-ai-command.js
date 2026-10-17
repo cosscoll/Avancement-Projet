@@ -22,6 +22,7 @@ function missionPrompt(project,task,provider){
   '- Fournis une réponse structurée : 1. Résumé 2. Livrables 3. Liens ou preuves 4. Tests réellement exécutés 5. Risques 6. Étapes suivantes.\n'+
   '- Ne reproduis pas de mot de passe, clé API ou jeton de session.\n';
 }
+function unmount(root){if(root){handlers.get(root)?.abort();handlers.delete(root)}}
 function ui(root,adapter={}){
  if(!root)return;
  handlers.get(root)?.abort();
@@ -104,5 +105,5 @@ function ui(root,adapter={}){
  },{signal:listeners.signal});
  paint();
 }
-window.CONTROL_MULTI_AI={mount:ui,missionPrompt};
+window.CONTROL_MULTI_AI={mount:ui,unmount,missionPrompt};
 })();
