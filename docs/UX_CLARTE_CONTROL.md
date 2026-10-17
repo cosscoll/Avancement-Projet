@@ -40,7 +40,11 @@ L'onglet actif dans Plus provoque l'ouverture du groupe ; l'utilisateur ne perd 
 
 **CONTROL Cloud** : Créer et publier, Organiser, Suivre et protéger — la catégorie contenant l'outil actif est ouverte, les autres repliées.
 
-### 5. Design visuel
+### 5. Bibliothèques et tutoriels sans surcharge
+
+Les 87 outils IA apparaissent par lots de **8 fiches**, les 12 kits restent sous un panneau facultatif. Les 10 tutoriels de mise en ligne apparaissent par lots de **4**, avec recherche et filtres pour accéder aux autres. Les fiches restent disponibles et aucun contenu n’est supprimé.
+
+### 6. Design visuel
 
 - Fond clair, cartes blanches, accent bleu sobre ; pas de couleurs saturées concurrentes.
 - Moins de boutons simultanés, libellés explicites et clics/touchers confortables.
