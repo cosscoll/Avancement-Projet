@@ -139,7 +139,7 @@
     },
     {
       "title": "PWA et distribution mobile non validées",
-      "description": "UCP-QA-31 reproduit un défaut résiduel de QA-28 : si caches.match rejette, le réseau n’est pas essayé. Un correctif minimal isolé ajoute ce repli et passe 18/18 contrôles injectés tout en conservant les exclusions API/navigation/mutations/origines tierces/hors liste. La preuve reste simulée sans vrai navigateur/service worker ; aucun Android/Xiaomi/iOS, HTTPS, Lighthouse, hors-ligne réel, paquet signé, compte store ou publication.",
+      "description": "UCP-QA-33 compose QA-28, QA-31 et QA-32 sur copie isolée : 35 contrôles d’intégration, 15 de composition et 8 tests DOM réussissent. Le repli réseau après erreur CacheStorage, les exclusions de données privées et les ajustements mobiles restent cohérents ensemble. La preuve demeure sans vrai navigateur/service worker, HTTPS, hors-ligne réel ni appareil Android/Xiaomi/iOS ; aucun code applicatif n’est intégré.",
       "level": "warning"
     },
     {
@@ -179,7 +179,7 @@
     },
     {
       "title": "Accessibilité de l’application partiellement auditée",
-      "description": "UCP-QA-21/22 couvrent la sémantique et le focus en simulation DOM. UCP-QA-32 relève sur la proposition PWA QA-28 des microtextes à 9–11 px et des actions à 36–40 px ; un correctif mobile isolé impose un seuil ergonomique interne de 44 px et passe 17/17 contrôles statiques. Aucun navigateur natif, clavier réel, contraste, zoom, lecteur d’écran, chevauchement ou appareil n’est validé ; propositions non intégrées.",
+      "description": "UCP-QA-21/22 couvrent la sémantique et le focus en simulation DOM. UCP-QA-33 compose le correctif mobile QA-32 avec la PWA QA-28 et le repli QA-31 : les cibles de 44 px, les champs à 16 px et prefers-reduced-motion passent le contrat composé et 8/8 tests DOM. Aucun navigateur natif, clavier réel, contraste, zoom, lecteur d’écran, chevauchement ou appareil n’est validé ; proposition non intégrée.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-32 ; QA-32 prépare isolément la lisibilité et les cibles tactiles mobiles, sans push applicatif",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-33 ; QA-33 compose isolément PWA, robustesse du cache et ergonomie mobile, sans push applicatif",
   "baseline_date": "2026-10-18"
 }
