@@ -986,5 +986,35 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261018T012702Z",
+    "started_at": "2026-10-18T01:27:02Z",
+    "ended_at": "2026-10-18T01:33:00Z",
+    "summary": "UCP-QA-34 : quatre chemins de polices erronés susceptibles de bloquer l’installation du service worker ont été corrigés sur copie isolée ; 79 contrôles réussis.",
+    "done": [
+      "Issues centrales #1/#2 inchangées, lues et bloquées ; main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Le pré-cache QA-33 référençait quatre polices sous /assets au lieu de /assets/fonts ; les chemins ont été corrigés et le cache incrémenté de v2 vers v3 sur copie isolée.",
+      "21/21 contrôles de cohérence du pré-cache, 35/35 d’intégration, 15/15 de composition et 8/8 tests DOM réussis, soit 79 contrôles ; archive Drive SHA256 8f57477451982733585e8f39f81cf918298de26ab5b29f93d47f5e7b69314846."
+    ],
+    "blockers": [
+      "Aucun navigateur, moteur Service Worker réel, HTTPS, quota CacheStorage ou appareil Android/Xiaomi/iOS testé.",
+      "Correctif non intégré ; état du clone Windows dev/ucp-codex inconnu et volontairement non lu."
+    ],
+    "next": "Comparer QA-34 au clone local, intégrer sur une branche dédiée, puis vérifier dans Chrome DevTools que les onze actifs se préchargent sans 404 avant la recette multi-appareils.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Livrable QA-34 sur Drive",
+        "url": "https://drive.google.com/file/d/1UasIRIgVDzJF5kSs7t3gB7pTbUNH42jv/view?usp=drivesdk"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
