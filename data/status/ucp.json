@@ -119,7 +119,7 @@
   "alerts": [
     {
       "title": "Environnement de production non validé",
-      "description": "QA-38 revalide sur copie isolée 110/110 tests backend avec --basetemp, puis 166/166 contrôles PWA/DOM, soit 276/276. Le paquet QA-37 omettait application/scripts/database.py : 109 succès et 1 échec ont d'abord reproduit ce défaut, puis le fichier public a été réintégré dans QA-38. Aucun navigateur réel, appareil, staging, charge, clone Windows ni déploiement n'est validé.",
+      "description": "QA-39 confirme sur copie isolée 110/110 tests backend avec --basetemp, 166/166 contrôles PWA/DOM et 24/24 contrôles de sauvegarde/restauration, soit 300/300. Aucun navigateur réel, appareil, stockage distant, staging, charge, clone Windows ni déploiement n'est validé.",
       "level": "warning"
     },
     {
@@ -129,7 +129,7 @@
     },
     {
       "title": "Sauvegardes SQLite non chiffrées",
-      "description": "UCP-QA-03 a confirmé sur le blob a4f587d que le fichier de sauvegarde expose l'en-tête SQLite et une valeur synthétique en clair ; 4 contrôles réussis et 2 exigences de chiffrement marquées XFAIL.",
+      "description": "UCP-QA-39 valide sur données synthétiques les permissions 0600, l'intégrité, le refus d'écrasement, le nettoyage après corruption, les clés étrangères, le mode WAL et la révocation des sessions/jetons après restauration (24/24). Le format reste un fichier SQLite lisible en clair : aucun chiffrement, rotation de clés, stockage distant ou exercice de staging n'est validé.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-38 ; QA-38 revalide 110/110 pytest avec --basetemp et 166/166 contrôles PWA/DOM sur copie isolée, sans push applicatif",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-39 ; QA-39 valide 24/24 contrôles de sauvegarde/restauration et une régression totale de 300/300 sur copie isolée, sans push applicatif",
   "baseline_date": "2026-10-18"
 }
