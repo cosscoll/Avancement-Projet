@@ -43,3 +43,19 @@
 .loc-shell :is(button,textarea,select,input):focus-visible{outline:3px solid #89acdd;outline-offset:2px}
 @media(max-width:640px){.loc-heading{align-items:flex-start;flex-direction:column}.loc-badge{display:none}.loc-settings,.loc-model,.loc-chat{padding:13px}.loc-stream{max-height:380px}.loc-message{max-width:100%}.loc-topline{align-items:stretch;flex-direction:column}.loc-topline label{width:100%;max-width:none}.loc-model-actions button,.loc-chat-actions button{flex:1}}
 @media(prefers-reduced-motion:reduce){.loc-shell *{scroll-behavior:auto!important}}
+
+/* CONTROL local operator — distinguish genuine local actions from generative chat. */
+.control-operator{border-color:#c5d9eb;background:#f9fcff}
+.control-operator .loc-chathead{align-items:flex-start}
+.control-operator .loc-chathead span{max-width:190px;text-align:right}
+.control-operator form label{display:block;font-size:12px;font-weight:750;color:#3a5772;margin:8px 0}
+.control-operator textarea,.control-operator input:not([type=checkbox]){display:block;width:100%;min-height:42px;background:white;border:1px solid #bfcfe1;border-radius:9px;padding:10px;margin-top:6px;color:#263d56;font:inherit}
+.control-operator textarea{resize:vertical;min-height:75px}
+.control-operator-response{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.6;color:#324e68;margin-top:14px;border-radius:10px}
+.control-operator-response:not(:empty){background:#edf4fb;border:1px solid #d5e3f0;padding:12px}
+.control-operator-response .control-operator-link{display:inline-flex;margin:10px 8px 0 0;padding:6px 10px;border:1px solid #b7cfe4;background:#fff;border-radius:8px;color:#204c78;text-decoration:none;font-weight:700}
+.control-operator [data-op-draft]:not([hidden]){border:1px solid #c8d7e8;background:#fff;margin-top:15px;padding:13px;border-radius:12px}
+.control-operator [data-op-draft] h3{font-size:15px;margin:0 0 8px}
+.control-operator [data-op-draft] p{font-size:12px;line-height:1.5}
+.control-operator [data-op-draft][hidden],.control-operator [data-op-date-wrap][hidden]{display:none!important}
+@media(max-width:600px){.control-operator .loc-chathead{flex-direction:column;gap:4px}.control-operator .loc-chathead span{text-align:left}.control-operator .loc-chat-actions button{flex:1 1 135px}}
