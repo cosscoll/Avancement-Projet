@@ -119,7 +119,7 @@
   "alerts": [
     {
       "title": "Environnement de production non validé",
-      "description": "QA-16 revalide 110/110 tests backend et 8/8 DOM sur application/ hash-identique au HEAD. QA-17 confirme le démarrage local, les en-têtes de sécurité et la garde Host, puis prépare une recette Playwright bureau/mobile ; aucun moteur Chromium n'a pu être téléchargé, donc aucun navigateur réel, appareil, staging, charge ou déploiement n'est validé.",
+      "description": "QA-38 revalide sur copie isolée 110/110 tests backend avec --basetemp, puis 166/166 contrôles PWA/DOM, soit 276/276. Le paquet QA-37 omettait application/scripts/database.py : 109 succès et 1 échec ont d'abord reproduit ce défaut, puis le fichier public a été réintégré dans QA-38. Aucun navigateur réel, appareil, staging, charge, clone Windows ni déploiement n'est validé.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-37 ; QA-37 valide en simulation un avis de mise à jour PWA avec rechargement explicite et protection des brouillons, sans push applicatif",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-38 ; QA-38 revalide 110/110 pytest avec --basetemp et 166/166 contrôles PWA/DOM sur copie isolée, sans push applicatif",
   "baseline_date": "2026-10-18"
 }
