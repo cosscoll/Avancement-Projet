@@ -119,12 +119,12 @@
   "alerts": [
     {
       "title": "Environnement de production non validé",
-      "description": "QA-39 confirme sur copie isolée 110/110 tests backend avec --basetemp, 166/166 contrôles PWA/DOM et 24/24 contrôles de sauvegarde/restauration, soit 300/300. Aucun navigateur réel, appareil, stockage distant, staging, charge, clone Windows ni déploiement n'est validé.",
+      "description": "QA-40 confirme sur copie isolée 110/110 tests backend avec --basetemp, 166/166 contrôles PWA/DOM et 24/24 contrôles de sauvegarde/restauration, soit 301/301. Un manifeste borné au HEAD public décrit 5 fichiers modifiés, 7 ajoutés, 22 identiques et 0 suppression. Aucun navigateur réel, appareil, staging privé, clone Windows, intégration ni déploiement n’est validé.",
       "level": "warning"
     },
     {
       "title": "Branche locale Codex non synchronisée",
-      "description": "main est à 2034e115 tandis que dev/ucp-codex distante reste à 712a069 ; les modifications et résultats du clone Windows ne sont pas prouvés sur GitHub.",
+      "description": "main est à 2034e115 et l’état du clone Windows dev/ucp-codex reste volontairement non lu. QA-40 fournit une passation contrôlée avec blobs Git, SHA-256 et tailles pour 12 fichiers, mais toute copie doit s’arrêter si la base locale diverge ; aucune intégration n’est prouvée.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-39 ; QA-39 valide 24/24 contrôles de sauvegarde/restauration et une régression totale de 300/300 sur copie isolée, sans push applicatif",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-40 ; QA-40 valide un manifeste 5 modifiés/7 ajoutés/22 identiques/0 suppression et 301/301 contrôles sur copie isolée, sans push applicatif",
   "baseline_date": "2026-10-18"
 }
