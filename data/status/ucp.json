@@ -139,7 +139,7 @@
     },
     {
       "title": "PWA et distribution mobile non validées",
-      "description": "UCP-QA-33 compose QA-28, QA-31 et QA-32 sur copie isolée : 35 contrôles d’intégration, 15 de composition et 8 tests DOM réussissent. Le repli réseau après erreur CacheStorage, les exclusions de données privées et les ajustements mobiles restent cohérents ensemble. La preuve demeure sans vrai navigateur/service worker, HTTPS, hors-ligne réel ni appareil Android/Xiaomi/iOS ; aucun code applicatif n’est intégré.",
+      "description": "UCP-QA-34 corrige sur copie isolée quatre URL de polices du pré-cache qui pointaient vers /assets au lieu de /assets/fonts et pouvaient faire rejeter cache.addAll, donc toute l’installation du service worker. Le cache passe de v2 à v3 ; 21 contrôles de chemins, 35 d’intégration, 15 de composition et 8 DOM réussissent. Aucun navigateur/service worker réel, HTTPS, hors-ligne ou appareil Android/Xiaomi/iOS n’est validé ; le correctif n’est pas intégré.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-33 ; QA-33 compose isolément PWA, robustesse du cache et ergonomie mobile, sans push applicatif",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-34 ; QA-34 corrige isolément les chemins de polices du pré-cache PWA, sans push applicatif",
   "baseline_date": "2026-10-18"
 }
