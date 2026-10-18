@@ -119,12 +119,12 @@
   "alerts": [
     {
       "title": "Environnement de production non validé",
-      "description": "QA-42 confirme 330/330 contrôles sur copie isolée et ajoute un audit fermé du ZIP de passation : 105 entrées, intégrité valide, aucun secret détecté et aucune adresse non synthétique. Le HEAD public af2bba35 ajoute uniquement une politique documentaire au parent applicatif 2034e115. Aucun navigateur réel, appareil, staging privé, clone Windows, intégration, PR, fusion ni déploiement n’est validé.",
+      "description": "QA-43 confirme 340/340 contrôles sur copie isolée et livre un ZIP audité accompagné d’un reçu détaché vérifiable par nom, taille, SHA-256, racine et métriques d’audit. Le HEAD public af2bba35 reste documentaire par rapport au parent applicatif 2034e115. Aucun navigateur réel, appareil, staging privé, clone Windows, intégration, PR, fusion ni déploiement n’est validé.",
       "level": "warning"
     },
     {
       "title": "Branche locale Codex non synchronisée",
-      "description": "Le clone Windows dev/ucp-codex reste volontairement non lu. QA-42 conserve le préflight non destructif de QA-41 et ajoute l’audit du ZIP reçu avant toute copie ; aucun de ces contrôles n’a encore été exécuté contre le clone. Le HEAD public af2bba35 ne change que docs/SPRINT_DELIVERY_POLICY.md et conserve 2034e115 comme parent applicatif du manifeste.",
+      "description": "Le clone Windows dev/ucp-codex reste volontairement non lu. QA-43 impose la vérification du reçu détaché et du ZIP avant le préflight non destructif ; aucun de ces contrôles n’a encore été exécuté contre le clone. Le HEAD public af2bba35 ne change que docs/SPRINT_DELIVERY_POLICY.md et conserve 2034e115 comme parent applicatif du manifeste.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-42 ; QA-42 valide l’audit fermé d’une archive de passation et 330/330 contrôles sur copie isolée. HEAD public af2bba35 documentaire, lot sauvegardé hors GitHub, non fusionné et non déployé",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-43 ; QA-43 valide un ZIP audité, son reçu d’intégrité détaché et 340/340 contrôles sur copie isolée. HEAD public af2bba35 documentaire, lot sauvegardé hors GitHub, non fusionné et non déployé",
   "baseline_date": "2026-10-18"
 }
