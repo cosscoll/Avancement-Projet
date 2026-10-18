@@ -106,3 +106,13 @@ Document public de suivi technique limité à CONTROL IA. Source de spécificati
 **Autocritique :** la fusion et la CI vérifient les tests Node et le déploiement, **pas** une recette Chrome Android physique, ni la vérification métier complète des interprétations de langage ; la gestion des fuseaux horaires est pour l'instant celle du navigateur, pas un compte synchronisé. Un refus d'API ou de PR lors d'un prochain sprint ne pourra pas être supprimé par un simple changement de prompt. Les séquences d'amélioration doivent inclure des tests représentatifs et éviter des succès déclaratifs.
 
 **Prochaine priorité P0 :** reproduire un scénario de portée inter-projet et un rendez-vous dans la PWA publiée, ajouter des tests end-to-end Chrome Android si un vrai navigateur est accessible. Ensuite, reprendre les critiques C-003 (identité/RLS), C-004 (faux positifs du routeur) et C-005 (recette appareils) sans service facturable. Conserver la documentation V1.1 privée.
+
+## 2026-10-18 — Reprise corrective PR #6 (13h56 Paris)
+- Tickets BACK-010/022/030, statut partiel ; autres BACK-001..042 inchangés (table précédente).
+- Base: PR #6 sur branche `control-ia/snapshot-failclosed-20261018`, CI précédente 89/91 en échec, tests historiques manquaient les préconditions attendues.
+- Première passe: commit `dbda503` transmet `expectedStatus` et `expectedDate` aux tests existants.
+- Autocritique: P0 une exception de `save()` ou une valeur truthy non booléenne pouvait laisser une mutation locale non sauvegardée ; P1 CI complète non encore observée.
+- Deuxième passe: `a2d52ba` rollback sur exception/valeur non strictement true ; `e82ff612` ajoute deux scénarios de régression.
+- Preuve: écritures GitHub réussies. Les tests n'ont PAS encore été exécutés sur le nouveau SHA : workflow GitHub Actions non retourné au moment du contrôle. Ne pas fusionner avant CI verte et absence de conflit.
+- Critiques ouvertes: P0 authentification serveur/RLS et atomicité multi-appareils ; P1 recette Android/iOS, test navigateur et vérification Pages ; P1 CI du dernier SHA à attendre.
+- Prochain sprint: vérifier le run CI du SHA `e82ff612b3f3ae6ffc740d06fc73949fc0981267`, corriger les éventuels échecs, fusionner seulement après validation, vérifier déploiement et parcours réel.
