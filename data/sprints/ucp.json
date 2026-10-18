@@ -1078,5 +1078,39 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/issues"
       }
     ]
+  },
+  {
+    "id": "ucp-20261018T053446Z",
+    "started_at": "2026-10-18T05:34:46Z",
+    "ended_at": "2026-10-18T05:38:22.922Z",
+    "summary": "UCP-QA-37 ajoute sur copie isolée un avis accessible de mise à jour PWA avec rechargement explicite et protection des brouillons ; 166 contrôles passent.",
+    "done": [
+      "Issues centrales #1 et #2 relues : ouvertes, inchangées, créées par cosscoll et sans commentaire ; aucune issue [DECISION][ucp].",
+      "Avis controllerchange limité aux pages déjà contrôlées, dédupliqué, annoncé poliment et sans rechargement automatique.",
+      "Le rechargement est explicite et refusé lorsqu’un brouillon est actif, avec instruction de sauvegarde.",
+      "166 contrôles réussis : 11 avis de mise à jour, 14 cycle worker, 62 HTTP/ASGI, 21 pré-cache, 35 intégration, 15 composition et 8 DOM.",
+      "Journal corrigé pour séparer les sections QA-35 et QA-36, puis QA-37 ajouté et relu.",
+      "Archive Drive vérifiée : 323022 octets, SHA-256 e6abd5eafaf5013be852a55db84b2a892fc7703e0e723a59ee58dd3004d78f5b."
+    ],
+    "blockers": [
+      "La connexion CONTROL–Codex demandée par les issues #1/#2 reste interdite ; aucun accès Codex n'a été accordé ou déclenché.",
+      "Simulation JSDOM/Node et ASGI sans navigateur, moteur Service Worker réel, HTTPS, multi-onglets ni appareil Android/Xiaomi/iOS.",
+      "Proposition non intégrée ; état du clone Windows dev/ucp-codex et de ses tests --basetemp inconnu."
+    ],
+    "next": "Comparer QA-37 au clone local, intégrer sur branche dédiée après contrôle de conflit, puis recetter sous Chrome la bannière, le focus et la protection d’un brouillon pendant une mise à jour.",
+    "links": [
+      {
+        "label": "Livrable UCP-QA-37",
+        "url": "https://drive.google.com/file/d/1Dl-HC0X9KNe4G6DGpBQjM5k5hh3e3QSb/view?usp=drivesdk"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      },
+      {
+        "label": "Issues UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues"
+      }
+    ]
   }
 ]
