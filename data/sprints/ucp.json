@@ -1480,5 +1480,52 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/issues"
       }
     ]
+  },
+  {
+    "id": "ucp-20261018T193445Z",
+    "started_at": "2026-10-18T19:34:45Z",
+    "ended_at": "2026-10-18T19:39:44.307Z",
+    "summary": "UCP-QA-47 ajoute une vérification indépendante anti-altération du rollback théorique et confirme 379/379 contrôles sur copie isolée, avec livraison Drive vérifiée.",
+    "done": [
+      "Issues centrales #1 et #2 relues : ouvertes, inchangées, créées par cosscoll et sans commentaire ; aucune issue [DECISION][ucp].",
+      "Validateur indépendant du rollback ajouté : vérification de l’empreinte canonique, reconstruction depuis le plan d’intégration revérifié et comparaison structurelle exacte, sans écriture.",
+      "10/10 tests dédiés et 1/1 vérification réelle réussis ; altérations d’opération, garde-fou, empreinte, cible, plan d’intégration, champ inattendu et lien symbolique bloquées.",
+      "Plan réel revérifié : 12 opérations no_action, aucune restauration, suppression ou écriture ; SHA-256 du rollback 0e06ba5f2a418456600506986b3e0bb832f6dc0ea78d85ea13a0b6115836a2f7.",
+      "Régression complète réussie : 110/110 pytest avec --basetemp, 166/166 PWA/DOM, 24/24 sauvegarde/restauration synthétique, manifeste, préflight, plans, vérifications, archive et reçu ; total 379/379.",
+      "Archive Drive vérifiée : 379606 octets, SHA-256 10e5f2d6401f19b20ec3d24b717c13bf01caa192d42b139fbd781a860f070c92.",
+      "Reçu Drive vérifié : 575 octets, SHA-256 1634ac40acd94f04f98eb0d97e0826c34d313106d4b11adcc96d92fb742db97d.",
+      "Journal UCP mis à jour et vérifié ; branche main publique présente et aucune PR ouverte."
+    ],
+    "blockers": [
+      "La connexion CONTROL–Codex demandée par les issues #1/#2 reste interdite ; aucun accès Codex n’a été accordé ou déclenché.",
+      "Le clone Windows dev/ucp-codex reste volontairement non lu ; le validateur de rollback n’y a pas été exécuté.",
+      "Le rollback demeure théorique : aucune sauvegarde réelle n’a été restaurée et aucun fichier réel n’a été supprimé.",
+      "Lot sauvegardé hors GitHub applicatif : non intégré, non fusionné, non déployé ; aucune recette navigateur/appareil ou staging privé.",
+      "Le reçu protège l’intégrité mais ne constitue pas une signature cryptographique d’identité.",
+      "Un avertissement de dépréciation Starlette/AnyIO reste non bloquant."
+    ],
+    "next": "Télécharger ensemble le ZIP QA-47 et son reçu, vérifier l’intégrité, puis générer et revérifier localement le plan d’intégration et le rollback ; arrêter sur tout BLOCKED, CONFLICT ou INVALID avant toute copie, restauration ou suppression.",
+    "links": [
+      {
+        "label": "Livrable UCP-QA-47",
+        "url": "https://drive.google.com/file/d/1gIjwmeFTqiSc6o9o38-BwbQp8R-ggYWj/view?usp=drivesdk"
+      },
+      {
+        "label": "Reçu d’intégrité QA-47",
+        "url": "https://drive.google.com/file/d/1mGC_OgDdjTT5zyJSITpqrNs1ebGGoMdf/view?usp=drivesdk"
+      },
+      {
+        "label": "Révision publique de référence",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/af2bba353089a382843f6997ea92239b03d8a2dc"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      },
+      {
+        "label": "Issues UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues"
+      }
+    ]
   }
 ]
