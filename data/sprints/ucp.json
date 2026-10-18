@@ -1016,5 +1016,35 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261018T022616Z",
+    "started_at": "2026-10-18T02:26:16Z",
+    "ended_at": "2026-10-18T02:31:30Z",
+    "summary": "UCP-QA-35 : les onze URL du pré-cache PWA corrigé ont été validées à travers l’application FastAPI en HTTP/ASGI ; 141 contrôles réussis sans intégration applicative.",
+    "done": [
+      "Issues centrales #1/#2 inchangées, lues et bloquées ; main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Pré-recette FastAPI TestClient sur copie isolée avec base SQLite synthétique temporaire supprimée : les onze URL du pré-cache répondent en HTTP 200, avec MIME et octets attendus.",
+      "62/62 contrôles HTTP/ASGI, 21/21 pré-cache, 35/35 intégration, 15/15 composition et 8/8 DOM réussis, soit 141 contrôles ; archive Drive SHA256 1a486da37d633b2c9e819ee52f13484108e028fd4ad1e74edc6e78381a81edf2."
+    ],
+    "blockers": [
+      "Test ASGI sans socket, navigateur, HTTPS, moteur Service Worker/CacheStorage réel ni appareil Android/Xiaomi/iOS.",
+      "Correctif non intégré ; état du clone Windows dev/ucp-codex inconnu et volontairement non lu."
+    ],
+    "next": "Comparer QA-35 au clone local, intégrer sur une branche dédiée, puis confirmer sous Chrome DevTools l’installation du worker et du cache v3 avant la recette multi-appareils.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Livrable QA-35 sur Drive",
+        "url": "https://drive.google.com/file/d/1VHVA9aeER7npX15YJCd4wD4CwQADHkCe/view?usp=drivesdk"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
