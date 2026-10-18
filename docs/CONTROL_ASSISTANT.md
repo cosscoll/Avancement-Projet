@@ -33,3 +33,29 @@
 5. Tester accessibilité, performance et sécurité avant de présenter CONTROL IA comme pleinement opérationnelle.
 
 Aucun achat ni abonnement n'est requis pour les fonctionnalités décrites ici.
+
+## Sprint CONTROL IA — 18 octobre 2026 : commandes locales
+
+La section « Agir dans CONTROL » est intégrée à l'écran #/control/localai. C'est un interpréteur déterministe pour les données CONTROL personnelles, **pas un modèle génératif ni un orchestrateur externe**.
+
+### Capacités ajoutées
+- Consulter les fiches de projets, leur statut de référence, les missions attribuées et les tâches.
+- Consulter les événements et rendez-vous enregistrés localement.
+- Préparer puis créer une tâche ou un événement, terminer une tâche, déplacer ou supprimer un événement local.
+- Exiger le consentement avant d'interroger les données du navigateur, une confirmation avant écriture et une confirmation renforcée avant suppression.
+- Valider l'appartenance au projet, les dates et les intitulés ; restaurer l'état en cas d'échec du stockage.
+- Journaliser localement les 200 dernières actions acceptées, sans conserver le prompt original.
+
+### Exemples de prompts
+« Où en est UCP ? », « Quelle IA travaille sur UCP ? », « Mes tâches », « Mon agenda », « Crée une tâche préparer les maquettes pour UCP », « Programme un rendez-vous le 25/10/2026 à 14h30 pour UCP », « Termine la tâche Tester le site », « Déplace le rendez-vous Revue de projet au 25/10/2026 à 16h pour UCP », « Supprime le rendez-vous Revue de projet ».
+
+### Fichiers et tests
+Modules assets/control-operator-core.js et assets/control-operator.js ; adaptateur dans assets/command-center.js ; intégration dans assets/local-ai.js, assets/local-ai.css et index.html ; tests comportementaux dans tests/control-operator.test.mjs ; précache PWA actualisé dans service-worker.js.
+
+Les tests automatiques valident les réponses déclaratives, l'isolation du projet sélectionné, la création d'une proposition sans écriture, la validation des dates, l'exécution des actions et le retour arrière en cas de stockage refusé. Ils **ne remplacent pas la recette sur navigateur Android**.
+
+### Limites et prochaines priorités
+- Les connexions privées aux IA, aux agendas externes et aux e-mails ne sont pas actives. Aucune invitation, visio réelle, notification push ni opération externe n'est déclenchée par ce module.
+- Les statuts « en cours » sont des informations saisies dans CONTROL, pas des preuves d'activité en temps réel.
+- Sans CONTROL Cloud authentifié et testé, les données et le journal sont locaux, non synchronisés et non inviolables.
+- Prochaines étapes : recette mobile et navigateur, véritable registre d'outils avec permissions, synchronisation sécurisée des statuts et calendriers, orchestration multi-IA, agent développeur sandboxé, tests de bout en bout.
