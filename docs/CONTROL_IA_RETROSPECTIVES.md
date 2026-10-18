@@ -93,3 +93,16 @@ Document public de suivi technique limité à CONTROL IA. Source de spécificati
 | BACK-040 | non vérifié : iOS physique |
 | BACK-041 | non vérifié |
 | BACK-042 | partiel : régression DST ajoutée, CI absente |
+
+
+## 2026-10-18 — Reprise et réparation du circuit de livraison (vers 10h00 Paris)
+
+**Incident réellement observé :** les sprints avaient travaillé sur des branches `control-ia/*` mais leurs commits n'apparaissaient pas sur `main`. La consultation exclusive de `main` a donc conduit à un diagnostic incomplet (« aucun travail »). La branche `control-ia/approval-timezone-20261018-0350` pointait sur `25c9e0795fb2ec5ebcb296d2c763b6a7b7465f90` et contenait quatre commits en avance, avec deux suites de tests et des corrections de portée/DST. Les comptes rendus automatisés signalent des refus ponctuels de création de PR et des échecs de clonage (DNS), pas une absence totale d'exécution.
+
+**Correction réellement effectuée :** ouverture de [PR #4](https://github.com/cosscoll/Avancement-Projet/pull/4), passage au vert du [workflow de tests de la PR](https://github.com/cosscoll/Avancement-Projet/actions/runs/39109662942), puis fusion de la PR dans `main` sous `5e76cc9f2c2c1d2e888b8159dcc7e4748ab488a0`. [Tests de `main`](https://github.com/cosscoll/Avancement-Projet/actions/runs/39109704637) et [GitHub Pages](https://github.com/cosscoll/Avancement-Projet/actions/runs/39109703950) réussis sur le commit fusionné. Cache PWA v36 ensuite demandé pour actualiser les scripts côté appareil ; sa CI et sa publication doivent être vérifiées séparément.
+
+**Automatisation conservée active à XXh50.** Instructions corrigées pour rechercher `main`, **branches**, **PR** et rétrospectives avant de conclure à une absence de livraison ; réutiliser le connecteur GitHub plutôt qu'un clone réseau fragile, réessayer une PR par la voie autorisée et ne jamais considérer un commit sur branche comme déployé. Journaliser les blocages avec détails et maintenir les critiques ouvertes.
+
+**Autocritique :** la fusion et la CI vérifient les tests Node et le déploiement, **pas** une recette Chrome Android physique, ni la vérification métier complète des interprétations de langage ; la gestion des fuseaux horaires est pour l'instant celle du navigateur, pas un compte synchronisé. Un refus d'API ou de PR lors d'un prochain sprint ne pourra pas être supprimé par un simple changement de prompt. Les séquences d'amélioration doivent inclure des tests représentatifs et éviter des succès déclaratifs.
+
+**Prochaine priorité P0 :** reproduire un scénario de portée inter-projet et un rendez-vous dans la PWA publiée, ajouter des tests end-to-end Chrome Android si un vrai navigateur est accessible. Ensuite, reprendre les critiques C-003 (identité/RLS), C-004 (faux positifs du routeur) et C-005 (recette appareils) sans service facturable. Conserver la documentation V1.1 privée.
