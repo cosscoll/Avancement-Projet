@@ -47,7 +47,12 @@ function inferTitle(query,kind,project){
  return trim(s.replace(/^(?:de |d['’]|pour |: )/i,'').replace(/[.,;:\s]+$/,''),160);
 }
 function interpret(input,snapshot={},scope='general'){
- const raw=trim(input,1200),q=fold(raw),v=visible(snapshot,scope),project=findProject(raw,v.projects,scope);
+ const raw=trim(input,1200),q=fold(raw),projects=arr(snapshot?.projects);
+ if(scope!=='general'&&!projects.some(p=>p.id===scope))return {kind:'help',text:'Projet introuvable. Accès refusé.'};
+ const mentioned=projects.filter(p=>[p.id,p.name,p.short].some(a=>typeof a==='string'&&fold(a).length>=2&&(' '+q+' ').includes(' '+fold(a)+' ')));
+ if(mentioned.length>1)return {kind:'help',text:'Plusieurs projets mentionnés : préciser un seul projet.'};
+ if(scope!=='general'&&mentioned.some(p=>p.id!==scope))return {kind:'help',text:'Projet différent du projet sélectionné : changer de projet.'};
+ const v=visible(snapshot,scope),project=findProject(raw,v.projects,scope);
  if(!q)return {kind:'help',text:'Décris un projet, une tâche, une mission ou un événement à retrouver.'};
  if(/(?:connecte|synchronise|envoie|delegue|lance|demarre)/.test(q)&&/(claude|chatgpt|gemini|codex|compte|gmail)/.test(q))
   return {kind:'help',text:'Les comptes IA externes ne sont pas pilotables depuis cette fonction locale. Aucun fournisseur n’a été déclenché.'};
