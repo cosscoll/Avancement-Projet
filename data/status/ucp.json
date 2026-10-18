@@ -139,7 +139,7 @@
     },
     {
       "title": "PWA et distribution mobile non validées",
-      "description": "UCP-QA-36 ajoute sur copie isolée une activation conditionnelle : skipWaiting seulement après pré-cache réussi et clients.claim seulement après purge réussie. Les échecs addAll/purge sont couverts et 155 contrôles passent avec les non-régressions HTTP, pré-cache, intégration, composition et DOM. Aucun navigateur/service worker ou CacheStorage réel, HTTPS, multi-onglets ou appareil Android/Xiaomi/iOS n’est validé ; le correctif n’est pas intégré.",
+      "description": "UCP-QA-37 complète le cycle QA-36 sur copie isolée : une page déjà contrôlée reçoit un avis accessible après controllerchange, sans rechargement automatique ; un brouillon actif bloque le rechargement et affiche une consigne de sauvegarde. Les 166 contrôles de mise à jour, cycle worker, HTTP, pré-cache, intégration, composition et DOM passent. Aucun navigateur/service worker réel, HTTPS, multi-onglets ou appareil Android/Xiaomi/iOS n’est validé ; le correctif n’est pas intégré.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-36 ; QA-36 valide en simulation le cycle de prise de contrôle PWA après pré-cache et purge réussis, sans push applicatif",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-37 ; QA-37 valide en simulation un avis de mise à jour PWA avec rechargement explicite et protection des brouillons, sans push applicatif",
   "baseline_date": "2026-10-18"
 }
