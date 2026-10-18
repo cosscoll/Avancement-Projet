@@ -84,6 +84,15 @@ test('write operations use the existing CONTROL state and roll back on storage f
  assert.throws(()=>sandbox.operatorExecute({type:'create_action',projectId:'ucp',title:'Pas enregistré'}),/Stockage indisponible/);
  assert.equal(db.actions.length,3);
  assert.equal(db.operatorAudit.length,2);
+ saveOk=true;
+ sandbox.save=()=>{throw Error('quota exceeded')};
+ assert.throws(()=>sandbox.operatorExecute({type:'create_action',projectId:'ucp',title:'Exception de stockage'}),/Stockage indisponible/);
+ assert.equal(db.actions.length,3);
+ assert.equal(db.operatorAudit.length,2);
+ sandbox.save=()=>({ok:true});
+ assert.throws(()=>sandbox.operatorExecute({type:'create_action',projectId:'ucp',title:'Retour non booléen'}),/Stockage indisponible/);
+ assert.equal(db.actions.length,3);
+ assert.equal(db.operatorAudit.length,2);
  assert.throws(()=>sandbox.operatorExecute({type:'create_event',projectId:'ucp',title:'Date invalide',date:'2026-02-30T10:00'}),/Date et heure invalides/);
 });
 test('UI requires consent and confirmation, no external tokens',()=>{
