@@ -217,7 +217,7 @@ function operatorExecute(action){
  const title=String(action.title||'').trim();
  if(!title||title.length>160)throw Error('Intitulé non valide.');
  const oldActions=db.actions.slice(),oldEvents=db.events.slice(),oldAudit=Array.isArray(db.operatorAudit)?db.operatorAudit.slice():[];
- let edited=null,previousStatus=null,previousClosed=null;
+ let edited=null,previousStatus=null,previousClosed=null,editedEvent=null,previousDate=null;
  if(type==='create_action'){
   db.actions.push({id:id(),project:projectId,title,priority:'Normale',status:'todo',due:'',url:'',at:new Date().toISOString()});
  }else if(type==='create_event'){
@@ -225,6 +225,15 @@ function operatorExecute(action){
   const when=new Date(action.date);
   if(!Number.isFinite(+when)||+when<Date.now())throw Error('Choisis une date future.');
   db.events.push({id:id(),project:projectId,title,date:String(action.date),details:'Créé depuis CONTROL IA (sur cet appareil)'});
+ }else if(type==='update_event'||type==='delete_event'){
+  editedEvent=db.events.find(x=>x.id===action.id&&x.project===projectId&&x.title===title);
+  if(!editedEvent)throw Error('Événement introuvable ou modifié depuis la demande.');
+  if(type==='update_event'){
+   if(!window.CONTROL_OPERATOR_CORE?.validateDate(action.date))throw Error('Nouvelle date invalide.');
+   const when=new Date(action.date);
+   if(!Number.isFinite(+when)||+when<Date.now())throw Error('Choisis une date future.');
+   previousDate=editedEvent.date;editedEvent.date=String(action.date);
+  }else db.events=db.events.filter(x=>x!==editedEvent);
  }else if(type==='complete_action'){
   edited=db.actions.find(x=>x.id===action.id&&x.project===projectId&&x.title===title&&x.status!=='done');
   if(!edited)throw Error('Tâche introuvable ou déjà terminée.');
@@ -234,6 +243,7 @@ function operatorExecute(action){
  if(!save()){
   db.actions=oldActions;db.events=oldEvents;db.operatorAudit=oldAudit;
   if(edited){edited.status=previousStatus;edited.closedAt=previousClosed}
+  if(editedEvent&&type==='update_event')editedEvent.date=previousDate;
   throw Error('Stockage indisponible : l’action a été annulée.');
  }
  return true;
