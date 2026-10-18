@@ -96,3 +96,29 @@ test('UI requires consent and confirmation, no external tokens',()=>{
  assert.match(index,/assets\/control-operator-core\.js/);
  assert.match(index,/assets\/control-operator\.js/);
 });
+
+test('confirmed calendar edit and delete remain local and reversible on storage failure',()=>{
+ const source=readFileSync('assets/command-center.js','utf8');
+ const snippet=source.slice(source.indexOf('function operatorSnapshot(){'),source.indexOf('function localai(){'));
+ const db={actions:[],missions:[],events:[{id:'e1',project:'ucp',title:'Revue de projet',date:'2026-10-20T14:00'}],meetings:[],operatorAudit:[]};
+ const ctx={projects:sample.projects};
+ let saveOk=true;
+ const sandbox=vm.createContext({ctx,db,window:{CONTROL_OPERATOR_CORE:core},save:()=>saveOk,id:()=>String(Date.now()),Date});
+ vm.runInContext(snippet,sandbox);
+ const moved=core.interpret('Déplace le rendez-vous Revue de projet au 25/10/2026 à 16h00 pour UCP',{...sample,events:db.events});
+ assert.equal(moved.action.type,'update_event');
+ assert.equal(moved.action.date,'2026-10-25T16:00');
+ assert.equal(sandbox.operatorExecute(moved.action),true);
+ assert.equal(db.events[0].date,'2026-10-25T16:00');
+ saveOk=false;
+ assert.throws(()=>sandbox.operatorExecute({type:'update_event',id:'e1',projectId:'ucp',title:'Revue de projet',date:'2026-10-27T10:30'}),/Stockage indisponible/);
+ assert.equal(db.events[0].date,'2026-10-25T16:00');
+ const canceled=core.interpret('Supprime le rendez-vous Revue de projet',{...sample,events:db.events});
+ assert.equal(canceled.action.type,'delete_event');
+ assert.throws(()=>sandbox.operatorExecute(canceled.action),/Stockage indisponible/);
+ assert.equal(db.events.length,1,'A failed deletion must be reverted');
+ saveOk=true;
+ assert.equal(sandbox.operatorExecute(canceled.action),true);
+ assert.equal(db.events.length,0);
+ assert.equal(db.operatorAudit.length,2);
+});
