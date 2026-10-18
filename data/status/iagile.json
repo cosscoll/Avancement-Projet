@@ -93,6 +93,11 @@
       "title": "Atelier Processus M7 candidat testé hors ligne",
       "description": "18/10/2026 : kit privé Playbook reproductible, apprenant/formateur séparés, 32/32 tests synthétiques après correction. Livrables sauvegardés en privé ; pas de validation humaine, de recette Auth/RLS ou de publication premium.",
       "level": "info"
+    },
+    {
+      "title": "M8 : contrôle Unicode testé hors ligne",
+      "description": "18/10/2026 : variante R3 du laboratoire fictif Processus M8, 7 tests unitaires réussis ; archives apprenant/formateur privées, non intégrées ni approuvées. Recette Auth/RLS réelle absente.",
+      "level": "info"
     }
   ],
   "decisions": [
