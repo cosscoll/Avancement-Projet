@@ -1258,5 +1258,45 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/issues"
       }
     ]
+  },
+  {
+    "id": "ucp-20261018T103326Z",
+    "started_at": "2026-10-18T10:33:26Z",
+    "ended_at": "2026-10-18T10:41:07Z",
+    "summary": "UCP-QA-42 ajoute un audit fermé du ZIP de passation et confirme 330/330 contrôles sur copie isolée, sans lire le clone Windows ni intégrer l’application.",
+    "done": [
+      "Issues centrales #1 et #2 relues : ouvertes, inchangées, créées par cosscoll et sans commentaire ; aucune issue [DECISION][ucp].",
+      "Auditeur ZIP sans extraction validé : chemins dangereux, doublons, liens, caches/VCS, bases, clés, tailles, CRC, signatures de secrets et emails non synthétiques sont bloqués ; 16/16 tests unitaires passent.",
+      "Régression complète réussie : 110/110 pytest avec --basetemp, 166/166 contrôles PWA/DOM, 24/24 sauvegarde/restauration synthétique, 1 manifeste, 12 contrôles préflight et 17 contrôles archive, soit 330/330.",
+      "ZIP final audité : 105 entrées, 350728 octets, SHA-256 a83ddbf1a9e42237565d1c73559548bd625b3b2a019272e4c02e0da0ff6e1833, intégrité valide, aucun secret détecté et aucune adresse non synthétique.",
+      "HEAD public confirmé à af2bba353089a382843f6997ea92239b03d8a2dc, documentation seulement par rapport au parent applicatif 2034e1152944bcb65bd09f3fb70a52e23a399ef2 ; aucune PR ouverte.",
+      "Journal UCP mis à jour ; téléversement Drive accepté, sans identifiant restitué ni résultat de recherche immédiatement indexé."
+    ],
+    "blockers": [
+      "La connexion CONTROL–Codex demandée par les issues #1/#2 reste interdite ; aucun accès Codex n’a été accordé ou déclenché.",
+      "Le clone Windows dev/ucp-codex reste volontairement non lu ; le préflight n’y a pas été exécuté.",
+      "Lot sauvegardé hors GitHub : non intégré, non fusionné, non déployé ; aucune recette navigateur/appareil ou staging privé.",
+      "Le connecteur Drive n’a pas restitué l’identifiant du ZIP téléversé et la recherche immédiate par nom n’a retourné aucun résultat.",
+      "Un avertissement de dépréciation Starlette/AnyIO reste non bloquant."
+    ],
+    "next": "Exécuter manuellement le préflight QA-42 contre le clone local et arrêter sur tout CONFLICT ou INVALID ; auditer ensuite le ZIP reçu avant toute copie des 12 fichiers, puis relancer les tests et la recette navigateur/staging privé.",
+    "links": [
+      {
+        "label": "HEAD public contrôlé",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/af2bba353089a382843f6997ea92239b03d8a2dc"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      },
+      {
+        "label": "Issues UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues"
+      },
+      {
+        "label": "Statut UCP central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      }
+    ]
   }
 ]
