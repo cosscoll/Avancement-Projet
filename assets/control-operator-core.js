@@ -60,6 +60,17 @@ function interpret(input,snapshot={},scope='general'){
    text:createTask?'Vérifie et confirme la tâche à créer localement dans '+project.name+'.':
     'Vérifie et confirme cet événement dans '+project.name+'. Aucun invité ni calendrier externe ne sera contacté.'};
  }
+ const eventWord=/\b(?:rdv|rendez[- ]vous|reunion|evenement)\b/.test(q);
+ const removeEvent=eventWord&&/\b(?:supprime|supprimer|annule|annuler|efface)\b/.test(q);
+ const moveEvent=eventWord&&/\b(?:decale|decaler|deplace|deplacer|reprogramme|reprogrammer|modifie|modifier)\b/.test(q);
+ if(removeEvent||moveEvent){
+  const matches=v.events.filter(e=>(!project||e.project===project.id)&&fold(e.title).length>2&&fold(raw).includes(fold(e.title)));
+  if(matches.length!==1)return {kind:'help',text:'Indique le titre exact de l’événement local et son projet. Événements disponibles : '+v.events.slice(0,6).map(e=>trim(e.title,80)).join(' · ')+'. Les visios externes ne sont pas supprimées.'};
+  const entry=matches[0],date=moveEvent?parseDate(raw)||'':entry.date;
+  return {kind:'draft',action:{type:moveEvent?'update_event':'delete_event',projectId:entry.project,id:entry.id,title:entry.title,date},
+   text:moveEvent?'Vérifie la nouvelle date avant de modifier cet événement local. Aucun calendrier externe ne sera modifié.':
+    'Suppression d’un événement local uniquement. Les invitations et calendriers externes ne seront pas modifiés.'};
+ }
  if(/\b(?:termine|terminer|acheve|marque)\b/.test(q)&&/\b(?:tache|action)\b/.test(q)){
   const active=v.actions.filter(a=>a.status!=='done'&&(!project||a.project===project.id));
   const matching=active.filter(a=>fold(a.title).length>2&&fold(raw).includes(fold(a.title)));
