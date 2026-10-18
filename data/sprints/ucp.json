@@ -1112,5 +1112,39 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/issues"
       }
     ]
+  },
+  {
+    "id": "ucp-20261018T063110Z",
+    "started_at": "2026-10-18T06:31:10Z",
+    "ended_at": "2026-10-18T06:37:16Z",
+    "summary": "UCP-QA-38 rétablit le paquet isolé complet et confirme 110/110 tests pytest avec --basetemp, puis 166/166 contrôles PWA/DOM, soit 276/276.",
+    "done": [
+      "Issues centrales #1 et #2 relues : ouvertes, inchangées, créées par cosscoll et sans commentaire ; aucune issue [DECISION][ucp].",
+      "Première exécution pytest : 109 succès et 1 échec authentique causé par l'absence de application/scripts/database.py dans le paquet QA-37.",
+      "Le fichier public manquant a été réintégré uniquement dans la copie QA-38 depuis le blob a4f587dc03e3bd22c8a36c6df0e5b41864c010e0 du commit applicatif 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Seconde exécution complète : 110/110 pytest réussis avec --basetemp dédié ; 166/166 contrôles complémentaires PWA/DOM relancés, total 276/276.",
+      "Archive Drive vérifiée : 326714 octets, SHA-256 85c67f461d18514246a1434ba49d462523c7eff9ca5bc7e02596372618a39ade ; base SQLite synthétique absente du livrable."
+    ],
+    "blockers": [
+      "La connexion CONTROL–Codex demandée par les issues #1/#2 reste interdite ; aucun accès Codex n'a été accordé ou déclenché.",
+      "La validation porte uniquement sur la copie isolée ; aucun navigateur/service worker natif, HTTPS ou appareil Android/Xiaomi/iOS n'a été testé.",
+      "Le correctif n'est pas intégré ; l'état du clone Windows dev/ucp-codex reste inconnu et volontairement non lu.",
+      "Un avertissement de dépréciation Starlette/AnyIO reste non bloquant."
+    ],
+    "next": "Comparer QA-38 au clone local, intégrer sur branche dédiée après contrôle de conflit, puis recetter sous Chrome et planifier la montée de dépendances qui supprime l’avertissement Starlette/AnyIO.",
+    "links": [
+      {
+        "label": "Livrable UCP-QA-38",
+        "url": "https://drive.google.com/file/d/151n4MDFOE9no-1DhJyd7EkWIADwtNnbD/view?usp=drivesdk"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      },
+      {
+        "label": "Issues UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues"
+      }
+    ]
   }
 ]
