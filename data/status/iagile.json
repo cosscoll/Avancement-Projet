@@ -88,6 +88,11 @@
       "title": "Atelier M6 candidat testé hors ligne",
       "description": "18/10/2026 : laboratoire Processus module 6 avec données fictives et 17 tests synthétiques réussis. Livrables non intégrés, non approuvés ; aucune recette Auth/RLS réelle ni publication premium.",
       "level": "info"
+    },
+    {
+      "title": "Atelier Processus M7 candidat testé hors ligne",
+      "description": "18/10/2026 : kit privé Playbook reproductible, apprenant/formateur séparés, 32/32 tests synthétiques après correction. Livrables sauvegardés en privé ; pas de validation humaine, de recette Auth/RLS ou de publication premium.",
+      "level": "info"
     }
   ],
   "decisions": [
