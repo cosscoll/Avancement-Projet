@@ -38,8 +38,9 @@ test('Local generative worker invokes a real text-generation pipeline contract a
  assert.ok(output.some(x=>x.type==='ready'));
  await self.onmessage({data:{action:'generate',requestId:2,question:'Aide UCP',context:'Projet UCP',history:[{role:'user',content:'Salut'}]}});
  assert.deepEqual(seenMessages.map(x=>x.role),['system','user','user']);
- assert.match(seenMessages[0].content,/Projet UCP/);
- assert.equal(seenMessages.at(-1).content,'Aide UCP');
+ assert.doesNotMatch(seenMessages[0].content,/Projet UCP/,'Untrusted project context must not become a system instruction');
+ assert.match(seenMessages.at(-1).content,/Aide UCP/);
+ assert.match(seenMessages.at(-1).content,/Projet UCP/,'Project data belongs in the user context');
  assert.equal(seenParams.max_new_tokens,180);
  assert.ok(output.some(x=>x.type==='answer'&&x.requestId===2&&x.text==='Plan local en trois étapes.'));
  assert.ok(!output.some(x=>x.type==='answer'&&x.requestId===1));
