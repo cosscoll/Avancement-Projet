@@ -5,6 +5,9 @@ import {setImmediate as tick} from 'node:timers/promises';
 
 const source=readFileSync(new URL('../service-worker.js',import.meta.url),'utf8');
 const origin='https://cosscoll.github.io/Avancement-Projet/';
+const shellName=source.match(/const CACHE_SHELL='([^']+)'/)?.[1];
+const publicName=source.match(/const CACHE_PUBLIC='([^']+)'/)?.[1];
+assert.ok(shellName&&publicName,'Cache versions must be declared');
 
 function harness(fetcher){
  const callbacks={},cacheMap=new Map();
@@ -33,7 +36,7 @@ function harness(fetcher){
 test('Legacy or unknown pages cannot poison the offline CONTROL homepage',async()=>{
  let online=true;
  const h=harness(async request=>{if(!online)throw Error('offline');const url=request.url||String(request);return{ok:true,content:url,clone(){return this}}});
- const shell=await h.open('control-shell-v31');
+ const shell=await h.open(shellName);
  const home=await h.navigate('index.html');
  assert.equal(home.content,origin+'index.html');
  assert.deepEqual(shell.puts,[origin+'index.html']);
@@ -60,8 +63,8 @@ test('Cold PWA install precaches only public files in bounded parallel batches',
  h.callbacks.install({waitUntil(p){awaited=p}});
  assert.ok(awaited);
  await awaited;
- const shell=await h.open('control-shell-v31');
- const data=await h.open('control-public-data-v31');
+ const shell=await h.open(shellName);
+ const data=await h.open(publicName);
  assert.ok(shell.puts.length>=25);
  assert.ok(data.puts.length>=10);
  assert.ok(total>=35);
