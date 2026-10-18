@@ -139,7 +139,7 @@
     },
     {
       "title": "PWA et distribution mobile non validées",
-      "description": "UCP-QA-34 corrige sur copie isolée quatre URL de polices du pré-cache qui pointaient vers /assets au lieu de /assets/fonts et pouvaient faire rejeter cache.addAll, donc toute l’installation du service worker. Le cache passe de v2 à v3 ; 21 contrôles de chemins, 35 d’intégration, 15 de composition et 8 DOM réussissent. Aucun navigateur/service worker réel, HTTPS, hors-ligne ou appareil Android/Xiaomi/iOS n’est validé ; le correctif n’est pas intégré.",
+      "description": "UCP-QA-35 valide à travers FastAPI/ASGI les onze URL du pré-cache corrigé : toutes répondent HTTP 200 avec le MIME et les octets attendus ; la base synthétique temporaire est supprimée. Avec les non-régressions, 141 contrôles réussissent. Aucun navigateur/service worker ou CacheStorage réel, HTTPS, hors-ligne ou appareil Android/Xiaomi/iOS n’est validé ; le correctif n’est pas intégré.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-34 ; QA-34 corrige isolément les chemins de polices du pré-cache PWA, sans push applicatif",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-35 ; QA-35 pré-valide en HTTP/ASGI les onze URL du pré-cache PWA corrigé, sans push applicatif",
   "baseline_date": "2026-10-18"
 }
