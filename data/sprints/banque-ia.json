@@ -348,5 +348,42 @@
       "Aucun commit ni CI sur le correctif; publication non effectuée"
     ],
     "next": "Intégrer le correctif via connecteur autorisé si les contrôles le permettent; CI verte, revue confidentialité, PR, fusion, puis vérification HTTP publique."
+  },
+  {
+    "id": "banque-ia-20261019-0020",
+    "started_at": "2026-10-19T00:20:09+02:00",
+    "ended_at": "2026-10-19T00:20:59+02:00",
+    "summary": "Branche de développement créée depuis main et correctif d'accueil/accessibilité préparé et testé localement ; écriture du code refusée par contrôle de sécurité, non livré.",
+    "main_sha": "1247e3c40f8757268751ae65084dfe730c3a4ca7",
+    "branch": "feat/home-navigation-a11y-20261019-0020",
+    "branch_sha": "1247e3c40f8757268751ae65084dfe730c3a4ca7",
+    "pr": null,
+    "ci": "GitHub Pages succès sur ancien main, pas de CI du patch",
+    "deployment": "non déployé / HTTPS non vérifié",
+    "done": [
+      "Issues [CONSIGNE][banque-ia] auteur cosscoll vérifiées dans Avancement-Projet : aucune (6 issues listées, aucune banque-ia).",
+      "Inspection main (11 fichiers), 5 branches, PR #2 déjà fusionnée ; branche dédiée créée à partir de main.",
+      "Correctif préparé pour index.html : liens vers 4 pages publiques, raccourcis, lien d'évitement, effacement de recherche et réduction du mouvement.",
+      "7/7 tests unitaires locaux réussis sur fixture synthétique ; SHA256 archive b3297e01980af320ae713183d0e45ba1dd4b21b1d5e7b9a17f4e9f9f23727484."
+    ],
+    "blockers": [
+      "GitHub update_file(index.html) sur branche dédiée refusé : This tool call was blocked by OpenAI's safety checks. Please double check what you are sending.",
+      "Aucun commit code, aucune PR, aucune fusion et aucune validation du site modifié en navigateur ni publication HTTPS."
+    ],
+    "next": "Faire valider l'écriture GitHub par voie autorisée sans contournement, appliquer patch sur base vérifiée, tester site réel, ouvrir PR, attendre CI verte et fusionner seulement après contrôle de confidentialité.",
+    "links": [
+      {
+        "label": "Dépôt marketing",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA"
+      },
+      {
+        "label": "Branche dédiée",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/tree/feat/home-navigation-a11y-20261019-0020"
+      },
+      {
+        "label": "CI ancien main",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/actions/runs/39126238167"
+      }
+    ]
   }
 ]
