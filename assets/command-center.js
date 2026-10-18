@@ -242,7 +242,9 @@ function operatorExecute(action){
   previousStatus=edited.status;previousClosed=edited.closedAt;edited.status='done';edited.closedAt=new Date().toISOString();
  }else throw Error('Action non autorisée par CONTROL.');
  db.operatorAudit=oldAudit.concat([{id:id(),type,project:projectId,title,at:new Date().toISOString(),scope:'local',outcome:'saved'}]).slice(-200);
- if(!save()){
+ let saved=false;
+ try{saved=save()===true}catch(error){saved=false}
+ if(!saved){
   db.actions=oldActions;db.events=oldEvents;db.operatorAudit=oldAudit;
   if(edited){edited.status=previousStatus;edited.closedAt=previousClosed}
   if(editedEvent&&type==='update_event')editedEvent.date=previousDate;
