@@ -35,11 +35,11 @@ function mount(root,adapter={}){
    if(!project)throw Error('Projet introuvable.');
    draft.hidden=false;$('[data-op-project]').textContent=project.name;$('[data-op-description]').textContent=answer.text;
    $('[data-op-title]').value=pending.title||((pending.type==='create_event')?'Rendez-vous':'');
-   $('[data-op-title]').readOnly=pending.type==='complete_action';
-   $('[data-op-date-wrap]').hidden=pending.type!=='create_event';
-   $('[data-op-date]').required=pending.type==='create_event';
+   $('[data-op-title]').readOnly=['complete_action','update_event','delete_event'].includes(pending.type);
+   $('[data-op-date-wrap]').hidden=!['create_event','update_event'].includes(pending.type);
+   $('[data-op-date]').required=['create_event','update_event'].includes(pending.type);
    $('[data-op-date]').value=pending.date||'';
-   $('[data-op-confirm]').textContent=pending.type==='complete_action'?'Marquer terminée':'Confirmer la création';
+   $('[data-op-confirm]').textContent=pending.type==='complete_action'?'Marquer terminée':pending.type==='delete_event'?'Supprimer cet événement':pending.type==='update_event'?'Déplacer cet événement':'Confirmer la création';
   }catch(error){reset();show('Action indisponible : '+String(error?.message||error).slice(0,180))}
  }
  $('[data-op-form]').addEventListener('submit',e=>{e.preventDefault();ask($('[data-op-form] textarea').value.trim())});
@@ -52,7 +52,8 @@ function mount(root,adapter={}){
   if(typeof adapter.execute!=='function'){show('Exécution locale indisponible.');return}
   const title=$('[data-op-title]').value.trim(),date=$('[data-op-date]').value;
   if(!title||title.length>160){show('Indique un intitulé valide.');return}
-  if(pending.type==='create_event'&&!window.CONTROL_OPERATOR_CORE.validateDate(date)){show('Indique une date et une heure valides.');return}
+  if(['create_event','update_event'].includes(pending.type)&&!window.CONTROL_OPERATOR_CORE.validateDate(date)){show('Indique une date et une heure valides.');return}
+  if(pending.type==='delete_event'&&!confirm('Supprimer cet événement de CONTROL ? Cette action ne peut pas être annulée dans le chat.'))return;
   const action={...pending,title,date};
   const data=snapshot();
   if(!data.projects.some(p=>p.id===action.projectId)){reset();show('Projet introuvable. Action refusée.');return}
