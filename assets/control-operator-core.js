@@ -7,12 +7,13 @@ const arr=x=>Array.isArray(x)?x:[];
 const statuses={todo:'à lancer',doing:'en cours (déclaré)',review:'à vérifier',done:'terminée'};
 function findProject(query,projects,scope){
  const q=' '+fold(query)+' ';
- const matches=arr(projects).map(p=>{
+ const available=scope&&scope!=='general'?arr(projects).filter(p=>p.id===scope):arr(projects);
+ const matches=available.map(p=>{
   const aliases=[p.id,p.name,p.short].filter(v=>typeof v==='string'&&v.length>=2);
   const score=aliases.reduce((n,v)=>{const s=fold(v);return s&&q.includes(' '+s+' ')?Math.max(n,s.length):n},0);
   return {project:p,score};
  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
- return matches[0]?.project||arr(projects).find(p=>p.id===scope)||null;
+ return matches[0]?.project||available.find(p=>p.id===scope)||null;
 }
 function validateDate(value){
  const match=String(value||'').match(/^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d)$/);
@@ -32,7 +33,7 @@ function parseDate(query){
 function visible(data,scope){
  const projects=arr(data?.projects),selected=projects.find(p=>p.id===scope);
  const allowed=p=>!selected||p===selected.id;
- return {projects,selected,actions:arr(data?.actions).filter(x=>allowed(x.project)),
+ return {projects:selected?[selected]:projects,selected,actions:arr(data?.actions).filter(x=>allowed(x.project)),
  missions:arr(data?.missions).filter(x=>allowed(x.project)),
  events:arr(data?.events).filter(x=>allowed(x.project)),
  meetings:arr(data?.meetings).filter(x=>allowed(x.projectId||x.project))};
@@ -51,7 +52,7 @@ function interpret(input,snapshot={},scope='general'){
  if(/(?:connecte|synchronise|envoie|delegue|lance|demarre)/.test(q)&&/(claude|chatgpt|gemini|codex|compte|gmail)/.test(q))
   return {kind:'help',text:'Les comptes IA externes ne sont pas pilotables depuis cette fonction locale. Aucun fournisseur n’a été déclenché.'};
  const createTask=/(?:cree|creer|ajoute|ajouter|note|planifie)\b/.test(q)&&/\b(?:tache|action)\b/.test(q);
- const createEvent=/(?:cree|creer|ajoute|ajouter|programme|programmer|planifie|planifier)\b/.test(q)&&/\b(?:rdv|rendez vous|reunion|evenement)\b/.test(q);
+ const createEvent=/(?:cree|creer|ajoute|ajouter|programme|programmer|planifie|planifier)\b/.test(q)&&/\b(?:rdv|rendez[- ]vous|reunion|evenement)\b/.test(q);
  if(createTask||createEvent){
   if(!project)return {kind:'help',text:'Choisis un projet ou indique son nom avant toute création.'};
   const type=createTask?'create_action':'create_event';
@@ -71,7 +72,7 @@ function interpret(input,snapshot={},scope='general'){
   if(!rows.length)return {kind:'read',text:'Aucune mission IA enregistrée pour ce périmètre. Les conversations des fournisseurs ne sont pas accessibles en direct.'};
   return {kind:'read',text:'Missions déclarées dans CONTROL ('+rows.length+') :\n'+rows.slice().reverse().slice(0,10).map(m=>'• '+trim(m.title,90)+' — '+trim(m.provider,30)+' — '+(statuses[m.status]||'état inconnu')).join('\n')+'\n« En cours » est un état déclaratif, pas une preuve d’activité en direct.',links:[{label:'Missions',href:'#/control/missions'}]};
  }
- if(/\b(?:agenda|calendrier|planning|rdv|rendez vous|visios?|reunions?|evenements?)\b/.test(q)){
+ if(/\b(?:agenda|calendrier|planning|rdv|rendez[- ]vous|visios?|reunions?|evenements?)\b/.test(q)){
   const events=[...v.events.map(e=>({title:e.title,date:e.date})),...v.meetings.map(e=>({title:e.title,date:e.startsAt}))].filter(e=>e.date&&Date.parse(e.date)>=Date.now()).sort((a,b)=>Date.parse(a.date)-Date.parse(b.date));
   return {kind:'read',text:events.length?'Prochains rendez-vous et événements enregistrés localement :\n'+events.slice(0,8).map(e=>'• '+trim(e.title,100)+' — '+trim(e.date,24)).join('\n')+'\nAucun calendrier externe synchronisé.':'Aucun événement futur enregistré dans CONTROL. Tes calendriers externes ne sont pas consultés.',links:[{label:'Calendrier',href:'#/control/calendar'},{label:'Visios',href:'#/control/meetings'}]};
  }
