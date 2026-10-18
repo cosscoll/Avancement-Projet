@@ -956,5 +956,35 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261018T002622Z",
+    "started_at": "2026-10-18T00:26:22Z",
+    "ended_at": "2026-10-18T00:33:30Z",
+    "summary": "UCP-QA-33 : les propositions QA-28, QA-31 et QA-32 ont été composées sur copie isolée et leurs contrats ont réussi 58 contrôles, sans intégration ni push applicatif.",
+    "done": [
+      "Issues centrales #1/#2 inchangées, déjà lues et bloquées ; main confirmé à 2034e1152944bcb65bd09f3fb70a52e23a399ef2.",
+      "Composition isolée de QA-28 (PWA), QA-31 (repli réseau après erreur CacheStorage) et QA-32 (lisibilité et cibles tactiles mobiles), sans modifier le dépôt applicatif.",
+      "35/35 contrôles d’intégration, 15/15 contrôles de composition et 8/8 tests DOM réussis, soit 58 contrôles ; archive Drive SHA256 627ea76ddd3fa454bdc9e3660274dc2b725477f224bd2306f4b4d4279f314431."
+    ],
+    "blockers": [
+      "Aucun navigateur réel, moteur Service Worker natif, HTTPS, mode hors ligne, zoom, lecteur d’écran ou appareil Android/Xiaomi/iOS testé.",
+      "Proposition composée non intégrée ; état du clone Windows dev/ucp-codex inconnu et volontairement non lu."
+    ],
+    "next": "Comparer QA-33 au clone local dev/ucp-codex, appliquer sur une branche dédiée, puis exécuter la recette Chrome/Android/iOS avec données fictives avant toute pull request.",
+    "links": [
+      {
+        "label": "Révision UCP contrôlée",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      },
+      {
+        "label": "Livrable QA-33 sur Drive",
+        "url": "https://drive.google.com/file/d/1eN1PjTeD_U8eXYsKIigxtUNoClzVssAX/view?usp=drivesdk"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      }
+    ]
   }
 ]
