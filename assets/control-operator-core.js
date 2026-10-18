@@ -85,7 +85,7 @@ function interpret(input,snapshot={},scope='general'){
   const matches=v.events.filter(e=>(!project||e.project===project.id)&&fold(e.title).length>2&&fold(raw).includes(fold(e.title)));
   if(matches.length!==1)return {kind:'help',text:'Indique le titre exact de l’événement local et son projet. Événements disponibles : '+v.events.slice(0,6).map(e=>trim(e.title,80)).join(' · ')+'. Les visios externes ne sont pas supprimées.'};
   const entry=matches[0],date=moveEvent?parseDate(raw)||'':entry.date;
-  return {kind:'draft',action:{type:moveEvent?'update_event':'delete_event',projectId:entry.project,id:entry.id,title:entry.title,date},
+  return {kind:'draft',action:{type:moveEvent?'update_event':'delete_event',projectId:entry.project,id:entry.id,title:entry.title,date,expectedDate:entry.date},
    text:moveEvent?'Vérifie la nouvelle date avant de modifier cet événement local. Aucun calendrier externe ne sera modifié.':
     'Suppression d’un événement local uniquement. Les invitations et calendriers externes ne seront pas modifiés.'};
  }
@@ -93,7 +93,7 @@ function interpret(input,snapshot={},scope='general'){
   const active=v.actions.filter(a=>a.status!=='done'&&(!project||a.project===project.id));
   const matching=active.filter(a=>fold(a.title).length>2&&fold(raw).includes(fold(a.title)));
   if(matching.length!==1)return {kind:'help',text:'Indique l’intitulé exact de la tâche et son projet. Tâches trouvées : '+active.slice(0,5).map(a=>trim(a.title,80)).join(' · ')};
-  return {kind:'draft',action:{type:'complete_action',projectId:matching[0].project,id:matching[0].id,title:matching[0].title},
+  return {kind:'draft',action:{type:'complete_action',projectId:matching[0].project,id:matching[0].id,title:matching[0].title,expectedStatus:matching[0].status},
     text:'Marquer la tâche terminée ? Cette modification demande une confirmation.'};
  }
  if(/\b(?:quelle ia|quelles ia|qui travaille|agent|missions?|en cours|delegue)\b/.test(q)&&!/\b(?:rendez|agenda)\b/.test(q)){
