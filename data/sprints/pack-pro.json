@@ -168,5 +168,35 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/pack-pro.json"
       }
     ]
+  },
+  {
+    "id": "pack-pro-20261018-061043-paris",
+    "started_at": "2026-10-18T06:10:43+02:00",
+    "ended_at": "2026-10-18T04:13:51.256Z",
+    "summary": "Prototype local non marchand porté à 17 pages avec protocole de recette de prépublication de 28 contrôles. Aucun commit de vitrine ni vérification HTTP publique.",
+    "done": [
+      "Trois recherches GitHub Issues auteur cosscoll et identifiant pack-pro exécutées, aucun résultat",
+      "Page recette-site.html créée localement : 28 contrôles, 7 domaines, filtres, ancres, impression, export CSV vierge",
+      "Liens vers le protocole ajoutés aux pages Validation, Avancement et Recherche (15 entrées indexées)",
+      "675 assertions statiques et 134 assertions Chromium par injection HTML réussies sur six largeurs de 280 à 1440 px ; débordement décoratif corrigé",
+      "Deux archives ZIP construites et intégrité vérifiée ; empreintes SHA256 calculées"
+    ],
+    "blockers": [
+      "Refus antérieurs d'écriture du dépôt vitrine : aucune publication tentée pour ne pas contourner les refus",
+      "Mise à jour du journal Google Docs refusée par les contrôles de sécurité",
+      "Navigation HTTP publique non vérifiée ; tests navigateur par injection HTML uniquement",
+      "Tests Microsoft Excel réel, validation métier indépendante, conformité, prix et offre commerciale en attente"
+    ],
+    "next": "Conserver la version locale testée, obtenir une voie de publication autorisée sans contourner les refus, exécuter les 28 contrôles sur le site HTTP public puis poursuivre les validations métier et Excel.",
+    "links": [
+      {
+        "label": "Dépôt vitrine non mis à jour",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro"
+      },
+      {
+        "label": "Statut public",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/pack-pro.json"
+      }
+    ]
   }
 ]
