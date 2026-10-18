@@ -202,11 +202,48 @@ function deploy(){
  return true;}
  });
 }
+function operatorSnapshot(){
+ // Explicitly bounded, read-only local records. No tokens, e-mails or mission instructions.
+ return {projects:ctx.projects.map(p=>({id:p.id,name:p.name,short:p.short||'',status:p.status||'',summary:p.summary||'',description:p.description||''})),
+  actions:db.actions.slice(-500).map(a=>({id:a.id,project:a.project,title:a.title,status:a.status,priority:a.priority,due:a.due})),
+  missions:db.missions.slice(-500).map(m=>({id:m.id,project:m.project,title:m.title,provider:m.provider,status:m.status})),
+  events:db.events.slice(-500).map(e=>({id:e.id,project:e.project,title:e.title,date:e.date})),
+  meetings:db.meetings.slice(-500).map(m=>({id:m.id,projectId:m.projectId||m.project,title:m.title,startsAt:m.startsAt}))};
+}
+function operatorExecute(action){
+ if(!action||typeof action!=='object')throw Error('Action invalide.');
+ const type=String(action.type||''),projectId=String(action.projectId||'');
+ if(!ctx.projects.some(p=>p.id===projectId))throw Error('Projet non autorisé ou introuvable.');
+ const title=String(action.title||'').trim();
+ if(!title||title.length>160)throw Error('Intitulé non valide.');
+ const oldActions=db.actions.slice(),oldEvents=db.events.slice(),oldAudit=Array.isArray(db.operatorAudit)?db.operatorAudit.slice():[];
+ let edited=null,previousStatus=null,previousClosed=null;
+ if(type==='create_action'){
+  db.actions.push({id:id(),project:projectId,title,priority:'Normale',status:'todo',due:'',url:'',at:new Date().toISOString()});
+ }else if(type==='create_event'){
+  if(!window.CONTROL_OPERATOR_CORE?.validateDate(action.date))throw Error('Date et heure invalides.');
+  const when=new Date(action.date);
+  if(!Number.isFinite(+when)||+when<Date.now())throw Error('Choisis une date future.');
+  db.events.push({id:id(),project:projectId,title,date:String(action.date),details:'Créé depuis CONTROL IA (sur cet appareil)'});
+ }else if(type==='complete_action'){
+  edited=db.actions.find(x=>x.id===action.id&&x.project===projectId&&x.title===title&&x.status!=='done');
+  if(!edited)throw Error('Tâche introuvable ou déjà terminée.');
+  previousStatus=edited.status;previousClosed=edited.closedAt;edited.status='done';edited.closedAt=new Date().toISOString();
+ }else throw Error('Action non autorisée par CONTROL.');
+ db.operatorAudit=oldAudit.concat([{id:id(),type,project:projectId,title,at:new Date().toISOString(),scope:'local',outcome:'saved'}]).slice(-200);
+ if(!save()){
+  db.actions=oldActions;db.events=oldEvents;db.operatorAudit=oldAudit;
+  if(edited){edited.status=previousStatus;edited.closedAt=previousClosed}
+  throw Error('Stockage indisponible : l’action a été annulée.');
+ }
+ return true;
+}
 function localai(){
  const root=$('#main');
  if(!window.CONTROL_LOCAL_AI){root.innerHTML=note('IA locale indisponible : actualise CONTROL.');return}
  const selected=new URLSearchParams(location.hash.split('?')[1]||'').get('project')||'';
  window.CONTROL_LOCAL_AI.mount(root,{projects:ctx.projects,projectId:selected,
+  operator:{snapshot:operatorSnapshot,execute:operatorExecute},
   createAction:(projectId,title)=>{
    if(!projectId||projectId==='general'||!ctx.projects.some(p=>p.id===projectId))throw Error('Sélectionne un projet avant d’ajouter une tâche.');
    const action={id:id(),project:projectId,title:cap(title,180),priority:'Normale',status:'todo',due:'',url:'',at:new Date().toISOString()};
