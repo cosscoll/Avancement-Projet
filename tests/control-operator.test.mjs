@@ -77,7 +77,7 @@ test('write operations use the existing CONTROL state and roll back on storage f
  assert.equal(db.actions.length,3);
  assert.equal(db.operatorAudit.length,1);
  assert.equal(db.operatorAudit[0].scope,'local');
- assert.equal(sandbox.operatorExecute({type:'complete_action',projectId:'ucp',id:'a1',title:'Tester le site'}),true);
+ assert.equal(sandbox.operatorExecute({type:'complete_action',projectId:'ucp',id:'a1',title:'Tester le site',expectedStatus:'todo'}),true);
  assert.equal(db.actions[0].status,'done');
  assert.throws(()=>sandbox.operatorExecute({type:'create_action',projectId:'unknown',title:'Interdit'}),/Projet non autorisé/);
  saveOk=false;
@@ -111,7 +111,7 @@ test('confirmed calendar edit and delete remain local and reversible on storage 
  assert.equal(sandbox.operatorExecute(moved.action),true);
  assert.equal(db.events[0].date,'2026-10-25T16:00');
  saveOk=false;
- assert.throws(()=>sandbox.operatorExecute({type:'update_event',id:'e1',projectId:'ucp',title:'Revue de projet',date:'2026-10-27T10:30'}),/Stockage indisponible/);
+ assert.throws(()=>sandbox.operatorExecute({type:'update_event',id:'e1',projectId:'ucp',title:'Revue de projet',date:'2026-10-27T10:30',expectedDate:'2026-10-25T16:00'}),/Stockage indisponible/);
  assert.equal(db.events[0].date,'2026-10-25T16:00');
  const canceled=core.interpret('Supprime le rendez-vous Revue de projet',{...sample,events:db.events});
  assert.equal(canceled.action.type,'delete_event');
