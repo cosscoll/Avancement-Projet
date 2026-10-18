@@ -1573,5 +1573,52 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/issues"
       }
     ]
+  },
+  {
+    "id": "ucp-20261018T213227Z",
+    "started_at": "2026-10-18T21:32:27Z",
+    "ended_at": "2026-10-18T21:38:55.537Z",
+    "summary": "UCP-QA-49 ajoute une matrice de cinq interruptions transactionnelles confinées et confirme 402/402 contrôles sur copie isolée, avec livraison Drive vérifiée.",
+    "done": [
+      "Issues centrales #1 et #2 relues : ouvertes, créées par cosscoll et sans commentaire ; aucune issue [DECISION][ucp].",
+      "Cinq checkpoints de panne bornés au bac à sable ajoutés : après copie, après intégration, avant rollback, après rollback et avant validation finale.",
+      "7/7 nouveaux tests et 5/5 pannes réelles contrôlées : chaque panne retourne BLOCKED, conserve la cible d’origine et supprime le bac à sable.",
+      "Répétition normale PASS ; plans revérifiés à 90d406cc920e605c28a5b8a35f6db2d47cb7cba23e30269f77ce03de32b91fcc et 889efcb9b492e98bbaa37d13138fe4e95d96e885de2896a76e1c3ef15bf02306.",
+      "Régression complète réussie : 110/110 pytest avec --basetemp, 166/166 PWA/DOM, 24/24 sauvegarde/restauration synthétique, 88/88 outils unitaires, manifeste, préflight, plans, répétitions, archive et reçu ; total 402/402.",
+      "Archive Drive vérifiée : 389729 octets, SHA-256 ca2a7aae7c46416b4e4f5f66cc990e9ea80c311b0f7d8779f168f3cf07d36536.",
+      "Reçu Drive vérifié : 575 octets, SHA-256 79800842571a7c3a202982c6ae3cf53cb0fe55178ee01be753f44af823e80d0f.",
+      "Journal UCP mis à jour et vérifié ; HEAD public af2bba353089a382843f6997ea92239b03d8a2dc et absence de PR ouverte confirmés."
+    ],
+    "blockers": [
+      "La connexion CONTROL–Codex demandée par les issues #1/#2 reste interdite ; aucun accès Codex n’a été accordé ou déclenché.",
+      "Le clone Windows dev/ucp-codex reste volontairement non lu ; la matrice de panne n’y a pas été exécutée.",
+      "Les pannes sont synthétiques et confinées : aucune coupure système réelle, intégration ni restauration réelle n’a été effectuée.",
+      "Lot sauvegardé hors GitHub applicatif : non intégré, non fusionné, non déployé ; aucune recette navigateur/appareil ou staging privé.",
+      "Le reçu protège l’intégrité mais ne constitue pas une signature cryptographique d’identité.",
+      "Un avertissement de dépréciation Starlette/AnyIO reste non bloquant."
+    ],
+    "next": "Télécharger ensemble le ZIP QA-49 et son reçu, vérifier l’intégrité, puis exécuter la matrice uniquement dans un clone jetable après génération et revérification des plans ; arrêter sur tout écart inattendu.",
+    "links": [
+      {
+        "label": "Livrable UCP-QA-49",
+        "url": "https://drive.google.com/file/d/1E-5_SKdYNlHVOlI969kCANp_JPGnj6EZ/view?usp=drivesdk"
+      },
+      {
+        "label": "Reçu d’intégrité QA-49",
+        "url": "https://drive.google.com/file/d/1jYI8A-8cP59XdoBIOewacODqJJK4a8O9/view?usp=drivesdk"
+      },
+      {
+        "label": "HEAD public contrôlé",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/af2bba353089a382843f6997ea92239b03d8a2dc"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      },
+      {
+        "label": "Issues UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues"
+      }
+    ]
   }
 ]
