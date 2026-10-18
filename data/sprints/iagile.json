@@ -239,5 +239,38 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/commit/181ba5280fe9e906faf7f5c97673d360db95313d"
       }
     ]
+  },
+  {
+    "id": "iagile-20261018-203815-paris",
+    "started_at": "2026-10-18T20:38:15+02:00",
+    "ended_at": "2026-10-18T18:40:58.890Z",
+    "summary": "Projet final Processus : kit candidat privé apprenant/formateur et contrôle d'accès documentaire.",
+    "done": [
+      "Issue #3 vérifiée : auteur cosscoll, ouverte, créée le 17/10/2026 à 13:07Z ; consigne déjà prise en compte.",
+      "Projet final Playbook (5 processus, prompts P24-P28, barème /20) créé en deux archives séparées et contrôlé hors ligne.",
+      "Deux ZIP et rapport QA sauvegardés dans la bibliothèque privée IAgile/Pilotage.",
+      "Supabase vérifié en lecture seule : 47 modules, 50 consignes, aucun compte Auth ni objet premium ; écart RLS de prévisualisation formateur confirmé.",
+      "PR #12 et #77 ouvertes en brouillon ; document Drive formateur M8 toujours vide."
+    ],
+    "blockers": [
+      "Restauration du document M8 refusée par les contrôles de sécurité.",
+      "V0.9.1 non approuvée, importateur R3 non intégré, tests Auth/RLS inter-comptes réels manquants.",
+      "Projet final candidat non évalué par des apprenants ni intégré à Academy."
+    ],
+    "next": "Valider pédagogiquement le projet final, corriger l'accès de prévisualisation formateur après revue RLS, restaurer M8 par un chemin autorisé, tester Auth/RLS et stockage privé avant tout GO.",
+    "links": [
+      {
+        "label": "Consigne #3",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues/3"
+      },
+      {
+        "label": "PR #12",
+        "url": "https://github.com/cosscoll/IAgile/pull/12"
+      },
+      {
+        "label": "PR #77",
+        "url": "https://github.com/cosscoll/IAgile/pull/77"
+      }
+    ]
   }
 ]
