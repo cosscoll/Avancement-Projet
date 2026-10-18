@@ -1,9 +1,9 @@
 /* CONTROL PWA — public static shell only; no private instructions, secrets or GitHub API responses. */
 'use strict';
-const CACHE_SHELL='control-shell-v33';
-const CACHE_PUBLIC='control-public-data-v33';
+const CACHE_SHELL='control-shell-v34';
+const CACHE_PUBLIC='control-public-data-v34';
 const ROOT=new URL(self.registration.scope);
-const ASSETS=['./','./index.html','./legacy.html','./assets/automations-hub.js','./assets/command-center.js','./assets/command-center.css','./assets/tool-catalog.js','./assets/tool-catalog.css','./assets/deployment-guides.js','./assets/deployment-guides.css','./assets/control-help.js','./assets/control-help.css','./assets/ai-lab.js','./assets/ai-lab.css','./assets/ux-clarity.css','./assets/multi-ai-command.js','./assets/multi-ai-command.css','./assets/visio-center.js','./assets/visio-center.css','./assets/local-ai.js','./assets/control-coach.js','./assets/local-ai.css','./assets/local-ai-worker.js','./assets/app.js','./assets/codex.js','./assets/style.css','./assets/theme.css','./assets/pwa.js','./assets/icon.svg','./assets/icon-192.png','./assets/icon-512.png','./manifest.webmanifest'];
+const ASSETS=['./','./index.html','./legacy.html','./assets/automations-hub.js','./assets/command-center.js','./assets/command-center.css','./assets/tool-catalog.js','./assets/tool-catalog.css','./assets/deployment-guides.js','./assets/deployment-guides.css','./assets/control-help.js','./assets/control-help.css','./assets/ai-lab.js','./assets/ai-lab.css','./assets/ux-clarity.css','./assets/multi-ai-command.js','./assets/multi-ai-command.css','./assets/visio-center.js','./assets/visio-center.css','./assets/local-ai.js','./assets/control-operator-core.js','./assets/control-operator.js','./assets/control-coach.js','./assets/local-ai.css','./assets/local-ai-worker.js','./assets/app.js','./assets/codex.js','./assets/style.css','./assets/theme.css','./assets/pwa.js','./assets/icon.svg','./assets/icon-192.png','./assets/icon-512.png','./manifest.webmanifest'];
 const PUBLIC_DATA=/^data\/(?:projects|catalog|automations|ai-tool-libraries|deployment-guides|help-center)\.json$|^data\/(?:sprints|status)\/[a-z0-9-]+\.json$/;
 const INITIAL_DATA=['./data/projects.json','./data/catalog.json','./data/automations.json','./data/ai-tool-libraries.json','./data/deployment-guides.json','./data/help-center.json',...['pack-pro','banque-ia','ucp','iagile','tcg'].map(id=>'./data/sprints/'+id+'.json')];
 self.addEventListener('install',(e)=>{
