@@ -290,5 +290,38 @@
         "url": "https://docs.google.com/document/d/1eP9ZVO-chyra1sZf1gISfawNwzQPjNOA66KZYjdwMhI/edit"
       }
     ]
+  },
+  {
+    "id": "banque-ia-20261018-081934",
+    "started_at": "2026-10-18T08:19:34+02:00",
+    "ended_at": "2026-10-18T06:22:49.204Z",
+    "summary": "Prototype local non marchand : nettoyage des URL et de l'historique des catégories du catalogue ; 55 fichiers contrôlés, 12 tests ciblés réussis. Aucun déploiement marketing.",
+    "done": [
+      "Première action GitHub search_issues : aucune issue ouverte de l'auteur cosscoll avec les préfixes [CONSIGNE][banque-ia] ou [DECISION][banque-ia] ; aucun numéro à accuser.",
+      "Correctif local assets/site.js : URLs des catégories limitées à categorie et ancres internes connues, suppression des paramètres tiers et identifiants URL ; remplacement de l'adresse au chargement/retour et navigation réversible.",
+      "Ajout tests/test_catalogue_url_hygiene.py : 5 URL adversariales fictives PASS ; tests pytest ciblés 5/5 PASS et complémentaires 7/7 PASS.",
+      "Barrière statique de publication PASS : 55 fichiers, 15 pages HTML, 134 liens internes ; aucun prix, collecte, outil premium ou paiement ajouté.",
+      "ZIP complet, patch et rapport archivés dans Library /Business02_Banques_Outils_IA/."
+    ],
+    "blockers": [
+      "Le dépôt marketing public conserve son ancien index.html (blob 0b84f57a4a003f97ae3296e18cf781026a531f95) ; aucune publication de ce patch confirmée.",
+      "Google Docs batch_update_document refusé par les contrôles de sécurité ; journal non synchronisé, rapport de secours en Bibliothèque.",
+      "Aucune navigation Chromium HTTP du site public, Lighthouse, validation terrain ou conformité RGPD juridique complète."
+    ],
+    "next": "Publier les 55 fichiers publics via un moyen GitHub autorisé sans contourner les refus, vérifier le déploiement et les tests HTTP/Lighthouse ; poursuivre les kits privés V0.12.3 sans contact, vente ni dépense.",
+    "links": [
+      {
+        "label": "Dépôt marketing",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA"
+      },
+      {
+        "label": "Rapports centraux",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/sprints/banque-ia.json"
+      },
+      {
+        "label": "Journal historique",
+        "url": "https://docs.google.com/document/d/1eP9ZVO-chyra1sZf1gISfawNwzQPjNOA66KZYjdwMhI/edit"
+      }
+    ]
   }
 ]
