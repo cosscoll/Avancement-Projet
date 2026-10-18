@@ -228,6 +228,7 @@ function operatorExecute(action){
  }else if(type==='update_event'||type==='delete_event'){
   editedEvent=db.events.find(x=>x.id===action.id&&x.project===projectId&&x.title===title);
   if(!editedEvent)throw Error('Événement introuvable ou modifié depuis la demande.');
+  if(typeof action.expectedDate!=='string'||editedEvent.date!==action.expectedDate)throw Error('Date de rendez-vous modifiée : nouvelle confirmation nécessaire.');
   if(type==='update_event'){
    if(!window.CONTROL_OPERATOR_CORE?.validateLocalDateTime(action.date))throw Error('Nouvelle date invalide.');
    const when=new Date(action.date);
@@ -237,10 +238,13 @@ function operatorExecute(action){
  }else if(type==='complete_action'){
   edited=db.actions.find(x=>x.id===action.id&&x.project===projectId&&x.title===title&&x.status!=='done');
   if(!edited)throw Error('Tâche introuvable ou déjà terminée.');
+  if(typeof action.expectedStatus!=='string'||edited.status!==action.expectedStatus)throw Error('Statut de tâche modifié : nouvelle confirmation nécessaire.');
   previousStatus=edited.status;previousClosed=edited.closedAt;edited.status='done';edited.closedAt=new Date().toISOString();
  }else throw Error('Action non autorisée par CONTROL.');
  db.operatorAudit=oldAudit.concat([{id:id(),type,project:projectId,title,at:new Date().toISOString(),scope:'local',outcome:'saved'}]).slice(-200);
- if(!save()){
+ let saved=false;
+ try{saved=save()===true}catch(error){saved=false}
+ if(!saved){
   db.actions=oldActions;db.events=oldEvents;db.operatorAudit=oldAudit;
   if(edited){edited.status=previousStatus;edited.closedAt=previousClosed}
   if(editedEvent&&type==='update_event')editedEvent.date=previousDate;
