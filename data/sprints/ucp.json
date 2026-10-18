@@ -1219,5 +1219,44 @@
         "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
       }
     ]
+  },
+  {
+    "id": "ucp-20261018T092751Z",
+    "started_at": "2026-10-18T09:27:51Z",
+    "ended_at": "2026-10-18T09:34:21.739Z",
+    "summary": "UCP-QA-41 ajoute un préflight d’intégration strictement en lecture seule au lot QA-40 et confirme 313/313 contrôles, sans lire ni modifier le clone Windows.",
+    "done": [
+      "Issues centrales #1 et #2 relues : ouvertes, identiques et sans commentaire ; aucune issue [DECISION][ucp].",
+      "Préflight limité aux 12 fichiers du manifeste : intégrité de la proposition, comparaison des blobs et états READY_MODIFY, READY_ADD, ALREADY_PROPOSED ou CONFLICT.",
+      "Arrêt démontré sur modification locale, collision d’ajout, fichier manquant, type inattendu, lien symbolique, chemin dangereux et proposition altérée ; aucune écriture, suppression, fusion ou rebase.",
+      "313/313 contrôles réussis : 110 pytest avec --basetemp, 166 PWA/DOM, 24 sauvegarde/restauration synthétique, 1 manifeste, 11 tests unitaires préflight et 1 contrôle préflight réel sur la proposition.",
+      "HEAD public contrôlé à af2bba353089a382843f6997ea92239b03d8a2dc : seul docs/SPRINT_DELIVERY_POLICY.md a été ajouté depuis le parent applicatif 2034e1152944bcb65bd09f3fb70a52e23a399ef2 ; aucune PR ouverte.",
+      "Archive Drive vérifiée : 344812 octets, SHA-256 6bc8c1c717d2bc680f834828e01021ec726b0b36dc468df69249652481b0110e."
+    ],
+    "blockers": [
+      "La connexion CONTROL–Codex demandée par les issues #1/#2 reste interdite ; aucun accès Codex n’a été accordé ou déclenché.",
+      "Le clone Windows dev/ucp-codex reste inconnu et volontairement non lu ; le préflight n’y a pas été exécuté.",
+      "Lot sauvegardé hors GitHub : non commité dans UnCoupdePouce, non fusionné, non déployé ; aucune recette navigateur/appareil ou staging privé.",
+      "Un avertissement de dépréciation Starlette/AnyIO reste non bloquant."
+    ],
+    "next": "Exécuter manuellement le préflight QA-41 contre le clone local ; arrêter sur tout CONFLICT ou INVALID. Si READY, copier seulement les fichiers listés sur une branche dédiée, relancer les tests puis recetter navigateur et staging privé avant toute PR.",
+    "links": [
+      {
+        "label": "Livrable UCP-QA-41",
+        "url": "https://drive.google.com/file/d/1Q52FPZLMp7wl-FSIMFFLAABLxYxYX0ws/view?usp=drivesdk"
+      },
+      {
+        "label": "HEAD public contrôlé",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/af2bba353089a382843f6997ea92239b03d8a2dc"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      },
+      {
+        "label": "Issues UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues"
+      }
+    ]
   }
 ]
