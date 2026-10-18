@@ -83,6 +83,11 @@
       "title": "Licences et ressources en qualification",
       "description": "Au 17/10/2026 à 21h40 Paris : 286 références privées, 122 licences en contrôle ciblé, 159 non contrôlées et 5 partielles. Cinq licences Agents annotées (dont MCP TypeScript à licence composite). Aucune ressource approuvée/publiée ; dépendances et tests Auth/RLS réels encore à valider.",
       "level": "warning"
+    },
+    {
+      "title": "Atelier M6 candidat testé hors ligne",
+      "description": "18/10/2026 : laboratoire Processus module 6 avec données fictives et 17 tests synthétiques réussis. Livrables non intégrés, non approuvés ; aucune recette Auth/RLS réelle ni publication premium.",
+      "level": "info"
     }
   ],
   "decisions": [
