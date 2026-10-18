@@ -1046,5 +1046,37 @@
         "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
       }
     ]
+  },
+  {
+    "id": "ucp-20261018T043423Z",
+    "started_at": "2026-10-18T04:34:23Z",
+    "ended_at": "2026-10-18T04:38:31.888Z",
+    "summary": "UCP-QA-36 sécurise sur copie isolée la prise de contrôle du service worker après pré-cache et purge réussis ; 155 contrôles passent, sans intégration applicative.",
+    "done": [
+      "Issues centrales #1 et #2 relues : ouvertes, identiques, créées par cosscoll et sans commentaire ; aucune issue [DECISION][ucp].",
+      "Correctif isolé : skipWaiting seulement après succès des 11 actifs pré-cachés et clients.claim seulement après succès de la purge des anciens caches UCP.",
+      "155 contrôles réussis : 14 cycle de mise à jour, 62 HTTP/ASGI, 21 pré-cache, 35 intégration, 15 composition et 8 DOM.",
+      "Archive Drive vérifiée : 315934 octets, SHA-256 14d8576f93ad8180d482d1e301c64d654b48b7acdc8daa4943dec111a183c620."
+    ],
+    "blockers": [
+      "La connexion CONTROL–Codex demandée par les issues #1/#2 reste interdite ; aucun accès Codex n'a été accordé ou déclenché.",
+      "Simulation sans navigateur, moteur Service Worker/CacheStorage réel, HTTPS, multi-onglets ni appareil Android/Xiaomi/iOS.",
+      "Proposition non intégrée ; état du clone Windows dev/ucp-codex et de ses tests --basetemp inconnu."
+    ],
+    "next": "Comparer QA-36 au clone local, intégrer sur branche dédiée après contrôle de conflit, puis recetter sous Chrome une mise à jour avec page déjà ouverte et un échec de pré-cache.",
+    "links": [
+      {
+        "label": "Livrable UCP-QA-36",
+        "url": "https://drive.google.com/file/d/1k0ARxv5A9KU3ISe2dwEHMhh4Nosqg4zL/view?usp=drivesdk"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      },
+      {
+        "label": "Issues UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues"
+      }
+    ]
   }
 ]
