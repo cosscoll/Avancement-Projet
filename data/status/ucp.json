@@ -139,7 +139,7 @@
     },
     {
       "title": "PWA et distribution mobile non validées",
-      "description": "UCP-QA-35 valide à travers FastAPI/ASGI les onze URL du pré-cache corrigé : toutes répondent HTTP 200 avec le MIME et les octets attendus ; la base synthétique temporaire est supprimée. Avec les non-régressions, 141 contrôles réussissent. Aucun navigateur/service worker ou CacheStorage réel, HTTPS, hors-ligne ou appareil Android/Xiaomi/iOS n’est validé ; le correctif n’est pas intégré.",
+      "description": "UCP-QA-36 ajoute sur copie isolée une activation conditionnelle : skipWaiting seulement après pré-cache réussi et clients.claim seulement après purge réussie. Les échecs addAll/purge sont couverts et 155 contrôles passent avec les non-régressions HTTP, pré-cache, intégration, composition et DOM. Aucun navigateur/service worker ou CacheStorage réel, HTTPS, multi-onglets ou appareil Android/Xiaomi/iOS n’est validé ; le correctif n’est pas intégré.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-35 ; QA-35 pré-valide en HTTP/ASGI les onze URL du pré-cache PWA corrigé, sans push applicatif",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-36 ; QA-36 valide en simulation le cycle de prise de contrôle PWA après pré-cache et purge réussis, sans push applicatif",
   "baseline_date": "2026-10-18"
 }
