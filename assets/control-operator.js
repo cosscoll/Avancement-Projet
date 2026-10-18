@@ -52,7 +52,7 @@ function mount(root,adapter={}){
   if(typeof adapter.execute!=='function'){show('Exécution locale indisponible.');return}
   const title=$('[data-op-title]').value.trim(),date=$('[data-op-date]').value;
   if(!title||title.length>160){show('Indique un intitulé valide.');return}
-  if(['create_event','update_event'].includes(pending.type)&&!window.CONTROL_OPERATOR_CORE.validateDate(date)){show('Indique une date et une heure valides.');return}
+  if(['create_event','update_event'].includes(pending.type)&&!window.CONTROL_OPERATOR_CORE.validateLocalDateTime(date)){show('Indique une date et une heure valides.');return}
   if(pending.type==='delete_event'&&!confirm('Supprimer cet événement de CONTROL ? Cette action ne peut pas être annulée dans le chat.'))return;
   const action={...pending,title,date};
   const data=snapshot();

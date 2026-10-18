@@ -21,6 +21,19 @@ function validateDate(value){
  const [y,m,d,h,min]=match.slice(1).map(Number);
  return y>=2020&&y<=2100&&m>=1&&m<=12&&h<=23&&min<=59&&d>=1&&d<=new Date(y,m,0).getDate();
 }
+// Reject nonexistent and ambiguous local wall-clock times in the device timezone.
+function validateLocalDateTime(value){
+ if(!validateDate(value))return false;
+ const [year,month,day,hour,minute]=value.match(/\d+/g).map(Number);
+ const same=d=>d.getFullYear()===year&&d.getMonth()+1===month&&d.getDate()===day&&d.getHours()===hour&&d.getMinutes()===minute;
+ const instant=new Date(value);
+ if(!Number.isFinite(+instant)||!same(instant))return false;
+ // A repeated wall-clock minute maps to two instants during a backward DST shift.
+ for(const delta of [-180,-120,-90,-60,-30,30,60,90,120,180]){
+  if(same(new Date(+instant+delta*60000)))return false;
+ }
+ return true;
+}
 function parseDate(query){
  const s=String(query||'');
  let d=s.match(/\b(\d{1,2})\/(\d{1,2})\/(\d{4})\b/),y,m,day;
@@ -47,7 +60,12 @@ function inferTitle(query,kind,project){
  return trim(s.replace(/^(?:de |d['’]|pour |: )/i,'').replace(/[.,;:\s]+$/,''),160);
 }
 function interpret(input,snapshot={},scope='general'){
- const raw=trim(input,1200),q=fold(raw),v=visible(snapshot,scope),project=findProject(raw,v.projects,scope);
+ const raw=trim(input,1200),q=fold(raw),projects=arr(snapshot?.projects);
+ if(scope!=='general'&&!projects.some(p=>p.id===scope))return {kind:'help',text:'Projet introuvable. Accès refusé.'};
+ const mentioned=projects.filter(p=>[p.id,p.name,p.short].some(a=>typeof a==='string'&&fold(a).length>=2&&(' '+q+' ').includes(' '+fold(a)+' ')));
+ if(mentioned.length>1)return {kind:'help',text:'Plusieurs projets mentionnés : préciser un seul projet.'};
+ if(scope!=='general'&&mentioned.some(p=>p.id!==scope))return {kind:'help',text:'Projet différent du projet sélectionné : changer de projet.'};
+ const v=visible(snapshot,scope),project=findProject(raw,v.projects,scope);
  if(!q)return {kind:'help',text:'Décris un projet, une tâche, une mission ou un événement à retrouver.'};
  if(/(?:connecte|synchronise|envoie|delegue|lance|demarre)/.test(q)&&/(claude|chatgpt|gemini|codex|compte|gmail)/.test(q))
   return {kind:'help',text:'Les comptes IA externes ne sont pas pilotables depuis cette fonction locale. Aucun fournisseur n’a été déclenché.'};
@@ -99,5 +117,5 @@ function interpret(input,snapshot={},scope='general'){
  }
  return {kind:'help',text:'Demandes prises en charge : « Où en est UCP ? », « Quelle IA travaille sur UCP ? », « Mes tâches », « Mon agenda », « Crée une tâche préparer le devis pour UCP », « Programme un rendez-vous le 25/10/2026 à 14h30 pour UCP ». Cette fonction consulte CONTROL local ; elle ne code pas encore des sites et ne commande pas les fournisseurs IA.'};
 }
-window.CONTROL_OPERATOR_CORE={interpret,fold,validateDate,parseDate,findProject};
+window.CONTROL_OPERATOR_CORE={interpret,fold,validateDate,validateLocalDateTime,parseDate,findProject};
 })();
