@@ -1181,5 +1181,43 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/issues"
       }
     ]
+  },
+  {
+    "id": "ucp-20261018T083008Z",
+    "started_at": "2026-10-18T08:30:08Z",
+    "ended_at": "2026-10-18T08:37:12.637Z",
+    "summary": "UCP-QA-40 transforme le lot isolé en passation contrôlée : manifeste borné au HEAD public, 12 fichiers à copier explicitement et 301/301 vérifications réussies.",
+    "done": [
+      "Issues centrales #1 et #2 relues : ouvertes, inchangées, créées par cosscoll et sans commentaire ; aucune issue [DECISION][ucp].",
+      "Manifeste d’intégration validé contre le commit public 2034e1152944bcb65bd09f3fb70a52e23a399ef2 : 5 fichiers modifiés, 7 ajoutés, 22 identiques et 0 suppression.",
+      "Chaque changement est borné par blob Git de référence, blob proposé, SHA-256 et taille ; la procédure impose l’arrêt si la base locale diverge et interdit merge/rebase automatique.",
+      "Régression complète réussie : 110/110 pytest avec --basetemp explicite, 166/166 contrôles PWA/DOM et 24/24 contrôles sauvegarde/restauration synthétique, soit 301/301.",
+      "Archive Drive vérifiée : 337807 octets, SHA-256 990a29e827613b8c457e1ba746cc6aef44ba53b3833b3645de2174974f917ca2 ; caches, fichiers temporaires, bytecode et bases SQLite exclus."
+    ],
+    "blockers": [
+      "La connexion CONTROL–Codex demandée par les issues #1/#2 reste interdite ; aucun accès Codex n’a été accordé ou déclenché.",
+      "L’état du clone Windows dev/ucp-codex reste inconnu et volontairement non lu ; le manifeste n’a donc pas encore été confronté à sa base locale.",
+      "Aucune intégration, recette navigateur/appareil, staging privé ou publication n’a été réalisée.",
+      "Un avertissement de dépréciation Starlette/AnyIO reste non bloquant."
+    ],
+    "next": "Comparer QA-40 au clone local ; arrêter sur tout écart de base ; copier seulement les 12 fichiers listés sur une branche dédiée, relancer les contrôles puis effectuer la recette navigateur et staging privé avant toute PR.",
+    "links": [
+      {
+        "label": "Livrable UCP-QA-40",
+        "url": "https://drive.google.com/file/d/1Ez1EPDSqoeMSpTaA8BUhhvLdECJFX1lw/view?usp=drivesdk"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      },
+      {
+        "label": "Issues UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues"
+      },
+      {
+        "label": "Révision applicative de référence",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/2034e1152944bcb65bd09f3fb70a52e23a399ef2"
+      }
+    ]
   }
 ]
