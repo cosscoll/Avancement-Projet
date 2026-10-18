@@ -198,5 +198,33 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/pack-pro.json"
       }
     ]
+  },
+  {
+    "id": "pack-pro-20261018-160823-paris",
+    "started_at": "2026-10-18T16:08:23+02:00",
+    "ended_at": "2026-10-18T14:12:01.903Z",
+    "summary": "Amélioration locale non marchande du catalogue 18 pages : illustrations 3D CSS contextualisées pour procédures, registres et tableur, avec support réduction des animations. Aucune écriture produit ni publication.",
+    "done": [
+      "Recherche de trois variantes de consignes GitHub author:cosscoll pack-pro : zéro résultat",
+      "Inspection main, cinq branches et PR #2 fusionnée ; main adfca7af3a88ac4e295fd2f803d4b491024427a9, branche catalogue identique à main",
+      "Illustrations CSS 3D créées localement pour trois catégories sans dépendances externes, contenu premium ou paiement",
+      "Tests locaux : 24 contrôles visuels/reduced-motion, 36 contrôles Chromium catalogue, 546 contrôles statiques, 28 contrôles footer, 439 contrôles ressources ; navigation HTTP non testée"
+    ],
+    "blockers": [
+      "GitHub update_file index.html sur feat/catalogue-public-accessible-20261018 refusé : This tool call was blocked by OpenAI's safety checks. Please double check what you are sending.",
+      "Aucun commit de vitrine, PR nouvelle, CI nouvelle ou publication HTTPS vérifiée",
+      "Validation métier indépendante, test Excel réel, conformité, prix et offre commerciale en attente"
+    ],
+    "next": "Préserver l'archive locale, ne pas contourner le refus GitHub ; réévaluer l'écriture uniquement après autorisation effective, puis vérifier PR/CI et publication HTTPS ; maintenir les validations métier/Excel hors de tout lancement.",
+    "links": [
+      {
+        "label": "Dépôt produit",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro"
+      },
+      {
+        "label": "Branche catalogue inchangée",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/tree/feat/catalogue-public-accessible-20261018"
+      }
+    ]
   }
 ]
