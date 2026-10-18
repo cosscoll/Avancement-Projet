@@ -1298,5 +1298,50 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
       }
     ]
+  },
+  {
+    "id": "ucp-20261018T133347Z",
+    "started_at": "2026-10-18T13:33:47Z",
+    "ended_at": "2026-10-18T13:35:44Z",
+    "summary": "UCP-QA-43 ajoute un reçu d’intégrité détaché au ZIP audité et confirme 340/340 contrôles sur copie isolée, avec livraison Drive vérifiée.",
+    "done": [
+      "Issues centrales #1 et #2 relues : ouvertes, inchangées depuis le 17/10/2026, créées par cosscoll et sans commentaire ; aucune issue [DECISION][ucp].",
+      "Reçu JSON détaché ajouté : nom, taille, SHA-256, racine ZIP, commit de référence et métriques d’audit sont recalculés avant acceptation.",
+      "9/9 tests dédiés réussis : altération du ZIP, nom, taille, schéma, racine, métriques, champ manquant et archive interdite sont bloqués.",
+      "Régression complète réussie : 110/110 pytest avec --basetemp, 166/166 PWA/DOM, 24/24 sauvegarde/restauration synthétique, manifeste, préflight, archive et reçu ; total 340/340.",
+      "Archive Drive vérifiée : 355801 octets, SHA-256 ae635fb2fab59245999682f4a23901010c371f41fe5db248b3f74f9b1f16e282.",
+      "Reçu Drive vérifié : 575 octets, SHA-256 022322d52bbedd00b96fa2327aa6c9b72cff5130f28d8d1e97ad5a23ea61e442.",
+      "HEAD public confirmé à af2bba353089a382843f6997ea92239b03d8a2dc ; aucune PR ouverte."
+    ],
+    "blockers": [
+      "La connexion CONTROL–Codex demandée par les issues #1/#2 reste interdite ; aucun accès Codex n’a été accordé ou déclenché.",
+      "Le clone Windows dev/ucp-codex reste volontairement non lu ; le préflight n’y a pas été exécuté.",
+      "Lot sauvegardé hors GitHub : non intégré, non fusionné, non déployé ; aucune recette navigateur/appareil ou staging privé.",
+      "Le reçu protège l’intégrité mais ne constitue pas une signature cryptographique d’identité.",
+      "Un avertissement de dépréciation Starlette/AnyIO reste non bloquant."
+    ],
+    "next": "Télécharger ensemble le ZIP QA-43 et son reçu, vérifier le reçu contre le ZIP, puis exécuter le préflight sur le clone local et arrêter sur tout CONFLICT ou INVALID avant toute copie des 12 fichiers.",
+    "links": [
+      {
+        "label": "Livrable UCP-QA-43",
+        "url": "https://drive.google.com/file/d/1lIuLxn1WUdJy4hIfsXOyHtNw0QgigInA/view?usp=drivesdk"
+      },
+      {
+        "label": "Reçu d’intégrité QA-43",
+        "url": "https://drive.google.com/file/d/1coaxjHUdh3BpLhMI6UFjt65yOD3Khs6v/view?usp=drivesdk"
+      },
+      {
+        "label": "HEAD public contrôlé",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/af2bba353089a382843f6997ea92239b03d8a2dc"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      },
+      {
+        "label": "Issues UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues"
+      }
+    ]
   }
 ]
