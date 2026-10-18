@@ -59,3 +59,7 @@ Les tests automatiques valident les réponses déclaratives, l'isolation du proj
 - Les statuts « en cours » sont des informations saisies dans CONTROL, pas des preuves d'activité en temps réel.
 - Sans CONTROL Cloud authentifié et testé, les données et le journal sont locaux, non synchronisés et non inviolables.
 - Prochaines étapes : recette mobile et navigateur, véritable registre d'outils avec permissions, synchronisation sécurisée des statuts et calendriers, orchestration multi-IA, agent développeur sandboxé, tests de bout en bout.
+
+## CONTROL IA V1.1 — 18 octobre 2026
+
+Revue de sécurité : contrôle de portée projet et validation des heures locales ambiguës/inexistantes. Trois tests de portée et un test DST ajoutés sur branche de revue. La CI et la recette Android restent non vérifiées. Voir docs/CONTROL_IA_RETROSPECTIVES.md pour les écarts et priorités. Aucun service externe activé.
