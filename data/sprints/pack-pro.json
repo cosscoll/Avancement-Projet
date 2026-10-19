@@ -494,5 +494,85 @@
         "Axe-core automated findings do not establish full WCAG 2.2 AA compliance or actual Safari/Android use."
       ]
     }
+  },
+  {
+    "schema_version": 2,
+    "id": "pack-pro-20261019-webgl-motion-live",
+    "started_at": "2026-10-19T09:11:35Z",
+    "ended_at": "2026-10-19T09:20:41.341Z",
+    "objectives": [
+      {
+        "before": "Réduction de mouvement appliquée uniquement au chargement ; 3D ne s'effaçait pas immédiatement si la préférence utilisateur changeait, récupération WebGL non gérée",
+        "after": "Sur l'accueil réel, WebGL2 bascule 3D→2D→3D sans rechargement lorsque la préférence change et affiche le fallback durant une perte de contexte graphique",
+        "acceptance": "Browser QA 390 et 1440 px sur branche et URL réelle : toggles, contexte simulé, aucun débordement ni erreur ; cinq workflows verts"
+      }
+    ],
+    "summary": "Robustesse WebGL améliorée et déployée : bascule instantanée reduced-motion et reconstruction après restauration de contexte ; recette Chromium publique validée aux résolutions 390 et 1440px.",
+    "done": [
+      "Audit du code WebGL et identification de l'absence d'adaptation dynamique à prefers-reduced-motion et d'initialisation après webglcontextrestored",
+      "Code corrigé avec repli immédiat, reprise de la scène quand les animations sont réautorisées, initialisation différée conservée",
+      "PR #12 fusionnée (6f89866a18770baec25710de94a7ccc7d739b7a4) après cinq workflows verts, tests Chromium WebGL2 au format 390 et 1440, zéro erreur JS/overflow",
+      "PR #13 fusionnée (05923edf406c3c35008e069b940458d987ca2a38) pour exécuter la recette sur l'URL publique en plus de la branche",
+      "GitHub Actions run 39229081651 : MOTION_LIFECYCLE_ACCEPTANCE_OK sur branche et site public ; 3D/2D/3D et interruption/restauration synthétique validées à 390 et 1440 px ; zéro JS/overflow",
+      "Règles de confidentialité et pré-lancement maintenues : aucun paiement, vente, contenu premium ni API payante"
+    ],
+    "deliverables": [
+      {
+        "name": "Gestion dynamique WebGL/animations réduites",
+        "kind": "code",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "6f89866a18770baec25710de94a7ccc7d739b7a4",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+      },
+      {
+        "name": "CI navigateur public WebGL",
+        "kind": "test",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "05923edf406c3c35008e069b940458d987ca2a38",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39229081651"
+      }
+    ],
+    "critique": {
+      "p0": [],
+      "p1": [
+        "Le contexte graphique perdu/restauré a été simulé, pas causé par une défaillance réelle du GPU",
+        "Safari/iPhone, Android physiques, utilisateurs au clavier et lecteurs d'écran non encore testés"
+      ],
+      "p2": [
+        "Surveillance des ressources WebGL pendant longues sessions non mesurée"
+      ],
+      "corrected": [
+        "Respect immédiat du mouvement réduit en cours de session",
+        "Fallback après contexte graphique interrompu",
+        "Nouvelle initialisation à la restauration",
+        "Vérification du comportement sur URL publique réelle en plus de branche"
+      ]
+    },
+    "blockers": [
+      "Validation des 15 procédures et 7 registres par professionnels encore nécessaire",
+      "Tests Microsoft Excel réel et conformité vendeur non attestés",
+      "Aucun paiement LIVE ou vente réelle autorisés"
+    ],
+    "next": "Faire une recette sur appareil Android/iOS réel, audit clavier/zoom/lecteur d'écran, mesurer performances réelles et corriger anomalies prioritaires avant finalisation commerciale.",
+    "links": [
+      {
+        "label": "Site Business 01",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+      },
+      {
+        "label": "PR #12",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/12"
+      },
+      {
+        "label": "PR #13",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/13"
+      },
+      {
+        "label": "Preuve WebGL sur URL publique",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39229081651"
+      }
+    ]
   }
 ]
