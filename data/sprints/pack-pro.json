@@ -226,5 +226,45 @@
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/tree/feat/catalogue-public-accessible-20261018"
       }
     ]
+  },
+  {
+    "id": "pack-pro-20261019-081746-paris",
+    "started_at": "2026-10-19T08:17:46+02:00",
+    "summary": "Guide public HTML testé localement et amélioré pour usage sans JavaScript et visibilité du résultat après soumission ; publication refusée par contrôle de sécurité GitHub. Aucun nouveau commit ni PR.",
+    "done": [
+      "Issues du dépôt central inspectées : aucune issue [CONSIGNE][pack-pro] présente",
+      "Sept branches du dépôt produit inspectées ; branche de guide à un commit de main, sans conflit historique signalé par comparaison",
+      "21 tests locaux réussis (pytest, contrôles structurels, interactions simulées et navigateur local) sur le livrable ZIP non publié",
+      "Correction locale : message de repli sans JavaScript et mise au point du résultat avec défilement natif",
+      "État GitHub vérifié : guide-choix.js seul présent sur la branche, commit existant 3aefca4e108c57579b5b36dcfb2e0928730b13ce ; main adfca7af3a88ac4e295fd2f803d4b491024427a9"
+    ],
+    "blockers": [
+      "Création de guide-choix.html sur la branche refusée : This tool call was blocked by OpenAI's safety checks. Please double check what you are sending.",
+      "Aucune nouvelle PR ni fusion : branche incomplète et CI du commit guide non exécutée",
+      "Aucune vérification HTTPS publique possible via outil web ; succès de l'ancienne action Pages ne prouve pas la présence du guide",
+      "Validations métier, Excel réel et conformité encore en attente"
+    ],
+    "git": {
+      "repository": "cosscoll/Pack-Proc-dures-Pro",
+      "main_sha": "adfca7af3a88ac4e295fd2f803d4b491024427a9",
+      "branch": "feat/catalogue-public-orientation-20261019-0210",
+      "branch_sha": "3aefca4e108c57579b5b36dcfb2e0928730b13ce",
+      "new_commit_sha": null,
+      "pr": null,
+      "ci": "not_run_for_branch_head",
+      "merge": false,
+      "deployment": "not_verified"
+    },
+    "next": "Ne pas contourner le refus. Reprendre uniquement une écriture GitHub autorisée, vérifier le contenu complet, ouvrir PR, exécuter CI puis fusionner sous conditions et vérifier Pages/HTTPS séparément.",
+    "links": [
+      {
+        "label": "Branche de travail",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/tree/feat/catalogue-public-orientation-20261019-0210"
+      },
+      {
+        "label": "Suivi central",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/sprints/pack-pro.json"
+      }
+    ]
   }
 ]
