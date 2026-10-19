@@ -928,5 +928,81 @@
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39237376013"
       }
     ]
+  },
+  {
+    "schema_version": 2,
+    "id": "pack-pro-20261019-mobile-menu-public",
+    "started_at": "2026-10-19T10:28:00Z",
+    "ended_at": "2026-10-19T10:41:11.811Z",
+    "objectives": [
+      {
+        "before": "Header mobile sur plusieurs lignes, liens peu visibles, risque de masquer le hero 3D",
+        "after": "Bouton de menu compact qui préserve le premier écran 3D, liens consultables, fermeture par Escape/clic/menu, repli sans JS",
+        "acceptance": "Chromium sur 320/390/750/768/1440, WCAG auto et autres checks réussis ; menu HTTP public vérifié depuis GitHub Actions"
+      }
+    ],
+    "summary": "Menu mobile compact animé, accessible et vérifié sur GitHub Pages, avec préservation du WebGL2, du présentoir 3D et du nouvel atelier métier.",
+    "done": [
+      "Réconciliation de la PR #22 obsolète sur latest main dans PR #26 pour ne pas perdre les nouveautés 3D et parcours interactif",
+      "Correction d'un défaut de transition visibility: le panneau restait brièvement visible au chargement après hydratation ; fermeture maintenant immédiate et animation transform/opacity conservée",
+      "Tests Chromium 320/390/750/768/1440 de l'ouverture/fermeture, Échap et focus restauré, navigation Avancement, clic extérieur, absence JS ; 0 débordement et exception",
+      "PR #26 fusionnée, commit 96349ee55ec95b5b9711ea01230a1309911eb813, ancien PR #22 fermé sans fusion",
+      "PR #27 fusionnée, commit 2052139d46d3d25339e38a8ff7a380d9be5617fe ; GitHub Actions run 39239006653 : PUBLIC_MOBILE_MENU_VERIFIED HTTP=200 et NAV_BROWSER_ACCEPTANCE_OK deux fois (branche et site réellement servi)",
+      "Tests WCAG axe-core et parcours 3D, P01, showroom verts sur branche avant fusion ; aucun encaissement ni collecte de données activés"
+    ],
+    "critique": {
+      "p0": [],
+      "p1": [
+        "Contrôle sur iPhone Safari et Android matériel encore non réalisé",
+        "Menu sans JavaScript visible mais son ergonomie avec lecteurs d’écran nécessite audit humain"
+      ],
+      "p2": [
+        "Test de fluidité en environnement matériel encore absent"
+      ],
+      "corrected": [
+        "Header mobile compact",
+        "Présence d'Avancement et des liens",
+        "Fermeture par Escape/navigation/clic extérieur",
+        "Flash initial du panneau corrigé",
+        "Version publique effectivement testée"
+      ]
+    },
+    "blockers": [
+      "Procédures métier non validées professionnellement, commerçabilité en attente",
+      "Aucun paiement ni tunnel de vente de produits en ligne, prix hypothétiques"
+    ],
+    "deliverables": [
+      {
+        "name": "Menu mobile compact",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "96349ee55ec95b5b9711ea01230a1309911eb813",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+      },
+      {
+        "name": "QA mobile sur vraie URL publique",
+        "kind": "test",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "2052139d46d3d25339e38a8ff7a380d9be5617fe",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39239006653"
+      }
+    ],
+    "next": "Poursuivre l'optimisation mobile sur appareils physiques, mesurer Core Web Vitals, prioriser la validation des procédures puis créer un tunnel commercial juridiquement conforme sans dépense avant approbation.",
+    "links": [
+      {
+        "label": "Accueil responsive en ligne",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+      },
+      {
+        "label": "Atelier gratuit",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/atelier-decisions.html"
+      },
+      {
+        "label": "Recette menu mobile HTTP",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39239006653"
+      }
+    ]
   }
 ]
