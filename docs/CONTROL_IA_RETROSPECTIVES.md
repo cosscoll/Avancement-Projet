@@ -179,3 +179,18 @@ L'autocritique a relevé un risque non testé : le raccourci PWA sur téléphone
 **Résultat :** [CI navigateur publiée](https://github.com/cosscoll/Avancement-Projet/actions/runs/39231769083), test PWA hors ligne **réussi** ; [CI générale](https://github.com/cosscoll/Avancement-Projet/actions/runs/39231769042) et [déploiement Pages](https://github.com/cosscoll/Avancement-Projet/actions/runs/39231768184) réussis.
 
 **Limite cruciale :** ce test confirme seulement la disponibilité de la **coque publique et du suivi en cache** dans Chrome headless, réseau simulé hors ligne. Il ne prouve PAS la persistance Cloud, la synchronisation en différé, le fonctionnement d'Android installé sur écran d'accueil, Safari iOS, le chargement offline du modèle IA (poids externes), les rappels push ou les connexions externes. Aucun critère `operational` supplémentaire n'est coché. Le critère QA-01 reçoit la preuve PWA, sans augmenter artificiellement le nombre de fonctionnalités terminées. Il faut encore une vraie recette sur les appareils de l'utilisateur.
+
+
+## 19 octobre 2026 — Recette P0 des permissions CONTROL Cloud, sans base distante
+
+**AVANT :** tests Node statiques et code des six tables RLS mais aucun test PostgreSQL A/B réel. Focus maintenu : CONTROL-ACCOUNT ; pas de comptes réels ni de Cloud activé.
+
+**Première passe :** PR #21. Ajout du workflow GitHub Actions avec PostgreSQL 16 jetable, auth.uid() et rôles fictifs, application du véritable SQL CONTROL sous verrou, exercices A/B sur six tables, refus anonymes, protection contre usurpation de propriétaire et clé étrangère composite. Résultat : CI PostgreSQL verte.
+
+**Autocritique n°1 :** P0 une simulation de JWT ne démontre pas Supabase Auth ni la sécurité de la future instance CONTROL ; P1 les cas de sujet absent et réaffectation de propriétaire n'étaient pas couverts ; P1 le verrou de la seconde migration méritait un test négatif distinct.
+
+**Deuxième passe :** ajout des tests de sujet absent malgré le rôle authenticated, de mise à jour owner_id vers un autre compte, de refus du SQL de quota IA sur base non confirmée. Retest de la même suite SQL. Résultat final : [CI PostgreSQL A/B verte](https://github.com/cosscoll/Avancement-Projet/actions/runs/39233284788) sur main après fusion [PR #21](https://github.com/cosscoll/Avancement-Projet/pull/21), [CI Node générale verte](https://github.com/cosscoll/Avancement-Projet/actions/runs/39233285019), [publication Pages verte](https://github.com/cosscoll/Avancement-Projet/actions/runs/39233283566). Aucune donnée ou instance distante touchée.
+
+**Autocritique n°2 :** blocage P0 confirmé : aucun backend CONTROL indépendant autorisé, pas de vrai compte Supabase, JWT/PostgREST ou synchronisation A/B réelle testés. Ce mock PostgreSQL n'est pas une certification de sécurité d'une instance Supabase. La migration garde son verrou ; config/cloud.json reste désactivé. Aucune augmentation artificielle du taux de capacités opérationnelles : **3/36 critères vérifiés (les précédents), 0/9 modules opérationnels**, ACC-01..04 non validés. Le tracker reçoit uniquement le lien vers la preuve de test RLS *simulé*.
+
+**Prochain sprint utile :** préparer une recette instrumentée PostgREST/JWT sur une future instance CONTROL DÉDIÉE et inspecter l'interface d'authentification avec comptes fictifs sans créer d'infrastructure nouvelle ; ne connecter/activer la vraie base qu'après vérification des coûts exacts à 0 € et autorisation du propriétaire. Tester isolation A/B, expiration, changement de session et persistance multi-appareils avant tout statut opérationnel.

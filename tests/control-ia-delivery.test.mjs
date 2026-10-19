@@ -87,3 +87,20 @@ test('Cloud stays disabled while identity and user isolation remain unverified',
  const identity=data.capabilities.find(x=>x.id==='CONTROL-ACCOUNT');
  if(identity.stage!=='operational')assert.equal(config.enabled,false);
 });
+
+
+test('Cloud is not mistaken for authenticated accounts while disabled',()=>{
+ const cfg=JSON.parse(readFileSync('config/cloud.json','utf8'));
+ const tracker=readTracker();
+ const account=tracker.capabilities.find(c=>c.id==='CONTROL-ACCOUNT');
+ assert.ok(account);
+ if(cfg.enabled!==true){
+   assert.notEqual(account.stage,'operational');
+   for(const criterion of account.acceptance){
+     assert.equal(criterion.verified,false,'No real Supabase Auth user test while Cloud is disabled: '+criterion.id);
+   }
+ }
+ // The PostgreSQL CI tests real policies with MOCK auth.uid() and cannot
+ // independently prove real Supabase/JWT A/B, OAuth or multi-device sessions.
+ assert.ok(account.evidence.ci_url?.includes('/actions/runs/'));
+});
