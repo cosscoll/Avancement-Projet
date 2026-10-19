@@ -68,6 +68,13 @@ jobs:
           count=$(psql -X -Atc "select count(*) from pg_tables where schemaname='public' and tablename like 'control_%'")
           test "$count" = '0' || { echo "::error::Guard failed after creating $count tables"; exit 1; }
           echo "RLS PASS: migration guard refused unconfirmed database without creating tables"
+          if psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261017_control_ai_dispatch.sql > /tmp/control-dispatch-guard.log 2>&1; then
+            echo "::error::Dispatch migration accepted an unconfirmed database"; exit 1
+          fi
+          grep -q 'CONTROL migration refused' /tmp/control-dispatch-guard.log || { cat /tmp/control-dispatch-guard.log; exit 1; }
+          count=$(psql -X -Atc "select count(*) from pg_tables where schemaname='public' and tablename like 'control_%'")
+          test "$count" = '0' || { echo "::error::Dispatch guard created tables"; exit 1; }
+          echo "RLS PASS: dispatch quota migration independently refuses unconfirmed database"
       - name: Installer schema CONTROL seulement dans PostgreSQL de test isolé
         run: psql -X -v ON_ERROR_STOP=1 -f tests/control-cloud-pg-fixtures.sql
       - name: Vérifier réellement les accès A/B, anonymes et droits de modification
