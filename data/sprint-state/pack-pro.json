@@ -3,10 +3,10 @@
   "project": "pack-pro",
   "status": "running",
   "lease": {
-    "run_id": "pack-pro-20261019T171204Z-automation11",
-    "started_at": "2026-10-19T17:12:04.162Z",
-    "expires_at": "2026-10-19T17:57:04.162Z",
-    "objective": "Reprendre et intégrer le correctif verify-live pour chaque push main, puis PR/CI/recette publique"
+    "run_id": "pack-pro-20261019T190820267Z-automation11",
+    "started_at": "2026-10-19T19:08:20.267Z",
+    "expires_at": "2026-10-19T19:53:20.267Z",
+    "objective": "Reprendre le checkpoint verify-live, examiner les CI et publier la correction si autorisée"
   },
   "checkpoint": {
     "at": "2026-10-19T17:12:49.219Z",
@@ -35,5 +35,5 @@
     "summary": "PR22 conflict/CI diagnosed; product HTML and sprint journal writes refused; no product merge; checkpoint retained",
     "report_synced": false
   },
-  "recovered_from": "pack-pro-20261019T161018Z-automation11"
+  "recovered_from": "pack-pro-20261019T171204Z-automation11"
 }
