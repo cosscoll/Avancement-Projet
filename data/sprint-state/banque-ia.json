@@ -1,24 +1,20 @@
 {
   "schema_version": 3,
   "project": "banque-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "banque-ia-20261019-1618-v3-r5",
-    "started_at": "2026-10-19T14:18:28.209Z",
-    "expires_at": "2026-10-19T15:03:28.209Z"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "step": "audit-reduced-motion-and-visual-purpose",
-    "branch": "feat/immersive-pointer-ice-core-20261019",
-    "pr_url": "https://github.com/cosscoll/Banque-Outils-IA/pull/8",
+    "step": "blocked-github-code-write-safety",
+    "branch": "fix/reduced-motion-toggle-20261019",
+    "pr_url": null,
     "files": [],
-    "next_action": "Corriger P1 contrôle d'animations après vérification de main, sans formes 3D décoratives supplémentaires"
+    "next_action": "Corriger les rotations WebGL et la reprise manuelle sous reduced-motion quand les écritures GitHub seront autorisées; journal V2 non actualisé car refus de sécurité; vérifier CI et Pages"
   },
   "last_completed": {
-    "run_id": "banque-ia-20261019-121732-paris-a2",
-    "ended_at": "2026-10-19T10:19:19.977Z",
-    "result": "blocked-github-write",
-    "pr_url": "https://github.com/cosscoll/Banque-Outils-IA/pull/8"
+    "run_id": "banque-ia-20261019-1618-v3-r5",
+    "ended_at": "2026-10-19T14:20:21.996Z",
+    "result": "blocked-github-code-write-safety",
+    "pr_url": null
   },
   "recovered_from": null
 }
