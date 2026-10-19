@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "pack-pro",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "pack-pro-20261019T161018Z-automation11",
+    "started_at": "2026-10-19T16:10:18.082Z",
+    "expires_at": "2026-10-19T16:55:18.082Z",
+    "objective": "Fiabiliser le déclenchement verify-live sur changements des tests et workflows"
+  },
   "checkpoint": {
     "at": "2026-10-19T10:16:57.219Z",
     "branch": "fix/mobile-nav-compact-20261019",
