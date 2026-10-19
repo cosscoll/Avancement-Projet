@@ -83,8 +83,8 @@
       "level": "warning"
     },
     {
-      "title": "Vitrine commerciale 3D V3 publiée, showroom interactif vérifié sur GitHub Pages",
-      "description": "Version V3 sur cosscoll.github.io/Pack-Proc-dures-Pro/ : WebGL2 au premier écran, correction mobile-first, comparateur opérationnel, showroom 3D avec procédures, registres et tableur pilote. QA public HTTP 200 + Chromium 320/390/768/1440 et axe-core sans régression automatique. Validation utilisateurs physiques, métier, marché et vente toujours ouvertes.",
+      "title": "Site V2 et showroom 3D en ligne — validation métier et ventes à préparer",
+      "description": "Le site public contient la vitrine WebGL2 dès le premier écran, le comparateur avant/après, l'échantillon P01 et le showroom 3D interactif (15 procédures / 7 registres / pilotage). QA Chromium sur GitHub Pages, HTTP 200, tests clavier/souris/tactile sur 4 largeurs et axe-core automatisé. Aucun achat activé ; revue métier et tests appareils physiques restent à accomplir.",
       "level": "warning"
     },
     {
