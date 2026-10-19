@@ -3,12 +3,12 @@
   "project": "iagile",
   "status": "running",
   "lease": {
-    "run_id": "iagile-20261019T124057Z-v3-11",
-    "started_at": "2026-10-19T12:41:07.214Z",
-    "expires_at": "2026-10-19T13:26:07.214Z",
-    "objective": "Pilote Processus M8 : vérifier et préparer un parcours de prévisualisation formateur sécurisé, corriger l'incident P0 si autorisé"
+    "run_id": "iagile-20261019T144440300Z-turn11",
+    "started_at": "2026-10-19T14:44:40.300Z",
+    "expires_at": "2026-10-19T15:29:40.300Z",
+    "objective": "Pilote Processus M8 : restaurer un support formateur privé et vérifier le chemin de prévisualisation sécurisé"
   },
   "checkpoint": null,
   "last_completed": null,
-  "recovered_from": "iagile-20261019T103959116Z-v3"
+  "recovered_from": "iagile-20261019T124057Z-v3-11"
 }
