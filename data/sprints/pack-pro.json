@@ -1107,5 +1107,75 @@
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/commit/2052139d46d3d25339e38a8ff7a380d9be5617fe"
       }
     ]
+  },
+  {
+    "schema_version": 2,
+    "id": "pack-pro-20261019T190820267Z-automation11",
+    "started_at": "2026-10-19T19:08:03Z",
+    "ended_at": "2026-10-19T19:09:43.209Z",
+    "objectives": [
+      {
+        "before": "Le workflow verify-live ne tourne pas sur tous les push main; la dernière recette de ce workflow cible un ancien SHA",
+        "after": "Déclenchement sur chaque push main et recette publique terminée sur SHA exact",
+        "acceptance": "PR ciblée, CI verte, merge et run verify-live success sur SHA main avec HTML identique et Chromium desktop/mobile"
+      }
+    ],
+    "summary": "Bail V3 acquis et vérifié, protocole V2/V3 lu, checkpoint récupéré. Filtre paths confirmé. Run mobile sur main 2052139d vérifié HTTP 200 et Chromium 320-1440. Écritures de checkpoint et création d'issue refusées; aucune correction produit ni nouvelle recette verify-live sur le SHA actuel.",
+    "done": [
+      "Bail coopératif acquis et propriétaire confirmé dans data/sprint-state/pack-pro.json",
+      "Main 2052139d46d3d25339e38a8ff7a380d9be5617fe, branche de correction identique, aucune PR ouverte",
+      "Diagnostic précis du filtre push.paths dans verify-live.yml",
+      "Log de CI 39239133581 vérifié: PUBLIC_MOBILE_MENU_VERIFIED HTTP=200, Chromium 320/390/750/768/1440 sans débordement ni erreur",
+      "Ancien verify-live 39238837780 success mais sur SHA 96349ee, non sur dernier main"
+    ],
+    "deliverables": [],
+    "quality": {
+      "checks_run": [
+        "Lecture GitHub main, branches, PR, workflow, CI et logs",
+        "Vérification HTTP publique via logs du runner GitHub"
+      ],
+      "checks_passed": [
+        "CI mobile sur SHA main terminée success, HTTP 200 et tests navigateur"
+      ],
+      "checks_failed": [
+        "Absence de verify-live sur SHA main",
+        "Écriture checkpoint refusée",
+        "Création issue incident refusée"
+      ],
+      "real_browser_verified": false,
+      "ci": "success_other_workflows_not_verify_live_on_main"
+    },
+    "blockers": [
+      "P0 github-write-safety-refusal-pack-pro : GitHub refuse la modification du workflow et la création d'issue",
+      "Site direct inaccessible dans l'environnement de cette exécution; preuve HTTP via runner plus ancien seulement"
+    ],
+    "incidents": [
+      {
+        "blocker_id": "github-write-safety-refusal-pack-pro",
+        "status": "open",
+        "priority": "P0",
+        "consecutive_sprints": 3,
+        "next_action": "Intervention propriétaire sur autorisations ou PR manuelle minimale retirant push.paths, puis run verify-live sur SHA exact; ne pas contourner le refus"
+      }
+    ],
+    "next": "Après intervention autorisée, finaliser le workflow sans dupliquer la branche, PR/CI/merge et preuve verify-live. Tester performances et UX ensuite.",
+    "links": [
+      {
+        "label": "Workflow bloqué",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/blob/main/.github/workflows/verify-live.yml"
+      },
+      {
+        "label": "Main",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/commit/2052139d46d3d25339e38a8ff7a380d9be5617fe"
+      },
+      {
+        "label": "CI mobile HTTP public",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39239133581"
+      },
+      {
+        "label": "Ancien verify-live",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39238837780"
+      }
+    ]
   }
 ]
