@@ -306,5 +306,51 @@
         "url": "https://github.com/cosscoll/IAgile/pull/77"
       }
     ]
+  },
+  {
+    "id": "iagile-20261019-044347-paris",
+    "started_at": "2026-10-19T04:43:47+02:00",
+    "ended_at": "2026-10-19T04:47:34+02:00",
+    "summary": "Consigne IAgile #3 poursuivie : une référence open source candidate MarkItDown ajoutée au catalogue privé Processus M4 (287 ressources) et atelier fictif apprenant/formateur sauvegardé ; 11 tests locaux du validateur réussis, sans approbation ni diffusion premium.",
+    "done": [
+      "Issue #3 [CONSIGNE][iagile] relue via search_issues puis fetch_issue : ouverte, auteur cosscoll, créée le 17/10/2026 à 13:07:25Z ; consigne déjà prise en compte lors de précédents sprints et poursuivie ici. Aucune [DECISION][iagile] ouverte retournée.",
+      "Dépôt microsoft/markitdown : licence MIT racine relue (blob 9e841e7a26e4eb057b24511e7b92d42b257a80e5), README relu (blob fa33f6b343cf54de037cfdb82337cc70d5), avertissement I/O privilégiées pris en compte ; dépendances non auditées.",
+      "Référence privée G904 ajoutée à public.academy_external_learning_resources pour Processus module 4 ; lecture SQL post-écriture confirme published=false et approved_for_course=false. Inventaire Academy passé de 286 à 287 ressources.",
+      "Deux archives candidates séparées apprenant/formateur créées à partir de données entièrement fictives, validateur local avec 11/11 tests réussis ; ZIP contrôlés et sauvegardés puis retrouvés dans la Bibliothèque privée IAgile.",
+      "Statut public iagile.json mis à jour, commit 93ce42cd4ef222526e389c7d7f3cb023ed898617 et lecture de vérification réussie.",
+      "Supabase : 0 utilisateur Auth, 0 objet Storage, 0 cours publié ; PR IAgile #12 et #77 revérifiées ouvertes."
+    ],
+    "blockers": [
+      "Restauration du Google Docs privé formateur M8 refusée par les contrôles de sécurité du connecteur ; document distant toujours non restauré.",
+      "MarkItDown lui-même non installé ni exécuté ; dépendances et plugins non audités ; les 11 tests concernent seulement le validateur pédagogique local.",
+      "V0.9.1 Processus non approuvée, importateur R3 non intégré, politique de prévisualisation des consignes brouillons formateur à revoir ; aucun test Auth/RLS/Storage réel inter-comptes."
+    ],
+    "next": "Rapprocher et faire approuver les supports du pilote Processus, résoudre la restauration M8, revoir la policy RLS formateur sans élargir l'accès apprenant, préparer des comptes de test autorisés et exécuter la recette réelle ; auditer les dépendances de MarkItDown avant tout essai.",
+    "links": [
+      {
+        "label": "Consigne IAgile #3",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues/3"
+      },
+      {
+        "label": "MarkItDown — licence MIT",
+        "url": "https://github.com/microsoft/markitdown/blob/main/LICENSE"
+      },
+      {
+        "label": "MarkItDown — README sécurité",
+        "url": "https://github.com/microsoft/markitdown/blob/main/README.md"
+      },
+      {
+        "label": "Statut IAgile mis à jour",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/93ce42cd4ef222526e389c7d7f3cb023ed898617"
+      },
+      {
+        "label": "PR IAgile #12",
+        "url": "https://github.com/cosscoll/IAgile/pull/12"
+      },
+      {
+        "label": "PR IAgile #77",
+        "url": "https://github.com/cosscoll/IAgile/pull/77"
+      }
+    ]
   }
 ]
