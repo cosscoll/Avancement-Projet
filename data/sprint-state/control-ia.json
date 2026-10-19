@@ -1,15 +1,26 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261019165416-s39",
-    "started_at": "2026-10-19T16:54:16.436Z",
-    "expires_at": "2026-10-19T17:39:16.436Z",
-    "objective": "Reprendre incident PWA v38 non publié, valider tests et publication sûre sans Cloud"
+  "status": "idle",
+  "lease": null,
+  "checkpoint": {
+    "branch": "control-ia/pwa-atomic-v38-20261019-1754",
+    "pr_url": null,
+    "files": [
+      "service-worker.js",
+      "tests/pwa-atomic-install.test.mjs",
+      "tests/service-worker-navigation.test.mjs"
+    ],
+    "tests": "16/16 local Node tests passed; no CI",
+    "next_action": "GitHub safety refusal for service-worker code write; inspect permission with authorized path, then publish PWA v38 and CI, verify Pages",
+    "blocker_id": "CONTROL-PWA-WRITE-001",
+    "stage": "tested_local_not_committed"
   },
-  "checkpoint": null,
-  "last_completed": null,
+  "last_completed": {
+    "run_id": "control-ia-20261019165416-s39",
+    "ended_at": "2026-10-19T16:55:49.373Z",
+    "summary": "PWA v38 tested locally; GitHub code/journal writes blocked; no feature published"
+  },
   "recovered_from": {
     "run_id": "control-ia-20261019-1754-paris-r9",
     "expired_at": "2026-10-19T16:39:59.728Z"
