@@ -46,3 +46,8 @@ jobs:
           node --check tests/control-ia-browser-smoke.mjs
       - name: Recette réelle dans Chromium isolé
         run: node tests/control-ia-browser-smoke.mjs
+      - name: Vérifier également la version en ligne via Chromium
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          CONTROL_BROWSER_PRODUCTION: '1'
+        run: node tests/control-ia-browser-smoke.mjs
