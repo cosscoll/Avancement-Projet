@@ -1,14 +1,19 @@
 {
   "schema_version": 3,
   "project": "iagile",
-  "status": "running",
-  "lease": {
-    "run_id": "iagile-20261019T193620Z-m8-preview-v3",
-    "started_at": "2026-10-19T19:36:20Z",
-    "expires_at": "2026-10-19T20:21:20Z",
-    "objective": "Processus M8 : préparer la prévisualisation sécurisée des exercices brouillons formateur et vérifier le parcours"
+  "status": "idle",
+  "lease": null,
+  "checkpoint": {
+    "branch": "feature/academy-private-rebased-20261010",
+    "pr_url": "https://github.com/cosscoll/IAgile/pull/12",
+    "files": [],
+    "next_action": "Integrate assigned-instructor independent draft preview after authorized GitHub write; preserve private M8 R3 Library source; review RLS before applying; real Auth tests require consent."
   },
-  "checkpoint": null,
-  "last_completed": null,
+  "last_completed": {
+    "run_id": "iagile-20261019T193620Z-m8-preview-v3",
+    "ended_at": "2026-10-19T19:38:04Z",
+    "result": "blocked",
+    "summary": "Diagnostic M8 and RLS completed; code and journal writes refused."
+  },
   "recovered_from": "iagile-20261019T183709915Z-preview-m8"
 }
