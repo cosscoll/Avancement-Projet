@@ -21,7 +21,7 @@ const deadline=(fn,max=18000,step=180)=>async()=>{
 // Detect stale GitHub Pages before claiming that a browser tested this commit.
 // The fresh public HTML/data/JS must match the checked-out source bytes.
 const PUBLIC_ORIGIN='https://cosscoll.github.io/Avancement-Projet/';
-const PUBLIC_ASSETS=['index.html','assets/control-operator.js','assets/control-operator-core.js','assets/command-center.js','assets/control-delivery.js','data/control-ia-delivery.json'];
+const PUBLIC_ASSETS=['index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/command-center.js','assets/control-delivery.js','data/control-ia-delivery.json'];
 const hash=data=>createHash('sha256').update(data).digest('hex');
 async function verifyPublishedFiles(){
  const expected=new Map(PUBLIC_ASSETS.map(path=>[path,hash(readFileSync(resolve(root,path)))]));
@@ -287,6 +287,20 @@ try{
    await command('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:0,uploadThroughput:0});
   }
  }
+
+
+ // Account gate is not the same as personal CONTROL: public Cloud must remain disabled.
+ // We test the actual app.html and public config, not merely assert file contents in Node.
+ const targetCloud=production?PUBLIC_ORIGIN+'app.html':'http://127.0.0.1:'+port+'/app.html';
+ await command('Page.navigate',{url:targetCloud});
+ await ready(()=>js("document.querySelector('#setup')?.hidden===false"),16000)();
+ const cloudState=await js("(async()=>{const cfg=await (await fetch('./config/cloud.json',{cache:'no-store'})).json();return {enabled:cfg.enabled,setup:document.querySelector('#setup')?.hidden,auth:document.querySelector('#auth')?.hidden,workspace:document.querySelector('#workspace')?.hidden,screen:document.querySelector('#setup h1')?.textContent}})()");
+ assert.equal(cloudState.enabled,false,'Cloud must remain disabled before independent backend authorization');
+ assert.equal(cloudState.setup,false,'Disabled Cloud must show setup panel');
+ assert.equal(cloudState.auth,true,'Disabled Cloud must not show sign-in or account creation');
+ assert.equal(cloudState.workspace,true,'Disabled Cloud must not expose private workspace');
+ assert.match(cloudState.screen||'',/CONTROL Cloud se prépare/);
+ log('Cloud app.html remains fail-closed without private accounts or sign-in (local and published)');
 
  assert.equal(errors.length,0,'Unexpected JS browser exceptions: '+errors.join(' | '));
  log('no uncaught JavaScript exceptions');
