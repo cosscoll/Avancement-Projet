@@ -385,5 +385,38 @@
         "url": "https://github.com/cosscoll/Banque-Outils-IA/actions/runs/39126238167"
       }
     ]
+  },
+  {
+    "id": "banque-ia-20261019-cartographie-1792397243279",
+    "started_at": "2026-10-19T08:07:23.279Z",
+    "ended_at": "2026-10-19T08:07:23.279Z",
+    "summary": "Refonte immersive : nouvelle cartographie WebGL de 6 familles IA, repli Canvas 2D, recherche locale, liens d'accueil et documentation, intégrés sur branche et PR #4 draft. Non fusionné/non publié.",
+    "done": [
+      "Issues ouvertes [CONSIGNE]/[DECISION][banque-ia] de cosscoll vérifiées : aucune correspondance.",
+      "cartographie.html créé sur feat/home-navigation-a11y-20261019-0020 : commit f661136963f527cee16256f4f2c763433bd98662.",
+      "index.html actualisé pour les liens cartographie/catalogue/méthodes/avancement : commit a69da9205e8b3cb592dcf257fe02b81d5d83aa3f.",
+      "docs/REFONTE_IMMERSIVE.md créé : commit f6e1543fac9de9db20e62e25b3cf3ad38526eddd.",
+      "Dix vérifications statiques PASS depuis les fichiers relus via GitHub ; PR brouillon #4 ouverte sans fusion."
+    ],
+    "blockers": [
+      "PR #4 mergeable=false ; état des conflits non certifié, aucune fusion.",
+      "Aucune CI/status associée au commit de branche retournée ; pas de test Chromium sur le commit exact ni Lighthouse.",
+      "Version publique GitHub Pages non vérifiée et main non modifié par ce sprint."
+    ],
+    "next": "Tester le code exact en navigateur Chromium sur desktop/mobile et repli WebGL ; corriger les défauts ; contrôler sécurité, conflits et CI de PR #4 ; fusionner uniquement après validation puis tester HTTPS public.",
+    "links": [
+      {
+        "label": "PR cartographie WebGL",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/pull/4"
+      },
+      {
+        "label": "Documentation refonte",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/blob/feat/home-navigation-a11y-20261019-0020/docs/REFONTE_IMMERSIVE.md"
+      },
+      {
+        "label": "Page cartographie",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/blob/feat/home-navigation-a11y-20261019-0020/cartographie.html"
+      }
+    ]
   }
 ]
