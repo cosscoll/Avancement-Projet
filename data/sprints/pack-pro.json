@@ -777,5 +777,70 @@
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/20"
       }
     ]
+  },
+  {
+    "schema_version": 2,
+    "id": "pack-pro-20261019-showroom-3d-public",
+    "started_at": "2026-10-19T10:00:00Z",
+    "ended_at": "2026-10-19T10:06:34.831Z",
+    "summary": "Nouveau présentoir produit 3D interactif publié parallèlement à la refonte V2 : trois vues (procédures, registres, pilotage), interactions survol/clavier/tactile, contenu métier distinct et CTA P01, preuve HTTP 200 et navigateur réelle.",
+    "objectives": [
+      {
+        "before": "La vitrine annonçait les contenus, mais le visiteur ne pouvait pas explorer les supports du futur pack",
+        "after": "Showroom 3D interactif avec onglets procédures/registres/pilotage et explication de chaque contenu",
+        "acceptance": "GitHub Pages HTTP 200; navigation 3 onglets, interactions souris/clavier/tactile testées 1440/768/390/320, zéro erreur JS ou débordement"
+      }
+    ],
+    "done": [
+      "Main GitHub contrôlée au commit 7f693b52a16415a4f30ca226f525eb9a92af3994 : comprend le présentoir 3D avec trois vues distinctes",
+      "Workflow GitHub Actions run 39234542774 : SHOWROOM_LIVE_HTML_VERIFIED HTTP=200 et SHOWROOM_ACCEPTANCE_OK sur le site public pour quatre largeurs, clavier et tactile mobile",
+      "Captures Playwright du présentoir examinées à 1440 et 390 px : présentation du produit réellement visible et lisible, CTA P01 présent; navigation mobile demeure dense à améliorer",
+      "Pack toujours à l'état pilote sans paiement ni données personnelles collectées"
+    ],
+    "deliverables": [
+      {
+        "name": "Showroom produit 3D",
+        "kind": "site",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+      },
+      {
+        "name": "Preuve QA showroom public",
+        "kind": "test",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774"
+      }
+    ],
+    "blockers": [
+      "Validation métier réelle et preuve de volonté d'achat toujours manquantes",
+      "Performance Safari/Android/iPhone physique non attestée",
+      "Boutique et livraison automatique réelles non configurées"
+    ],
+    "critique": {
+      "p0": [],
+      "p1": [
+        "Le showroom illustre des brouillons et ne doit pas être interprété comme une preuve de qualité métier ou de vente",
+        "Navigation header mobile visible mais dense à revoir dans prochain sprint UX"
+      ],
+      "p2": [
+        "Compléter la preuve d'utilité en entretien client"
+      ],
+      "corrected": [
+        "Produit désormais exploratoire plutôt que simple affiche fixe"
+      ]
+    },
+    "next": "Auditer et simplifier la navigation mobile; valider P01/pack auprès des professionnels; préparer ensuite une conversion non marchande vérifiable et les prérequis juridiques et techniques d'encaissement.",
+    "links": [
+      {
+        "label": "Site",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+      },
+      {
+        "label": "QA réelle",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774"
+      }
+    ]
   }
 ]
