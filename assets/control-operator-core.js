@@ -36,12 +36,23 @@ function validateLocalDateTime(value){
 }
 function parseDate(query){
  const s=String(query||'');
- let d=s.match(/\b(\d{1,2})\/(\d{1,2})\/(\d{4})\b/),y,m,day;
- if(d){day=d[1];m=d[2];y=d[3]}else{d=s.match(/\b(\d{4})-(\d\d)-(\d\d)\b/);if(!d)return null;[y,m,day]=d.slice(1)}
- const time=s.slice(d.index+d[0].length).match(/(?:\b|à\s+|a\s+)(\d{1,2})\s*(?:h|:)\s*(\d{2})?/i);
- if(!time)return null;
- const date=y+'-'+m.padStart(2,'0')+'-'+day.padStart(2,'0')+'T'+time[1].padStart(2,'0')+':'+(time[2]||'00');
- return validateDate(date)?date:null;
+ // This interface accepts only a single unambiguous device-local wall-clock time.
+ // Reject explicit timezones and offsets rather than silently converting them.
+ if(/(?:\d{1,2}:\d{2}|\d{1,2}h\d{2})(?:UTC|GMT|CET|CEST|EST|EDT|BST|WET|WEST|EET|EEST|IST|JST|PST|PDT|HNE|HAE|HNC|HAC|HNR|HAR|HNP|HAP|(?:Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific)\/[A-Za-z_]+(?:\/[A-Za-z_]+)?)/i.test(s))return null;
+ if(/\b(?:UTC|GMT|CET|CEST|BST|WET|WEST|EET|EEST|IST|JST|EDT|PST|PDT|HNE|HAE|HNC|HAC|HNR|HAR|HNP|HAP)\b/i.test(s)||/\bEST\b/.test(s)||/\b(?:Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific)\/[A-Za-z_]+(?:\/[A-Za-z_]+)?\b/.test(s)||/(?:\d{1,2}:\d{2}|\d{1,2}h\d{2})\s*Z\b/i.test(s)||/(?:\d{1,2}:\d{2}|\d{1,2}h\d{0,2})\s*[+\-\u2212\u2010-\u2015\uFE63\uFF0B\uFF0D]\s*\d{1,2}(?::?\d{2})?\b/i.test(s))return null;
+ const zoneContext=s.replace(/\b(?:heure|horaire)\s+(?:de|du|d['’])\s+(?:travail|d[eé]but|fin|pause|r[eé]union)\b/gi,'');
+ if(/\b(?:heure|horaire|fuseau|timezone)\s+(?:(?:de|du|d['’]|en)\s+)?[A-Za-zÀ-ÿ_-]+(?:\s+[A-Za-zÀ-ÿ_-]+){0,2}/i.test(zoneContext))return null;
+ const dates=[...s.matchAll(/\b(?:\d{1,2}\/\d{1,2}\/\d{4}|\d{4}-\d{2}-\d{2})(?=\b|T\d{1,2}:)/g)];
+ const times=[...s.matchAll(/(?:\b|à\s+|a\s+|T)(\d{1,2})\s*(?:h|:)\s*(\d{2})?/gi)];
+ if(dates.length!==1||times.length!==1||times[0].index<dates[0].index+dates[0][0].length)return null;
+ if(/\b(?:ou|soit)\b/i.test(s.slice(dates[0].index+dates[0][0].length)))return null;
+ const d=dates[0][0],parts=d.includes('/')?d.split('/'):d.split('-');
+ const [y,m,day]=d.includes('/')?[parts[2],parts[1],parts[0]]:parts;
+ const t=times[0];
+ if(/^\d/.test(s.slice(t.index+t[0].length)))return null;
+ if(/^[:.,]\d/.test(s.slice(t.index+t[0].length)))return null;
+ const date=y+'-'+m.padStart(2,'0')+'-'+day.padStart(2,'0')+'T'+t[1].padStart(2,'0')+':'+(t[2]||'00');
+ return validateDate(date)&&validateLocalDateTime(date)?date:null;
 }
 function visible(data,scope){
  const projects=arr(data?.projects),selected=projects.find(p=>p.id===scope);
