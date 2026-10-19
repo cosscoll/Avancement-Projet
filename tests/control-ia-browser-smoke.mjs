@@ -126,6 +126,14 @@ try{
  const count=await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').actions?.filter(a=>a.project==='ucp'&&a.title.includes('Recette Navigateur Unique')).length||0");
  assert.equal(count,1,'Created test action must persist once to project UCP');
  log('confirmed action written exactly once to correct project');
+ // Test the real "À traiter" route, not only the storage JSON.
+ await js("location.hash='#/control/inbox'");
+ await ready(()=>js("[...document.querySelectorAll('#main strong')].some(e=>e.textContent.trim()==='Recette Navigateur Unique')"),9000)();
+ log('new task is visible in the actual To-do screen');
+ await js("location.hash='#/control/localai'");
+ await ready(()=>js("!!document.querySelector('[data-op-consent]')"),9000)();
+ assert.equal(await js("document.querySelector('[data-op-consent]').checked"),false);
+ await js("document.querySelector('[data-op-consent]').click()");
  await js("document.querySelector('[data-op-form] textarea').value='Mes tâches';document.querySelector('[data-op-form]').requestSubmit()");
  await ready(()=>js("document.querySelector('[data-op-response]').textContent.includes('Recette Navigateur Unique')"),8000)();
  log('action read back via operator conversation');
@@ -147,6 +155,15 @@ try{
  const event=await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').events?.find(e=>e.title.includes('Recette Agenda Unique'))?.date");
  assert.equal(event,tomorrow+'T14:30','Event must be persisted at the requested hour');
  log('calendar event created with correct device-local time');
+ // Confirm that the calendar UI displays the same event the assistant wrote.
+ await js("location.hash='#/control/calendar'");
+ await ready(()=>js("[...document.querySelectorAll('#main .inbox-item strong')].some(e=>e.textContent.trim()==='Recette Agenda Unique')"),9000)();
+ const listed=await js("[...document.querySelectorAll('#main .inbox-item')].find(e=>e.querySelector('strong')?.textContent==='Recette Agenda Unique')?.textContent||''");
+ assert.ok(listed.includes(tomorrow+'T14:30'),'Calendar page is missing the recorded event time');
+ log('new event and requested hour are visible on the actual Calendar screen');
+ await js("location.hash='#/control/localai'");
+ await ready(()=>js("!!document.querySelector('[data-op-consent]')"),9000)();
+ await js("document.querySelector('[data-op-consent]').click()");
  await js("document.querySelector('#loc-project').value='ucp';document.querySelector('#loc-project').dispatchEvent(new Event('change',{bubbles:true}))");
  await js("document.querySelector('[data-op-form] textarea').value='Crée une tâche Contamination pour IAgile';document.querySelector('[data-op-form]').requestSubmit()");
  await ready(()=>js("document.querySelector('[data-op-response]').textContent.length>0"),8000)();
@@ -200,6 +217,10 @@ try{
  await ready(()=>js("document.querySelector('[data-op-response]').textContent.includes('Action enregistrée')"),8000)();
  assert.equal(await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').events?.find(e=>e.title==='Recette Agenda Unique')?.date"),tomorrow+'T16:45');
  log('calendar event rescheduled and persisted at the chosen hour');
+ await js("document.querySelector('[data-op-form] textarea').value='Mon agenda';document.querySelector('[data-op-form]').requestSubmit()");
+ await ready(()=>js("document.querySelector('[data-op-response]').textContent.includes('Recette Agenda Unique')"),8000)();
+ assert.ok((await js("document.querySelector('[data-op-response]').textContent")).includes(tomorrow+'T16:45'),'Assistant agenda should display the updated local time');
+ log('assistant agenda reads back the updated appointment');
 
  await js("document.querySelector('[data-op-form] textarea').value='Supprime le rendez-vous Recette Agenda Unique';document.querySelector('[data-op-form]').requestSubmit()");
  await ready(()=>js("document.querySelector('[data-op-draft]').hidden===false"),8000)();
@@ -211,6 +232,13 @@ try{
  assert.equal(await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').events?.filter(e=>e.title==='Recette Agenda Unique').length||0"),0);
  await js("window.confirm=window.__controlTestConfirm;delete window.__controlTestConfirm");
  log('calendar deletion requires confirmation and canceled deletion preserves the event');
+ await js("location.hash='#/control/calendar'");
+ await ready(()=>js("document.querySelector('#main')?.textContent.includes('Agenda des projets')"),9000)();
+ assert.equal(await js("[...document.querySelectorAll('#main .inbox-item strong')].some(e=>e.textContent.trim()==='Recette Agenda Unique')"),false,'Deleted event must disappear from Calendar UI');
+ log('deleted event is absent from the Calendar screen');
+ await js("location.hash='#/control/localai'");
+ await ready(()=>js("!!document.querySelector('[data-op-consent]')"),9000)();
+ await js("document.querySelector('[data-op-consent]').click()");
 
  // A storage failure must never claim success or create a phantom task.
  await js("document.querySelector('[data-op-form] textarea').value='Crée une tâche Recette Echec Stockage Unique pour UCP';document.querySelector('[data-op-form]').requestSubmit()");
