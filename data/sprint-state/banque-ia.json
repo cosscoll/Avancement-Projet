@@ -9,11 +9,11 @@
     "objective": "Reprendre la correction de pause/reprise WebGL et reduced-motion avec tests de régression sur branche existante"
   },
   "checkpoint": {
-    "step": "lease-acquired-pending-code",
+    "step": "code-write-refused-by-safety-check",
     "branch": "fix/reduced-motion-toggle-20261019",
     "pr_url": null,
     "files": [],
-    "next_action": "Corriger assets/atlas.js et ajouter tests de régression sur branche existante, vérifier CI avant PR"
+    "next_action": "Ne pas contourner le refus de mise à jour assets/atlas.js ; obtenir une voie d'écriture explicitement autorisée, puis appliquer horloge animation suspendable, tests Chromium reduced-motion, PR et CI"
   },
   "last_completed": {
     "run_id": "banque-ia-20261019-1618-v3-r5",
