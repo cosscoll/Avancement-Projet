@@ -3,12 +3,15 @@
   "project": "control-ia",
   "status": "running",
   "lease": {
-    "run_id": "control-ia-20261019-1754-paris-r9",
-    "started_at": "2026-10-19T15:54:59.728Z",
-    "expires_at": "2026-10-19T16:39:59.728Z",
-    "objective": "Diagnostiquer incident de bail GitHub et reprendre le chantier CONTROL-ACCOUNT/RLS sans activer Cloud"
+    "run_id": "control-ia-20261019165416-s39",
+    "started_at": "2026-10-19T16:54:16.436Z",
+    "expires_at": "2026-10-19T17:39:16.436Z",
+    "objective": "Reprendre incident PWA v38 non publié, valider tests et publication sûre sans Cloud"
   },
   "checkpoint": null,
   "last_completed": null,
-  "recovered_from": null
+  "recovered_from": {
+    "run_id": "control-ia-20261019-1754-paris-r9",
+    "expired_at": "2026-10-19T16:39:59.728Z"
+  }
 }
