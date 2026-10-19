@@ -86,3 +86,16 @@ Le code n'engage aucune dépense. Créer un nouveau projet Supabase, héberger d
 - `allowRegistration:true` : inscription libre par e-mail ; n'activer qu'après validation des protections et des obligations légales.
 - `allowGoogleLogin:true` : afficher le bouton Google **uniquement** quand le fournisseur OAuth est correctement configuré. OAuth Google peut créer des comptes ; ne pas activer pendant une bêta fermée sans mécanisme d'invitation supplémentaire.
 - `accountDeletionEnabled:true` : exposer la suppression définitive uniquement si l'Edge Function JWT vérifiée est déployée et testée.
+
+
+## Recette PostgreSQL indépendante A/B — 19 octobre 2026
+
+**Code ajouté et fusionné :** [PR #21](https://github.com/cosscoll/Avancement-Projet/pull/21). Le workflow [CONTROL Cloud — PostgreSQL RLS A/B](../.github/workflows/control-cloud-rls.yml) lance un **PostgreSQL 16 jetable sur GitHub Actions**, sans connexion à un projet Supabase, abonnement ou modification d'une base IAgile. Il crée deux utilisateurs factices, simule les rôles de base Supabase et la fonction auth.uid(), puis applique les migrations CONTROL existantes.
+
+**Scénarios réellement exécutés :** migration bloquée sans confirmation (y compris quota IA), six tables métier isolées entre A et B, accès aux propres lignes, refus de lectures/modifications croisées, usurpation du propriétaire, rattachement inter-projets refusé par clé étrangère composite, accès anonyme interdit, journal audit non modifiable par le client, fonction quota IA réservée au rôle service. Deuxième passe : refus d'une session sans auth.uid() et tentative de réassignation de owner_id.
+
+**Résultat :** [CI RLS sur main réussie](https://github.com/cosscoll/Avancement-Projet/actions/runs/39233284788), et [CI générale](https://github.com/cosscoll/Avancement-Projet/actions/runs/39233285019). Scripts : [fixtures](../tests/control-cloud-pg-fixtures.sql), [assertions A/B](../tests/control-cloud-rls-ab.sql). Le résultat valide le **comportement PostgreSQL des politiques dans cet environnement fictif uniquement**.
+
+**Toujours NON testé :** aucune authentification Supabase Auth réelle, signature et rotation JWT, vraie API PostgREST, permissions/configuration du futur projet CONTROL, appels multi-appareils, backend connecté, suppression des comptes ni Android physique. Un rôle authenticated et une fonction auth.uid() **simulés** ne valident pas les sessions fournisseur ; il ne s'agit pas d'un audit de sécurité complet. Critères ACC-01 à ACC-04 **non vérifiés**. Cloud enabled:false inchangé.
+
+**Prochaine recette après confirmation/autorisation d'une instance CONTROL réellement indépendante à coût nul :** deux utilisateurs de TEST authentifiés par Supabase, leurs propres JWT (jamais enregistrés dans un dépôt public), tests PostgREST A/B, sessions expirées et révoquées, synchronisation sur deux appareils autorisés, export et suppression. L'échec d'un seul scénario bloque l'activation publique.
