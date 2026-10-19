@@ -1,0 +1,33 @@
+name: CONTROL IA — Recette du site publié
+on:
+  workflow_run:
+    workflows: ["pages build and deployment"]
+    types: [completed]
+permissions:
+  contents: read
+concurrency:
+  group: control-live-browser-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+jobs:
+  live:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Lire la version réellement déployée
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - name: Installer Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Vérifier navigateur préinstallé
+        run: |
+          command -v google-chrome || command -v chromium
+          node --check tests/control-ia-browser-smoke.mjs
+      - name: Tester le site PUBLIC dans Chromium
+        env:
+          CONTROL_BROWSER_PRODUCTION: '1'
+        run: node tests/control-ia-browser-smoke.mjs
