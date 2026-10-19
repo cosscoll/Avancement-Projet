@@ -1712,5 +1712,51 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/issues"
       }
     ]
+  },
+  {
+    "id": "ucp-20261019T032556Z",
+    "started_at": "2026-10-19T03:25:56Z",
+    "ended_at": "2026-10-19T03:31:43.047Z",
+    "summary": "UCP-QA-52 reprend une suppression de bac à sable interrompue, propage l’exception initiale et confirme 411/411 contrôles sur copie isolée.",
+    "done": [
+      "Issues centrales #1 et #2 relues : ouvertes, créées par cosscoll et sans commentaire ; aucune issue [DECISION][ucp] ni pull request ouverte.",
+      "Reprise bornée du nettoyage ajoutée : après KeyboardInterrupt ou SystemExit au premier effacement, une seconde suppression enlève le bac puis l’exception initiale est propagée.",
+      "2/2 scénarios dédiés réussis : cible originale inchangée, aucun résidu de bac à sable et aucune fausse réussite.",
+      "Répétition normale PASS ; plans vérifiés à 304ae019237aacfe54695d03a606d02d52a7deb99d1e25b6ad4387eb00ed2319 et 39a7749aeee2cb11a597bad488d3e3601fad86e858b615ebc9eee4a91c2101df.",
+      "Régression complète : 110/110 backend avec --basetemp, 24/24 sauvegarde-restauration, 166/166 PWA/DOM, 97/97 outils de sûreté, puis audit et reçu ; total 411/411.",
+      "Archive auditée : 158 entrées, 410364 octets, SHA-256 a9d76584020b526a2d8a458902c7fc90e03733934807c3adff522671bc514a9c, aucun constat, secret ou email inattendu.",
+      "Reçu vérifié : 575 octets, SHA-256 4068bae439bc2b7ccbd603f53f27f627681a96073428655f8efb4885f778f6a2.",
+      "Journal UCP mis à jour et vérifié ; HEAD public af2bba353089a382843f6997ea92239b03d8a2dc confirmé."
+    ],
+    "blockers": [
+      "La connexion CONTROL–Codex demandée par les issues #1/#2 reste interdite ; aucun accès Codex n’a été accordé ou déclenché.",
+      "Le clone Windows dev/ucp-codex reste volontairement non lu ; les tests n’y ont pas été exécutés.",
+      "Une panne persistante du nettoyage après la reprise bornée reste bloquante.",
+      "Interruptions synthétiques uniquement : aucune coupure système, intégration ou restauration réelle.",
+      "Lot hors GitHub applicatif : non intégré, non fusionné, non déployé ; trois preuves navigateur/appareil réel restent xfail."
+    ],
+    "next": "Dans une copie jetable, vérifier qu’une panne persistante du nettoyage produit un diagnostic fermé, conserve la cible originale et ne prétend jamais avoir supprimé le résidu.",
+    "links": [
+      {
+        "label": "Livrable UCP-QA-52",
+        "url": "https://drive.google.com/file/d/1vF9mKSoKZXWsCKLmgogBTI9ff6E9Ct0F/view?usp=drivesdk"
+      },
+      {
+        "label": "Reçu d’intégrité QA-52",
+        "url": "https://drive.google.com/file/d/1KKaNW8nZmbKRriclHG-2mXjxYvyy10st/view?usp=drivesdk"
+      },
+      {
+        "label": "HEAD public contrôlé",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/af2bba353089a382843f6997ea92239b03d8a2dc"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      },
+      {
+        "label": "Issues UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues"
+      }
+    ]
   }
 ]
