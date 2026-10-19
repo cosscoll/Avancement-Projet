@@ -116,3 +116,25 @@ Document public de suivi technique limité à CONTROL IA. Source de spécificati
 - Preuve: écritures GitHub réussies. Les tests n'ont PAS encore été exécutés sur le nouveau SHA : workflow GitHub Actions non retourné au moment du contrôle. Ne pas fusionner avant CI verte et absence de conflit.
 - Critiques ouvertes: P0 authentification serveur/RLS et atomicité multi-appareils ; P1 recette Android/iOS, test navigateur et vérification Pages ; P1 CI du dernier SHA à attendre.
 - Prochain sprint: vérifier le run CI du SHA `e82ff612b3f3ae6ffc740d06fc73949fc0981267`, corriger les éventuels échecs, fusionner seulement après validation, vérifier déploiement et parcours réel.
+
+## 2026-10-19 — Mise en place du pilotage par livraisons (PR #8)
+
+**Décision utilisateur :** conserver les sprints horaires avec développement, autocritique, second sprint correctif, retests et publication contrôlée, mais les concentrer sur des fonctionnalités réellement opérationnelles, une capacité principale à la fois.
+
+**AVANT :** revue par tickets et correctifs techniques, sans source unique distinguant clairement prototype, code testé, déploiement et recette utilisateur ; le nombre de commits et de tests pouvait donner une impression excessive d'achèvement.
+
+**Première passe :** création de `data/control-ia-delivery.json` (9 capacités, 36 critères initialement NON VALIDÉS, un focus `CONTROL-ACCOUNT`, WIP=1), de `scripts/control-ia-readiness.mjs`, de `assets/control-delivery.js` et CSS (panneau public), et de `docs/CONTROL_IA_GESTION_FONCTIONNELLE.md`. La PWA et le routeur de l'IA locale affichent maintenant le suivi déclaratif.
+
+**Autocritique n°1 :**
+- P0 : un code publié ne démontre ni inscription authentifiée, ni synchronisation entre appareils, ni fonctionnement d'agent externe ; aucun critère métier ne peut être validé sans recette réelle.
+- P0 : des déclarations de livraison pourraient dériver vers « opérationnel » sur la seule base de commits, sans preuves.
+- P1 : ce tracker est un instantané GitHub public mis à jour par les sprints, pas une télémétrie live ; ses preuves URL sont soumises au jugement humain.
+- P1 : les sites/pages disponibles publiquement et les nouveaux styles ne sont pas encore éprouvés sur un vrai Android/iOS par ce sprint.
+
+**Deuxième passe corrective :** introduction de 8 tests `tests/control-ia-delivery.test.mjs` vérifiant schéma/objectif, absence de preuves, statut de déploiement sans URL, dépendances non résolues, absence de preuves de recette, doublons et cycles ; CI GitHub mise à jour pour vérifier le tracker avant toute fusion. Mise à jour du cache PWA v37 pour rendre les ressources accessibles hors ligne. Automatisation CONTROL IA réorientée explicitement vers `focus_id` et les critères de réception sans changer sa cadence (XXh50) ou ses contraintes de coût/quota.
+
+**Preuves :** [PR #8 fusionnée](https://github.com/cosscoll/Avancement-Projet/pull/8) ; merge `e52db06d05460a216c3bf0c6e60b3aaca177c61d` ; [CI sur main réussie](https://github.com/cosscoll/Avancement-Projet/actions/runs/39221475096) avec **102/102 tests Node réussis, 0 échec**, y compris nouveau validateur et 8 tests fonctionnels de gouvernance ; [déploiement Pages réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/39221475420). Le contenu HTML a été publié selon GitHub ; aucun parcours navigateur réel ni réponse HTTP de Pages n'a été vérifié depuis cet environnement.
+
+**NOUVELLE AUTOCRITIQUE :** l'ajout d'un tracker n'est **pas** la livraison de CONTROL-ACCOUNT, ni la preuve que CONTROL IA est un agent universel. Les 36 critères restent non validés, **0/9 capacités totalement opérationnelles** selon ce référentiel exigeant ; validation utilisateur, CI navigateur et test Android/iOS non réalisés. Un lien de preuve pourrait être trompeur sans vérification du contenu ; conserver audit manuel et tests métier. L'objectif principal reste bloqué avant activation Cloud par la base CONTROL dédiée, les droits RLS A/B, la validation du coût nul et l'accord explicite du propriétaire.
+
+**Priorité du prochain sprint :** CONTROL-ACCOUNT — inspecter les contrats et migrations existants, préparer/renforcer les tests d'isolation et la recette authentifiée de façon sûre et gratuite, puis avancer sur l'infrastructure uniquement après les autorisations nécessaires. Continuer les corrections P0 transverses ; ne changer ni focus ni critères sans justification vérifiable.
