@@ -98,6 +98,11 @@
       "title": "M8 : contrôle Unicode testé hors ligne",
       "description": "18/10/2026 : variante R3 du laboratoire fictif Processus M8, 7 tests unitaires réussis ; archives apprenant/formateur privées, non intégrées ni approuvées. Recette Auth/RLS réelle absente.",
       "level": "info"
+    },
+    {
+      "title": "Ressource candidate Processus M4 — 19/10/2026",
+      "description": "Une référence open source supplémentaire a été enregistrée dans le catalogue privé (287 références au total). Licence racine MIT et avertissement I/O du README vérifiés ; 11 tests locaux du validateur d'exercice fictif réussis. Outil tiers non exécuté, dépendances non auditées, kit non approuvé et non publié.",
+      "level": "info"
     }
   ],
   "decisions": [
