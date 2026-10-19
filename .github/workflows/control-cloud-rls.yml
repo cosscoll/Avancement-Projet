@@ -1,0 +1,81 @@
+name: CONTROL Cloud — PostgreSQL RLS A/B (base jetable)
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - 'tests/control-cloud-pg-fixtures.sql'
+      - 'tests/control-cloud-rls-ab.sql'
+      - '.github/workflows/control-cloud-rls.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/migrations/**'
+      - 'tests/control-cloud-pg-fixtures.sql'
+      - 'tests/control-cloud-rls-ab.sql'
+      - '.github/workflows/control-cloud-rls.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: control-cloud-rls-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rls-ab:
+    name: Test RLS PostgreSQL — deux comptes fictifs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: disposable_control_ci_only
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d postgres"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 12
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: '5432'
+      PGUSER: postgres
+      PGPASSWORD: disposable_control_ci_only
+      PGDATABASE: postgres
+    steps:
+      - name: Lire le dépôt (aucun accès aux secrets de production)
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Préparer client PostgreSQL
+        run: |
+          if ! command -v psql >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq postgresql-client
+          fi
+          psql --version
+      - name: Le verrou doit REFUSER une migration hors projet confirmé
+        run: |
+          if psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261017_control_saas_v1.sql > /tmp/control-guard.log 2>&1; then
+            echo "::error::Migration accepted an unconfirmed database"; exit 1
+          fi
+          grep -q 'CONTROL migration refused' /tmp/control-guard.log || { cat /tmp/control-guard.log; exit 1; }
+          count=$(psql -X -Atc "select count(*) from pg_tables where schemaname='public' and tablename like 'control_%'")
+          test "$count" = '0' || { echo "::error::Guard failed after creating $count tables"; exit 1; }
+          echo "RLS PASS: migration guard refused unconfirmed database without creating tables"
+          if psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261017_control_ai_dispatch.sql > /tmp/control-dispatch-guard.log 2>&1; then
+            echo "::error::Dispatch migration accepted an unconfirmed database"; exit 1
+          fi
+          grep -q 'CONTROL migration refused' /tmp/control-dispatch-guard.log || { cat /tmp/control-dispatch-guard.log; exit 1; }
+          count=$(psql -X -Atc "select count(*) from pg_tables where schemaname='public' and tablename like 'control_%'")
+          test "$count" = '0' || { echo "::error::Dispatch guard created tables"; exit 1; }
+          echo "RLS PASS: dispatch quota migration independently refuses unconfirmed database"
+      - name: Installer schema CONTROL seulement dans PostgreSQL de test isolé
+        run: psql -X -v ON_ERROR_STOP=1 -f tests/control-cloud-pg-fixtures.sql
+      - name: Vérifier réellement les accès A/B, anonymes et droits de modification
+        run: psql -X -v ON_ERROR_STOP=1 -f tests/control-cloud-rls-ab.sql
