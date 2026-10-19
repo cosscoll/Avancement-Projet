@@ -1,0 +1,26 @@
+/* CONTROL IA delivery: explicit evidence-driven product roadmap. */
+.control-delivery{border:1px solid #cedce9;background:#fff;color:#263d56}
+.control-delivery h2{font-size:18px;margin:0 0 8px}
+.control-delivery p{font-size:12px;line-height:1.6}
+.control-delivery-disclaimer{color:#5b738c}
+.control-delivery-count{font-size:14px!important;font-weight:800;letter-spacing:-.1px;margin:12px 0}
+.control-delivery-focus{border:1px solid #b9cee0;border-radius:11px;padding:12px 14px;background:#f1f6fb}
+.control-delivery-kicker{display:block;color:#436587;font-weight:800;font-size:10px;letter-spacing:.08em}
+.control-delivery-focus h3{font-size:16px;margin:5px 0}
+.control-delivery-focus p{margin:5px 0}
+.control-delivery-grid{display:grid;gap:7px;margin-top:14px}
+.control-delivery-item{border:1px solid #dce6f0;border-radius:10px;background:#fbfdff}
+.control-delivery-item summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;font-size:12px;line-height:1.4}
+.control-delivery-item summary:focus-visible{outline:2px solid #315b86;outline-offset:2px}
+.control-delivery-name{font-weight:750}
+.control-delivery-stage{flex-shrink:0;border-radius:20px;background:#e9edf2;color:#455c73;padding:4px 7px;font-size:10px;font-weight:700}
+.control-delivery-stage[data-stage=operational]{background:#d7efe2;color:#145c36}
+.control-delivery-stage[data-stage=deployed],.control-delivery-stage[data-stage=ci_tested]{background:#ebf2fb;color:#28557f}
+.control-delivery-body{border-top:1px solid #e3ebf3;padding:8px 14px 12px}
+.control-delivery-body ul{margin:6px 0 9px 16px;padding:0}
+.control-delivery-body li{font-size:11px;line-height:1.5;margin:4px 0}
+.control-delivery-body a{font-size:11px;color:#245e94;font-weight:700;display:inline-block;margin:8px 8px 2px 0}
+.control-delivery-label,.control-delivery-criteria-count{font-weight:750}
+.control-delivery-date{font-size:11px!important;color:#637d96;margin:12px 0 0!important}
+.control-delivery-error{color:#984f45}
+@media(max-width:600px){.control-delivery-item summary{align-items:flex-start;flex-direction:column}.control-delivery-stage{flex-shrink:1}}

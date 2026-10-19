@@ -1,0 +1,512 @@
+{
+  "schema_version": 1,
+  "reviewed_on": "2026-10-19",
+  "title": "CONTROL IA — Pilotage des livraisons fonctionnelles",
+  "purpose": "Transformer les capacités partielles en parcours opérationnels, sans confondre code, CI, publication et recette.",
+  "focus_id": "CONTROL-ACCOUNT",
+  "work_in_progress_limit": 1,
+  "states": [
+    "not_started",
+    "in_code",
+    "ci_tested",
+    "integrated",
+    "deployed",
+    "user_verified",
+    "operational"
+  ],
+  "stage_labels": {
+    "not_started": "À construire",
+    "in_code": "En développement",
+    "ci_tested": "Tests techniques validés",
+    "integrated": "Intégré",
+    "deployed": "Code publié",
+    "user_verified": "Parcours vérifié",
+    "operational": "Opérationnel"
+  },
+  "delivery_rules": [
+    "Conserver un objectif fonctionnel principal (WIP = 1); défaut critique de sécurité prioritaire autorisé.",
+    "Une action terminée doit être démontrée dans une session authentique; commits et CI seuls ne prouvent pas l'opérationnalité.",
+    "Les preuves doivent mentionner leur portée : code, CI, déploiement, recette utilisateur.",
+    "Ne pas activer CONTROL Cloud ou des comptes tiers avant validation des permissions et de l'absence de frais.",
+    "Après chaque sprint, reprendre les critiques ouvertes, développer, s'autocritiquer, corriger, retester puis publier si les contrôles passent."
+  ],
+  "capabilities": [
+    {
+      "id": "CONTROL-ACCOUNT",
+      "name": "Compte unique et synchronisation sécurisée",
+      "priority": "P0",
+      "stage": "in_code",
+      "depends_on": [],
+      "summary": "Auth CONTROL, base dédiée, séparation des utilisateurs, synchronisation entre appareils et retrait du compte.",
+      "next": "Créer et valider une base CONTROL distincte avec coût confirmé à 0 €, puis recette A/B RLS avant activation.",
+      "blockers": [
+        "Base CONTROL indépendante non activée; accord d'infrastructure à obtenir après vérification du coût.",
+        "config/cloud.json reste enabled:false."
+      ],
+      "source_tickets": [
+        "BACK-004",
+        "BACK-005",
+        "BACK-023",
+        "BACK-025",
+        "BACK-039"
+      ],
+      "acceptance": [
+        {
+          "id": "ACC-01",
+          "label": "Session utilisateur authentifiée et isolée",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "ACC-02",
+          "label": "Isolation RLS vérifiée avec deux comptes distincts",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "ACC-03",
+          "label": "Données réellement synchronisées sur deux appareils",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "ACC-04",
+          "label": "Déconnexion, export et suppression fonctionnels",
+          "verified": false,
+          "evidence": []
+        }
+      ],
+      "evidence": {
+        "code_url": "https://github.com/cosscoll/Avancement-Projet/blob/main/docs/CONTROL_CLOUD_SAAS.md",
+        "ci_url": null,
+        "deployment_url": null,
+        "journey_url": null
+      }
+    },
+    {
+      "id": "CONTROL-ACTIONS",
+      "name": "Projets, missions et actions persistantes",
+      "priority": "P0",
+      "stage": "deployed",
+      "depends_on": [],
+      "summary": "Interface et commandes locales avec confirmation; pas encore d'actions authentifiées sur plusieurs appareils.",
+      "next": "Tester en navigateur la création/lecture/modification avec persistance; préparer le contrat de synchronisation avec CONTROL-ACCOUNT.",
+      "blockers": [
+        "Persistance limitée au navigateur; aucune isolation de deux comptes réelle.",
+        "Aucune recette Android physique documentée."
+      ],
+      "source_tickets": [
+        "BACK-006",
+        "BACK-007",
+        "BACK-008",
+        "BACK-010",
+        "BACK-011"
+      ],
+      "acceptance": [
+        {
+          "id": "ACT-01",
+          "label": "Création/modification/relecture réellement testées dans le navigateur",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "ACT-02",
+          "label": "Reprise de tâche et détection d'écriture concurrente entre appareils",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "ACT-03",
+          "label": "Journal serveur des mutations authentifiées et preuve de provenance",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "ACT-04",
+          "label": "Isolation des données et permissions testées de bout en bout",
+          "verified": false,
+          "evidence": []
+        }
+      ],
+      "evidence": {
+        "code_url": "https://github.com/cosscoll/Avancement-Projet/blob/main/assets/control-operator.js",
+        "ci_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39216159627",
+        "deployment_url": "https://cosscoll.github.io/Avancement-Projet/#/control/localai",
+        "journey_url": null
+      }
+    },
+    {
+      "id": "CONTROL-ASSISTANT",
+      "name": "Compréhension des demandes et actions vérifiables",
+      "priority": "P1",
+      "stage": "ci_tested",
+      "depends_on": [
+        "CONTROL-ACTIONS"
+      ],
+      "summary": "Routeur déterministe et petit modèle local expérimental; pas de moteur général fiable ni outils multi-services.",
+      "next": "Définir un banc de 40 scénarios réels d'intention/permissions, mesurer refus et erreurs, brancher un registre d'outils autorisé.",
+      "blockers": [
+        "Modèle génératif local limité; qualité et latence sur appareil réel non mesurées."
+      ],
+      "source_tickets": [
+        "BACK-008",
+        "BACK-009",
+        "BACK-010",
+        "BACK-022"
+      ],
+      "acceptance": [
+        {
+          "id": "IA-01",
+          "label": "Commandes françaises variées mesurées sur un corpus de référence",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "IA-02",
+          "label": "Plan d'actions et outils autorisés avec refus sûrs testés",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "IA-03",
+          "label": "Actions exécutées avec confirmations et reçus vérifiables",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "IA-04",
+          "label": "Recette de compréhension et de latence sur Android",
+          "verified": false,
+          "evidence": []
+        }
+      ],
+      "evidence": {
+        "code_url": "https://github.com/cosscoll/Avancement-Projet/blob/main/assets/control-operator-core.js",
+        "ci_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39216159627",
+        "deployment_url": null,
+        "journey_url": null
+      }
+    },
+    {
+      "id": "CONTROL-CONNECTORS",
+      "name": "Connexions aux comptes et outils externes",
+      "priority": "P1",
+      "stage": "in_code",
+      "depends_on": [
+        "CONTROL-ACCOUNT"
+      ],
+      "summary": "Préparation des routes et du dispatcher; aucun OAuth multi-services activé ni action tierce prouvée.",
+      "next": "Implémenter le registre des permissions; connecter un premier fournisseur officiel uniquement après consentement, et tester renouvellement/retrait.",
+      "blockers": [
+        "OAuth et tokens serveur nécessitent une identité CONTROL authentifiée et un coffre de secrets.",
+        "Services payants, API facturables et quotas limités interdits."
+      ],
+      "source_tickets": [
+        "BACK-012",
+        "BACK-013",
+        "BACK-014",
+        "BACK-024",
+        "BACK-035",
+        "BACK-036"
+      ],
+      "acceptance": [
+        {
+          "id": "CON-01",
+          "label": "Connexion OAuth explicite, permissions minimales et refus possible",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "CON-02",
+          "label": "Rafraîchissement, révocation et expiration des autorisations",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "CON-03",
+          "label": "Première action externe effectuée avec reçu vérifiable",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "CON-04",
+          "label": "Aucune clé/jeton exposé au navigateur ou au dépôt public",
+          "verified": false,
+          "evidence": []
+        }
+      ],
+      "evidence": {
+        "code_url": "https://github.com/cosscoll/Avancement-Projet/blob/main/supabase/functions/control-ai-dispatch/index.ts",
+        "ci_url": null,
+        "deployment_url": null,
+        "journey_url": null
+      }
+    },
+    {
+      "id": "CONTROL-CALENDAR",
+      "name": "Agenda, disponibilités, rendez-vous et visios",
+      "priority": "P1",
+      "stage": "deployed",
+      "depends_on": [],
+      "summary": "Fonctionnalités locales accessibles; connexion aux calendriers réels, invitations et visios créées automatiquement non vérifiées.",
+      "next": "Valider le cycle de vie d'un rendez-vous local en navigateur puis concevoir les disponibilités et la synchronisation sous consentement.",
+      "blockers": [
+        "Aucune intégration Google/Microsoft authentifiée.",
+        "Gestion d'horaires inter-fuseaux, récurrences et anti-conflits non validée."
+      ],
+      "source_tickets": [
+        "BACK-026",
+        "BACK-027",
+        "BACK-028",
+        "BACK-029",
+        "BACK-030",
+        "BACK-037",
+        "BACK-042"
+      ],
+      "acceptance": [
+        {
+          "id": "CAL-01",
+          "label": "Créer, déplacer, supprimer et retrouver rendez-vous dans une session réelle",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "CAL-02",
+          "label": "Conflits, horaires de travail, fuseaux et DST testés",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "CAL-03",
+          "label": "Invitation/visio créée via compte autorisé, sans doublon",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "CAL-04",
+          "label": "Réconciliation après changement ou annulation externe",
+          "verified": false,
+          "evidence": []
+        }
+      ],
+      "evidence": {
+        "code_url": "https://github.com/cosscoll/Avancement-Projet/blob/main/assets/visio-center.js",
+        "ci_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39216159627",
+        "deployment_url": "https://cosscoll.github.io/Avancement-Projet/#/control/localai",
+        "journey_url": null
+      }
+    },
+    {
+      "id": "CONTROL-REMINDERS",
+      "name": "Rappels et notifications appareil fermé",
+      "priority": "P1",
+      "stage": "not_started",
+      "depends_on": [
+        "CONTROL-ACCOUNT",
+        "CONTROL-CALENDAR"
+      ],
+      "summary": "Aucune preuve d'un planificateur serveur de rappels CONTROL et de notifications push persistantes.",
+      "next": "Concevoir le job scheduler idempotent, les choix de notifications et la stratégie d'envoi après consentement.",
+      "blockers": [
+        "Serveur, stockage persistant et permissions push non disponibles."
+      ],
+      "source_tickets": [
+        "BACK-031",
+        "BACK-032",
+        "BACK-033",
+        "BACK-034"
+      ],
+      "acceptance": [
+        {
+          "id": "REM-01",
+          "label": "Rappel programmé et retrouvé après fermeture puis reconnexion",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "REM-02",
+          "label": "Livraison push sous consentement sur Android et navigateur",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "REM-03",
+          "label": "Modification/annulation répercutée sans notification fantôme",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "REM-04",
+          "label": "Fuseaux, déduplication et erreurs de livraison vérifiés",
+          "verified": false,
+          "evidence": []
+        }
+      ],
+      "evidence": {
+        "code_url": null,
+        "ci_url": null,
+        "deployment_url": null,
+        "journey_url": null
+      }
+    },
+    {
+      "id": "CONTROL-AGENTS",
+      "name": "Suivi et orchestration réelle des IA",
+      "priority": "P1",
+      "stage": "in_code",
+      "depends_on": [
+        "CONTROL-ACCOUNT",
+        "CONTROL-CONNECTORS",
+        "CONTROL-ACTIONS"
+      ],
+      "summary": "Missions déclaratives; pas de preuve d'agent externe exécuté, suivi en direct ni délégation multi-IA.",
+      "next": "Implémenter run IDs, journal d'événements, détection de blocage et un premier exécuteur autorisé avant multi-agents.",
+      "blockers": [
+        "Exécuteurs externes non connectés; permissions et persistance serveur absentes."
+      ],
+      "source_tickets": [
+        "BACK-011",
+        "BACK-013",
+        "BACK-014",
+        "BACK-015",
+        "BACK-016"
+      ],
+      "acceptance": [
+        {
+          "id": "AG-01",
+          "label": "Une mission passe de demandée à exécutée avec trace fournisseur",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "AG-02",
+          "label": "Progression horodatée, erreurs et résultats vérifiés",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "AG-03",
+          "label": "Interruption/reprise et doublons testés",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "AG-04",
+          "label": "Deux outils IA réellement orchestrés sans fausse activité",
+          "verified": false,
+          "evidence": []
+        }
+      ],
+      "evidence": {
+        "code_url": "https://github.com/cosscoll/Avancement-Projet/blob/main/assets/multi-ai-command.js",
+        "ci_url": null,
+        "deployment_url": null,
+        "journey_url": null
+      }
+    },
+    {
+      "id": "CONTROL-WEBBUILDER",
+      "name": "Création et publication de sites depuis un prompt",
+      "priority": "P2",
+      "stage": "not_started",
+      "depends_on": [
+        "CONTROL-ASSISTANT",
+        "CONTROL-AGENTS"
+      ],
+      "summary": "Ressources et guides existants; pas d'agent capable de construire et tester un site complet depuis le chat CONTROL.",
+      "next": "Définir un prototype sandboxé de génération multi-fichiers avec aperçus et tests, sans publication automatique.",
+      "blockers": [
+        "Orchestrateur d'outils exécutable et sandbox sécurisée non disponibles."
+      ],
+      "source_tickets": [
+        "BACK-017",
+        "BACK-018",
+        "BACK-019"
+      ],
+      "acceptance": [
+        {
+          "id": "WEB-01",
+          "label": "Prompt -> fichiers d'un site exécutable en sandbox",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "WEB-02",
+          "label": "Preview responsive et tests automatisés visibles",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "WEB-03",
+          "label": "Itération après critique avec code et résultat reproductibles",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "WEB-04",
+          "label": "Publication autorisée après validation et contrôle HTTPS",
+          "verified": false,
+          "evidence": []
+        }
+      ],
+      "evidence": {
+        "code_url": null,
+        "ci_url": null,
+        "deployment_url": null,
+        "journey_url": null
+      }
+    },
+    {
+      "id": "CONTROL-QUALITY",
+      "name": "Expérience mobile, accessibilité et fiabilité",
+      "priority": "P1",
+      "stage": "ci_tested",
+      "depends_on": [],
+      "summary": "Tests Node et déploiement Pages verts, mais pas d'essais confirmés sur appareils réels ni de parcours utilisateur complet.",
+      "next": "Mettre en place une recette end-to-end traçable (desktop, Chrome Android, Safari iOS) et corriger les erreurs d'usage constatées.",
+      "blockers": [
+        "Tests physiques Android/iOS non vérifiés.",
+        "CI statique ne prouve pas la navigation ni l'accessibilité réelle."
+      ],
+      "source_tickets": [
+        "BACK-020",
+        "BACK-021",
+        "BACK-022",
+        "BACK-040",
+        "BACK-041"
+      ],
+      "acceptance": [
+        {
+          "id": "QA-01",
+          "label": "Tests navigateur desktop de parcours critiques réussis",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "QA-02",
+          "label": "Recette Android et iOS réels vérifiée",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "QA-03",
+          "label": "Parcours clavier/lecteur d'écran et contrastes vérifiés",
+          "verified": false,
+          "evidence": []
+        },
+        {
+          "id": "QA-04",
+          "label": "Performance et récupération après échec mesurées",
+          "verified": false,
+          "evidence": []
+        }
+      ],
+      "evidence": {
+        "code_url": "https://github.com/cosscoll/Avancement-Projet/blob/main/.github/workflows/quality.yml",
+        "ci_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39216159627",
+        "deployment_url": null,
+        "journey_url": null
+      }
+    }
+  ]
+}
