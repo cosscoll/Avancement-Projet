@@ -272,5 +272,39 @@
         "url": "https://github.com/cosscoll/IAgile/pull/77"
       }
     ]
+  },
+  {
+    "id": "iagile-20261019-024019-paris",
+    "started_at": "2026-10-19T02:40:19+02:00",
+    "ended_at": "2026-10-19T02:42:12+02:00",
+    "summary": "Audit et reconditionnement privé du kit final Processus R5.1 : archives nettoyées et reproductibles, 43 tests locaux réussis ; aucun lancement premium.",
+    "done": [
+      "Issue #3 [CONSIGNE][iagile] vérifiée ouverte, auteur cosscoll, créée le 17/10/2026 à 13:07:25Z : déjà prise en compte, non terminée ; aucune issue [DECISION][iagile] ouverte retournée.",
+      "R5.1 : suppression de deux fichiers bytecode .pyc des archives R5 sans changement du code pédagogique, ZIP reconstruits de façon déterministe.",
+      "43/43 tests Python locaux réussis après extraction isolée ; CRC, chemins, doublons et séparation des corrigés formateur contrôlés ; empreintes SHA256 enregistrées.",
+      "Deux archives R5.1, rapport QA, manifeste SHA256 et journal de tests sauvegardés dans la bibliothèque privée IAgile/Pilotage.",
+      "RLS vérifiée en lecture seule : prévisualisation des modules brouillons autorisée au formateur affecté actif, consignes de livrables brouillons toujours sans policy de prévisualisation ; aucune migration appliquée.",
+      "PR #12 et #77 revérifiées ouvertes ; document formateur M8 Google Docs confirmé vide."
+    ],
+    "blockers": [
+      "Écriture contrôlée de restauration du Google Docs privé M8 refusée par les contrôles de sécurité.",
+      "V0.9.1 non approuvée, importateur R3 non intégré, absence de comptes de recette et de tests Auth/RLS/Storage inter-comptes réels.",
+      "R5.1 reste un prototype privé non évalué pédagogiquement ; aucun cours premium diffusé."
+    ],
+    "next": "Réviser et valider R5.1 avec un formateur et des cas fictifs hors corpus ; restaurer M8 par une voie autorisée ; corriger la policy formateur après revue, puis exécuter la recette Auth/RLS/Storage avec comptes de test autorisés.",
+    "links": [
+      {
+        "label": "Consigne IAgile #3",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues/3"
+      },
+      {
+        "label": "PR Academy #12",
+        "url": "https://github.com/cosscoll/IAgile/pull/12"
+      },
+      {
+        "label": "PR ressources #77",
+        "url": "https://github.com/cosscoll/IAgile/pull/77"
+      }
+    ]
   }
 ]
