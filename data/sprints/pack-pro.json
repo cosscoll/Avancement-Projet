@@ -428,7 +428,10 @@
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
         "ref": "f52b548c567788b36b4245268f23122f9d94e62b",
-        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/exemple-procedure.html"
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/exemple-procedure.html",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/exemple-procedure.html",
+        "online_verified_at": "2026-10-19T09:09:30Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39227859705"
       },
       {
         "name": "Recette HTTP publique P01",
@@ -436,7 +439,10 @@
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
         "ref": "bc60a1e324779c58d18c75b42ad49e9bf3ea1cf7",
-        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39226628934"
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39226628934",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/exemple-procedure.html",
+        "online_verified_at": "2026-10-19T08:58:49Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39226628934"
       },
       {
         "name": "Audit accessibilité sur version publique",
@@ -444,7 +450,10 @@
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
         "ref": "a3b9983a724f550b9cee77f0a9ba73736d518354",
-        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39227859705"
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39227859705",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/exemple-procedure.html",
+        "online_verified_at": "2026-10-19T09:09:30Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39227859705"
       }
     ],
     "next": "Réaliser une recette clavier/zoom/Safari physique et tests d'usage métier de la fiche P01 ; corriger anomalies réelles, étudier la performance mobile terrain avant un éventuel lancement marchand.",
@@ -469,6 +478,21 @@
         "label": "Audit public PR #11",
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/11"
       }
-    ]
+    ],
+    "quality": {
+      "ci": "verified",
+      "checks_run": [
+        "Chromium responsive checks on public P01",
+        "Automated axe-core WCAG A/AA 2.0, 2.1, 2.2 on public index and P01"
+      ],
+      "checks_passed": [
+        "HTTP 200/P01 and public seven-step markers: run 39226628934",
+        "Automated public accessibility checks passed: run 39227859705"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "Axe-core automated findings do not establish full WCAG 2.2 AA compliance or actual Safari/Android use."
+      ]
+    }
   }
 ]
