@@ -1620,5 +1620,52 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/issues"
       }
     ]
+  },
+  {
+    "id": "ucp-20261019T012829Z",
+    "started_at": "2026-10-19T01:28:29Z",
+    "ended_at": "2026-10-19T01:35:23.318Z",
+    "summary": "UCP-QA-50 étend la matrice d’interruptions à chacune des 24 opérations d’intégration/rollback, corrige un contrat de cache obsolète et confirme 405/405 contrôles sur copie isolée.",
+    "done": [
+      "Issues centrales #1 et #2 relues : ouvertes, créées par cosscoll et sans commentaire ; aucune issue [DECISION][ucp].",
+      "Points d’injection dynamiques et fermés ajoutés après chacune des 12 opérations d’intégration et des 12 opérations de rollback.",
+      "10/10 tests dédiés et 24/24 interruptions opérationnelles contrôlées : chaque interruption retourne BLOCKED, conserve la cible d’origine et supprime le bac à sable.",
+      "Le contrat d’icônes resté sur ucp-static-v2 a été réaligné sur ucp-static-v3, version réellement servie ; 17 tests PWA passent et 3 xfail matériels restent documentés.",
+      "Régression complète réussie : 110/110 backend avec --basetemp, 166/166 PWA/DOM, 24/24 sauvegarde/restauration synthétique, 91/91 outils unitaires ; total final 405/405 selon la convention historique du lot.",
+      "Archive Drive auditée : 146 entrées, 395753 octets, SHA-256 a614a34859e9da2e678a520e867ee338d6426cdaf868069b80d8abb27433904f, aucun constat, secret ou email inattendu.",
+      "Reçu Drive vérifié : 575 octets, SHA-256 c268a59b4e262e817e765ea840b2cc41ac77892253201a5a06fd600a5353c6a9.",
+      "Journal UCP mis à jour ; HEAD public af2bba353089a382843f6997ea92239b03d8a2dc et absence de PR ouverte confirmés."
+    ],
+    "blockers": [
+      "La connexion CONTROL–Codex demandée par les issues #1/#2 reste interdite ; aucun accès Codex n’a été accordé ou déclenché.",
+      "Le clone Windows dev/ucp-codex reste volontairement non lu ; la matrice n’y a pas été exécutée.",
+      "Les interruptions sont synthétiques et confinées : aucune coupure système réelle, intégration ni restauration réelle n’a été effectuée.",
+      "Lot sauvegardé hors GitHub applicatif : non intégré, non fusionné, non déployé ; aucune recette navigateur/appareil ou staging privé.",
+      "Les trois xfail PWA correspondent aux preuves de navigateur et d’appareils réels absentes.",
+      "Un avertissement de dépréciation Starlette/AnyIO reste non bloquant."
+    ],
+    "next": "Télécharger le ZIP QA-50 et son reçu, vérifier leur intégrité, puis exécuter la matrice uniquement dans un clone jetable après régénération et revérification des plans ; arrêter sur tout BLOCKED, CONFLICT ou INVALID inattendu.",
+    "links": [
+      {
+        "label": "Livrable UCP-QA-50",
+        "url": "https://drive.google.com/file/d/1IvPg0bq4sSYtTzWBK8CnpBFnn72Iujur/view?usp=drivesdk"
+      },
+      {
+        "label": "Reçu d’intégrité QA-50",
+        "url": "https://drive.google.com/file/d/18oS0TW4GCLlWD_biBIFPsQDK2sCKLyNW/view?usp=drivesdk"
+      },
+      {
+        "label": "HEAD public contrôlé",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/af2bba353089a382843f6997ea92239b03d8a2dc"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      },
+      {
+        "label": "Issues UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues"
+      }
+    ]
   }
 ]
