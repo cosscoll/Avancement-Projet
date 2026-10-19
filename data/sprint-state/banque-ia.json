@@ -1,14 +1,18 @@
 {
   "schema_version": 3,
   "project": "banque-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "banque-ia-20261019-1618-v3-r5",
+    "started_at": "2026-10-19T14:18:28.209Z",
+    "expires_at": "2026-10-19T15:03:28.209Z"
+  },
   "checkpoint": {
-    "step": "blocked-github-write",
+    "step": "audit-reduced-motion-and-visual-purpose",
     "branch": "feat/immersive-pointer-ice-core-20261019",
     "pr_url": "https://github.com/cosscoll/Banque-Outils-IA/pull/8",
     "files": [],
-    "next_action": "Corriger CI PR verify-live et erreur de rendu WebGL sur PR #8 apres autorisation des ecritures GitHub"
+    "next_action": "Corriger P1 contrôle d'animations après vérification de main, sans formes 3D décoratives supplémentaires"
   },
   "last_completed": {
     "run_id": "banque-ia-20261019-121732-paris-a2",
