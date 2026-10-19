@@ -418,5 +418,47 @@
         "url": "https://github.com/cosscoll/Banque-Outils-IA/blob/feat/home-navigation-a11y-20261019-0020/cartographie.html"
       }
     ]
+  },
+  {
+    "id": "banque-ia-20261019-production-3d-1792398451547",
+    "started_at": "2026-10-19T08:14:25Z",
+    "ended_at": "2026-10-19T08:27:31.547Z",
+    "summary": "Déblocage de la publication Business 02 : fusion des PR #4/#5, accueil WebGL réellement sur main, recherche historique préservée, CI et déploiement GitHub Pages réussis sur SHA de production 022c4bcbc63973d8cf676915e4b34c60360cafdf.",
+    "done": [
+      "Raccordement de la cartographie, du catalogue public de 12 usages et de la documentation via PR #4.",
+      "Conflit résolu par commit de fusion conservant la nouvelle recherche de main et les tests.",
+      "CI GitHub Actions de PR #4 verte ; PR #4 fusionnée sur main SHA 8c5783dced536b4556d03a0bd176e6c7257a0bbf.",
+      "Nouvelle page d'accueil immersive WebGL à la place du hero statique ; conservation de la recherche initiale dans recherche.html et adaptations de navigation/tests.",
+      "PR #5 CI verte et fusionnée ; main SHA 022c4bcbc63973d8cf676915e4b34c60360cafdf, fichiers relus sur main.",
+      "CI de push main et build/deploy GitHub Pages terminés en success au SHA exact 022c4bcbc63973d8cf676915e4b34c60360cafdf.",
+      "Aucun kit premium, paiement, collecte de recherche ou dépense ajouté."
+    ],
+    "blockers": [
+      "Consultation directe des pages HTTPS depuis l'outil web impossible ; contenu servi non contrôlé indépendamment bien que le déploiement GitHub Pages ait réussi.",
+      "QA réelle iPhone/Android, contrôle visuel WebGL et audit Lighthouse restent à réaliser."
+    ],
+    "next": "Auditer l'expérience 3D en navigateur réel et mobile; corriger les défauts de cadrage et performance; vérifier via un client HTTP fiable le contenu déployé; maintenir CI et sécurité.",
+    "links": [
+      {
+        "label": "Site public",
+        "url": "https://cosscoll.github.io/Banque-Outils-IA/"
+      },
+      {
+        "label": "PR cartographie fusionnée",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/pull/4"
+      },
+      {
+        "label": "PR accueil immersif fusionnée",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/pull/5"
+      },
+      {
+        "label": "Déploiement GitHub Pages réussi",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/actions/runs/39222680099"
+      },
+      {
+        "label": "Tests GitHub push main",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/actions/runs/39222679700"
+      }
+    ]
   }
 ]
