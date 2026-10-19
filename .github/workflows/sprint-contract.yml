@@ -3,15 +3,21 @@ on:
   pull_request:
     paths:
       - 'data/sprints/**'
+      - 'data/sprint-state/**'
       - 'scripts/sprint-contract.mjs'
+      - 'scripts/sprint-v3.mjs'
       - 'tests/sprint-contract.test.mjs'
+      - 'tests/sprint-v3.test.mjs'
       - '.github/workflows/sprint-contract.yml'
   push:
     branches: [main]
     paths:
       - 'data/sprints/**'
+      - 'data/sprint-state/**'
       - 'scripts/sprint-contract.mjs'
+      - 'scripts/sprint-v3.mjs'
       - 'tests/sprint-contract.test.mjs'
+      - 'tests/sprint-v3.test.mjs'
       - '.github/workflows/sprint-contract.yml'
 permissions:
   contents: read
@@ -21,4 +27,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check sprint history and delivery evidence contract
-        run: node --test tests/sprint-contract.test.mjs
+        run: node --test tests/sprint-contract.test.mjs tests/sprint-v3.test.mjs

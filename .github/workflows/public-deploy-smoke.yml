@@ -1,0 +1,37 @@
+name: Public sites — post-deploy proof
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'assets/command-center.js'
+      - 'scripts/verify-public-deployments.mjs'
+      - '.github/workflows/public-deploy-smoke.yml'
+permissions:
+  contents: read
+concurrency:
+  group: control-public-sites-smoke
+  cancel-in-progress: true
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned public-browser testing tools
+        run: |
+          npm install --no-save --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Compare live pages with main and run mobile/desktop browser checks
+        run: node scripts/verify-public-deployments.mjs
+      - name: Store public evidence, even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-site-smoke-evidence
+          path: artifacts/public-deploy-smoke/
+          if-no-files-found: warn
+          retention-days: 7
