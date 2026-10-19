@@ -3,7 +3,7 @@ import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-export const PROJECTS=['pack-pro','banque-ia','ucp','iagile'];
+export const PROJECTS=['pack-pro','banque-ia','ucp','iagile','control-ia'];
 export const STAGES=['planned','coded','tested','merged','deployed','verified_online','operational'];
 const https=url=>{try{const u=new URL(url);return u.protocol==='https:'&&!u.username&&!u.password;}catch{return false}};
 const validDate=d=>typeof d==='string'&&Number.isFinite(Date.parse(d));

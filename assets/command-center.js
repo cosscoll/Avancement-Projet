@@ -399,23 +399,37 @@ function search(){const items=[...ctx.projects.map(p=>({t:p.name,s:'Projet',u:'#
  $('#main').innerHTML=view('Recherche universelle','Trouver un projet, une mission, un document ou une décision',box('Chercher dans CONTROL','<label>Recherche<input id="global-search" type="search" class="field" placeholder="Un projet, une tâche, un fichier…"></label><div id="search-hits"></div>'+tiny('Ne recherche pas le texte privé des conversations ChatGPT, Claude ou Gemini.')));
  const draw=()=>{const q=$('#global-search').value.toLowerCase().trim(),res=items.filter(x=>(x.t+' '+x.s).toLowerCase().includes(q)).slice(0,65);$('#search-hits').innerHTML=res.length?res.map(x=>'<a class="link" href="'+h(x.u)+'" '+(x.u.startsWith('https:')?'target="_blank" rel="noopener noreferrer"':'')+'><span><strong>'+h(x.t)+'</strong><small>'+h(x.s)+'</small></span><span>→</span></a>').join(''):tiny('Aucun résultat.')};draw();$('#global-search').oninput=draw;
 }
-const SPRINT_IDS=['pack-pro','banque-ia','ucp','iagile','tcg'];
+const SPRINT_IDS=['pack-pro','banque-ia','ucp','iagile','control-ia'];
+const SPRINT_NAMES={'pack-pro':'Business 01 · Procédures Pro','banque-ia':'Business 02 · Banque Outils IA','ucp':'Un Coup de Pouce','iagile':'IAgile','control-ia':'CONTROL IA'};
 async function fetchSprints(force=false){
  if(sprintLoading)return sprintLoading;
  const toLoad=SPRINT_IDS.filter(id=>force||!sprintLoaded[id]);if(!toLoad.length)return;
  sprintLoading=Promise.allSettled(toLoad.map(async id=>{const r=await fetch('./data/sprints/'+id+'.json',{cache:'no-store'});if(!r.ok)throw Error('GitHub Pages '+r.status);const a=await r.json();if(!Array.isArray(a))throw Error('Format incompatible');
- const clean=a.filter(x=>x&&typeof x==='object'&&typeof x.summary==='string'&&x.ended_at);
- clean.sort((a,b)=>new Date(b.ended_at)-new Date(a.ended_at));
+ const clean=a.filter(x=>x&&typeof x==='object'&&typeof x.summary==='string'&&(x.ended_at||x.started_at));
+ clean.sort((a,b)=>new Date(b.ended_at||b.started_at)-new Date(a.ended_at||a.started_at));
  sprints[id]=clean[0]||null;sprintLoaded[id]={checkedAt:new Date().toISOString(),entries:a.length};
  })).finally(()=>{sprintLoading=null});await sprintLoading;
 }
 function paintSprints(selector,onlyBlockers=false){const out=$(selector);if(!out)return;
- if(!Object.keys(sprintLoaded).length){out.innerHTML=tiny('Rapports publics non encore chargés.');return}
- const rows=SPRINT_IDS.flatMap(id=>{const s=sprints[id];if(!s||onlyBlockers&&!(s.blockers||[]).length)return[];return[{id,s}]});
- out.innerHTML=rows.length?rows.map(({id,s})=>'<div class="chatrow"><div><strong>'+h(pname(id))+'</strong><small>Sprint '+h(dt(s.ended_at||s.started_at))+' · source : GitHub public</small>'+
- (onlyBlockers?'<p>'+h((s.blockers||[]).slice(0,4).join(' · '))+'</p>':'<p>'+h(cap(s.summary,240))+'</p><small>Suite : '+h(cap(s.next,180))+'</small>')+
- '</div>'+href('https://github.com/'+OWNER+'/Avancement-Projet/blob/main/data/sprints/'+encodeURIComponent(id)+'.json','Preuve')+'</div>').join(''):tiny(onlyBlockers?'Aucun blocage dans les derniers rapports accessibles.':'Aucun sprint accessible.');
+ if(!Object.keys(sprintLoaded).length){out.innerHTML=tiny('Rapports non encore chargés.');return}
+ const rows=SPRINT_IDS.map(id=>({id,s:sprints[id]||null})).filter(({s})=>!onlyBlockers||((s?.blockers||[]).length>0));
+ out.innerHTML=rows.length?rows.map(({id,s})=>{
+  const name=SPRINT_NAMES[id]||pname(id);
+  const link=href('https://github.com/'+OWNER+'/Avancement-Projet/blob/main/data/sprints/'+encodeURIComponent(id)+'.json','Journal');
+  if(!s)return '<div class="chatrow"><div><strong>'+h(name)+'</strong><small>Aucun rapport structuré accessible ; activité non vérifiée.</small></div>'+link+'</div>';
+  const delivery=Array.isArray(s.deliverables)?s.deliverables:[];
+  const levels=['planned','coded','tested','merged','deployed','verified_online','operational'];
+  const rank=delivery.reduce((m,d)=>Math.max(m,levels.indexOf(d?.stage)), -1);
+  const stage=rank<0?'Aucun niveau de livraison vérifiable dans ce rapport':'Niveau déclaré : '+levels[rank];
+  const proof=delivery.some(d=>['verified_online','operational'].includes(d?.stage)&&d?.online_url&&d?.online_verified_at&&d?.online_evidence_url)?
+   'Référence de contrôle en ligne fournie (à revérifier)':'Aucune preuve de parcours en ligne dans ce rapport';
+  const head='<div><strong>'+h(name)+'</strong><small>Dernier rapport : '+h(dt(s.ended_at||s.started_at))+' · source : journal GitHub</small>';
+  const details=onlyBlockers?'<p>'+h((s.blockers||[]).slice(0,4).join(' · '))+'</p>':
+   '<p>'+h(cap(s.summary,240))+'</p><small>'+h(stage)+' · '+h(proof)+'</small><small>Suite : '+h(cap(s.next,180))+'</small>';
+  return '<div class="chatrow">'+head+details+'</div>'+link+'</div>';
+ }).join(''):tiny(onlyBlockers?'Aucun blocage indiqué dans les derniers rapports.':'Aucun sprint accessible.');
  const n=Object.keys(sprintLoaded).length;if(n<SPRINT_IDS.length)out.innerHTML+=tiny((SPRINT_IDS.length-n)+' source(s) non vérifiée(s), information potentiellement partielle.');
+ out.innerHTML+=tiny('Ces données sont des journaux GitHub, pas un suivi en direct de ChatGPT. Le statut en ligne nécessite une preuve de recette réelle.');
 }
 function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,meetings,command,localai,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,budget,backup,settings,search};(pages[page]||manager)()}
 window.CONTROL_CENTER={render};
