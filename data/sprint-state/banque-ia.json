@@ -1,14 +1,19 @@
 {
   "schema_version": 3,
   "project": "banque-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "banque-ia-20261019171821-v3-r8",
+    "started_at": "2026-10-19T17:18:21.589Z",
+    "expires_at": "2026-10-19T18:03:21.589Z",
+    "objective": "Corriger le bouton pause/reprise des animations WebGL et son comportement reduced-motion avec test de régression"
+  },
   "checkpoint": {
-    "step": "blocked-github-code-write-safety",
+    "step": "lease-acquired-pending-code",
     "branch": "fix/reduced-motion-toggle-20261019",
     "pr_url": null,
     "files": [],
-    "next_action": "Corriger les rotations WebGL et la reprise manuelle sous reduced-motion quand les écritures GitHub seront autorisées; journal V2 non actualisé car refus de sécurité; vérifier CI et Pages"
+    "next_action": "Corriger assets/atlas.js et ajouter tests de régression sur branche existante, vérifier CI avant PR"
   },
   "last_completed": {
     "run_id": "banque-ia-20261019-1618-v3-r5",
