@@ -267,6 +267,27 @@ try{
  const narrow=await js("({viewport:window.innerWidth,scroll:document.documentElement.scrollWidth})");
  assert.ok(narrow.scroll<=narrow.viewport+4,'320px mobile horizontal overflow detected: '+JSON.stringify(narrow));
  log('very narrow 320px viewport avoids horizontal scroll');
+
+ // Only the public HTTPS application registers the service worker.
+ if(production){
+  const registered=await js("(async()=>{if(!('serviceWorker' in navigator))return false;return Promise.race([navigator.serviceWorker.ready.then(r=>!!r.active),new Promise(resolve=>setTimeout(()=>resolve(false),15000))])})()");
+  assert.equal(registered,true,'Public PWA must install and activate its service worker');
+  await ready(()=>js("Boolean(navigator.serviceWorker.controller)"),12000)();
+  const cacheNames=await js("(async()=>await caches.keys())()");
+  assert.ok(Array.isArray(cacheNames)&&cacheNames.some(name=>name.startsWith('control-shell-')),'Public PWA must cache the application shell');
+  log('public PWA service worker activated and offline shell cache created');
+  await command('Network.enable');
+  try{
+   await command('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
+   await command('Page.reload',{ignoreCache:false});
+   await ready(()=>js("document.querySelector('[data-control-delivery] .control-delivery-count')?.textContent?.includes('9 fonctionnalités')"),16000)();
+   assert.ok(await js("!!document.querySelector('[data-control-operator]')"),'Operator UI missing offline');
+   log('public PWA reloads the assistant and cached tracker when completely offline');
+  }finally{
+   await command('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:0,uploadThroughput:0});
+  }
+ }
+
  assert.equal(errors.length,0,'Unexpected JS browser exceptions: '+errors.join(' | '));
  log('no uncaught JavaScript exceptions');
  process.stdout.write('BROWSER SMOKE: ALL CHECKS PASSED (actual Chromium, '+(production?'public GitHub Pages with isolated ephemeral browser profile':'local isolated server')+'; not a physical Android device)\n');
