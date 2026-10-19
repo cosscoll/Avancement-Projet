@@ -502,5 +502,53 @@
         "url": "https://github.com/cosscoll/Banque-Outils-IA/commit/bcd2dafaea30fd828d4e36271953b402febb2b7a"
       }
     ]
+  },
+  {
+    "id": "banque-ia-20261019-hover-igloo-direction-1792405613244",
+    "started_at": "2026-10-19T10:03:38+02:00",
+    "ended_at": "2026-10-19T10:26:53.244Z",
+    "summary": "Refonte UX/UI inspirée du niveau d'interaction d'igloo.inc sans reproduction : noyau WebGL cristallin à facettes, parallaxe liée au pointeur et au scroll, survol des familles synchronisé avec catalogue, CTA magnétiques, halos et révélations; PR #8 fusionnée, CI Node/Chromium et production HTTPS vérifiées sur SHA e92d1af7c0a426307d6ebe5d7bc8a63c12ce7e18.",
+    "done": [
+      "Recherche des consignes et décisions ouvertes [banque-ia] de cosscoll : aucune nouvelle.",
+      "Audit du réel accueil initial : construction statique sphère/anneaux et faibles interactions. Références Igloo studiées via études techniques externes ; aucune copie ni outil payant.",
+      "Fichiers GitHub réellement modifiés : assets/atlas.js (nouveau cristal triangulé et six satellites, caméra pointeur/scroll), assets/motion.css et assets/hover-motion.js (hover magnétique, halos, révélations), index.html, tests/interactive-motion.test.mjs et tests/atlas-browser.mjs.",
+      "Revue visuelle de captures Chromium 1440/390 : volume à facettes bien visible mais matériau encore simpliste. Tentative de nouveau shader ayant provoqué une régression, retirée avant fusion.",
+      "CI sur la tête de PR #8 : Verify public preview réussite, QA visuelle atlas 3D réussite (desktop/mobile/WebGL/fallback/hover), zero paiement/collecte supplémentaire.",
+      "Workflow live corrigé : auparavant testait la branche non publiée contre GitHub Pages ; maintenant vérifie main après push.",
+      "PR #8 fusionnée, SHA e92d1af7c0a426307d6ebe5d7bc8a63c12ce7e18 ; vérification des fichiers sur main.",
+      "GitHub Pages et Verify live website after deployment : success sur ce SHA, journal de validation Public deployment: VERIFIED [].",
+      "docs/DIRECTION_IMMERSIVE_HOVER.md créé pour cadrer la suite du développement autonome."
+    ],
+    "blockers": [
+      "Le rendu actuel est une première itération, pas encore au niveau de la direction graphique/shaders/scroll et fluidité d'igloo.inc. Les shaders avancés doivent être réintroduits avec test de compilation explicite.",
+      "Tests sur iPhone/Android physiques et mesures Lighthouse LCP/CLS réelles non effectués."
+    ],
+    "next": "Poursuivre sur PR dédiée : shader de glace avec compilation isolée, meilleure géométrie et liens visuels dynamiques, transitions de caméra au scroll guidées, QA capture comparative + tests performance / reduced-motion mobile avant fusion.",
+    "links": [
+      {
+        "label": "Site public",
+        "url": "https://cosscoll.github.io/Banque-Outils-IA/"
+      },
+      {
+        "label": "PR #8",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/pull/8"
+      },
+      {
+        "label": "Commit production",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/commit/e92d1af7c0a426307d6ebe5d7bc8a63c12ce7e18"
+      },
+      {
+        "label": "Workflow GitHub Pages",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/actions/runs/39237261329"
+      },
+      {
+        "label": "Verification publique HTTPS + Chromium",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/actions/runs/39237262675"
+      },
+      {
+        "label": "Cadrage animations",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/blob/main/docs/DIRECTION_IMMERSIVE_HOVER.md"
+      }
+    ]
   }
 ]
