@@ -1,8 +1,14 @@
 {
   "schema_version": 3,
   "project": "iagile",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "iagile-20261019T103959116Z-v3",
+    "started_at": "2026-10-19T10:39:59.116Z",
+    "expires_at": "2026-10-19T11:24:59.116Z",
+    "objective": "Pilote Processus M8 : diagnostiquer et corriger la chaîne de prévisualisation formateur sans élargir les accès apprenants"
+  },
   "checkpoint": null,
-  "last_completed": null
+  "last_completed": null,
+  "recovered_from": null
 }
