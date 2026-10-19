@@ -5,6 +5,12 @@ on:
       - 'data/sprints/**'
       - 'scripts/sprint-contract.mjs'
       - 'tests/sprint-contract.test.mjs'
+      - 'scripts/sprint-v3.mjs'
+      - 'tests/sprint-v3.test.mjs'
+      - 'data/sprint-state/**'
+      - 'scripts/sprint-v3.mjs'
+      - 'tests/sprint-v3.test.mjs'
+      - 'data/sprint-state/**'
       - '.github/workflows/sprint-contract.yml'
   push:
     branches: [main]
@@ -21,4 +27,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check sprint history and delivery evidence contract
-        run: node --test tests/sprint-contract.test.mjs
+        run: node --test tests/sprint-contract.test.mjs tests/sprint-v3.test.mjs
