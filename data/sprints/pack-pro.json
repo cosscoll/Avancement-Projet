@@ -302,7 +302,10 @@
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
         "ref": "68b870cf7ee0be70b30c5fa316d413fa9db50b10",
-        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_verified_at": "2026-10-19T08:32:18Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39223462971"
       },
       {
         "name": "Code WebGL et laboratoires, PR #4",
@@ -318,7 +321,10 @@
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
         "ref": "40f767ede2eda461b07e089e04bba635aad2c317",
-        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39223462971"
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39223462971",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_verified_at": "2026-10-19T08:32:18Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39223462971"
       }
     ],
     "critique": {
@@ -356,6 +362,19 @@
         "label": "Documentation de reprise",
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/blob/main/docs/REFONTE_IMMERSIVE.md"
       }
-    ]
+    ],
+    "quality": {
+      "ci": "verified",
+      "checks_run": [
+        "Vérification HTTP du site public depuis GitHub Actions"
+      ],
+      "checks_passed": [
+        "GitHub Actions run 39223462971 succeeded: HTTP 200, 41259 bytes, and 3 HTML markers present"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "Cette vérification HTTP/HTML ne démontre ni interaction navigateur réelle, ni rendu GPU WebGL2, ni accessibilité/performances physiques."
+      ]
+    }
   }
 ]
