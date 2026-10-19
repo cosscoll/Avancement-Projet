@@ -685,5 +685,97 @@
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39233969523"
       }
     ]
+  },
+  {
+    "schema_version": 2,
+    "id": "pack-pro-20261019-showroom-v3-live",
+    "started_at": "2026-10-19T09:41:55Z",
+    "ended_at": "2026-10-19T10:05:14.164Z",
+    "objectives": [
+      {
+        "before": "Page principale 3D V2 publiée, mais contenu du futur pack difficile à explorer ; expérience produit peu tangible",
+        "after": "Showroom 3D interactif présentant trois vues de supports, associé au hero mobile-first et au comparateur métier existants",
+        "acceptance": "PR sans conflit depuis latest main, Chrome 320/390/768/1440 sans JS erreur/overflow, axe-core et tests régressions verts, HTTP 200 + vrais interactions showroom sur URL publique"
+      }
+    ],
+    "summary": "Vitrine V3 publiée et vérifiée en ligne : hero WebGL2 visible dès l'ouverture mobile, présentoir de documents en 3D inclinables, trois onglets produits (15 SOPs, 7 registres, tableur pilote), CTA P01, copies orientées usage. Aucun paiement ou contenu premium exposé.",
+    "done": [
+      "Refonte commerciale V2 précédente déjà sur main avec WebGL2 de premier écran, comparateur avant/après, survol et copywriting métiers",
+      "Construction d'un showroom 3D avec trois vues, documentations préliminaires et éclairages différents, tilt au pointeur, glisser tactile, navigation aux flèches clavier et tabs ARIA",
+      "Préservation explicite de la correction d'ouverture 3D mobile, malgré plusieurs commits simultanés sur main",
+      "Réparation des erreurs de tests (ciblage data-view), ARIA group et capture du pointeur interrompue; non contournées",
+      "Recette navigateur sur branche et en ligne sur 1440, 768, 390, 320 : trois onglets, états, clavier, gestuelle tactile simulée, pas de débordement ni erreur JS ; SHOWROOM_ACCEPTANCE_OK",
+      "Contrôles Chromium historiques, copie commerciale et axe-core WCAG automatisés réussis sur la branche",
+      "PR #19 fusionnée, commit 14ea614c1b2ca1428d228acdcc9a9388756122a4 ; PR #20 fusionnée, commit 7f693b52a16415a4f30ca226f525eb9a92af3994",
+      "GitHub Actions run 39234542774 : SHOWROOM_LIVE_HTML_VERIFIED HTTP=200, tests showroom exécutés avec succès sur les vraies pages GitHub Pages en plus de la branche",
+      "Pas d'engagement de dépenses, de ventes, de paiement live, de fichier premium exposé ou de données personnelles collectées"
+    ],
+    "blockers": [
+      "La validation indépendante des 15 procédures, 7 CSV et du tableur pilote reste nécessaire ; les produits ne sont pas commercialement prêts",
+      "Tests de performance sur GPU physiques, iPhone Safari et Android réel non effectués ; glissement tactile vérifié par simulation Chromium seulement",
+      "Absence de preuve de conversion commerciale, de taux d'achat ou de gain de productivité ; tarifs et marque provisoires",
+      "Tunnel d'achat et de livraison non activé pour préserver les prérequis commerciaux et juridiques"
+    ],
+    "critique": {
+      "p0": [],
+      "p1": [
+        "Amélioration de la copie orientée bénéfice non validée par test A/B ni acheteurs réels",
+        "Rendu des feuilles documentaires encore à affiner sur téléphones physiques"
+      ],
+      "p2": [
+        "Les three views sont une prévisualisation éditoriale, pas un visualiseur du fichier complet premium"
+      ],
+      "corrected": [
+        "Main mobile hero conservé durant refonte",
+        "Accessibilité ARIA corrigée",
+        "Erreur de capture du pointeur tactiles interrompus sécurisée",
+        "CI de déploiement réelle ajoutée"
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Vitrine Business 01 V3",
+        "kind": "site",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "14ea614c1b2ca1428d228acdcc9a9388756122a4",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+      },
+      {
+        "name": "PR de showroom 3D V3",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "14ea614c1b2ca1428d228acdcc9a9388756122a4",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/19"
+      },
+      {
+        "name": "Recette navigateur en production",
+        "kind": "test",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "7f693b52a16415a4f30ca226f525eb9a92af3994",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774"
+      }
+    ],
+    "next": "Tester la vitrine en conditions réelles sur Android/iPhone, recueillir les retours des 9 conciergeries contactées sans relance non autorisée, valider la valeur des SOP/CSV et seulement ensuite ouvrir la configuration marchande sous conditions.",
+    "links": [
+      {
+        "label": "Vitrine 3D commerciale en ligne",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+      },
+      {
+        "label": "QA publique quatre résolutions",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774"
+      },
+      {
+        "label": "Showroom V3 PR #19",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/19"
+      },
+      {
+        "label": "Tests HTTP publiques PR #20",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/20"
+      }
+    ]
   }
 ]
