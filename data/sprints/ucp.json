@@ -1667,5 +1667,50 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/issues"
       }
     ]
+  },
+  {
+    "id": "ucp-20261019T023201Z",
+    "started_at": "2026-10-19T02:32:01Z",
+    "ended_at": "2026-10-19T02:38:16.626Z",
+    "summary": "UCP-QA-51 vérifie quatre interruptions abruptes Python confinées et confirme 409/409 contrôles sur copie isolée, avec archive et reçu Drive validés.",
+    "done": [
+      "Issues centrales #1 et #2 relues : ouvertes, créées par cosscoll et sans commentaire ; aucune issue [DECISION][ucp] ni pull request ouverte.",
+      "Quatre interruptions abruptes KeyboardInterrupt/SystemExit injectées pendant sauvegarde, intégration et rollback : 4/4 réussies, exceptions propagées, bacs supprimés et cible originale inchangée.",
+      "Répétition normale PASS ; plans d’intégration et rollback liés par SHA-256 b80dde03751f1ce7875aa313364390d230a35eb61705845488186467d9cfbb62 et c964b07f596ac1d96967da7914df126d2c57a491df99ac19e2b9d86b64aecb78.",
+      "Régression complète : 110/110 backend avec --basetemp, 24/24 sauvegarde-restauration, 166/166 PWA/DOM, 95/95 outils de sûreté, puis audit et reçu ; total 409/409.",
+      "Archive auditée : 152 entrées, 403195 octets, SHA-256 512385e87bcde22f1b80fe0d4a43c435524bf4e2ca77c1edcfed14270ab78a65, aucun constat, secret ou email inattendu.",
+      "Reçu vérifié : 575 octets, SHA-256 5b31378a3baca8fb2e90000b49c8818b3728c781429789dcc10d31183249e0fd.",
+      "Journal UCP mis à jour et vérifié ; HEAD public af2bba353089a382843f6997ea92239b03d8a2dc confirmé."
+    ],
+    "blockers": [
+      "La connexion CONTROL–Codex demandée par les issues #1/#2 reste interdite ; aucun accès Codex n’a été accordé ou déclenché.",
+      "Le clone Windows dev/ucp-codex reste volontairement non lu ; les tests n’y ont pas été exécutés.",
+      "Les interruptions sont synthétiques : aucune coupure électrique, arrêt noyau, intégration ou restauration réelle.",
+      "Lot hors GitHub applicatif : non intégré, non fusionné, non déployé ; aucune recette navigateur/appareil ou staging privé.",
+      "Trois cas PWA navigateur/appareil réel restent xfail documentés ; un avertissement Starlette/AnyIO reste non bloquant."
+    ],
+    "next": "Simuler, dans une copie jetable uniquement, une interruption au moment du nettoyage lui-même ; arrêter sur tout résidu, écart d’empreinte ou résultat inattendu.",
+    "links": [
+      {
+        "label": "Livrable UCP-QA-51",
+        "url": "https://drive.google.com/file/d/1y5KeVIsJKJwkZmXsh9L8J3qbvy2JqGRf/view?usp=drivesdk"
+      },
+      {
+        "label": "Reçu d’intégrité QA-51",
+        "url": "https://drive.google.com/file/d/1h65-32ZJAim1NG7-xQNAXRbcZzYAscg9/view?usp=drivesdk"
+      },
+      {
+        "label": "HEAD public contrôlé",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/af2bba353089a382843f6997ea92239b03d8a2dc"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      },
+      {
+        "label": "Issues UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues"
+      }
+    ]
   }
 ]
