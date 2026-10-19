@@ -3,12 +3,12 @@
   "project": "iagile",
   "status": "running",
   "lease": {
-    "run_id": "iagile-20261019T183709915Z-preview-m8",
-    "started_at": "2026-10-19T18:37:09.915Z",
-    "expires_at": "2026-10-19T19:22:09.915Z",
-    "objective": "Processus M8 : rendre les consignes brouillon prévisualisables pour formateur affecté, sans divulgation"
+    "run_id": "iagile-20261019T193620Z-m8-preview-v3",
+    "started_at": "2026-10-19T19:36:20Z",
+    "expires_at": "2026-10-19T20:21:20Z",
+    "objective": "Processus M8 : préparer la prévisualisation sécurisée des exercices brouillons formateur et vérifier le parcours"
   },
   "checkpoint": null,
   "last_completed": null,
-  "recovered_from": "iagile-20261019T153944336Z-sprint11"
+  "recovered_from": "iagile-20261019T183709915Z-preview-m8"
 }
