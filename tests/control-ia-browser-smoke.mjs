@@ -132,7 +132,13 @@ try{
  process.stdout.write('BROWSER SMOKE: ALL CHECKS PASSED (actual Chromium, '+(production?'public GitHub Pages with isolated ephemeral browser profile':'local isolated server')+'; not a physical Android device)\n');
 }finally{
  try{ws?.close()}catch{}
- if(browser&&!browser.killed)browser.kill('SIGTERM');
+ // Chrome may still write session files after SIGTERM; wait before removing
+ // its ephemeral profile to avoid a false ENOTEMPTY test failure.
+ if(browser&&browser.exitCode===null&&!browser.killed){
+  const exit=new Promise(done=>browser.once('exit',done));
+  browser.kill('SIGTERM');
+  await Promise.race([exit,delay(3000)]);
+ }
  if(!serverClosed){serverClosed=true;server.close()}
- rmSync(profile,{recursive:true,force:true});
+ rmSync(profile,{recursive:true,force:true,maxRetries:12,retryDelay:150});
 }
