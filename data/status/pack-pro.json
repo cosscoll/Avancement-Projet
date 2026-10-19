@@ -83,8 +83,8 @@
       "level": "warning"
     },
     {
-      "title": "Vitrine immersive + exemple P01 en ligne — recette manuelle à compléter",
-      "description": "Au 19/10 : accueil et échantillon P01 (7 étapes) HTTP 200, Chromium 320–1440px et WebGL2 logiciel testés ; axe-core WCAG 2 A/AA, 2.1/2.2 AA sans violation automatique sur URLs publiques. Tests Safari/Android physiques, clavier/lecteur d'écran et performances de terrain encore nécessaires.",
+      "title": "Vitrine immersive publiée — accessibilité automatisée et cycle WebGL public vérifiés",
+      "description": "Au 19/10 : accueil et procédure P01 disponibles en HTTP 200, axe-core sans violation automatique, WebGL2 Chromium SwiftShader avec changement reduced-motion et récupération de contexte simulée vérifiés sur URL réelle à 390/1440px. Restent essais physiques iPhone/Android, WCAG manuel et performances terrain ; aucune vente activée.",
       "level": "warning"
     },
     {
