@@ -1004,5 +1004,40 @@
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39239006653"
       }
     ]
+  },
+  {
+    "schema_version": 2,
+    "id": "pack-pro-20261019-depth-duplicate-resolved",
+    "started_at": "2026-10-19T10:10:58Z",
+    "ended_at": "2026-10-19T12:47:00Z",
+    "summary": "Contrôle de la dernière correction de profondeur WebGL : amélioration déjà intégrée sur main via commit 758d3297 ; PR #28 doublon fermée sans fusion afin de préserver les six commits plus récents, notamment l’atelier des décisions et le menu mobile.",
+    "done": [
+      "Vérification dans index.html sur main : épaisseur des documents WebGL .24, caméra -0.40/.49, effet lumière variable --light-x, animation heroChipFloat, présentoir et menu mobile présents",
+      "Identification du commit principal 758d3297 déjà livré pour cette correction; recherche des commits récents, PR #23/24 atelier de décisions, menu responsive PR #26",
+      "PR #28 fermée sans fusion, car la branche était en retard de six commits et aurait risqué de réintroduire des régressions; aucun code existant écrasé",
+      "Contrôle de l’existence de la page atelier-decisions.html dans main, déjà reliée à l’accueil"
+    ],
+    "blockers": [
+      "Nouveaux essais matériels et retours de conciergeries non confirmés",
+      "Tests de conversion et validation du pack complet toujours ouverts"
+    ],
+    "next": "Prioriser retours professionnels et analyse de la valeur, puis tester le parcours utilisateur sur téléphones physiques avant tout lancement marchand.",
+    "deliverables": [
+      {
+        "name": "Correction WebGL déjà intégrée",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "758d3297",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/commit/758d3297"
+      },
+      {
+        "name": "PR redondante fermée sans fusion",
+        "kind": "review",
+        "stage": "closed",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/28"
+      }
+    ]
   }
 ]
