@@ -523,7 +523,10 @@
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
         "ref": "6f89866a18770baec25710de94a7ccc7d739b7a4",
-        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_verified_at": "2026-10-19T09:19:14Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39229081651"
       },
       {
         "name": "CI navigateur public WebGL",
@@ -531,7 +534,10 @@
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
         "ref": "05923edf406c3c35008e069b940458d987ca2a38",
-        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39229081651"
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39229081651",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_verified_at": "2026-10-19T09:19:14Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39229081651"
       }
     ],
     "critique": {
@@ -573,6 +579,20 @@
         "label": "Preuve WebGL sur URL publique",
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39229081651"
       }
-    ]
+    ],
+    "quality": {
+      "ci": "verified",
+      "checks_run": [
+        "Chromium responsive and WebGL-motion lifecycle tests against source and public URL"
+      ],
+      "checks_passed": [
+        "GitHub Actions 39229081651: MOTION_LIFECYCLE_ACCEPTANCE_OK at 1440px and 390px; reduced motion toggle and simulated graphics restore; 0 overflow, 0 JS errors"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "Restoration was simulated; hardware GPU failure not reproduced.",
+        "No physical Android, iOS Safari, keyboard screen-reader or full Core Web Vitals receipt."
+      ]
+    }
   }
 ]
