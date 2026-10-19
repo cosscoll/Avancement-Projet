@@ -842,5 +842,91 @@
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774"
       }
     ]
+  },
+  {
+    "schema_version": 2,
+    "id": "pack-pro-20261019-decision-workshop-public",
+    "started_at": "2026-10-19T10:10:58Z",
+    "ended_at": "2026-10-19T10:28:41.812Z",
+    "objectives": [
+      {
+        "before": "Volume initial WebGL insuffisamment apparent et valeur métier trop abstraite malgré les premières interactions",
+        "after": "Documents 3D plus épais, caméra et éclairage plus prononcés ; atelier gratuit à trois scénarios qui met le visiteur en situation avant d'afficher la fiche P01",
+        "acceptance": "PR #21, #23, #24, #25 fusionnées ; atelier HTTP 200 réellement servi, Playwright 320/390/768/1440 zéro erreur/overflow et axe-core automatisé sans violation"
+      }
+    ],
+    "summary": "Renforcement du hero WebGL2 en production et ajout d'un atelier de décision pour conciergeries. Trois situations jouables sans inscription, bilan et CTA vers P01 ; page publiée et tests de navigation/accessibilité sur URL réelle.",
+    "done": [
+      "PR #21 déjà fusionnée entre les phases de travail : épaisseur WebGL de 0,105 à 0,24 unité, angle caméra, ombres et spotlight souris plus visibles, flottement discret réductible",
+      "Atelier standalone CSS 3D : choix de décision pour mission non confirmée, contrôle non attribué et incident avant arrivée ; score pédagogique, retours explicatifs et bouton recommencer",
+      "Respect de la confidentialité : aucune saisie personnelle, cookie, compte, publicité, suivi de décision ou paiement",
+      "PR #23 fusionnée (1b6ecc7f...), recette branche en Chromium 320/390/768/1440, 0 débordement JS et axe-core WCAG automatique sans violation",
+      "PR #24 fusionnée (6ff0706f...) : CTA premier écran « Jouer une rotation en 3 décisions », second CTA depuis le comparateur, accès direct conservé à P01",
+      "PR #25 fusionnée (37e065e4...) : QA indépendante sur GitHub Pages en HTTP 200 et Chromium en production 320/390/768/1440 ; DECISION_GAME_ACCEPTANCE_OK, tous les tests sans overflow/exception/WCAG auto",
+      "Aucune statistique de ventes, d'économie, de taux de conversion ou d'usage professionnel inventée"
+    ],
+    "deliverables": [
+      {
+        "name": "Atelier de décisions accessible publiquement",
+        "kind": "site",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "1b6ecc7f187cd88f1d63f0fcc1d3cfad3216685c",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/atelier-decisions.html"
+      },
+      {
+        "name": "CTA et parcours depuis l'accueil",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "6ff0706f6d8623a3316eacaf890be6e8d4f11737",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+      },
+      {
+        "name": "Recette navigateur de production",
+        "kind": "test",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "37e065e4f5541464ee014beae3d88db0943283f4",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39237376013"
+      }
+    ],
+    "critique": {
+      "p0": [],
+      "p1": [
+        "Aucune donnée prouvant que l'atelier améliore le taux de conversion — seul test utilisateur réel pourra établir la valeur commerciale",
+        "Site toujours en pré-lancement : aucun produit complet validé métier ni checkout, donc un funnel réellement vendeur n'est pas achetable"
+      ],
+      "p2": [
+        "CSS 3D du mini-jeu et WebGL du hero ne prouvent pas la fluidité sur iPhone/Android physiques",
+        "Le menu compact mobile est dans une PR concurrente #22 non fusionnée lors de ce rapport"
+      ],
+      "corrected": [
+        "Cas d'usage concrets et décisions explicites",
+        "CTA vers essai gratuit dans le hero",
+        "Lien jeu après comparateur avant/après",
+        "Contrôle public HTTP, clavier et responsive"
+      ]
+    },
+    "blockers": [
+      "Validation du pack documentaire par des conciergeries indépendantes avant vente",
+      "Vendeur/statut juridique, TVA, politique licence, traitement des données et solution de paiement restent à finaliser",
+      "Contrôle de performances GPU et Safari/Android matériels restant à faire"
+    ],
+    "next": "Analyser les véritables retours professionnels et observer le parcours de test sans tracer les utilisateurs sans consentement ; après validation métier, finaliser offre et livraison digitale avec cadre légal ; améliorer l'interface sur appareils réels.",
+    "links": [
+      {
+        "label": "Accueil 3D",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+      },
+      {
+        "label": "Atelier de 3 décisions",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/atelier-decisions.html"
+      },
+      {
+        "label": "Preuve Playwright en production",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39237376013"
+      }
+    ]
   }
 ]
