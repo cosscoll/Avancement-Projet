@@ -69,7 +69,9 @@ try{
  }
  const ready=deadline;
  await command('Page.enable');await command('Runtime.enable');
- const addr='http://127.0.0.1:'+port+'/index.html#/control/localai';
+ const production=process.env.CONTROL_BROWSER_PRODUCTION==='1';
+ const addr=production?'https://cosscoll.github.io/Avancement-Projet/#/control/localai':'http://127.0.0.1:'+port+'/index.html#/control/localai';
+ process.stdout.write('BROWSER TARGET: '+(production?'deployed GitHub Pages':'isolated local server')+'\n');
  await command('Page.navigate',{url:addr});
  await ready(()=>js("document.querySelector('[data-control-delivery] .control-delivery-count')?.textContent?.includes('9 fonctionnalités')"),20000)();
  assert.equal(await js("document.querySelectorAll('.control-delivery-item').length"),9);
@@ -127,7 +129,7 @@ try{
  log('mobile-sized 390px viewport renders roadmap with no horizontal overflow');
  assert.equal(errors.length,0,'Unexpected JS browser exceptions: '+errors.join(' | '));
  log('no uncaught JavaScript exceptions');
- process.stdout.write('BROWSER SMOKE: ALL CHECKS PASSED (actual headless Chromium, isolated local origin; not a physical Android device)\n');
+ process.stdout.write('BROWSER SMOKE: ALL CHECKS PASSED (actual Chromium, '+(production?'public GitHub Pages with isolated ephemeral browser profile':'local isolated server')+'; not a physical Android device)\n');
 }finally{
  try{ws?.close()}catch{}
  if(browser&&!browser.killed)browser.kill('SIGTERM');
