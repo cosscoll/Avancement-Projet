@@ -478,9 +478,11 @@
       "acceptance": [
         {
           "id": "QA-01",
-          "label": "Tests navigateur desktop de parcours critiques réussis",
-          "verified": false,
-          "evidence": []
+          "label": "CONTROL IA personnel : parcours projets, tâches, agenda et version publiée vérifiés dans Chromium (ordinateur simulé)",
+          "verified": true,
+          "evidence": [
+            "https://github.com/cosscoll/Avancement-Projet/actions/runs/39228575645"
+          ]
         },
         {
           "id": "QA-02",
@@ -503,9 +505,9 @@
       ],
       "evidence": {
         "code_url": "https://github.com/cosscoll/Avancement-Projet/blob/main/.github/workflows/quality.yml",
-        "ci_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39216159627",
+        "ci_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39228575535",
         "deployment_url": null,
-        "journey_url": null
+        "journey_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39228575645"
       }
     }
   ]
