@@ -460,5 +460,47 @@
         "url": "https://github.com/cosscoll/Banque-Outils-IA/actions/runs/39222679700"
       }
     ]
+  },
+  {
+    "id": "banque-ia-20261019-refonte-calme-webgl-1792400569859",
+    "started_at": "2026-10-19T08:38:46Z",
+    "ended_at": "2026-10-19T09:02:49.854Z",
+    "summary": "Refonte UI Business 02 après retour critique utilisateur : accueil minimal ivoire/ardoise, objet 3D WebGL réellement volumétrique et animé, choix de six univers et harmonisation de pages. PR #6 fusionnée dans main ; CI et déploiement Pages verts sur SHA bcd2dafaea30fd828d4e36271953b402febb2b7a.",
+    "done": [
+      "Consignes ouvertes [banque-ia] de cosscoll recherchées : aucune nouvelle.",
+      "Création de index.html, assets/atlas.css et assets/atlas.js avec vraie géométrie WebGL sphères et anneaux, éclairage, perspective, rotation fluide, interaction et mode réduit ; repli Canvas 2D.",
+      "Refonte palette ivoire #f5f4ef / graphite #182124, réduction du contenu de l'accueil ; palette alignée pour catalogue.html, recherche.html et avancement.html via assets/atlas-legacy.css.",
+      "Bug d'orientation des triangles de sphères corrigé et repli 2D signalant rendu prêt ; tests Chromium desktop 1440 et mobile 390, WebGL activé confirmé, absence d'erreurs et débordements ; interactions et fallback testés.",
+      "Tests Node et CI navigateur GitHub Actions au vert sur le SHA de PR #6 c9cb902aa50c4d723cde9587ca40d6d23a2db9a0 ; test aussi du catalogue, recherche et avancement.",
+      "PR #6 fusionnée dans main sans conflit, SHA production bcd2dafaea30fd828d4e36271953b402febb2b7a ; lecture des fichiers intégrés sur main.",
+      "Workflow Verify public preview push main réussite et GitHub Pages build/deploy terminé success pour le même SHA."
+    ],
+    "blockers": [
+      "La réponse HTTPS du site public n'a pas pu être consultée indépendamment avec le navigateur web de cet environnement, malgré preuve de réussite du déploiement Github Pages.",
+      "Confirmation esthétique définitive de l'utilisateur et validation sur iPhone/Android physiques et mesures Lighthouse LCP/CLS restent à faire."
+    ],
+    "next": "Collecter le retour utilisateur sur le nouvel accueil minimal ; réaliser tests sur appareils physiques et audits performances ; améliorer continuité visuelle des pages méthodes/parcours en conservant confidentialité et zéro dépenses.",
+    "links": [
+      {
+        "label": "Site en ligne",
+        "url": "https://cosscoll.github.io/Banque-Outils-IA/"
+      },
+      {
+        "label": "PR refonte fusionnée",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/pull/6"
+      },
+      {
+        "label": "CI navigateur réussie",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/actions/runs/39226745017"
+      },
+      {
+        "label": "GitHub Pages déploiement réussi",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/actions/runs/39226915932"
+      },
+      {
+        "label": "Commit main",
+        "url": "https://github.com/cosscoll/Banque-Outils-IA/commit/bcd2dafaea30fd828d4e36271953b402febb2b7a"
+      }
+    ]
   }
 ]
