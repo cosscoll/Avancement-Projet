@@ -1,6 +1,7 @@
 /* REAL Chromium smoke test of the CONTROL personal application (no 3rd-party login or cost).
    Run: node tests/control-ia-browser-smoke.mjs. Requires preinstalled Chromium/Chrome. */
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import {createServer} from 'node:http';
 import {spawn,spawnSync} from 'node:child_process';
 import {mkdtempSync,existsSync,readFileSync,rmSync} from 'node:fs';
@@ -17,6 +18,35 @@ const deadline=(fn,max=18000,step=180)=>async()=>{
  while(Date.now()<end){try{const result=await fn();if(result)return result}catch(e){last=e}await delay(step)}
  throw Error('Timed out waiting for browser state'+(last?': '+last.message:''));
 };
+// Detect stale GitHub Pages before claiming that a browser tested this commit.
+// The fresh public HTML/data/JS must match the checked-out source bytes.
+const PUBLIC_ORIGIN='https://cosscoll.github.io/Avancement-Projet/';
+const PUBLIC_ASSETS=['index.html','assets/control-operator.js','assets/control-operator-core.js','assets/command-center.js','assets/control-delivery.js','data/control-ia-delivery.json'];
+const hash=data=>createHash('sha256').update(data).digest('hex');
+async function verifyPublishedFiles(){
+ const expected=new Map(PUBLIC_ASSETS.map(path=>[path,hash(readFileSync(resolve(root,path)))]));
+ const errors=[];
+ for(let attempt=1;attempt<=16;attempt++){
+  try{
+   const results=await Promise.all(PUBLIC_ASSETS.map(async path=>{
+    const url=new URL(path,PUBLIC_ORIGIN);
+    const response=await fetch(url,{cache:'no-store',redirect:'follow',signal:AbortSignal.timeout(12000)});
+    if(!response.ok)throw Error(path+' HTTP '+response.status);
+    const actual=hash(Buffer.from(await response.arrayBuffer()));
+    return {path,match:actual===expected.get(path)};
+   }));
+   const stale=results.filter(r=>!r.match).map(r=>r.path);
+   if(!stale.length){
+    log('public deployment bytes match checked-out commit',PUBLIC_ASSETS.length+' HTML, JS and JSON assets');
+    return;
+   }
+   errors.push('attempt '+attempt+' stale: '+stale.join(', '));
+  }catch(error){errors.push('attempt '+attempt+': '+String(error?.message||error))}
+  if(attempt<16)await delay(3000);
+ }
+ throw Error('Public GitHub Pages does not serve the checked-out application assets. '+errors.slice(-5).join('; '));
+}
+
 const waitPort=deadline(async()=>{
  const filename=join(profile,'DevToolsActivePort');
  if(!existsSync(filename))return null;
@@ -70,6 +100,7 @@ try{
  const ready=deadline;
  await command('Page.enable');await command('Runtime.enable');
  const production=process.env.CONTROL_BROWSER_PRODUCTION==='1';
+ if(production)await verifyPublishedFiles();
  const addr=production?'https://cosscoll.github.io/Avancement-Projet/#/control/localai':'http://127.0.0.1:'+port+'/index.html#/control/localai';
  process.stdout.write('BROWSER TARGET: '+(production?'deployed GitHub Pages':'isolated local server')+'\n');
  await command('Page.navigate',{url:addr});
