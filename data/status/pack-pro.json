@@ -83,8 +83,8 @@
       "level": "warning"
     },
     {
-      "title": "Vitrine commerciale 3D V2 publiée et contrôlée — validation marché à poursuivre",
-      "description": "PR15, PR16 et PR18 intégrées : scene 3D visible en première page desktop/mobile, hover WebGL2 et repli CSS; comparateur commercial et P01 gratuit. Run 39233969523 sur URL réelle, 4 tailles, 0 erreur JS et overflow. Restent retour clients, QA iPhone/Android physiques, vente/livraison non encore actives. PR17 catalogue distincte ouverte.",
+      "title": "Vitrine commerciale 3D V3 publiée, showroom interactif vérifié sur GitHub Pages",
+      "description": "Version V3 sur cosscoll.github.io/Pack-Proc-dures-Pro/ : WebGL2 au premier écran, correction mobile-first, comparateur opérationnel, showroom 3D avec procédures, registres et tableur pilote. QA public HTTP 200 + Chromium 320/390/768/1440 et axe-core sans régression automatique. Validation utilisateurs physiques, métier, marché et vente toujours ouvertes.",
       "level": "warning"
     },
     {
