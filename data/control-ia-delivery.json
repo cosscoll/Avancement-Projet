@@ -38,7 +38,7 @@
       "stage": "in_code",
       "depends_on": [],
       "summary": "Auth CONTROL, base dédiée, séparation des utilisateurs, synchronisation entre appareils et retrait du compte.",
-      "next": "Créer et valider une base CONTROL distincte avec coût confirmé à 0 €, puis recette A/B RLS avant activation.",
+      "next": "RLS PostgreSQL A/B sur base jetable validé (pas Supabase Auth). Vérifier une base CONTROL réellement dédiée et son coût 0 €, puis tester vraies sessions JWT A/B et synchronisation avant toute activation Cloud.",
       "blockers": [
         "Base CONTROL indépendante non activée; accord d'infrastructure à obtenir après vérification du coût.",
         "config/cloud.json reste enabled:false."
@@ -78,7 +78,7 @@
       ],
       "evidence": {
         "code_url": "https://github.com/cosscoll/Avancement-Projet/blob/main/docs/CONTROL_CLOUD_SAAS.md",
-        "ci_url": null,
+        "ci_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39233284788",
         "deployment_url": null,
         "journey_url": null
       }
