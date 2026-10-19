@@ -112,6 +112,46 @@ BEGIN
 END $check$;
 \echo RLS PASS: both users' private records stay isolated bidirectionally
 
+-- A tenant must not reassign ownership to B, even for a row they own.
+DO $check$
+BEGIN
+ BEGIN
+  UPDATE public.control_projects
+  SET owner_id='00000000-0000-4000-8000-000000000002'
+  WHERE id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+  RAISE EXCEPTION 'A reassigned their project into account B';
+ EXCEPTION WHEN insufficient_privilege THEN NULL;
+ END;
+ BEGIN
+  UPDATE public.control_items
+  SET owner_id='00000000-0000-4000-8000-000000000002'
+  WHERE id='cccccccc-cccc-4ccc-8ccc-cccccccccccc';
+  RAISE EXCEPTION 'A reassigned their item into account B';
+ EXCEPTION WHEN insufficient_privilege THEN NULL;
+ END;
+END $check$;
+\echo RLS PASS: ownership cannot be transferred with an authenticated client
+
+-- Even if a caller has the authenticated DB role, no valid JWT subject must fail closed.
+RESET "request.jwt.claim.sub";
+DO $check$
+BEGIN
+ IF (SELECT auth.uid()) IS NOT NULL
+ OR (SELECT count(*) FROM public.control_projects) <> 0
+ OR (SELECT count(*) FROM public.control_items) <> 0
+ OR (SELECT count(*) FROM public.control_profiles) <> 0
+ THEN RAISE EXCEPTION 'Authenticated-role request without user identity accessed data'; END IF;
+ BEGIN
+  INSERT INTO public.control_projects (owner_id,name)
+  VALUES ('00000000-0000-4000-8000-000000000001','no identity');
+  RAISE EXCEPTION 'Authenticated role without identity inserted A project';
+ EXCEPTION WHEN insufficient_privilege THEN NULL;
+ END;
+END $check$;
+\echo RLS PASS: authenticated DB role with missing identity cannot read/write another account
+SET "request.jwt.claim.sub" = '00000000-0000-4000-8000-000000000001';
+
+
 -- Audit is append-only for authenticated clients. Service-only quota function.
 DO $check$
 BEGIN
