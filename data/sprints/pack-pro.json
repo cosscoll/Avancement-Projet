@@ -1039,5 +1039,73 @@
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/28"
       }
     ]
+  },
+  {
+    "schema_version": 2,
+    "id": "pack-pro-20261019T161018Z-automation11",
+    "started_at": "2026-10-19T16:10:18.082Z",
+    "ended_at": "2026-10-19T16:12:19.202Z",
+    "objectives": [
+      {
+        "before": "Le contrôle public verify-live ne démarre pas après certains commits main qui ne touchent pas les chemins filtrés",
+        "after": "Déclencher la recette publique après chaque push main, quel que soit le fichier modifié",
+        "acceptance": "Workflow YAML valide sans filtre paths, PR CI verte, merge et run verify-live terminé avec succès sur le SHA main exact"
+      }
+    ],
+    "summary": "Bail V3 acquis et vérifié. Branche créée, défaut de filtre identifié et patch YAML validé localement (7 assertions). Écriture GitHub du workflow et du checkpoint refusée; aucune modification produit publiée.",
+    "done": [
+      "Protocoles V2/V3 lus, état central et PR contrôlés; aucune PR ouverte; PR #22 fermée, corrections mobiles déjà fusionnées",
+      "Bail coopératif acquis sur main au commit ff2572f71b48ba85f964e621c1f9555424b6b4f5 puis propriété relue",
+      "Branche fix/verify-live-all-main-pushes-20261019-1810 créée depuis main 2052139d46d3d25339e38a8ff7a380d9be5617fe, sans commit",
+      "Patch local verify-live-main-push.patch testé: YAML valide et 7 assertions; pas de CI distante"
+    ],
+    "deliverables": [
+      {
+        "name": "Patch de déclenchement verify-live (non publié)",
+        "kind": "patch",
+        "stage": "tested",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": null,
+        "url": null,
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "quality": {
+      "checks_run": [
+        "Validation YAML et assertions statiques locales (7)"
+      ],
+      "checks_passed": [
+        "7 assertions locales"
+      ],
+      "checks_failed": [],
+      "real_browser_verified": false,
+      "ci": "not_run_for_patch"
+    },
+    "blockers": [
+      "GitHub update_file du workflow refusé : This tool call was blocked by OpenAI's safety checks. Please double check what you are sending.",
+      "GitHub update_file du checkpoint refusé avec la même erreur; bail toujours présent jusqu'à libération vérifiée",
+      "HTTP direct site non vérifiable depuis environnement (DNS)"
+    ],
+    "incidents": [
+      {
+        "blocker_id": "github-write-safety-refusal-pack-pro",
+        "status": "open",
+        "consecutive_sprints": 2,
+        "priority": "P0",
+        "next_action": "Ne pas contourner le refus; conserver patch et obtenir une opération d'écriture explicitement autorisée ou intervention propriétaire"
+      }
+    ],
+    "next": "Libérer le bail si écriture autorisée, intégrer le patch via voie autorisée, PR/CI, fusion prudente puis verify-live terminé sur main.",
+    "links": [
+      {
+        "label": "Branche sans commit",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/tree/fix/verify-live-all-main-pushes-20261019-1810"
+      },
+      {
+        "label": "main connu",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/commit/2052139d46d3d25339e38a8ff7a380d9be5617fe"
+      }
+    ]
   }
 ]
