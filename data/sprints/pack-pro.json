@@ -376,5 +376,99 @@
         "Cette vérification HTTP/HTML ne démontre ni interaction navigateur réelle, ni rendu GPU WebGL2, ni accessibilité/performances physiques."
       ]
     }
+  },
+  {
+    "schema_version": 2,
+    "id": "pack-pro-20261019-p01-wcag-real",
+    "started_at": "2026-10-19T08:47:33Z",
+    "ended_at": "2026-10-19T09:11:25.803Z",
+    "objectives": [
+      {
+        "before": "Vitrine immersive sans échantillon interactif public ni preuve indépendante WCAG 2.2 AA",
+        "after": "Une procédure pilote P01 interactive et imprimable accessible publiquement, QA Chromium responsive et audit axe-core public sans violation automatique",
+        "acceptance": "Accès URL P01 HTTP 200, présence 7 étapes, cases/reset/impression 320–1440 px et 0 violation automatisée WCAG sur les 2 URLs réelles"
+      }
+    ],
+    "summary": "Livraison P01 gratuite interactive en ligne, 7 étapes, progression et impression ; corrections de contraste, CI axe-core WCAG AA et vérification sur la version publique. Produit complet non marchand et non validé métier.",
+    "done": [
+      "Nouvelle page exemple-procedure.html avec 7 étapes P01, progression/reprise à zéro, version imprimable, notice de statut pilote, aucune donnée enregistrée ni dépendance externe",
+      "Liens de la fiche depuis catalogue et laboratoire du site de production ; aucun document premium complet rendu public",
+      "PR #8 fusionnée, recette Chromium locale HTTP sur 320,390,768,1440 px : 0 overflow, 0 JS, 7 cases, reset, impression, aucune ressource tiers ; run 39226393913",
+      "PR #9 fusionnée, GitHub Pages HTTP 200 sur accueil ET P01 ; sept étapes et lien depuis accueil vérifiés sur contenu public ; run 39226628934",
+      "Premier audit axe-core a trouvé des contrastes WCAG AA insuffisants ; deux passes de corrections CSS et ajustement du test pour auditer la branche PR plutôt que la version publique obsolète",
+      "PR #10 fusionnée, axe-core WCAG 2 A/AA 2.1 AA 2.2 AA : 0 violation automatique sur index et P01 sur branche ; run 39227519176 ; tous les workflows CI existants verts",
+      "PR #11 fusionnée, même audit passé aussi directement sur le site public GitHub Pages et sur branche ; run 39227772800 et 39227859705, HTTP 200, zéro erreur JS, zéro débordement, CLS=0 mesuré en laboratoire",
+      "Les alertes et ce journal central sont actualisés sans modifier les autres projets ; aucune vente, dépense ou collecte liée à la fiche"
+    ],
+    "critique": {
+      "p0": [],
+      "p1": [
+        "Axe-core détecte des règles automatiques, pas la conformité WCAG 2.2 AA exhaustive",
+        "Performances réelles Safari/iPhone, Android GPU, LCP/CLS/INP de terrain non encore mesurées"
+      ],
+      "p2": [
+        "La fiche publique est un échantillon pilote, sans revue professionnelle indépendante"
+      ],
+      "corrected": [
+        "Contraste des petites légendes sur pages ivoire et clair",
+        "Contraste des nombres et étapes du laboratoire",
+        "Contraste des libellés sur fond vert",
+        "Script de test axe-core utilise browser.newContext et teste la bonne branche puis GitHub Pages"
+      ]
+    },
+    "blockers": [
+      "15 procédures et 7 registres restent brouillons non validés métier",
+      "Aucun test d'usage de la fiche ou du tableur par professionnel indépendant encore documenté",
+      "Aucune configuration marchande LIVE ni conformité vendeur validée ; ne pas ouvrir les ventes"
+    ],
+    "deliverables": [
+      {
+        "name": "Fiche pilote P01 disponible",
+        "kind": "site",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "f52b548c567788b36b4245268f23122f9d94e62b",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/exemple-procedure.html"
+      },
+      {
+        "name": "Recette HTTP publique P01",
+        "kind": "test",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "bc60a1e324779c58d18c75b42ad49e9bf3ea1cf7",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39226628934"
+      },
+      {
+        "name": "Audit accessibilité sur version publique",
+        "kind": "test",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "a3b9983a724f550b9cee77f0a9ba73736d518354",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39227859705"
+      }
+    ],
+    "next": "Réaliser une recette clavier/zoom/Safari physique et tests d'usage métier de la fiche P01 ; corriger anomalies réelles, étudier la performance mobile terrain avant un éventuel lancement marchand.",
+    "links": [
+      {
+        "label": "Procédure interactive P01",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/exemple-procedure.html"
+      },
+      {
+        "label": "CI WCAG public",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39227859705"
+      },
+      {
+        "label": "Refonte P01 PR #8",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/8"
+      },
+      {
+        "label": "Corrections contraste PR #10",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/10"
+      },
+      {
+        "label": "Audit public PR #11",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/11"
+      }
+    ]
   }
 ]
