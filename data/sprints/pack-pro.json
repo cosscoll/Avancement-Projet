@@ -594,5 +594,96 @@
         "No physical Android, iOS Safari, keyboard screen-reader or full Core Web Vitals receipt."
       ]
     }
+  },
+  {
+    "schema_version": 2,
+    "id": "pack-pro-20261019-sales-hero-v2-live",
+    "started_at": "2026-10-19T09:25:00Z",
+    "ended_at": "2026-10-19T10:02:39.835Z",
+    "objectives": [
+      {
+        "before": "Hero 3D uniquement visible après défilement, survol peu perceptible, discours flou et proposition de valeur non convaincante",
+        "after": "Hero WebGL2 immédiatement visible sur desktop/tablette/mobile, rotation souris/clavier, fallback CSS, comparateur des erreurs de rotation et CTA gratuit très visible",
+        "acceptance": "Recette Playwright en prod HTTP public: 320/390/1024/1440, 3D premier écran, WebGL2 ou fallback, hover/clavier, comparateur, zéro erreur JS/overflow"
+      }
+    ],
+    "summary": "Refonte commerciale immersive V2 réellement publiée sur GitHub Pages : animation et scène WebGL2 en hero, démonstration avant-après, hover et copies opérationnelles, mobile corrigé après inspection de captures. Pas de ventes actives.",
+    "done": [
+      "Audit du site initial : héros uniquement textuel, 3D plus bas que le premier écran, CTA insuffisamment vendeur",
+      "PR #15 fusionnée, copywriting métier sur missions non confirmées et incidents, 3D WebGL2 interactive dès l'accueil, comparateur sans/avec procédure, survol et transitions, accès échantillon P01",
+      "PR #16 fusionnée, correction du premier écran mobile : scène 3D placée avant le texte sur petits écrans et ajustements 320/390px",
+      "Premier jeu de captures Playwright mal cadré (screenshot après smooth-scroll de sections inférieures) ; recette corrigée pour capturer le vrai viewport initial. Captures vérifiées manuellement sur 320/390/1024/1440.",
+      "7 suites CI de branche sans régression, dont axe-core WCAG automatisé",
+      "PR #18 fusionnée ; preuve publique GitHub Actions run 39233969523: PUBLIC_V2_MARKER_CONFIRMED et SALES_HERO_ACCEPTANCE_OK à 1440/1024/390/320. WebGL2 actif à 1440/1024/390; alternative CSS à 320 avec reduced motion; rotation pointeur sur tailles compatibles, clavier, comparateur et scénario métier; 0 débordement, 0 erreur JS",
+      "GitHub Pages public https://cosscoll.github.io/Pack-Proc-dures-Pro/ sert la nouvelle version, et les tests de publication se rejouent après changements du site.",
+      "Aucune dépense ni activation de paiement, collecte externe ou publication du pack premium."
+    ],
+    "deliverables": [
+      {
+        "name": "Vitrine commerciale V2 réellement déployée",
+        "kind": "site",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "118e63d71fda89e13e6ce5f6a4aa118fdfe0bd7c",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+      },
+      {
+        "name": "Recette 3D de production",
+        "kind": "test",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "67602b4f5d3e4ef5080ce6e337ab00c52b2fdbbc",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39233969523"
+      },
+      {
+        "name": "Échantillon public gratuit P01",
+        "kind": "site",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/exemple-procedure.html"
+      }
+    ],
+    "critique": {
+      "p0": [],
+      "p1": [
+        "Le site a une proposition de valeur améliorée mais pas de validation commerciale ou retours acheteurs avérés; ne pas annoncer de conversion, retour sur investissement ou ventes",
+        "Interactivité WebGL contrôlée dans Chromium SwiftShader; iPhone/Safari/Android matériel non testé"
+      ],
+      "p2": [
+        "Présentoir produit multi-formats encore sur PR #17 indépendante, non fusionnée : comparer à la version publique actuelle avant intégration",
+        "Performance de terrain et ergonomie accessibilité manuelle à mesurer"
+      ],
+      "corrected": [
+        "3D dans le premier viewport mobile et desktop",
+        "CTA gratuit au premier écran",
+        "Comparateur métier réellement interactif",
+        "Captures QA recadrées au viewport réel",
+        "Vérification HTTP et navigateur sur production"
+      ]
+    },
+    "blockers": [
+      "Procédures et 7 registres non validés métier, statut pilote",
+      "Aucun système de paiement, livraison commerciale automatique ni CGV/identité vendeuse prêts",
+      "Optimisation Safari/iOS/Android, audit manuel WCAG et revue PR #17 restant à faire"
+    ],
+    "next": "Poursuivre le travail sur preuve commerciale : valider P01 avec des professionnels, analyser les retours réellement obtenus, vérifier les performances physiques. Revoir PR #17 produit interactif sur la dernière main sans écraser V2 ; intégrer si QA concluante. Conserver paiements désactivés.",
+    "links": [
+      {
+        "label": "Nouveau site",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+      },
+      {
+        "label": "PR #15",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/15"
+      },
+      {
+        "label": "PR #16",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/16"
+      },
+      {
+        "label": "PR #18 et QA production",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39233969523"
+      }
+    ]
   }
 ]
