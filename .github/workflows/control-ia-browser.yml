@@ -1,0 +1,48 @@
+name: CONTROL IA — Recette navigateur Chromium
+on:
+  pull_request:
+    paths:
+      - 'assets/**'
+      - 'data/control-ia-delivery.json'
+      - 'data/projects.json'
+      - 'index.html'
+      - 'tests/control-ia-browser-smoke.mjs'
+      - '.github/workflows/control-ia-browser.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'assets/**'
+      - 'data/control-ia-delivery.json'
+      - 'data/projects.json'
+      - 'index.html'
+      - 'tests/control-ia-browser-smoke.mjs'
+      - '.github/workflows/control-ia-browser.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: control-browser-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser:
+    name: Interface, consentement, persistance et mobile
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Lire le dépôt
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Installer Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Vérifier Chrome préinstallé
+        run: |
+          command -v google-chrome || command -v chromium
+          node --check tests/control-ia-browser-smoke.mjs
+      - name: Recette réelle dans Chromium isolé
+        run: node tests/control-ia-browser-smoke.mjs
