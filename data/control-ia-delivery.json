@@ -90,7 +90,7 @@
       "stage": "deployed",
       "depends_on": [],
       "summary": "Interface et commandes locales avec confirmation; pas encore d'actions authentifiées sur plusieurs appareils.",
-      "next": "Tester en navigateur la création/lecture/modification avec persistance; préparer le contrat de synchronisation avec CONTROL-ACCOUNT.",
+      "next": "Conserver la recette locale verte ; développer la persistance authentifiée, la reprise multi-appareils et l'isolation des comptes avec CONTROL-ACCOUNT.",
       "blockers": [
         "Persistance limitée au navigateur; aucune isolation de deux comptes réelle.",
         "Aucune recette Android physique documentée."
@@ -105,9 +105,11 @@
       "acceptance": [
         {
           "id": "ACT-01",
-          "label": "Création/modification/relecture réellement testées dans le navigateur",
-          "verified": false,
-          "evidence": []
+          "label": "Création, terminaison et relecture de tâches locales vérifiées dans Chromium, y compris après rechargement",
+          "verified": true,
+          "evidence": [
+            "https://github.com/cosscoll/Avancement-Projet/actions/runs/39231084718"
+          ]
         },
         {
           "id": "ACT-02",
@@ -249,7 +251,7 @@
       "stage": "deployed",
       "depends_on": [],
       "summary": "Fonctionnalités locales accessibles; connexion aux calendriers réels, invitations et visios créées automatiquement non vérifiées.",
-      "next": "Valider le cycle de vie d'un rendez-vous local en navigateur puis concevoir les disponibilités et la synchronisation sous consentement.",
+      "next": "Conserver la recette CRUD locale verte ; ajouter disponibilités, gestion de conflits, invitations et synchronisation OAuth seulement après comptes autorisés.",
       "blockers": [
         "Aucune intégration Google/Microsoft authentifiée.",
         "Gestion d'horaires inter-fuseaux, récurrences et anti-conflits non validée."
@@ -266,9 +268,11 @@
       "acceptance": [
         {
           "id": "CAL-01",
-          "label": "Créer, déplacer, supprimer et retrouver rendez-vous dans une session réelle",
-          "verified": false,
-          "evidence": []
+          "label": "Créer, retrouver, déplacer et supprimer un rendez-vous local dans l'interface et dans Chromium",
+          "verified": true,
+          "evidence": [
+            "https://github.com/cosscoll/Avancement-Projet/actions/runs/39231084718"
+          ]
         },
         {
           "id": "CAL-02",
