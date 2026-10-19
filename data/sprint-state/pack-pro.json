@@ -3,26 +3,26 @@
   "project": "pack-pro",
   "status": "running",
   "lease": {
-    "run_id": "pack-pro-20261019T161018Z-automation11",
-    "started_at": "2026-10-19T16:10:18.082Z",
-    "expires_at": "2026-10-19T16:55:18.082Z",
-    "objective": "Fiabiliser le déclenchement verify-live sur changements des tests et workflows"
+    "run_id": "pack-pro-20261019T171204Z-automation11",
+    "started_at": "2026-10-19T17:12:04.162Z",
+    "expires_at": "2026-10-19T17:57:04.162Z",
+    "objective": "Reprendre et intégrer le correctif verify-live pour chaque push main, puis PR/CI/recette publique"
   },
   "checkpoint": {
-    "at": "2026-10-19T10:16:57.219Z",
-    "branch": "fix/mobile-nav-compact-20261019",
-    "pr_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/22",
-    "files": [],
-    "stage": "blocked",
-    "main_sha": "758d32977e9438c80f77865b2c8645c680c9e502",
-    "branch_sha": "479997af9323184108d43be515a25074ddeedb90",
-    "checks": [
-      "PR #22 mergeable_state=dirty",
-      "PR #22 mobile-nav CI failed: drawer initially hidden assertion",
-      "main verify-live success run 39235712155; hash match + Chromium"
+    "at": "2026-10-19T17:12:04.162Z",
+    "branch": "fix/verify-live-all-main-pushes-20261019-1810",
+    "pr_url": null,
+    "files": [
+      ".github/workflows/verify-live.yml"
     ],
-    "blocker": "GitHub update_file index.html refused by OpenAI safety checks; no product commit",
-    "next_action": "After authorized product write, reconcile PR #22 index.html with main PR #21 3D changes; remove visibility from CSS transition to avoid initial drawer visibility race; rerun mobile-nav CI; merge only when green; verify live."
+    "stage": "pending_lease_recovery",
+    "main_sha": "2052139d46d3d25339e38a8ff7a380d9be5617fe",
+    "branch_sha": "2052139d46d3d25339e38a8ff7a380d9be5617fe",
+    "checks": [
+      "Previous sprint prepared patch removing push.paths; 7 local assertions; no commit; branch at main"
+    ],
+    "blocker": "Prior update_file refused by safety checks",
+    "next_action": "Apply previously tested minimal workflow patch to existing branch; PR, CI, verify-live"
   },
   "last_completed": {
     "run_id": "pack-pro-20261019T101510Z-11",
@@ -31,5 +31,5 @@
     "summary": "PR22 conflict/CI diagnosed; product HTML and sprint journal writes refused; no product merge; checkpoint retained",
     "report_synced": false
   },
-  "recovered_from": null
+  "recovered_from": "pack-pro-20261019T161018Z-automation11"
 }
