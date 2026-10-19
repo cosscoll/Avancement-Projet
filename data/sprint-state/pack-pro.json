@@ -9,7 +9,22 @@
     "expires_at": "2026-10-19T11:00:15.101Z",
     "objective": "Reprendre PR #22 menu mobile, résoudre conflits avec PR #21 fusionnée, valider CI et recette publique"
   },
-  "checkpoint": null,
+  "checkpoint": {
+    "at": "2026-10-19T10:16:57.219Z",
+    "branch": "fix/mobile-nav-compact-20261019",
+    "pr_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/22",
+    "files": [],
+    "stage": "blocked",
+    "main_sha": "758d32977e9438c80f77865b2c8645c680c9e502",
+    "branch_sha": "479997af9323184108d43be515a25074ddeedb90",
+    "checks": [
+      "PR #22 mergeable_state=dirty",
+      "PR #22 mobile-nav CI failed: drawer initially hidden assertion",
+      "main verify-live success run 39235712155; hash match + Chromium"
+    ],
+    "blocker": "GitHub update_file index.html refused by OpenAI safety checks; no product commit",
+    "next_action": "After authorized product write, reconcile PR #22 index.html with main PR #21 3D changes; remove visibility from CSS transition to avoid initial drawer visibility race; rerun mobile-nav CI; merge only when green; verify live."
+  },
   "last_completed": null,
   "recovered_from": null
 }
