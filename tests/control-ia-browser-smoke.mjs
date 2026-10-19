@@ -17,7 +17,7 @@ const deadline=(fn,max=18000,step=180)=>async()=>{
  while(Date.now()<end){try{const result=await fn();if(result)return result}catch(e){last=e}await delay(step)}
  throw Error('Timed out waiting for browser state'+(last?': '+last.message:''));
 };
-const waitPort=deadline(async profile=>{
+const waitPort=deadline(async()=>{
  const filename=join(profile,'DevToolsActivePort');
  if(!existsSync(filename))return null;
  const port=Number(readFileSync(filename,'utf8').split('\n')[0]);
@@ -43,7 +43,7 @@ try{
  const binary=candidates.find(c=>spawnSync('which',[c],{stdio:'ignore'}).status===0);
  assert.ok(binary,'No preinstalled Chromium/Chrome found. Browser verification cannot be declared successful.');
  browser=spawn(binary,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--no-first-run','--no-default-browser-check','--disable-background-networking','--remote-allow-origins=*','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:'ignore'});
- const debugPort=await waitPort(profile)();
+ const debugPort=await waitPort();
  const targets=await (await fetch('http://127.0.0.1:'+debugPort+'/json')).json();
  const page=targets.find(t=>t.type==='page'&&t.webSocketDebuggerUrl);
  assert.ok(page,'No Chrome page target');
