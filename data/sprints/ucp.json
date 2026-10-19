@@ -1804,5 +1804,51 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/issues"
       }
     ]
+  },
+  {
+    "id": "ucp-20261019T064519Z",
+    "started_at": "2026-10-19T06:45:19Z",
+    "ended_at": "2026-10-19T07:03:00Z",
+    "summary": "UCP-QA-54 ajoute un reçu minimal non sensible pour les résidus de nettoyage persistants et confirme 415/415 contrôles sur copie isolée.",
+    "done": [
+      "Issues centrales #1 et #2 relues : ouvertes, créées par cosscoll et sans commentaire ; aucune issue [DECISION][ucp] ni pull request ouverte.",
+      "Reçu ucp-cleanup-residue/v1 ajouté aux seuls doubles échecs de nettoyage : stade, nom isolé du bac, types d’erreurs, sandbox_removed=false et content_included=false ; chemin parent, contenu et messages privés exclus.",
+      "2/2 tests dédiés réussis ; le rapport CLI BLOCKED expose le reçu sans jamais prétendre que le nettoyage a réussi.",
+      "Répétition normale PASS ; plans vérifiés à 5e9d2cb84ef1efd252b80d3c6f3d7f4a0bff01791e97c25fbcc39ea12569f4f8 et f324598478c6b6aee2e7856f9c39b01f6ce9e9bb6c1158d61783c6f20ac75ee2.",
+      "Régression complète : 110/110 backend avec --basetemp, 24/24 sauvegarde-restauration, 166/166 PWA/DOM, 101/101 outils de sûreté, puis audit et reçu ; total 415/415.",
+      "Archive auditée : 168 entrées, 421446 octets, SHA-256 cb144b013a93708e4ef1de9e448e091d0934c93c7c5ce29fb63c167605efebde, aucun constat, secret ou email inattendu.",
+      "Reçu vérifié : 575 octets, SHA-256 155fee2ca2a60290d983d99557779869b7952c2b7a355420cde2a0a9524a8e77.",
+      "Journal UCP mis à jour et vérifié ; HEAD public af2bba353089a382843f6997ea92239b03d8a2dc confirmé."
+    ],
+    "blockers": [
+      "La connexion CONTROL–Codex demandée par les issues #1/#2 reste interdite ; aucun accès Codex n’a été accordé ou déclenché.",
+      "Le clone Windows dev/ucp-codex reste volontairement non lu ; les tests n’y ont pas été exécutés.",
+      "Une panne persistante laisse volontairement un résidu signalé pour intervention manuelle ; le reçu ne contient ni contenu ni chemin parent.",
+      "Pannes synthétiques uniquement : aucune panne réelle du système de fichiers, intégration ou restauration réelle.",
+      "Lot hors GitHub applicatif : non intégré, non fusionné, non déployé ; trois preuves navigateur/appareil réel restent xfail."
+    ],
+    "next": "Faire consommer le reçu minimal par un diagnostic local autorisé dans une copie jetable et conserver un arrêt fermé tant que sandbox_removed=false.",
+    "links": [
+      {
+        "label": "Livrable UCP-QA-54",
+        "url": "https://drive.google.com/file/d/1Wdy8w-ov7-Y6LI7BC_LFAqME7QGf1emE/view?usp=drivesdk"
+      },
+      {
+        "label": "Reçu d’intégrité QA-54",
+        "url": "https://drive.google.com/file/d/1X01o58pnTzkZiOk8icbMuw1aqEjp3gZH/view?usp=drivesdk"
+      },
+      {
+        "label": "HEAD public contrôlé",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/af2bba353089a382843f6997ea92239b03d8a2dc"
+      },
+      {
+        "label": "Journal UCP",
+        "url": "https://docs.google.com/document/d/1GjkjrDCiwwb44Ytm0-ohHWeMGWSd0eDQ0tZznYR1O_g/edit"
+      },
+      {
+        "label": "Issues UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues"
+      }
+    ]
   }
 ]
