@@ -121,12 +121,74 @@ try{
  await ready(()=>js("document.querySelector('[data-op-response]').textContent.length>0"),8000)();
  assert.equal(await js("document.querySelector('[data-op-draft]').hidden"),true,'Cross-project request should not produce a confirmation draft');
  log('cross-project request rejected while UCP is selected');
+
+ // Test cancel before any write. The draft must never be persisted.
+ await js("document.querySelector('[data-op-form] textarea').value='Crée une tâche Recette Annulee Unique pour UCP';document.querySelector('[data-op-form]').requestSubmit()");
+ await ready(()=>js("document.querySelector('[data-op-draft]').hidden===false"),8000)();
+ await js("document.querySelector('[data-op-cancel]').click()");
+ assert.equal(await js("document.querySelector('[data-op-draft]').hidden"),true,'Canceled draft stays hidden');
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').actions?.filter(a=>a.title==='Recette Annulee Unique').length||0"),0,'Canceled action must not persist');
+ log('canceling a proposed action leaves the database unchanged');
+
+ // A completed task is persisted, and a second completion is never silently allowed.
+ await js("document.querySelector('[data-op-form] textarea').value='Termine la tâche Recette Navigateur Unique';document.querySelector('[data-op-form]').requestSubmit()");
+ await ready(()=>js("document.querySelector('[data-op-draft]').hidden===false"),8000)();
+ assert.match(await js("document.querySelector('[data-op-confirm]').textContent"),/Marquer terminée/);
+ await js("document.querySelector('[data-op-draft]').requestSubmit()");
+ await ready(()=>js("document.querySelector('[data-op-response]').textContent.includes('Action enregistrée')"),8000)();
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').actions?.find(a=>a.title==='Recette Navigateur Unique')?.status"),'done');
+ await js("document.querySelector('[data-op-form] textarea').value='Termine la tâche Recette Navigateur Unique';document.querySelector('[data-op-form]').requestSubmit()");
+ assert.equal(await js("document.querySelector('[data-op-draft]').hidden"),true,'A previously completed action must not be proposed again');
+ log('task completion persists and cannot be repeated');
+
+ // The UI must read, reschedule, and delete the EXACT event it created.
+ const movePrompt='Déplace le rendez-vous Recette Agenda Unique au '+dateFR+' à 16h45 pour UCP';
+ await js("document.querySelector('[data-op-form] textarea').value="+JSON.stringify(movePrompt)+";document.querySelector('[data-op-form]').requestSubmit()");
+ await ready(()=>js("document.querySelector('[data-op-draft]').hidden===false"),8000)();
+ assert.equal(await js("document.querySelector('[data-op-date]').value"),tomorrow+'T16:45');
+ await js("document.querySelector('[data-op-draft]').requestSubmit()");
+ await ready(()=>js("document.querySelector('[data-op-response]').textContent.includes('Action enregistrée')"),8000)();
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').events?.find(e=>e.title==='Recette Agenda Unique')?.date"),tomorrow+'T16:45');
+ log('calendar event rescheduled and persisted at the chosen hour');
+
+ await js("document.querySelector('[data-op-form] textarea').value='Supprime le rendez-vous Recette Agenda Unique';document.querySelector('[data-op-form]').requestSubmit()");
+ await ready(()=>js("document.querySelector('[data-op-draft]').hidden===false"),8000)();
+ await js("window.__controlTestConfirm=window.confirm;window.confirm=()=>false;document.querySelector('[data-op-draft]').requestSubmit()");
+ assert.equal(await js("document.querySelector('[data-op-draft]').hidden"),false,'Canceled deletion must keep the draft');
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').events?.filter(e=>e.title==='Recette Agenda Unique').length||0"),1,'Canceled deletion must not remove the event');
+ await js("window.confirm=()=>true;document.querySelector('[data-op-draft]').requestSubmit()");
+ await ready(()=>js("document.querySelector('[data-op-response]').textContent.includes('Action enregistrée')"),8000)();
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').events?.filter(e=>e.title==='Recette Agenda Unique').length||0"),0);
+ await js("window.confirm=window.__controlTestConfirm;delete window.__controlTestConfirm");
+ log('calendar deletion requires confirmation and canceled deletion preserves the event');
+
+ // A storage failure must never claim success or create a phantom task.
+ await js("document.querySelector('[data-op-form] textarea').value='Crée une tâche Recette Echec Stockage Unique pour UCP';document.querySelector('[data-op-form]').requestSubmit()");
+ await ready(()=>js("document.querySelector('[data-op-draft]').hidden===false"),8000)();
+ await js("window.__controlOldSetItem=Storage.prototype.setItem;Storage.prototype.setItem=function(){throw new DOMException('Quota simulé','QuotaExceededError')};document.querySelector('[data-op-draft]').requestSubmit()");
+ await ready(()=>js("document.querySelector('[data-op-response]').textContent.includes('Action non enregistrée')"),8000)();
+ await js("Storage.prototype.setItem=window.__controlOldSetItem;delete window.__controlOldSetItem");
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').actions?.filter(a=>a.title==='Recette Echec Stockage Unique').length||0"),0);
+ log('storage quota failure is reported and does not create a phantom task');
+ 
+ // Force actual Europe/Paris timezone in Chromium to test skipped and repeated local hours.
+ await command('Emulation.setTimezoneOverride',{timezoneId:'Europe/Paris'});
+ assert.equal(await js("window.CONTROL_OPERATOR_CORE.validateLocalDateTime('2027-03-28T02:30')"),false,'Skipped daylight-saving time must be rejected');
+ assert.equal(await js("window.CONTROL_OPERATOR_CORE.validateLocalDateTime('2027-10-31T02:30')"),false,'Repeated daylight-saving time must be rejected');
+ assert.equal(await js("window.CONTROL_OPERATOR_CORE.validateLocalDateTime('2027-10-31T03:30')"),true,'Valid local clock time must be accepted');
+ log('Europe/Paris DST skipped/repeated times are rejected in real browser');
+
  await command('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:2,mobile:true});
  await delay(300);
  const mobile=await js("({viewport:window.innerWidth,scroll:document.documentElement.scrollWidth,head:!!document.querySelector('.control-delivery-focus')})");
  assert.equal(mobile.head,true);
  assert.ok(mobile.scroll<=mobile.viewport+4,'Mobile horizontal overflow detected: '+JSON.stringify(mobile));
  log('mobile-sized 390px viewport renders roadmap with no horizontal overflow');
+ await command('Emulation.setDeviceMetricsOverride',{width:320,height:700,deviceScaleFactor:2,mobile:true});
+ await delay(250);
+ const narrow=await js("({viewport:window.innerWidth,scroll:document.documentElement.scrollWidth})");
+ assert.ok(narrow.scroll<=narrow.viewport+4,'320px mobile horizontal overflow detected: '+JSON.stringify(narrow));
+ log('very narrow 320px viewport avoids horizontal scroll');
  assert.equal(errors.length,0,'Unexpected JS browser exceptions: '+errors.join(' | '));
  log('no uncaught JavaScript exceptions');
  process.stdout.write('BROWSER SMOKE: ALL CHECKS PASSED (actual Chromium, '+(production?'public GitHub Pages with isolated ephemeral browser profile':'local isolated server')+'; not a physical Android device)\n');
