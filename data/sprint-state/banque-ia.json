@@ -1,8 +1,19 @@
 {
   "schema_version": 3,
   "project": "banque-ia",
-  "status": "idle",
-  "lease": null,
-  "checkpoint": null,
-  "last_completed": null
+  "status": "running",
+  "lease": {
+    "run_id": "banque-ia-20261019-121732-paris-a2",
+    "started_at": "2026-10-19T10:17:56.850Z",
+    "expires_at": "2026-10-19T11:02:56.850Z"
+  },
+  "checkpoint": {
+    "step": "review-pr",
+    "branch": "feat/immersive-pointer-ice-core-20261019",
+    "pr_url": "https://github.com/cosscoll/Banque-Outils-IA/pull/8",
+    "files": [],
+    "next_action": "Valider et integrer PR #8 apres revue CI et navigateur"
+  },
+  "last_completed": null,
+  "recovered_from": null
 }
