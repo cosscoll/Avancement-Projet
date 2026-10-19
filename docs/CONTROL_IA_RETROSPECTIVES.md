@@ -171,3 +171,11 @@ Document public de suivi technique limité à CONTROL IA. Source de spécificati
 - **P2 / coût** : aucune API payante ou ressource Cloud supplémentaire activée ; budget nul inchangé.
 
 **Prochaine priorité :** conserver le focus `CONTROL-ACCOUNT`, concevoir/vérifier le schéma et les permissions de la base CONTROL dédiée sans activation anticipée, préparer des tests RLS A/B isolés et une recette de synchronisation multi-appareils. L'utilisateur doit approuver toute activation d'infrastructure ou consentement OAuth nécessaire. Le prochain sprint reprend en priorité ces risques et ne ferme aucun critère sans preuve réelle.
+
+### Complément de recette PWA hors connexion — 19 octobre 2026
+
+L'autocritique a relevé un risque non testé : le raccourci PWA sur téléphone pouvait sembler installé sans que l'interface ou ses données publiques résistent à une coupure réseau. [PR #20](https://github.com/cosscoll/Avancement-Projet/pull/20), fusionnée, ajoute une recette Chromium sur le **site public HTTPS** après vérification des empreintes SHA-256 : service worker activé, cache de la coque présent, coupure réseau complète simulée via DevTools, rechargement et présence effective de l'interface CONTROL IA et du tracker public.
+
+**Résultat :** [CI navigateur publiée](https://github.com/cosscoll/Avancement-Projet/actions/runs/39231769083), test PWA hors ligne **réussi** ; [CI générale](https://github.com/cosscoll/Avancement-Projet/actions/runs/39231769042) et [déploiement Pages](https://github.com/cosscoll/Avancement-Projet/actions/runs/39231768184) réussis.
+
+**Limite cruciale :** ce test confirme seulement la disponibilité de la **coque publique et du suivi en cache** dans Chrome headless, réseau simulé hors ligne. Il ne prouve PAS la persistance Cloud, la synchronisation en différé, le fonctionnement d'Android installé sur écran d'accueil, Safari iOS, le chargement offline du modèle IA (poids externes), les rappels push ou les connexions externes. Aucun critère `operational` supplémentaire n'est coché. Le critère QA-01 reçoit la preuve PWA, sans augmenter artificiellement le nombre de fonctionnalités terminées. Il faut encore une vraie recette sur les appareils de l'utilisateur.
