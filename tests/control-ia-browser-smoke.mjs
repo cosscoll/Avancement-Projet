@@ -42,7 +42,7 @@ try{
  const candidates=[process.env.CHROME_BIN,'google-chrome','google-chrome-stable','chromium','chromium-browser'].filter(Boolean);
  const binary=candidates.find(c=>spawnSync('which',[c],{stdio:'ignore'}).status===0);
  assert.ok(binary,'No preinstalled Chromium/Chrome found. Browser verification cannot be declared successful.');
- browser=spawn(binary,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--no-first-run','--no-default-browser-check','--disable-background-networking','--remote-allow-origins=*','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:'ignore'});
+ browser=spawn(binary,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--no-first-run','--no-default-browser-check','--disable-background-networking','--remote-allow-origins=*','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:'ignore',detached:true});
  const debugPort=await waitPort();
  const targets=await (await fetch('http://127.0.0.1:'+debugPort+'/json')).json();
  const page=targets.find(t=>t.type==='page'&&t.webSocketDebuggerUrl);
@@ -132,7 +132,24 @@ try{
  process.stdout.write('BROWSER SMOKE: ALL CHECKS PASSED (actual Chromium, '+(production?'public GitHub Pages with isolated ephemeral browser profile':'local isolated server')+'; not a physical Android device)\n');
 }finally{
  try{ws?.close()}catch{}
- if(browser&&!browser.killed)browser.kill('SIGTERM');
+ // Chrome may still write session files after SIGTERM; wait before removing
+ // its ephemeral profile to avoid a false ENOTEMPTY test failure.
+ if(browser){
+  const exit=browser.exitCode!==null?Promise.resolve():new Promise(done=>browser.once('exit',done));
+  // Chromium consists of many child processes. On Unix, detached=true
+  // creates an isolated process group which can be closed together.
+  try{if(process.platform!=='win32')process.kill(-browser.pid,'SIGTERM');else browser.kill('SIGTERM')}catch{}
+  await Promise.race([exit,delay(1800)]);
+  if(browser.exitCode===null){
+   try{if(process.platform!=='win32')process.kill(-browser.pid,'SIGKILL');else browser.kill('SIGKILL')}catch{}
+  }
+ }
  if(!serverClosed){serverClosed=true;server.close()}
- rmSync(profile,{recursive:true,force:true});
+ try{rmSync(profile,{recursive:true,force:true,maxRetries:5,retryDelay:100})}
+ catch(error){
+  // The runner is ephemeral and contains only synthetic browser fixtures.
+  // Do not misclassify a Chromium shutdown race as an application failure.
+  if(!['ENOTEMPTY','EBUSY','EPERM'].includes(error?.code))throw error;
+  process.stderr.write('BROWSER CLEANUP: temporary profile will be removed by ephemeral runner ('+error.code+')\n');
+ }
 }
