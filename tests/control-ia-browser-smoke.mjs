@@ -122,6 +122,25 @@ try{
  assert.equal(await js("document.querySelector('[data-op-draft]').hidden"),true,'Cross-project request should not produce a confirmation draft');
  log('cross-project request rejected while UCP is selected');
 
+ // Verify scope cannot change between proposal and confirmation (TOCTOU).
+ await js("document.querySelector('[data-op-form] textarea').value='Crée une tâche Recette Mauvais Scope';document.querySelector('[data-op-form]').requestSubmit()");
+ await ready(()=>js("document.querySelector('[data-op-draft]').hidden===false"),8000)();
+ await js("document.querySelector('#loc-project').value='iagile';document.querySelector('#loc-project').dispatchEvent(new Event('change',{bubbles:true}));document.querySelector('[data-op-draft]').requestSubmit()");
+ await ready(()=>js("document.querySelector('[data-op-response]').textContent.includes('projet sélectionné a changé')"),8000)();
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').actions?.filter(a=>a.title==='Recette Mauvais Scope').length||0"),0);
+ await js("document.querySelector('#loc-project').value='ucp';document.querySelector('#loc-project').dispatchEvent(new Event('change',{bubbles:true}))");
+ log('changing selected project after draft cannot write into the wrong project');
+
+ // Revocation must remove pending write permissions immediately.
+ await js("document.querySelector('[data-op-form] textarea').value='Crée une tâche Recette Consentement Retire';document.querySelector('[data-op-form]').requestSubmit()");
+ await ready(()=>js("document.querySelector('[data-op-draft]').hidden===false"),8000)();
+ await js("document.querySelector('[data-op-consent]').click()");
+ assert.equal(await js("document.querySelector('[data-op-draft]').hidden"),true);
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').actions?.filter(a=>a.title==='Recette Consentement Retire').length||0"),0);
+ await js("document.querySelector('[data-op-consent]').click()");
+ log('revoking consent cancels pending actions without writes');
+
+
  // Test cancel before any write. The draft must never be persisted.
  await js("document.querySelector('[data-op-form] textarea').value='Crée une tâche Recette Annulee Unique pour UCP';document.querySelector('[data-op-form]').requestSubmit()");
  await ready(()=>js("document.querySelector('[data-op-draft]').hidden===false"),8000)();
