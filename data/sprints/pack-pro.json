@@ -266,5 +266,96 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/sprints/pack-pro.json"
       }
     ]
+  },
+  {
+    "schema_version": 2,
+    "id": "pack-pro-20261019-1011-immersive-v1",
+    "started_at": "2026-10-19T08:11:23Z",
+    "ended_at": "2026-10-19T08:35:03Z",
+    "objectives": [
+      {
+        "before": "Site générique sans 3D métier, expérience et menus mobiles peu distinctifs",
+        "after": "Vitrine immersive cohérente, 3D WebGL2 codée avec fallback, simulateur et orientation, fusionnée et accessible en HTTP 200 sur GitHub Pages",
+        "acceptance": "CI passe, main inclut la refonte, GitHub Pages HTTP 200 sert les marqueurs scène/atelier/orientation/laboratoire"
+      }
+    ],
+    "summary": "Refonte immersive Business 01 fusionnée via PR #4, page GitHub Pages réellement servie en HTTP 200 vérifiée via runner GitHub ; atelier WebGL2 et simulateur de rotation avec fallback. GPU réel, LCP/CLS, Safari et WCAG complets encore non validés.",
+    "done": [
+      "Audit main GitHub, anciennes branches, PR et page précédente ; conservation du guide d’orientation métier et du lien Avancement",
+      "Nouvelle expérience éditoriale ivoire/vert : narration désordre→maîtrise, scène WebGL2 documentaire, 3 scénarios métier, état produit honnêtement en pré-lancement",
+      "Correctif du menu mobile et suppression de fonts externes ; accordéons métier rétablis après autocritique",
+      "Chromium HTML injecté aux largeurs 320/390/768/1440 : zéro overflow, zéro erreur JavaScript, navigation Avancement visible, simulation incident/pending et repli reduced-motion testés",
+      "Test CPU du chemin de rendu WebGL2 avec contexte GPU simulé aux largeurs 1440/390 : 432/458 draw calls, 0 exception ; ne remplace pas test GPU réel",
+      "PR #4 fusionnée après succès du workflow historique et nouveau workflow ; PR #5 et #6 de recette HTTP également fusionnées",
+      "Runner GitHub Actions run 39223462971 : PUBLIC_SITE_VERIFIED: HTTP=200 bytes=41259 ; markers processCanvas, orientation, laboratoire repérés sur URL publique réelle",
+      "Aucun paiement, dépendance payante, collecte ni contenu premium publiés"
+    ],
+    "blockers": [
+      "Validation GPU WebGL2 sur ordinateur et mobile physique non réalisée (WebGL contexte nul dans navigateur local, alternative CSS utilisée)",
+      "LCP mobile, CLS, fluidité, Safari iPhone et audit WCAG 2.2 AA complet non mesurés en production",
+      "Validation métier indépendante des 15 procédures, tests Microsoft Excel réel et conformité/paiement/livraison marchande toujours nécessaires"
+    ],
+    "deliverables": [
+      {
+        "name": "Vitrine immersive GitHub Pages",
+        "kind": "code",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "68b870cf7ee0be70b30c5fa316d413fa9db50b10",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+      },
+      {
+        "name": "Code WebGL et laboratoires, PR #4",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "68b870cf7ee0be70b30c5fa316d413fa9db50b10",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/4"
+      },
+      {
+        "name": "Recette HTTP publique automatisée",
+        "kind": "test",
+        "stage": "verified_online",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "40f767ede2eda461b07e089e04bba635aad2c317",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39223462971"
+      }
+    ],
+    "critique": {
+      "p0": [],
+      "p1": [
+        "Rendu GPU/animations non testés sur appareils physiques",
+        "Tests performances Core Web Vitals et clavier/Safari insuffisants"
+      ],
+      "p2": [
+        "Parcours commercial sans CTA de test clients sur la vitrine",
+        "Documentation de la DA à raffiner selon sessions QA"
+      ],
+      "corrected": [
+        "Rétablissement orientation métier",
+        "Navigation Avancement accessible sur mobile",
+        "Retrait dépendance Google Fonts",
+        "Mise à niveau des tests historiques"
+      ]
+    },
+    "next": "Tester réellement le moteur 3D sur Safari/Android et appareils de puissance modeste, mesurer LCP/CLS, corriger selon résultats ; finaliser le parcours de consultation limité aux échantillons publics, sans vendre de brouillons ; conserver une seule PR utile à la fois.",
+    "links": [
+      {
+        "label": "Nouveau site public HTTP 200",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+      },
+      {
+        "label": "PR refonte fusionnée",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/4"
+      },
+      {
+        "label": "Preuve de vérification HTTP",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39223462971"
+      },
+      {
+        "label": "Documentation de reprise",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/blob/main/docs/REFONTE_IMMERSIVE.md"
+      }
+    ]
   }
 ]
