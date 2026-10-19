@@ -482,10 +482,11 @@
       "acceptance": [
         {
           "id": "QA-01",
-          "label": "CONTROL IA personnel : parcours projets, tâches, agenda et version publiée vérifiés dans Chromium (ordinateur simulé)",
+          "label": "CONTROL IA personnel : parcours tâches/agenda et site public testés dans Chromium, coque PWA et suivi rechargés sans réseau simulé",
           "verified": true,
           "evidence": [
-            "https://github.com/cosscoll/Avancement-Projet/actions/runs/39228575645"
+            "https://github.com/cosscoll/Avancement-Projet/actions/runs/39228575645",
+            "https://github.com/cosscoll/Avancement-Projet/actions/runs/39231769083"
           ]
         },
         {
