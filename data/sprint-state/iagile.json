@@ -3,12 +3,12 @@
   "project": "iagile",
   "status": "running",
   "lease": {
-    "run_id": "iagile-20261019T144440300Z-turn11",
-    "started_at": "2026-10-19T14:44:40.300Z",
-    "expires_at": "2026-10-19T15:29:40.300Z",
-    "objective": "Pilote Processus M8 : restaurer un support formateur privé et vérifier le chemin de prévisualisation sécurisé"
+    "run_id": "iagile-20261019T153944336Z-sprint11",
+    "started_at": "2026-10-19T15:39:44.336Z",
+    "expires_at": "2026-10-19T16:24:44.336Z",
+    "objective": "Pilote Processus M8 : résoudre le blocage du support formateur et qualifier la prévisualisation privée"
   },
   "checkpoint": null,
   "last_completed": null,
-  "recovered_from": "iagile-20261019T124057Z-v3-11"
+  "recovered_from": "iagile-20261019T144440300Z-turn11"
 }
