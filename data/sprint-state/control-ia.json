@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "control-ia-20261020-v38-pwa-resume-classic",
+    "started_at": "2026-10-20T09:31:27.421Z",
+    "expires_at": "2026-10-20T10:15:27.426Z",
+    "objective": "Comparer archive privée sprint38 au PWA main, corriger sécurité/cache et tester réellement, puis livrer sur main"
+  },
   "checkpoint": {
     "updated_at": "2026-10-20T09:28:58Z",
     "files": [
