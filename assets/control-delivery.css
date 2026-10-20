@@ -24,3 +24,12 @@
 .control-delivery-date{font-size:11px!important;color:#637d96;margin:12px 0 0!important}
 .control-delivery-error{color:#984f45}
 @media(max-width:600px){.control-delivery-item summary{align-items:flex-start;flex-direction:column}.control-delivery-stage{flex-shrink:1}}
+
+/* V1.2 requirement overview: show proof gaps plainly, with no status inflation. */
+.control-delivery-v12{margin-top:16px;padding:15px;border:1px solid #c8dce7;border-radius:12px;background:#f5faff}
+.control-delivery-v12 h3{margin:0 0 8px;font-size:15px;line-height:1.35;color:#263d56}
+.control-delivery-v12-count{font-size:14px!important;font-weight:800;line-height:1.5;color:#284d6e}
+.control-delivery-v12-focus{border-left:3px solid #698baa;padding-left:10px;font-size:12px}
+.control-delivery-v12 a{display:inline-flex;color:#205c91;font-size:11px;font-weight:750;line-height:1.5;margin-top:5px;text-decoration:underline;text-underline-offset:3px}
+.control-delivery-v12 a:focus-visible{outline:2px solid #315b86;outline-offset:2px;border-radius:3px}
+@media(max-width:420px){.control-delivery-v12{padding:11px}.control-delivery-v12-count{font-size:12px!important}}
