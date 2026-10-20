@@ -10,20 +10,21 @@
     "objective": "Afficher un repli utilisateur lorsque le téléchargement du brief est indisponible et libérer l’URL objet sans fuite"
   },
   "checkpoint": {
-    "phase": "first-pass-committed",
+    "phase": "ready-to-merge",
     "repository": "cosscoll/UnCoupdePouce",
     "base_commit": "828eb1bb808897bcd73e5d17f85494980f25f04a",
     "branch": "fix/ucp-brief-download-fallback-20261020",
-    "head_commit": "5ae3d1864d5cc63dd84af1ec7c395ebfd03d1509",
-    "pull_request": null,
+    "head_commit": "c21ad2cc86317b30402f4c0b2fcf9bed394fc623",
+    "pull_request": 7,
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.cjs"
     ],
     "tests": [
-      "CI première passe en attente"
+      "Vitrine CI 39442334617: success (première passe)",
+      "Vitrine CI 39442423184: success (seconde passe corrective)"
     ],
-    "next": "Ouvrir la PR, attendre la CI, puis ajouter une seconde passe couvrant l’échec après allocation de l’URL objet."
+    "next": "Fusionner prudemment la PR #7 avec vérification du head, puis synchroniser statut et journal publics."
   },
   "last_completed": {
     "run_id": "ucp-20261020T132616Z-v3",
