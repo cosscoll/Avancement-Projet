@@ -12,7 +12,7 @@
     "data/sprint-state/control-ia.json",
     "data/sprints/control-ia.json"
   ],
-  "private_backlog_reference": "CONTROL IA V1.1 / BACK-001..042 (Library, jamais publier le contenu privé)",
+  "private_backlog_reference": "CONTROL IA V1.2 PRIVÉE — 22 tickets BACK-001..022 et 42 recettes T-01..T-42; texte intégral uniquement Library /CONTROL-IA, jamais dans le dépôt public.",
   "focus": {
     "capability": "CONTROL-ACCOUNT",
     "reason": "Identité et cloisonnement multi-utilisateurs requis pour les intégrations réelles; en attente d'infrastructure dédiée et autorisation.",
