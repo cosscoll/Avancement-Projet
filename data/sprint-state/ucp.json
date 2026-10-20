@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "ucp-20261020-0951-central-report-quality-repair",
+    "started_at": "2026-10-20T07:51:17Z",
+    "expires_at": "2026-10-20T08:21:17Z",
+    "objective": "Mettre au format les métadonnées de preuves existantes des rapports du dépôt central; préserver les conclusions et les données du projet."
+  },
   "checkpoint": null,
   "last_completed": {
     "run_id": "ucp-20261020T072624Z-v3",
