@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "ucp-20261020T083418Z-v3",
+    "started_at": "2026-10-20T08:34:18Z",
+    "expires_at": "2026-10-20T09:19:18Z",
+    "objective": "Actualiser la page Avancement UCP obsolète avec les preuves réelles de main, CI et limites de recette"
+  },
   "checkpoint": null,
   "last_completed": {
     "run_id": "ucp-20261020T072624Z-v3",
