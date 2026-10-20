@@ -3,12 +3,18 @@
   "project": "ucp",
   "status": "running",
   "lease": {
-    "run_id": "ucp-20261020T103117Z-v3",
-    "started_at": "2026-10-20T10:31:17Z",
-    "expires_at": "2026-10-20T11:16:17Z",
-    "objective": "Empêcher le script de la vitrine de planter sur les navigateurs utilisant encore MediaQueryList.addListener"
+    "run_id": "ucp-20261020T122924Z-v3",
+    "started_at": "2026-10-20T12:29:24Z",
+    "expires_at": "2026-10-20T13:14:24Z",
+    "objective": "Empêcher le script de la vitrine de planter quand MediaQueryList.addEventListener est absent"
   },
-  "checkpoint": null,
+  "checkpoint": {
+    "recovered_from": "ucp-20261020T103117Z-v3",
+    "branch": "fix/ucp-matchmedia-legacy-20261020",
+    "files": [],
+    "tests": [],
+    "next_action": "Vérifier que la branche ne contient aucun commit puis appliquer le correctif et ses tests."
+  },
   "last_completed": {
     "run_id": "ucp-20261020T093301Z-v3",
     "ended_at": "2026-10-20T09:37:49Z",
