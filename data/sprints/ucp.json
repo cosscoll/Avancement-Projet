@@ -2073,5 +2073,126 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
       }
     ]
+  },
+  {
+    "id": "ucp-20261020T093301Z-v3",
+    "schema_version": 2,
+    "protocol_version": 3,
+    "started_at": "2026-10-20T09:33:01Z",
+    "ended_at": "2026-10-20T09:37:49Z",
+    "summary": "Les pages Projet FR/EN ne figent plus un état au 14 octobre : elles renvoient durablement vers les preuves publiques, et la CI garantit désormais la cohérence entre build.py et les sorties HTML.",
+    "objectives": [
+      {
+        "before": "Les pages Projet française et anglaise affichaient encore une revue datée du 14 octobre 2026.",
+        "after": "Le statut de pré-lancement renvoie vers le suivi public sans date éditoriale périssable.",
+        "acceptance": "Les deux pages et build.py ne contiennent plus les anciennes dates, portent le lien UCP public, et la CI finale est verte."
+      },
+      {
+        "before": "La CI validait les sorties HTML sans vérifier qu’elles étaient reproductibles depuis build.py.",
+        "after": "La CI reconstruit la vitrine et échoue sur toute dérive build/dist.",
+        "acceptance": "python site-vitrine/build.py puis git diff --exit-code -- site-vitrine/dist réussissent dans GitHub Actions."
+      }
+    ],
+    "done": [
+      "Issues #1/#2 relues : ouvertes et authentifiées cosscoll ; aucune nouvelle décision. La demande de connexion Codex reste bloquée.",
+      "Protocoles V3/V2, trois derniers journaux, état, branches, main, PR et incidents consultés avant mutation.",
+      "Bail V3 ucp-20261020T093301Z-v3 acquis sous SHA puis relu avec le bon propriétaire.",
+      "Comparaison main/dev/ucp-codex : branche divergente, mais aucune modification site-vitrine hors qa-static ; application/** et README exclus.",
+      "PR #4 créée avec source build.py, pages Projet FR/EN et contrat statique supprimant les dates périmées.",
+      "Autocritique P1 : absence de preuve build/dist ; étape de reconstruction déterministe ajoutée à la CI.",
+      "La première CI renforcée a échoué utilement sur une dérive préexistante des pages 404 et Informations ; ces deux sorties ont été réalignées au générateur.",
+      "CI finale 39401930217 verte, main vérifiée inchangée à 4eefa80 avant fusion, puis PR #4 fusionnée par squash au commit 5471ff9cb52b1aaeabc7791c6d52bc3fb2668b49.",
+      "Build, pages Projet FR/EN et workflow relus sur main ; statut public central synchronisé."
+    ],
+    "deliverables": [
+      {
+        "name": "PR UCP #4 fusionnée",
+        "kind": "pull_request",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "4",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/4",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Commit main de fraîcheur éditoriale",
+        "kind": "commit",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "5471ff9cb52b1aaeabc7791c6d52bc3fb2668b49",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/5471ff9cb52b1aaeabc7791c6d52bc3fb2668b49",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "CI Vitrine finale avec contrôle build/dist",
+        "kind": "ci",
+        "stage": "tested",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "39401930217",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39401930217",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "quality": {
+      "p0": [],
+      "p1": [
+        "Aucune recette navigateur, appareil, site public ou staging ; l’affichage réel reste non vérifié."
+      ],
+      "p2": [
+        "La première CI renforcée a détecté une dérive build/dist sur 404.html et informations.html ; sorties corrigées puis retestées."
+      ],
+      "second_pass": "corrected_and_retested",
+      "checks_run": [
+        "Vitrine CI run 39401792048 (première passe avant correction)",
+        "Vitrine CI run 39401840771 (échec utile build/dist)",
+        "Vitrine CI run 39401930217 (succès final)",
+        "Relecture des blobs main"
+      ],
+      "checks_passed": [
+        "Première CI avant renforcement",
+        "CI finale avec reconstruction",
+        "Blobs main conformes"
+      ],
+      "checks_failed": [
+        "CI intermédiaire : dérive 404.html et informations.html"
+      ],
+      "real_browser_verified": false,
+      "ci": "success"
+    },
+    "blockers": [
+      "Le clone Windows dev/ucp-codex reste volontairement non lu et non modifié ; aucune synchronisation n’est revendiquée.",
+      "Aucun navigateur, appareil réel, site public ou staging n’a été vérifié ; aucun déploiement n’a été déclenché.",
+      "Les demandes publiques #1/#2 de connexion CONTROL–Codex restent lues mais bloquées."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "ucp-public-site-unverified",
+        "status": "incident",
+        "consecutive_sprints": 3,
+        "next_action": "Ne pas répéter une ouverture sans URL confirmée ; obtenir un staging privé autorisé ou vérifier le workflow Pages avant une recette navigateur bornée."
+      }
+    ],
+    "next": "Traiter un bug applicatif indépendant seulement si un périmètre sans conflit avec dev/ucp-codex est prouvé ; sinon préparer la recette privée de la vitrine sans répéter le contrôle en ligne bloqué.",
+    "links": [
+      {
+        "label": "PR UCP #4",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/4"
+      },
+      {
+        "label": "Commit main 5471ff9",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/5471ff9cb52b1aaeabc7791c6d52bc3fb2668b49"
+      },
+      {
+        "label": "CI Vitrine finale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39401930217"
+      },
+      {
+        "label": "Statut public UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      }
+    ]
   }
 ]
