@@ -1,1 +1,105 @@
-[]
+[
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261020-074659-direct-main-governance",
+    "started_at": "2026-10-20T07:46:59Z",
+    "ended_at": "2026-10-20T08:00:27Z",
+    "objectives": [
+      {
+        "before": "La stratégie des dix améliorations CONTROL était uniquement sur une branche PR et sa publication main bloquée par l'historique des rapports de sprint.",
+        "after": "Cinq fichiers de stratégie et de validation publiés directement dans main avec contrôle des SHA; procédure/automatisation passées en mode direct-main; CI générale et contrat de rapports verts.",
+        "acceptance": "Comparer SHA des 5 sources du projet; stratégie dédiée 12/12, CI générale 130/130, contrat 14/14 et publication Pages terminés success; aucune ouverture Cloud non autorisée."
+      }
+    ],
+    "summary": "Demande propriétaire appliquée : plus de nouvelles PR pour CONTROL; livraison directe main avec contrôle SHA et CI, organisation des dix objectifs maintenant versionnée; métadonnées du dépôt central normalisées sans maquiller les preuves.",
+    "done": [
+      "Bail CONTROL acquis et vérifié; anciens checkpoints de reprise conservés.",
+      "Copie directe depuis branche #24 des cinq sources vérifiées vers main; correspondance de cinq hashes SHA contrôlée; PR #24 clôturée sans fusion.",
+      "Règle direct-main ajoutée à stratégie, validateur, tests, protocoles et automatisation; aucune modification de cadence/activation par cette session.",
+      "Correction de métadonnées des rapports historiques pack-pro, UCP et IAgile sous baux coopératifs; vérification de runs GitHub réels et conservation de leurs contenus et conclusions.",
+      "Qualité générale 130/130, contrat rapports 14/14, stratégie dédiée et Pages success, liens joints."
+    ],
+    "blockers": [
+      "Compte et base CONTROL réellement indépendants, autorisés et vérifiés absents : Cloud reste désactivé.",
+      "Checkpoint PWA v38 à récupérer ; tests locaux allégués mais patch non publié.",
+      "Une CI future peut échouer après un nouveau rapport malformé; jamais désactiver les vérifications pour obtenir un run vert."
+    ],
+    "quality": {
+      "ci": "verified",
+      "checks_run": [
+        "Node suite on main, GitHub Actions 39390035544",
+        "Sprint reports contract 39390035582",
+        "CONTROL ten-feature strategy 39388934063",
+        "GitHub Pages deploy 39390036811"
+      ],
+      "checks_passed": [
+        "130/130 Node tests",
+        "14/14 report tests",
+        "Strategy validator and 12 tests previously successful",
+        "Pages deployment reported success"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "Aucune authentification Cloud réelle ni recette Android physique.",
+        "Les résultats CI constatés concernent un SHA avant le commit de cette entrée d'historique, qui déclenchera sa propre validation."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Stratégie dix améliorations dans main",
+        "kind": "document",
+        "stage": "coded",
+        "repository": "cosscoll/Avancement-Projet",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/control-ia-strategy.json"
+      },
+      {
+        "name": "Protocole sprints directs dans main",
+        "kind": "document",
+        "stage": "coded",
+        "repository": "cosscoll/Avancement-Projet",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/docs/CONTROL_IA_ORGANISATION_SPRINTS.md"
+      },
+      {
+        "name": "Tests de qualité globale verts",
+        "kind": "test",
+        "stage": "tested",
+        "repository": "cosscoll/Avancement-Projet",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39390035544"
+      }
+    ],
+    "links": [
+      {
+        "label": "CI Node 130/130",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39390035544"
+      },
+      {
+        "label": "CI contrat rapports 14/14",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39390035582"
+      },
+      {
+        "label": "Déploiement Pages réussi",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39390036811"
+      },
+      {
+        "label": "CI stratégie",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39388934063"
+      }
+    ],
+    "critique": {
+      "p0": [],
+      "p1": [
+        "Les scripts producteurs de rapports externes ne normalisent pas encore systématiquement les schémas V2/V3 avant écriture.",
+        "CI et déploiement post-commit ne peuvent techniquement pas être garantis par avance."
+      ],
+      "p2": [
+        "La multiplication d'écritures successives directement sur main peut déclencher des déploiements intermédiaires annulés, d'où besoin de lots plus atomiques."
+      ],
+      "corrected": [
+        "Publication des cinq fichiers sans fusion",
+        "CI des rapports restaurée à partir de preuves authentifiées",
+        "Processus commun auto/classique aligné sur mode direct-main"
+      ]
+    },
+    "next": "Reprendre le checkpoint PWA v38 et son blocage GitHub réel; corriger le code applicatif par lot sûr directement dans main avec tests préalables; maintenir focus CONTROL-ACCOUNT et Cloud disabled jusqu'à approbation."
+  }
+]
