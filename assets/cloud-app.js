@@ -34,7 +34,22 @@ const choose=(label,name,xs,current='')=>'<label>'+H(label)+'<select name="'+H(n
 const projSelect=(current='',emptyLabel='Sans projet')=>'<label>Projet<select name="project_id">'+projectsOpts(current,emptyLabel)+'</select></label>';
 const kindOpt=(current='task')=>choose('Type de contenu','kind',Object.entries(names).map(([k,v])=>[k,v]),current);
 const providerOpt=(current='ChatGPT')=>choose('IA / fournisseur','provider',[...new Set([...Object.keys(providers),...cache.items.filter(x=>x.kind==='ai_space').map(x=>x.provider).filter(Boolean),'Autre'])].map(x=>[x,x]),current);
-function safeClientConfig(v){try{if(!v||v.enabled!==true)return false;const url=new URL(v.supabaseUrl);return url.protocol==='https:'&&/^[a-z0-9-]+\.supabase\.co$/.test(url.hostname)&&url.pathname==='/'&&typeof v.supabasePublishableKey==='string'&&/^(sb_publishable_[a-zA-Z0-9_-]+|eyJ[a-zA-Z0-9_.-]+)$/.test(v.supabasePublishableKey)&&!v.supabasePublishableKey.toLowerCase().includes('service_role')}catch{return false}}
+// Before enabling private accounts, require an explicit independent CONTROL project review.
+// This browser check supplements (but never replaces) actual Supabase RLS/Auth and user approval.
+function safeClientConfig(v){
+ try{
+  if(!v||v.enabled!==true||v.independentProjectConfirmed!==true)return false;
+  const url=new URL(v.supabaseUrl);
+  if(url.protocol!=='https:'||url.username||url.password||url.port||url.search||url.hash||url.pathname!=='/')return false;
+  if(!/^[a-z0-9-]+\.supabase\.co$/.test(url.hostname))return false;
+  const ref=url.hostname.slice(0,-'.supabase.co'.length);
+  if(ref.length<8||v.controlProjectRef!==ref)return false;
+  const key=v.supabasePublishableKey;
+  // Legacy JWTs can encode a service_role credential: never embed any JWT in this public client.
+  // Modern sb_publishable_ keys are explicitly intended to be public, but still require RLS.
+  return typeof key==='string'&&/^sb_publishable_[A-Za-z0-9_-]{12,}$/.test(key);
+ }catch{return false}
+}
 async function boot(){live('Vérification de la configuration privée…');let cfg;
  try{const r=await fetch(CONFIG_URL,{cache:'no-store'});if(!r.ok)throw Error('not ready');cfg=await r.json();if(!safeClientConfig(cfg))throw Error('not configured');cloudConfig=cfg;byId('google-login').hidden=(cfg.allowGoogleLogin!==true);if(cfg.allowRegistration!==true){document.querySelector('.auth-box h2').textContent='Se connecter à la bêta';document.querySelector('.auth-box .muted').textContent='Accès sur invitation uniquement. Les inscriptions publiques ne sont pas encore ouvertes.'}}catch{visible('setup');return}
  try{live('Initialisation de la connexion sécurisée…');const {createClient}=await import(CDN);client=createClient(cfg.supabaseUrl,cfg.supabasePublishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}});
