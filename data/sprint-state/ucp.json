@@ -1,34 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-20261020T122924Z-v3",
-    "started_at": "2026-10-20T12:29:24Z",
-    "expires_at": "2026-10-20T13:14:24Z",
-    "objective": "Empêcher le script de la vitrine de planter quand MediaQueryList.addEventListener est absent"
-  },
-  "checkpoint": {
-    "recovered_from": "ucp-20261020T103117Z-v3",
-    "branch": "fix/ucp-matchmedia-legacy-20261020",
-    "head": "1f6dd6079bd3759b84c752529aea0f7b4a96bc25",
-    "files": [
-      "site-vitrine/dist/assets/app.js",
-      "site-vitrine/tests/app-shell.test.cjs",
-      ".github/workflows/vitrine-ci.yml"
-    ],
-    "tests": [
-      "Vitrine CI 39423143888 réussie",
-      "Seconde CI après scénario matchMedia absent en attente"
-    ],
-    "next_action": "Attendre la seconde CI puis contrôler main et fusionner uniquement si verte.",
-    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/5"
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261020T093301Z-v3",
-    "ended_at": "2026-10-20T09:37:49Z",
+    "run_id": "ucp-20261020T122924Z-v3",
+    "ended_at": "2026-10-20T12:34:53.854Z",
     "outcome": "merged",
-    "summary": "PR #4 statut Projet durable fusionnée sur main 5471ff9 avec contrôle CI build/dist vert ; site réel non vérifié.",
+    "summary": "PR #5 compatibilité matchMedia fusionnée sur main 88db2dad après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
