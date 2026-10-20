@@ -9,16 +9,17 @@
     "objective": "Actualiser la page Avancement UCP obsolète avec les preuves réelles de main, CI et limites de recette"
   },
   "checkpoint": {
-    "stage": "coded",
+    "stage": "second_pass",
     "repository": "cosscoll/UnCoupdePouce",
     "branch": "fix/ucp-avancement-preuves-20261020",
-    "head_sha": "287a811d844ac6a15f932d847b9c4e8feec8b8a4",
+    "pull_request": 3,
+    "head_sha": "e2f8b4ac50e35b1281d833513d11d728bb94f969",
     "files": [
       "site-vitrine/dist/avancement.html",
       "site-vitrine/scripts/check_site.py"
     ],
-    "tests": "En attente de la CI Vitrine sur pull request",
-    "next_action": "Créer la pull request, examiner le diff, attendre la CI puis corriger et retester si nécessaire"
+    "tests": "Première CI Vitrine verte sur 287a811 ; seconde CI attendue après correction P1",
+    "next_action": "Attendre la seconde CI, vérifier main inchangée puis fusionner prudemment"
   },
   "last_completed": {
     "run_id": "ucp-20261020T072624Z-v3",
