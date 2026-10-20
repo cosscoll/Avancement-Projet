@@ -31,6 +31,18 @@ Les dix nouvelles améliorations sont décrites et dépendancées dans [`data/co
 
 **Indicateur principal :** part de missions réelles autorisées **terminées et vérifiées** parmi les missions engagées. Définition stricte : trace d'exécution, reçu, résultat accepté, permissions respectées. Ne jamais créer une valeur si nous n'avons pas d'échantillon mesuré. Mesurer séparément bugs P0 ouverts, couverture des parcours, preuves périmées, interruptions et délais de reprise.
 
+## Publication directe sur `main` (demande du propriétaire du 20 octobre 2026)
+
+**Règle prioritaire : aucune nouvelle Pull Request ni fusion pour livrer CONTROL IA.** Les changements nécessaires sont écrits **directement dans la branche `main`** via le connecteur GitHub. Pour réduire le risque, les étapes de qualité remplacent la fusion :
+
+1. Avant toute écriture : vérifier le bail CONTROL IA, examiner le fichier courant et son SHA, comparer les changements attendus, valider la syntaxe et exécuter les tests possibles sans publier. **Si le changement est trop risqué à valider, ne pas écrire.**
+2. Écrire un lot cohérent directement sur `main`, séquentiellement, sans écraser des fichiers modifiés par d'autres. Si plusieurs fichiers dépendent les uns des autres, éviter une version transitoire dangereuse ; ne déclarer le lot livré qu'après vérification de tous ses fichiers.
+3. Relire immédiatement chaque fichier écrit et comparer le blob SHA au contenu voulu. Contrôler `main`, les résultats CI spécifiques et la suite de régression générale ; inspecter la cause précise de tout échec.
+4. Vérifier ensuite le déploiement GitHub Pages et, quand applicable, le parcours réel sur la version servie. Un run Pages vert ne garantit pas une interaction ou un compte connecté.
+5. En cas de **nouvelle régression causée par la livraison**, appliquer le correctif testé ou un retour arrière sûr, en conservant le journal ; ne pas masquer le test, rétrograder les contrôles ni prétendre que zéro erreur est garanti. Un échec **préexistant et indépendant** reste visible et doit être corrigé par la voie autorisée du projet concerné, sans falsifier son historique.
+
+Cette règle concerne **les prochains sprints automatiques comme nos conversations classiques**. Elle n'autorise ni dépenses, ni contournement GitHub, ni écrasement concurrent, ni modification de projets tiers sans leur bail. Les anciennes PR peuvent être relues pour récupérer du code, mais **pas de nouvelle PR pour CONTROL**.
+
 ## 2. Même méthode pour les deux types de sprints
 
 | Étape obligatoire | Automatisation horaire | Conversation classique |
@@ -41,7 +53,7 @@ Les dix nouvelles améliorations sont décrites et dépendancées dans [`data/co
 | 3. Première passe | Développement effectif et tests dans le périmètre autorisé. | Développement effectif ; possibilité de lot plus large si vérifiable dans la session. |
 | 4. Autocritique | Liste P0/P1/P2 prouvée, lacunes et limites. | Identique, aucune autocritique décorative. |
 | 5. Deuxième passe | Corriger le défaut le plus grave réalisable, retester et refaire une critique. | Identique ; répéter si une correction utile reste réalisable. |
-| 6. Livrer | Branche/PR, CI, fusion sécurisée, main et site public vérifiés distinctement. | Identique. Une session sans accès ne prétend pas avoir fusionné/pubié. |
+| 6. Livrer | Contrôles préalables, écriture **directe dans `main`**, SHA revérifiés, CI puis site public contrôlés distinctement. | Identique. Aucun succès annoncé avant preuve. |
 | 7. Transmettre | Checkpoint, critères, incidents, preuves, prochain pas, libérer son bail. | Identique : le sprint automatique **reprend exactement ce checkpoint**. |
 
 **Le mode conversation classique ne doit pas créer un deuxième chantier concurrent simplement parce que le travail est manuel.** Un ordre du propriétaire peut changer la priorité ; l'écart au focus est écrit, daté et justifié dans la stratégie/rétrospective.
@@ -51,11 +63,11 @@ Les dix nouvelles améliorations sont décrites et dépendancées dans [`data/co
 - Si cette conversation détient un bail encore valide, l'automatisation **ne modifie aucun code ni document CONTROL** ; elle peut lire et préparer un diagnostic sans toucher à l'état protégé.
 - Si le bail appartient à l'automatisation, une conversation classique attend la fin de son bail pour muter ou s'en tient à une analyse.
 - Si un bail est expiré, reprendre le **checkpoint** et vérifier les branches, commits/PR/CI avant toute nouvelle écriture.
-- Un verrou GitHub est **coopératif** ; il n'empêche pas une personne ou un outil non coopératif de modifier les fichiers. Toujours vérifier les SHA, la base PR et les tests après mise à jour.
+- Un verrou GitHub est **coopératif** ; il n'empêche pas une personne ou un outil non coopératif de modifier les fichiers. Toujours vérifier les SHA, l'état actuel de `main` et les tests après mise à jour.
 
 ### Comment terminer une session sans perdre le travail
 
-Même si une fonctionnalité est incomplète, laisser une seule **prochaine action concrète**, par exemple : « exécuter le test de connexion A/B dans une base CONTROL dédiée dès que les accès seront approuvés ». Écrire aussi les fichiers déjà modifiés, branche, PR, SHA, CI, blocage et priorité de reprise. Ne jamais effacer une critique ouverte sans preuve. Libérer uniquement le bail de son `run_id`. Si un checkpoint ancien contient encore du travail non fusionné, **l'archiver dans la rétrospective/stratégie avant de le remplacer**.
+Même si une fonctionnalité est incomplète, laisser une seule **prochaine action concrète**, par exemple : « exécuter le test de connexion A/B dans une base CONTROL dédiée dès que les accès seront approuvés ». Écrire aussi les fichiers déjà modifiés, commit `main`, anciennes branches/PR seulement si déjà existantes, SHA, CI, blocage et priorité de reprise. Ne jamais effacer une critique ouverte sans preuve. Libérer uniquement le bail de son `run_id`. Si un checkpoint ancien contient encore du travail non fusionné, **l'archiver dans la rétrospective/stratégie avant de le remplacer**.
 
 ## 3. Planification : priorité unique, dépendances et réalisme
 
@@ -90,7 +102,7 @@ Dépendance non disponible ? Noter un `blocker_id` stable, son nombre de sprints
 
 **Début (si visible)** : projet CONTROL IA, type `automatique` ou `conversation`, heure Paris réellement connue, bail acquis oui/non, objectif, AVANT et résultat visé.
 
-**Fin :** début/fin réels ; focus/initiative (`CONTROL-*`/`IMP-*`) ; développements ; autocritique initiale ; correction et nouvelle autocritique ; fichiers/commits/PR ; CI et nombre réel de tests ; `main`, déploiement, recette réelle (oui/non/non vérifié) ; critères avant/après **avec preuves** ; incidents, checkpoint et **première action précise du prochain sprint**.
+**Fin :** début/fin réels ; focus/initiative (`CONTROL-*`/`IMP-*`) ; développements ; autocritique initiale ; correction et nouvelle autocritique ; fichiers/commits directs `main` (anciennes PR facultatives) ; CI et nombre réel de tests ; `main`, déploiement, recette réelle (oui/non/non vérifié) ; critères avant/après **avec preuves** ; incidents, checkpoint et **première action précise du prochain sprint**.
 
 Le résumé doit rester bref ; la preuve et la mémoire durable dans les fichiers. En cas de limite d'outil, laisser des fichiers de reprise mais **ne pas inventer une exécution continue**.
 
