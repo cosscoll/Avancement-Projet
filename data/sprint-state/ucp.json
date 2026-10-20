@@ -1,9 +1,24 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "idle",
-  "lease": null,
-  "checkpoint": null,
+  "status": "leased",
+  "lease": {
+    "run_id": "ucp-20261020T144341Z-v3",
+    "owner": "chatgpt-automation",
+    "started_at": "2026-10-20T14:43:41Z",
+    "expires_at": "2026-10-20T15:28:41Z",
+    "objective": "Afficher un repli utilisateur lorsque le téléchargement du brief est indisponible et libérer l’URL objet sans fuite"
+  },
+  "checkpoint": {
+    "phase": "lock-acquired",
+    "repository": "cosscoll/UnCoupdePouce",
+    "base_commit": "828eb1bb808897bcd73e5d17f85494980f25f04a",
+    "branch": null,
+    "pull_request": null,
+    "files": [],
+    "tests": [],
+    "next": "Relire les sources du parcours brief, créer une branche depuis le HEAD exact de main et corriger le téléchargement."
+  },
   "last_completed": {
     "run_id": "ucp-20261020T132616Z-v3",
     "ended_at": "2026-10-20T13:33:21.316Z",
