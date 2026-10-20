@@ -1,36 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "leased",
-  "lease": {
-    "run_id": "ucp-20261020T163215Z-v3",
-    "owner": "chatgpt-automation",
-    "started_at": "2026-10-20T16:32:15Z",
-    "expires_at": "2026-10-20T17:17:15Z",
-    "objective": "Maintenir le téléchargement du brief lorsque Element.remove est indisponible et vérifier le nettoyage legacy"
-  },
-  "checkpoint": {
-    "phase": "ready-to-merge",
-    "repository": "cosscoll/UnCoupdePouce",
-    "base_commit": "ec3be79fc20ffbabe980324db3e96a00a01801c9",
-    "branch": "fix/ucp-download-legacy-remove-20261020",
-    "head_commit": "70a6fda6a0ad18f849d789c66d7ca385099a031b",
-    "pull_request": 9,
-    "files": [
-      "site-vitrine/dist/assets/app.js",
-      "site-vitrine/tests/app-shell.test.cjs"
-    ],
-    "tests": [
-      "Vitrine CI 39458542561: success (première passe)",
-      "Vitrine CI 39458631314: success (seconde passe corrective)"
-    ],
-    "next": "Vérifier PR et main, fusionner avec le head attendu, puis synchroniser statut et journal publics."
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261020T152905Z-v3",
-    "ended_at": "2026-10-20T15:32:58.411Z",
+    "run_id": "ucp-20261020T163215Z-v3",
+    "ended_at": "2026-10-20T16:35:30.655Z",
     "outcome": "merged",
-    "summary": "PR #8 repli de copie du brief fusionnée sur main ec3be79f après deux CI vertes ; navigateur réel non vérifié.",
+    "summary": "PR #9 nettoyage legacy du téléchargement fusionnée sur main e7ff47e5 après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
