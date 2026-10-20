@@ -12,14 +12,16 @@
   "checkpoint": {
     "base_ref": "c5783609e6305548e4134fc71f34fc212a7dc442",
     "branch": "fix/ucp-copy-cleanup-error-20261020",
-    "head_ref": "10f8ed7e90e6dd9e51c2f2df0e83e93ef242e7c5",
-    "pr_url": null,
+    "head_ref": "68132219aaa104b194665fa307f92fc3c57c966c",
+    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/11",
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.cjs"
     ],
-    "checks": [],
-    "next_action": "Créer la PR et attendre la première CI, puis couvrir l’absence totale de removeChild."
+    "checks": [
+      "Vitrine CI #39484846931 success (première passe)"
+    ],
+    "next_action": "Attendre la CI corrective couvrant l’absence totale de removeChild, puis vérifier la base et fusionner prudemment."
   },
   "last_completed": {
     "run_id": "ucp-20261020T183251Z-v3",
