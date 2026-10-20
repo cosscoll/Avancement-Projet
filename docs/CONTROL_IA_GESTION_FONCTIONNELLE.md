@@ -27,7 +27,7 @@ Chaque déclenchement de l'automatisation horaire (XXh50 Europe/Paris) suit le c
 3. **Première passe de développement** : modifier le vrai code et les tests, exécuter les contrôles disponibles ; ne pas s'arrêter à un rapport.
 4. **Autocritique n°1** : documenter les erreurs, les lacunes, le risque, les limites des preuves et les critères non satisfaits.
 5. **Deuxième passe corrective** : corriger au moins un problème issu de sa propre critique quand les outils le permettent ; retester, puis nouvelle autocritique. Répéter si utile.
-6. **Livraison contrôlée** : commit / branche / PR / CI / fusion `main` / GitHub Pages. Contrôler les résultats de chaque étape séparément. En cas de blocage, conserver le patch, citer l'erreur et poursuivre un autre chantier non dangereux.
+6. **Livraison contrôlée sur `main`** : tests préalables, vérification SHA, écriture directe sans Pull Request, relecture des fichiers, CI et contrôle distinct du site GitHub Pages. Contrôler les résultats de chaque étape séparément. En cas de blocage, conserver le patch, citer l'erreur et poursuivre un autre chantier non dangereux.
 7. **Mémoire durable** : compléter la rétrospective et réviser le tracker fonctionnel **seulement sur la base de preuves** ; reprendre les points ouverts au sprint suivant.
 
 Les lectures et tests indépendants peuvent être groupés pour gagner du temps. Ne jamais paralléliser des mutations susceptibles de se concurrencer. Éviter une refonte non nécessaire ou une répétition intégrale d'audit sans changement de périmètre.
@@ -79,7 +79,7 @@ Une transition ne peut pas être fondée sur un compte rendu IA non prouvé. Le 
 
 ## Livrables de chaque sprint
 
-Chaque bilan doit préciser : identifiant de l'objectif `CONTROL-*` et tickets `BACK-*` ; état AVANT/APRÈS ; 1re passe + autocritique + 2e passe corrective + nouvelle autocritique ; tests exécutés et résultats ; branche, SHA, PR et CI ; fusion/main ; déploiement ; recette réelle ou mention « non vérifiée » ; critères modifiés avec preuves ; défauts ouverts et prochain travail.
+Chaque bilan doit préciser : identifiant de l'objectif `CONTROL-*` et tickets `BACK-*` ; état AVANT/APRÈS ; 1re passe + autocritique + 2e passe corrective + nouvelle autocritique ; tests exécutés et résultats ; SHA du commit direct `main`, CI et statut des contrôles ; déploiement ; recette réelle ou mention « non vérifiée » ; critères modifiés avec preuves ; défauts ouverts et prochain travail.
 
 **Ne pas faire passer un sprint de code pour une livraison fonctionnelle.** Un sprint sans progrès vérifiable doit le dire et préserver le focus et les critiques.
 
@@ -97,3 +97,6 @@ La suite générale continue avec `node --test tests/*.test.mjs`. Des tests de r
 ## Contraintes permanentes
 
 Automation CONTROL IA active à XXh50, méthode de développement/autocritique inchangée, **budget 0 €**, pas de Work/Codex/agents workspace/Excel ou quota partagé limité dans les sprints. Chaque connexion tierce requiert un consentement explicite fournisseur par fournisseur. Aucun changement de cadence sans demande du propriétaire.
+
+
+**Consigne propriétaire du 20 octobre 2026 :** l'organisation active est décrite dans [CONTROL_IA_ORGANISATION_SPRINTS.md](CONTROL_IA_ORGANISATION_SPRINTS.md). Les prochaines livraisons CONTROL IA se font directement dans `main`, sans fusion PR, mais uniquement après contrôles préalables et avec validation réelle CI/site. Le mécanisme ne garantit pas l'absence absolue d'échec ; tout défaut doit rester visible et être traité sans compromettre les critères de sécurité.
