@@ -83,8 +83,8 @@
       "level": "warning"
     },
     {
-      "title": "Site V2 et showroom 3D en ligne — validation métier et ventes à préparer",
-      "description": "Le site public contient la vitrine WebGL2 dès le premier écran, le comparateur avant/après, l'échantillon P01 et le showroom 3D interactif (15 procédures / 7 registres / pilotage). QA Chromium sur GitHub Pages, HTTP 200, tests clavier/souris/tactile sur 4 largeurs et axe-core automatisé. Aucun achat activé ; revue métier et tests appareils physiques restent à accomplir.",
+      "title": "ROTATION 001 V4 — vitrine cinématographique 3D publiée et vérifiée",
+      "description": "20/10/2026 : appartement WebGL2 (chambre, salon, cuisine, entrée) et quatre chapitres au scroll, UI cinématographique et décisions métier, échantillon P01 et atelier conservés. PR #29 et #30 fusionnées. Run 39388870475 : HTTP 200 réel, Chromium WebGL2 1440/768/390, mode réduit SVG 320, zéro erreur JS/débordement. Cela ne démontre pas fidélité AAA aux références, compatibilité Safari/iPhone physique ou conversions ; SOP/CSV non validés. Aucun paiement.",
       "level": "warning"
     },
     {
