@@ -1,0 +1,46 @@
+name: CONTROL IA — Gouvernance des dix améliorations
+on:
+  pull_request:
+    paths:
+      - 'data/control-ia-strategy.json'
+      - 'data/control-ia-delivery.json'
+      - 'docs/CONTROL_IA_ORGANISATION_SPRINTS.md'
+      - 'scripts/control-ia-strategy.mjs'
+      - 'tests/control-ia-strategy.test.mjs'
+      - '.github/workflows/control-ia-strategy.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/control-ia-strategy.json'
+      - 'data/control-ia-delivery.json'
+      - 'docs/CONTROL_IA_ORGANISATION_SPRINTS.md'
+      - 'scripts/control-ia-strategy.mjs'
+      - 'tests/control-ia-strategy.test.mjs'
+      - '.github/workflows/control-ia-strategy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: control-strategy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integrity:
+    name: Dix objectifs, critères, checkpoint et garde-fous
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Lire la version exacte des documents
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Valider les priorités et dépendances
+        run: node scripts/control-ia-strategy.mjs
+      - name: Exécuter les tests de continuité des sprints
+        run: node --test tests/control-ia-strategy.test.mjs
