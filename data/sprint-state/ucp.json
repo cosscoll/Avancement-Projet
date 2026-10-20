@@ -12,14 +12,16 @@
   "checkpoint": {
     "base_ref": "1de0fc4406367cdab46809c5fd0071dadeab4a06",
     "branch": "fix/ucp-menu-nodelist-legacy-20261020",
-    "head_ref": "a654e5aba6657dff67039667200f0720d21f1ec5",
-    "pr_url": null,
+    "head_ref": "8103401cb8316398bd20e1febdc9386d2eec2bf3",
+    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/12",
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.cjs"
     ],
-    "checks": [],
-    "next_action": "Créer la PR et attendre la première CI, puis confirmer la liaison des liens modernes."
+    "checks": [
+      "Vitrine CI #39492538718 success (première passe)"
+    ],
+    "next_action": "Attendre la CI corrective couvrant les collections de liens modernes, puis vérifier la base et fusionner prudemment."
   },
   "last_completed": {
     "run_id": "ucp-20261020T193421Z-v3",
