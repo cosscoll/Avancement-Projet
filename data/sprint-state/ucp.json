@@ -10,20 +10,21 @@
     "objective": "Conserver la copie du brief lorsque Clipboard API est indisponible et nettoyer le contrôle temporaire sans fuite"
   },
   "checkpoint": {
-    "phase": "first-pass-committed",
+    "phase": "ready-to-merge",
     "repository": "cosscoll/UnCoupdePouce",
     "base_commit": "836f767f6b50ddbf380ef574f78dae40902634a8",
     "branch": "fix/ucp-brief-clipboard-fallback-20261020",
-    "head_commit": "a5fefa932d2db7b3aadbfbe218d62eb1963b87f8",
-    "pull_request": null,
+    "head_commit": "35dcdfac349f66d139e4ec3c748e5d9a852f455e",
+    "pull_request": 8,
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.cjs"
     ],
     "tests": [
-      "CI première passe en attente"
+      "Vitrine CI 39449186991: success (première passe)",
+      "Vitrine CI 39449251666: success (seconde passe corrective)"
     ],
-    "next": "Ouvrir la PR, attendre la CI, puis couvrir le rejet asynchrone de Clipboard API avec repli historique."
+    "next": "Vérifier PR et main, fusionner avec le head attendu, puis synchroniser statut et journal publics."
   },
   "last_completed": {
     "run_id": "ucp-20261020T144341Z-v3",
