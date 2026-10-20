@@ -117,7 +117,7 @@ try{
  assert.match(v12.text,/10 améliorations/);
  assert.match(v12.text,/30 critères supplémentaires/);
  assert.match(v12.text,/0 \/ 42 scénarios entièrement vérifiés/);
- assert.match(v12.text,/4 contrôles partiels\/simulés/);
+ assert.match(v12.text,/5 contrôles partiels\/simulés/);
  assert.equal(new URL(v12.link).pathname,production?'/Avancement-Projet/data/control-ia-requirements.json':'/data/control-ia-requirements.json');
  log('public V1.2 requirement overview renders 22 tickets/42 scenarios/10 additions with no fake verification');
 
