@@ -43,6 +43,12 @@ Les dix nouvelles améliorations sont décrites et dépendancées dans [`data/co
 
 Cette règle concerne **les prochains sprints automatiques comme nos conversations classiques**. Elle n'autorise ni dépenses, ni contournement GitHub, ni écrasement concurrent, ni modification de projets tiers sans leur bail. Les anciennes PR peuvent être relues pour récupérer du code, mais **pas de nouvelle PR pour CONTROL**.
 
+### Mise à jour V1.2 — nomenclature et contrôle de progression
+
+**Le backlog privé contient exactement 22 tickets `BACK-001..022`, pas 42.** Les 42 identifiants `T-01..T-42` désignent des scénarios de recette distincts ; les dix nouveaux chantiers sont `IMP-01..IMP-10` avec 30 critères supplémentaires. Le cahier intégral V1.2 demeure privé dans Library `/CONTROL-IA/CONTROL_IA_Cahier_des_charges_V1_2_PRIVE.md`.
+
+Les sprints lisent en premier le [suivi public expurgé du cahier V1.2](CONTROL_IA_CAHIER_V1_2_SUIVI.md) et [son registre ID/preuves](../data/control-ia-requirements.json), puis la stratégie, le tracker initial et les retrospectives. **Aucune description complète du cahier privé n'est copiée dans GitHub.** Un ticket BACK ne passe en `real_verified` que si les scénarios T associés ont été validés par une vraie recette sourcée ; un test Chromium local, une session PostgreSQL fictive et une preuve d'exécution IA réelle restent des catégories distinctes. Vérifier `node scripts/control-ia-requirements.mjs` et les 12 tests correspondants après les modifications du registre.
+
 ## 2. Même méthode pour les deux types de sprints
 
 | Étape obligatoire | Automatisation horaire | Conversation classique |
