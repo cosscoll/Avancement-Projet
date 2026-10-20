@@ -1177,5 +1177,84 @@
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39238837780"
       }
     ]
+  },
+  {
+    "schema_version": 3,
+    "id": "pack-pro-20261020-cinematic-rotation-v4-live",
+    "started_at": "2026-10-20T07:16:39Z",
+    "ended_at": "2026-10-20T07:52:06.627Z",
+    "objective": "Répondre au rejet explicite du design générique : remplacer les papiers flottants par une expérience réellement narrative et architecturale proche du niveau d'immersion recherché, sans copier les références.",
+    "summary": "V4 'ROTATION 001' : appartement de conciergerie meublé modélisé en WebGL2 (chambre, cuisine, salon, entrée, parquet procédural, ombres et éclairage), caméra guidée par quatre chapitres, hotspots et décisions métier. Refonte fusionnée et vérifiée sur GitHub Pages réel.",
+    "done": [
+      "Audit de la V3 générique et examen des références Igloo, Studio Mirage, Noomo et Santalarch comme inspirations de mise en scène, sans reproduction d'assets.",
+      "Réécriture de l'index en quatre chapitres immersifs : départ, rotation, contrôle, méthode, CTA vers procédure P01, atelier de décisions et avancement.",
+      "Scène originale Three.js/WebGL2 : vrai intérieur meublé en 3D, matériaux PBR, ombres, éclairage, texture parquet générée en code, caméra animée au scroll et points de contrôle ; SVG architectural alternatif si WebGL/CDN indisponible ou reduced motion.",
+      "UI cinématographique responsive, interactions de décision, menu clavier et fermeture Escape ; suppression de l'ancien langage visuel cartes + documents abstraits.",
+      "Autocritique visuelle et correction d'une première surexposition, du contraste de chapitre et de la composition mobile ; correctifs axe-core ARIA et textes sur fond clair ; correction débordement 7 px à 320 px.",
+      "Remplacement des tests historiques dépendants d'éléments supprimés, tout en conservant les recettes P01, WCAG et syntaxe.",
+      "PR #29 fusionnée commit 59a2677bd9c5f1428c734ddca1275084b4a6e4a3 après cinq suites CI vertes, notamment Chromium WebGL2 1440/768/390 et repli 320 ; 0 débordement/exception.",
+      "PR #30 fusionnée commit 5c5368886e95c80d71f85a98feef7591ad85b446 pour recette réellement indépendante sur GitHub Pages : run 39388870475, HTTP 200 et quatre tests Chromium réels concluants."
+    ],
+    "deliverables": [
+      {
+        "name": "Site cinématographique en ligne V4",
+        "kind": "site",
+        "stage": "verified_online",
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "59a2677bd9c5f1428c734ddca1275084b4a6e4a3"
+      },
+      {
+        "name": "Refonte de l'univers 3D",
+        "kind": "code",
+        "stage": "merged",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/29",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "59a2677bd9c5f1428c734ddca1275084b4a6e4a3"
+      },
+      {
+        "name": "Recette Chromium sur site public",
+        "kind": "test",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39388870475",
+        "repository": "cosscoll/Pack-Proc-dures-Pro",
+        "ref": "5c5368886e95c80d71f85a98feef7591ad85b446"
+      },
+      {
+        "name": "Contrat de direction artistique",
+        "kind": "documentation",
+        "stage": "merged",
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/blob/main/docs/DA_CINEMATIQUE_20261020.md",
+        "repository": "cosscoll/Pack-Proc-dures-Pro"
+      }
+    ],
+    "tests": {
+      "ci_branch": "5 workflows success",
+      "ci_public": "39388870475 success; PUBLIC_CINEMATIC_HTML_VERIFIED HTTP=200; CINEMATIC_QA_ACCEPTANCE_OK 1440/768/390 real WebGL2, 320 fallback reduced motion; 0 JS errors, 0 overflow",
+      "wcag": "axe-core automated 0 violations on the two tested pages; not a full manual accessibility certification"
+    },
+    "risks": [
+      "Rendu original stylisé, ne pas affirmer la fidélité AAA des références Igloo/Studio Mirage; recueillir réaction du propriétaire après visite.",
+      "Three.js externe via jsDelivr : performance/réseau et robustesse à améliorer ; SVG de secours disponible.",
+      "Accessibilité manuelle lecteur écran et compatibilité iPhone Safari / Android matériel non attestées.",
+      "Aucune preuve de conversion, aucune validation professionnelle SOP/CSV et aucune vente réelle. Prix indicatif non adopté."
+    ],
+    "critique": {
+      "p0": [],
+      "p1": [
+        "Tester sur appareils physiques et optimiser le chargement GPU/CDN.",
+        "Faire évaluer la nouvelle direction artistique et le parcours commercial par utilisateurs réels."
+      ],
+      "p2": [
+        "Approfondir composition/matériaux et transitions plutôt que multiplier les sections marketing."
+      ],
+      "corrected": [
+        "Supprimé thème de pages abstraites",
+        "Modélisé un logement qui illustre le métier",
+        "Ajusté contraste et mobile selon captures",
+        "Ajouté vérification public externe post-merge"
+      ]
+    },
+    "next": "Ne pas revenir aux documents abstraits. Priorité à retour visuel honnête sur V4, performance mobile réelle et renforcement de l'esthétique architecturale; ensuite recueillir retours métiers des conciergeries sans relance automatique."
   }
 ]
