@@ -15,7 +15,8 @@
       "academy-private/instructor.html"
     ],
     "journal_commit": "68c900c7810d1cf244dc51aae19443a7bf0ce86e",
-    "next_action": "Resume M8 preview: verified HTML scaffold commit 7153407d1d328dae6de981675444b281e16d1f04; resolve JS/YAML write refusal through authorized support, then test RLS/Auth/Storage with approval."
+    "next_action": "M8 preview remains NO-GO. A private non-premium implementation/security acceptance document was saved to Library on 2026-10-20; GitHub JS/YAML/status/journal writes refused by safety. Seek authorized resolution, then implement instructor JS, review draft prompt RLS, approve synthetic test identities and validate Auth/Storage. Do not repeat blocked writes or publish premium.",
+    "last_verified_code_sha": "7153407d1d328dae6de981675444b281e16d1f04"
   },
   "last_completed": {
     "run_id": "iagile-20261020T064411516Z-m8-authorization",
