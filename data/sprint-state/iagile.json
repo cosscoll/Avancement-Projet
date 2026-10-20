@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "iagile",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "iagile-20261020T064411516Z-m8-authorization",
+    "started_at": "2026-10-20T06:44:11.516Z",
+    "expires_at": "2026-10-20T07:29:11.516Z",
+    "objective": "P0 M8 Processus V0.9.1: validate authorized GitHub write path; progress secure instructor preview without exposing premium content."
+  },
   "checkpoint": {
     "branch": "feature/academy-private-rebased-20261010",
     "pr_url": "https://github.com/cosscoll/IAgile/pull/12",
