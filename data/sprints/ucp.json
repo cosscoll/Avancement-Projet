@@ -2425,5 +2425,121 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
       }
     ]
+  },
+  {
+    "id": "ucp-20261020T144341Z-v3",
+    "schema_version": 2,
+    "protocol_version": 3,
+    "started_at": "2026-10-20T14:43:41Z",
+    "ended_at": "2026-10-20T14:48:58.050Z",
+    "summary": "Le téléchargement du brief ne casse plus silencieusement le parcours lorsque les API navigateur ou le clic programmatique échouent : un repli accessible vers la copie est intégré sur main, avec libération de l’URL objet et deux CI vertes.",
+    "objectives": [
+      {
+        "before": "Le bouton Télécharger en .txt appelait Blob, URL.createObjectURL et link.click sans garde ; une API absente ou un clic refusé interrompait le parcours sans message.",
+        "after": "Le téléchargement est protégé, annonce un repli vers Copier le brief et révoque immédiatement l’URL objet lorsqu’une erreur survient après son allocation.",
+        "acceptance": "PR #7 fusionnée au commit 836f767f6b50ddbf380ef574f78dae40902634a8 après deux CI Vitrine réussies."
+      }
+    ],
+    "done": [
+      "Issues centrales #1/#2 relues en premier : authentifiées cosscoll, toujours ouvertes ; demande Codex lue mais bloquée par les interdictions permanentes.",
+      "Protocoles V3/V2, état, derniers journaux, branches, PR, CI, incidents et main contrôlés avant mutation.",
+      "Bail V3 ucp-20261020T144341Z-v3 acquis avec le SHA courant puis relu avec le bon propriétaire.",
+      "Correctif limité à site-vitrine/dist/assets/app.js et site-vitrine/tests/app-shell.test.cjs ; aucun fichier application/** ni dev/ucp-codex modifié.",
+      "Première CI 39442334617 réussie pour les API absentes, le succès du téléchargement et la révocation différée.",
+      "Autocritique P1 corrigée par un scénario où link.click échoue après création de l’URL ; seconde CI 39442423184 réussie et révocation immédiate prouvée.",
+      "Main est resté au blob app.js 3019ac57 avant fusion ; PR #7 fusionnée par squash avec le head attendu c21ad2cc, nouveau main 836f767f6b50ddbf380ef574f78dae40902634a8.",
+      "Les deux blobs ont été relus sur main et le statut public central a été synchronisé au commit f60a1183."
+    ],
+    "deliverables": [
+      {
+        "name": "PR UCP #7 fusionnée",
+        "kind": "pull_request",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "7",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/7",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Commit main repli téléchargement du brief",
+        "kind": "commit",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "836f767f6b50ddbf380ef574f78dae40902634a8",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/836f767f6b50ddbf380ef574f78dae40902634a8",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "CI Vitrine finale",
+        "kind": "ci",
+        "stage": "tested",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "39442423184",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39442423184",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "quality": {
+      "p0": [],
+      "p1": [
+        "La première passe ne couvrait pas l’échec de link.click après allocation de l’URL objet ; scénario ajouté et réussi."
+      ],
+      "p2": [
+        "Les tests exécutent un DOM simulé Node : la disponibilité et le téléchargement réel du fichier restent à recetter dans un navigateur autorisé."
+      ],
+      "second_pass": "corrected_and_retested",
+      "checks_run": [
+        "Vitrine CI 39442334617",
+        "Vitrine CI 39442423184",
+        "Relecture des deux blobs sur main"
+      ],
+      "checks_passed": [
+        "CI initiale",
+        "CI finale après scénario d’échec post-allocation",
+        "Blobs main conformes"
+      ],
+      "checks_failed": [],
+      "real_browser_verified": false,
+      "ci": "success"
+    },
+    "blockers": [
+      "Le clone Windows dev/ucp-codex reste volontairement non lu et non modifié ; aucune synchronisation n’est revendiquée.",
+      "Aucun navigateur, appareil réel, site public ou staging n’a été vérifié ; aucun déploiement n’a été déclenché.",
+      "Les demandes publiques #1/#2 de connexion CONTROL–Codex restent lues mais bloquées."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "ucp-public-site-unverified",
+        "status": "incident",
+        "consecutive_sprints": 6,
+        "next_action": "Ne pas répéter une ouverture sans URL confirmée ; effectuer une recette navigateur bornée seulement sur un staging privé autorisé."
+      }
+    ],
+    "next": "Traiter un autre bug indépendant hors application/** ou, si un staging privé autorisé existe, recetter réellement le téléchargement et la copie du brief sur navigateur et appareil.",
+    "links": [
+      {
+        "label": "PR UCP #7",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/7"
+      },
+      {
+        "label": "Commit main 836f767f",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/836f767f6b50ddbf380ef574f78dae40902634a8"
+      },
+      {
+        "label": "CI Vitrine initiale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39442334617"
+      },
+      {
+        "label": "CI Vitrine finale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39442423184"
+      },
+      {
+        "label": "Statut public UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      }
+    ]
   }
 ]
