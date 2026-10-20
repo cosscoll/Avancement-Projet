@@ -28,7 +28,7 @@ export function validateStrategy(strategy,delivery){
  const modes=strategy.work_policy?.session_types;
  if(!Array.isArray(modes)||!modes.includes('scheduled')||!modes.includes('conversation')||modes.length!==2)errors.push('Both scheduled and conversational execution are mandatory');
  if(!Array.isArray(strategy.governing_sources)||!strategy.governing_sources.includes('docs/PROTOCOLE_SPRINTS_V3.md'))errors.push('V3 protocol reference missing');
- if(!strategy.private_backlog_reference?.includes('BACK-001..042'))errors.push('Private backlog must be preserved');
+ if(!strategy.private_backlog_reference?.includes('BACK-001..022')||!strategy.private_backlog_reference?.includes('T-01..T-42'))errors.push('Private V1.2 backlog and acceptance scenarios must remain distinct');
  if(!Array.isArray(strategy.roadmap_phases)||strategy.roadmap_phases.map(p=>p.id).join(',')!==PHASES.join(','))errors.push('Unexpected roadmap phases');
  if(!Array.isArray(strategy.improvements)||strategy.improvements.length!==10)return [...errors,'Exactly ten user improvements are required'];
  const ids=strategy.improvements.map(x=>x.id);
