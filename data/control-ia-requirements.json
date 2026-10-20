@@ -1,0 +1,758 @@
+{
+  "schema_version": 1,
+  "specification_version": "1.2",
+  "updated_on": "2026-10-20",
+  "public_redaction": "Identifiers, statuses and proof links only; the full V1.1 and consolidated V1.2 specification remain private Library files.",
+  "private_source": "/CONTROL-IA/CONTROL_IA_Cahier_des_charges_V1_2_PRIVE.md",
+  "delivery_source": "data/control-ia-delivery.json",
+  "improvement_source": "data/control-ia-strategy.json",
+  "primary_focus": "CONTROL-ACCOUNT",
+  "counts": {
+    "backlog_tickets": 22,
+    "acceptance_scenarios": 42,
+    "improvements": 10,
+    "improvement_criteria": 30,
+    "legacy_criteria": 36
+  },
+  "verification_policy": {
+    "not_verified": "No proof of full scenario acceptance.",
+    "partial_mock": "Limited simulation or local test passed, not a real user deployment.",
+    "real_verified": "Full authorized user scenario proven with source, SHA, environment and reliable evidence."
+  },
+  "tickets": [
+    {
+      "id": "BACK-001",
+      "priority": "P0",
+      "capability_id": "CONTROL-QUALITY",
+      "acceptance_scenarios": [
+        "T-18"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-002",
+      "priority": "P0",
+      "capability_id": "CONTROL-QUALITY",
+      "acceptance_scenarios": [
+        "T-19"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-003",
+      "priority": "P0",
+      "capability_id": "CONTROL-QUALITY",
+      "acceptance_scenarios": [
+        "T-20"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-004",
+      "priority": "P0",
+      "capability_id": "CONTROL-ACCOUNT",
+      "acceptance_scenarios": [
+        "T-15",
+        "T-16",
+        "T-21"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-005",
+      "priority": "P0",
+      "capability_id": "CONTROL-ACCOUNT",
+      "acceptance_scenarios": [
+        "T-04",
+        "T-06",
+        "T-15",
+        "T-16",
+        "T-21",
+        "T-26",
+        "T-39"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-006",
+      "priority": "P0",
+      "capability_id": "CONTROL-ACCOUNT",
+      "acceptance_scenarios": [
+        "T-23",
+        "T-25",
+        "T-26",
+        "T-28",
+        "T-38"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-007",
+      "priority": "P0",
+      "capability_id": "CONTROL-ACTIONS",
+      "acceptance_scenarios": [
+        "T-05",
+        "T-06",
+        "T-14"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-008",
+      "priority": "P0",
+      "capability_id": "CONTROL-ACTIONS",
+      "acceptance_scenarios": [
+        "T-01",
+        "T-02"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-009",
+      "priority": "P0",
+      "capability_id": "CONTROL-ASSISTANT",
+      "acceptance_scenarios": [
+        "T-02",
+        "T-19",
+        "T-24"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-010",
+      "priority": "P0",
+      "capability_id": "CONTROL-ACTIONS",
+      "acceptance_scenarios": [
+        "T-05",
+        "T-06",
+        "T-14",
+        "T-27",
+        "T-36"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-011",
+      "priority": "P0",
+      "capability_id": "CONTROL-AGENTS",
+      "acceptance_scenarios": [
+        "T-03",
+        "T-17",
+        "T-29",
+        "T-40"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-012",
+      "priority": "P1",
+      "capability_id": "CONTROL-CONNECTORS",
+      "acceptance_scenarios": [
+        "T-02"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-013",
+      "priority": "P1",
+      "capability_id": "CONTROL-CONNECTORS",
+      "acceptance_scenarios": [
+        "T-08",
+        "T-09",
+        "T-22",
+        "T-34",
+        "T-35",
+        "T-37",
+        "T-41",
+        "T-42"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-014",
+      "priority": "P1",
+      "capability_id": "CONTROL-AGENTS",
+      "acceptance_scenarios": [
+        "T-07"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-015",
+      "priority": "P1",
+      "capability_id": "CONTROL-WEBBUILDER",
+      "acceptance_scenarios": [
+        "T-10",
+        "T-11"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-016",
+      "priority": "P1",
+      "capability_id": "CONTROL-WEBBUILDER",
+      "acceptance_scenarios": [
+        "T-10",
+        "T-11"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-017",
+      "priority": "P0",
+      "capability_id": "CONTROL-WEBBUILDER",
+      "acceptance_scenarios": [
+        "T-12"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-018",
+      "priority": "P1",
+      "capability_id": "CONTROL-WEBBUILDER",
+      "acceptance_scenarios": [
+        "T-12"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-019",
+      "priority": "P1",
+      "capability_id": "CONTROL-WEBBUILDER",
+      "acceptance_scenarios": [
+        "T-13"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-020",
+      "priority": "P0",
+      "capability_id": "CONTROL-QUALITY",
+      "acceptance_scenarios": [
+        "T-18",
+        "T-30",
+        "T-31",
+        "T-32"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-021",
+      "priority": "P0",
+      "capability_id": "CONTROL-ACCOUNT",
+      "acceptance_scenarios": [
+        "T-16",
+        "T-33",
+        "T-39"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    },
+    {
+      "id": "BACK-022",
+      "priority": "P0",
+      "capability_id": "CONTROL-ASSISTANT",
+      "acceptance_scenarios": [
+        "T-02",
+        "T-03",
+        "T-08"
+      ],
+      "stage": "not_verified",
+      "evidence_urls": []
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "T-01",
+      "linked_backlog": [
+        "BACK-008"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-02",
+      "linked_backlog": [
+        "BACK-008",
+        "BACK-009",
+        "BACK-012",
+        "BACK-022"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-03",
+      "linked_backlog": [
+        "BACK-011",
+        "BACK-022"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-04",
+      "linked_backlog": [
+        "BACK-005"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-05",
+      "linked_backlog": [
+        "BACK-007",
+        "BACK-010"
+      ],
+      "verification": "partial_mock",
+      "evidence": [
+        {
+          "type": "local_browser",
+          "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39230180420",
+          "scope": "Task mutations in ephemeral browser storage only, no authenticated backend"
+        }
+      ]
+    },
+    {
+      "id": "T-06",
+      "linked_backlog": [
+        "BACK-005",
+        "BACK-007",
+        "BACK-010"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-07",
+      "linked_backlog": [
+        "BACK-014"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-08",
+      "linked_backlog": [
+        "BACK-013",
+        "BACK-022"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-09",
+      "linked_backlog": [
+        "BACK-013"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-10",
+      "linked_backlog": [
+        "BACK-015",
+        "BACK-016"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-11",
+      "linked_backlog": [
+        "BACK-015",
+        "BACK-016"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-12",
+      "linked_backlog": [
+        "BACK-017",
+        "BACK-018"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-13",
+      "linked_backlog": [
+        "BACK-019"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-14",
+      "linked_backlog": [
+        "BACK-007",
+        "BACK-010"
+      ],
+      "verification": "partial_mock",
+      "evidence": [
+        {
+          "type": "local_browser",
+          "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39230180420",
+          "scope": "Local duplicate prevention only; no authenticated backend"
+        }
+      ]
+    },
+    {
+      "id": "T-15",
+      "linked_backlog": [
+        "BACK-004",
+        "BACK-005"
+      ],
+      "verification": "partial_mock",
+      "evidence": [
+        {
+          "type": "mock_database",
+          "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39233284788",
+          "scope": "Synthetic users in disposable PostgreSQL; no real JWT session"
+        }
+      ]
+    },
+    {
+      "id": "T-16",
+      "linked_backlog": [
+        "BACK-004",
+        "BACK-005",
+        "BACK-021"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-17",
+      "linked_backlog": [
+        "BACK-011"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-18",
+      "linked_backlog": [
+        "BACK-001",
+        "BACK-020"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-19",
+      "linked_backlog": [
+        "BACK-002",
+        "BACK-009"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-20",
+      "linked_backlog": [
+        "BACK-003"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-21",
+      "linked_backlog": [
+        "BACK-004",
+        "BACK-005"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-22",
+      "linked_backlog": [
+        "BACK-013"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-23",
+      "linked_backlog": [
+        "BACK-006"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-24",
+      "linked_backlog": [
+        "BACK-009"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-25",
+      "linked_backlog": [
+        "BACK-006"
+      ],
+      "verification": "partial_mock",
+      "evidence": [
+        {
+          "type": "local_browser",
+          "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39230180420",
+          "scope": "Paris DST ambiguity checks in browser only"
+        }
+      ]
+    },
+    {
+      "id": "T-26",
+      "linked_backlog": [
+        "BACK-005",
+        "BACK-006"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-27",
+      "linked_backlog": [
+        "BACK-010"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-28",
+      "linked_backlog": [
+        "BACK-006"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-29",
+      "linked_backlog": [
+        "BACK-011"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-30",
+      "linked_backlog": [
+        "BACK-020"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-31",
+      "linked_backlog": [
+        "BACK-020"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-32",
+      "linked_backlog": [
+        "BACK-020"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-33",
+      "linked_backlog": [
+        "BACK-021"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-34",
+      "linked_backlog": [
+        "BACK-013"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-35",
+      "linked_backlog": [
+        "BACK-013"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-36",
+      "linked_backlog": [
+        "BACK-010"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-37",
+      "linked_backlog": [
+        "BACK-013"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-38",
+      "linked_backlog": [
+        "BACK-006"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-39",
+      "linked_backlog": [
+        "BACK-005",
+        "BACK-021"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-40",
+      "linked_backlog": [
+        "BACK-011"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-41",
+      "linked_backlog": [
+        "BACK-013"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    },
+    {
+      "id": "T-42",
+      "linked_backlog": [
+        "BACK-013"
+      ],
+      "verification": "not_verified",
+      "evidence": []
+    }
+  ],
+  "improvements": [
+    {
+      "id": "IMP-01",
+      "acceptance_criterion_ids": [
+        "IMP-01-AC1",
+        "IMP-01-AC2",
+        "IMP-01-AC3"
+      ],
+      "source": "data/control-ia-strategy.json"
+    },
+    {
+      "id": "IMP-02",
+      "acceptance_criterion_ids": [
+        "IMP-02-AC1",
+        "IMP-02-AC2",
+        "IMP-02-AC3"
+      ],
+      "source": "data/control-ia-strategy.json"
+    },
+    {
+      "id": "IMP-03",
+      "acceptance_criterion_ids": [
+        "IMP-03-AC1",
+        "IMP-03-AC2",
+        "IMP-03-AC3"
+      ],
+      "source": "data/control-ia-strategy.json"
+    },
+    {
+      "id": "IMP-04",
+      "acceptance_criterion_ids": [
+        "IMP-04-AC1",
+        "IMP-04-AC2",
+        "IMP-04-AC3"
+      ],
+      "source": "data/control-ia-strategy.json"
+    },
+    {
+      "id": "IMP-05",
+      "acceptance_criterion_ids": [
+        "IMP-05-AC1",
+        "IMP-05-AC2",
+        "IMP-05-AC3"
+      ],
+      "source": "data/control-ia-strategy.json"
+    },
+    {
+      "id": "IMP-06",
+      "acceptance_criterion_ids": [
+        "IMP-06-AC1",
+        "IMP-06-AC2",
+        "IMP-06-AC3"
+      ],
+      "source": "data/control-ia-strategy.json"
+    },
+    {
+      "id": "IMP-07",
+      "acceptance_criterion_ids": [
+        "IMP-07-AC1",
+        "IMP-07-AC2",
+        "IMP-07-AC3"
+      ],
+      "source": "data/control-ia-strategy.json"
+    },
+    {
+      "id": "IMP-08",
+      "acceptance_criterion_ids": [
+        "IMP-08-AC1",
+        "IMP-08-AC2",
+        "IMP-08-AC3"
+      ],
+      "source": "data/control-ia-strategy.json"
+    },
+    {
+      "id": "IMP-09",
+      "acceptance_criterion_ids": [
+        "IMP-09-AC1",
+        "IMP-09-AC2",
+        "IMP-09-AC3"
+      ],
+      "source": "data/control-ia-strategy.json"
+    },
+    {
+      "id": "IMP-10",
+      "acceptance_criterion_ids": [
+        "IMP-10-AC1",
+        "IMP-10-AC2",
+        "IMP-10-AC3"
+      ],
+      "source": "data/control-ia-strategy.json"
+    }
+  ]
+}
