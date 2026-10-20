@@ -1,13 +1,8 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-20261020-0951-central-report-quality-repair",
-    "started_at": "2026-10-20T07:51:17Z",
-    "expires_at": "2026-10-20T08:21:17Z",
-    "objective": "Mettre au format les métadonnées de preuves existantes des rapports du dépôt central; préserver les conclusions et les données du projet."
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": null,
   "last_completed": {
     "run_id": "ucp-20261020T072624Z-v3",
@@ -15,5 +10,10 @@
     "outcome": "merged",
     "summary": "PR #2 navigation mobile fusionnée sur main 8da708c avec CI Vitrine verte ; recette navigateur et site non vérifiés.",
     "report_synced": true
+  },
+  "maintenance_last_run": {
+    "run_id": "ucp-20261020-0951-central-report-quality-repair",
+    "ended_at": "2026-10-20T08:01:29Z",
+    "summary": "Central public sprint schema/quality metadata only; prior project history and checkpoint preserved."
   }
 }
