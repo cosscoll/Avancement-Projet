@@ -57,6 +57,23 @@ function render(section,data){
  section.append(list);
  section.append(text('p','Dernière revue de ce tableau : '+data.reviewed_on+' · Les états sont mis à jour après vérification, et non automatiquement en fonction des commits.','control-delivery-date'));
 }
+function renderV12(section,registry){
+ if(!registry||registry.specification_version!=='1.2'||!Array.isArray(registry.tickets)||registry.tickets.length!==22||!Array.isArray(registry.scenarios)||registry.scenarios.length!==42||!Array.isArray(registry.improvements)||registry.improvements.length!==10)throw Error('Registre V1.2 incorrect');
+ const div=document.createElement('section');div.className='control-delivery-v12';div.dataset.controlV12='';
+ div.setAttribute('aria-label','Traçabilité des objectifs du cahier des charges V1.2');
+ div.append(text('h3','Cahier des charges V1.2 : suivi des exigences'));
+ div.append(text('p','Périmètre consolidé : 22 tickets de développement, 42 scénarios de recette et 10 améliorations avec 30 critères supplémentaires. Le cahier complet reste privé.','control-delivery-disclaimer'));
+ const fully=registry.scenarios.filter(x=>x.verification==='real_verified').length;
+ const partial=registry.scenarios.filter(x=>x.verification==='partial_mock').length;
+ const count=text('p',fully+' / 42 scénarios entièrement vérifiés · '+partial+' contrôles partiels/simulés','control-delivery-v12-count');
+ div.append(count);
+ const focus=text('p','Priorité : identité et synchronisation CONTROL indépendantes ; aucune activation Cloud sans autorisation et vraie recette A/B.','control-delivery-v12-focus');
+ div.append(focus);
+ const a=document.createElement('a');a.href=new URL('data/control-ia-requirements.json',document.baseURI).href;
+ a.target='_blank';a.rel='noopener noreferrer';a.textContent='Consulter le registre public des preuves et dépendances';div.append(a);
+ section.append(div);
+}
+
 async function mount(root){
  if(!root||root.querySelector('[data-control-delivery]'))return;
  const section=document.createElement('section');section.className='control-delivery loc-settings';section.dataset.controlDelivery='';
@@ -68,6 +85,15 @@ async function mount(root){
   if(!response.ok)throw Error('Lecture indisponible ('+response.status+')');
   const data=inspect(await response.json());
   if(root.contains(section))render(section,data);
+  if(root.contains(section)){
+   try{
+    const requirementsResponse=await fetch(new URL('data/control-ia-requirements.json',document.baseURI),{cache:'no-store',credentials:'omit'});
+    if(!requirementsResponse.ok)throw Error('Registre inaccessible');
+    renderV12(section,await requirementsResponse.json());
+   }catch{
+    section.append(text('p','Registre V1.2 indisponible : la vérification détaillée des exigences n’est pas confirmée.','control-delivery-error'));
+   }
+  }
  }catch(error){
   if(!root.contains(section))return;
   section.replaceChildren(text('h2','Progression fonctionnelle de CONTROL IA'),text('p','Suivi temporairement indisponible. Aucun état ne peut être confirmé depuis cette interface.','control-delivery-error'));
