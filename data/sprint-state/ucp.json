@@ -11,9 +11,16 @@
   "checkpoint": {
     "recovered_from": "ucp-20261020T103117Z-v3",
     "branch": "fix/ucp-matchmedia-legacy-20261020",
-    "files": [],
-    "tests": [],
-    "next_action": "Vérifier que la branche ne contient aucun commit puis appliquer le correctif et ses tests."
+    "head": "3768ea42a26521063015f6dc88058d7dc83e5a39",
+    "files": [
+      "site-vitrine/dist/assets/app.js",
+      "site-vitrine/tests/app-shell.test.cjs",
+      ".github/workflows/vitrine-ci.yml"
+    ],
+    "tests": [
+      "CI de PR à lancer"
+    ],
+    "next_action": "Créer la PR, attendre la CI, autocritiquer puis corriger et retester."
   },
   "last_completed": {
     "run_id": "ucp-20261020T093301Z-v3",
