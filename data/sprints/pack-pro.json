@@ -625,7 +625,10 @@
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
         "ref": "118e63d71fda89e13e6ce5f6a4aa118fdfe0bd7c",
-        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_verified_at": "2026-10-19T09:58:47Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39233969523"
       },
       {
         "name": "Recette 3D de production",
@@ -633,14 +636,20 @@
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
         "ref": "67602b4f5d3e4ef5080ce6e337ab00c52b2fdbbc",
-        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39233969523"
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39233969523",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_verified_at": "2026-10-19T09:58:47Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39233969523"
       },
       {
         "name": "Échantillon public gratuit P01",
         "kind": "site",
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
-        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/exemple-procedure.html"
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/exemple-procedure.html",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/exemple-procedure.html",
+        "online_verified_at": "2026-10-19T09:09:30Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39227859705"
       }
     ],
     "critique": {
@@ -684,7 +693,26 @@
         "label": "PR #18 et QA production",
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39233969523"
       }
-    ]
+    ],
+    "quality": {
+      "ci": "verified",
+      "checks_run": [
+        "GitHub Actions: Recette réelle du site 3D en production"
+      ],
+      "checks_passed": [
+        "Run 39233969523 completed successfully; see the linked CI proof and the originally recorded scenario claims."
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "No claim of real Android/iPhone hardware testing, business conversion or full manual accessibility compliance."
+      ]
+    },
+    "metadata_repair": {
+      "date": "2026-10-20",
+      "scope": "proof_link_fields_only",
+      "verified_source": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39233969523",
+      "note": "Existing recorded success linked to independently confirmed successful GitHub Actions. No new browser/manual test claimed."
+    }
   },
   {
     "schema_version": 2,
@@ -739,7 +767,10 @@
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
         "ref": "14ea614c1b2ca1428d228acdcc9a9388756122a4",
-        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_verified_at": "2026-10-19T10:03:25Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774"
       },
       {
         "name": "PR de showroom 3D V3",
@@ -755,7 +786,10 @@
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
         "ref": "7f693b52a16415a4f30ca226f525eb9a92af3994",
-        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774"
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_verified_at": "2026-10-19T10:03:25Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774"
       }
     ],
     "next": "Tester la vitrine en conditions réelles sur Android/iPhone, recueillir les retours des 9 conciergeries contactées sans relance non autorisée, valider la valeur des SOP/CSV et seulement ensuite ouvrir la configuration marchande sous conditions.",
@@ -776,7 +810,26 @@
         "label": "Tests HTTP publiques PR #20",
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/20"
       }
-    ]
+    ],
+    "quality": {
+      "ci": "verified",
+      "checks_run": [
+        "GitHub Actions: Vitrine interactive — aperçu du contenu produit"
+      ],
+      "checks_passed": [
+        "Run 39234542774 completed successfully; see the linked CI proof and the originally recorded scenario claims."
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "No claim of real Android/iPhone hardware testing, business conversion or full manual accessibility compliance."
+      ]
+    },
+    "metadata_repair": {
+      "date": "2026-10-20",
+      "scope": "proof_link_fields_only",
+      "verified_source": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774",
+      "note": "Existing recorded success linked to independently confirmed successful GitHub Actions. No new browser/manual test claimed."
+    }
   },
   {
     "schema_version": 2,
@@ -803,14 +856,20 @@
         "kind": "site",
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
-        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/"
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_verified_at": "2026-10-19T10:03:25Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774"
       },
       {
         "name": "Preuve QA showroom public",
         "kind": "test",
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
-        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774"
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_verified_at": "2026-10-19T10:03:25Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774"
       }
     ],
     "blockers": [
@@ -841,7 +900,26 @@
         "label": "QA réelle",
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774"
       }
-    ]
+    ],
+    "quality": {
+      "ci": "verified",
+      "checks_run": [
+        "GitHub Actions: Vitrine interactive — aperçu du contenu produit"
+      ],
+      "checks_passed": [
+        "Run 39234542774 completed successfully; see the linked CI proof and the originally recorded scenario claims."
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "No claim of real Android/iPhone hardware testing, business conversion or full manual accessibility compliance."
+      ]
+    },
+    "metadata_repair": {
+      "date": "2026-10-20",
+      "scope": "proof_link_fields_only",
+      "verified_source": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39234542774",
+      "note": "Existing recorded success linked to independently confirmed successful GitHub Actions. No new browser/manual test claimed."
+    }
   },
   {
     "schema_version": 2,
@@ -872,7 +950,10 @@
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
         "ref": "1b6ecc7f187cd88f1d63f0fcc1d3cfad3216685c",
-        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/atelier-decisions.html"
+        "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/atelier-decisions.html",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/atelier-decisions.html",
+        "online_verified_at": "2026-10-19T10:26:39Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39237376013"
       },
       {
         "name": "CTA et parcours depuis l'accueil",
@@ -888,7 +969,10 @@
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
         "ref": "37e065e4f5541464ee014beae3d88db0943283f4",
-        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39237376013"
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39237376013",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_verified_at": "2026-10-19T10:26:39Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39237376013"
       }
     ],
     "critique": {
@@ -927,7 +1011,26 @@
         "label": "Preuve Playwright en production",
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39237376013"
       }
-    ]
+    ],
+    "quality": {
+      "ci": "verified",
+      "checks_run": [
+        "GitHub Actions: Expérience métier interactive — recette navigateur"
+      ],
+      "checks_passed": [
+        "Run 39237376013 completed successfully; see the linked CI proof and the originally recorded scenario claims."
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "No claim of real Android/iPhone hardware testing, business conversion or full manual accessibility compliance."
+      ]
+    },
+    "metadata_repair": {
+      "date": "2026-10-20",
+      "scope": "proof_link_fields_only",
+      "verified_source": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39237376013",
+      "note": "Existing recorded success linked to independently confirmed successful GitHub Actions. No new browser/manual test claimed."
+    }
   },
   {
     "schema_version": 2,
@@ -986,7 +1089,10 @@
         "stage": "verified_online",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
         "ref": "2052139d46d3d25339e38a8ff7a380d9be5617fe",
-        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39239006653"
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39239006653",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_verified_at": "2026-10-19T10:40:01Z",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39239006653"
       }
     ],
     "next": "Poursuivre l'optimisation mobile sur appareils physiques, mesurer Core Web Vitals, prioriser la validation des procédures puis créer un tunnel commercial juridiquement conforme sans dépense avant approbation.",
@@ -1003,7 +1109,26 @@
         "label": "Recette menu mobile HTTP",
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39239006653"
       }
-    ]
+    ],
+    "quality": {
+      "ci": "verified",
+      "checks_run": [
+        "GitHub Actions: Recette du menu mobile compact — Business 01"
+      ],
+      "checks_passed": [
+        "Run 39239006653 completed successfully; see the linked CI proof and the originally recorded scenario claims."
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "No claim of real Android/iPhone hardware testing, business conversion or full manual accessibility compliance."
+      ]
+    },
+    "metadata_repair": {
+      "date": "2026-10-20",
+      "scope": "proof_link_fields_only",
+      "verified_source": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39239006653",
+      "note": "Existing recorded success linked to independently confirmed successful GitHub Actions. No new browser/manual test claimed."
+    }
   },
   {
     "schema_version": 2,
@@ -1034,11 +1159,38 @@
       {
         "name": "PR redondante fermée sans fusion",
         "kind": "review",
-        "stage": "closed",
+        "stage": "tested",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
-        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/28"
+        "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/pull/28",
+        "original_review_stage": "closed_without_merge",
+        "note": "Review outcome only: PR closed unmerged, not new deployed code."
       }
-    ]
+    ],
+    "objectives": [
+      {
+        "before": "Duplicate WebGL depth PR #28 remained open despite same correction already existing on main.",
+        "after": "PR #28 was closed without merge while original corrective commit remained in project history.",
+        "acceptance": "PR #28 is closed and merged=false, and commit 758d32977e9438c80f77865b2c8645c680c9e502 exists on GitHub; no duplicate release claimed."
+      }
+    ],
+    "quality": {
+      "ci": "not_verified",
+      "checks_run": [
+        "Existing GitHub commit and PR status checked as public metadata"
+      ],
+      "checks_passed": [
+        "PR #28 closed unmerged; historical WebGL correction commit 758d3297 exists"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "No new CI run or live visual/browser test was performed for this historical review report."
+      ]
+    },
+    "metadata_repair": {
+      "date": "2026-10-20",
+      "scope": "contract_validation_only",
+      "note": "Original review outcome and closed PR preserved without claiming a deployment."
+    }
   },
   {
     "schema_version": 2,
