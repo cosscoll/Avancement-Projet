@@ -440,8 +440,14 @@
         "BACK-005",
         "BACK-021"
       ],
-      "verification": "not_verified",
-      "evidence": []
+      "verification": "partial_mock",
+      "evidence": [
+        {
+          "type": "simulator",
+          "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403753476",
+          "scope": "Five tests of real CONTROL Cloud client session/reload functions under two synthetic user IDs; verifies stale response and logout cache isolation in mock network only. NO real Supabase Auth, JWT, physical devices or PostgREST."
+        }
+      ]
     },
     {
       "id": "T-17",
