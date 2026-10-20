@@ -1,0 +1,42 @@
+name: CONTROL IA — Cahier V1.2 et traçabilité
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/control-ia-requirements.json'
+      - 'data/control-ia-strategy.json'
+      - 'data/control-ia-delivery.json'
+      - 'scripts/control-ia-requirements.mjs'
+      - 'tests/control-ia-requirements.test.mjs'
+      - 'docs/CONTROL_IA_CAHIER_V1_2_SUIVI.md'
+      - '.github/workflows/control-ia-requirements.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: control-ia-requirements-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integrity:
+    name: Validation indépendente du cahier V1.2
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Lire main
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Pré-vérifier la syntaxe
+        run: node --check scripts/control-ia-requirements.mjs
+      - name: Vérifier 22 tickets, 42 recettes et 10 améliorations
+        run: node scripts/control-ia-requirements.mjs
+      - name: Exécuter les 12 tests V1.2
+        run: node --test tests/control-ia-requirements.test.mjs
+      - name: Vérifier la cohérence des dix améliorations
+        run: node scripts/control-ia-strategy.mjs
