@@ -3,10 +3,10 @@
   "project": "control-ia",
   "status": "running",
   "lease": {
-    "run_id": "control-ia-20261020114954-auto11",
-    "started_at": "2026-10-20T11:49:54.967Z",
-    "expires_at": "2026-10-20T12:34:54.967Z",
-    "objective": "CONTROL-ACCOUNT: vérifier et corriger un défaut mesurable de sécurité/reprise des sessions clientes, avec tests synthétiques et Cloud désactivé"
+    "run_id": "control-ia-20261020125015408-9ufh9o",
+    "started_at": "2026-10-20T12:50:15.408Z",
+    "expires_at": "2026-10-20T13:35:15.408Z",
+    "objective": "CONTROL-ACCOUNT: corriger le chargement concurrent de sessions et le filtrage owner_id, tester, puis publier sur main si sûr"
   },
   "checkpoint": {
     "updated_at": "2026-10-20T09:57:40.777Z",
@@ -42,8 +42,8 @@
     "commit_sha": "ba145f15c60ab86820c8644cdbe8632473023236"
   },
   "recovered_from": {
-    "run_id": "control-ia-20261019-1754-paris-r9",
-    "expired_at": "2026-10-19T16:39:59.728Z"
+    "run_id": "control-ia-20261020114954-auto11",
+    "expired_at": "2026-10-20T12:34:54.967Z"
   },
   "prior_checkpoint": {
     "updated_at": "2026-10-20T07:23:35Z",
@@ -87,5 +87,29 @@
     "resolved_at": "2026-10-20T09:43:18.402Z",
     "proof_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39401977906",
     "note": "Recovered old private v38 local patch, code improved and released as v39 directly on main. No outstanding write refusal on this feature."
+  },
+  "expired_run_checkpoint": {
+    "updated_at": "2026-10-20T09:57:40.777Z",
+    "main": true,
+    "stage": "cloud_config_safety_tested_backend_still_blocked",
+    "files": [
+      "assets/cloud-app.js",
+      "config/cloud.example.json",
+      "tests/control-cloud-config-gate.test.mjs",
+      "tests/control-cloud-session-isolation.test.mjs",
+      ".github/workflows/control-cloud-config.yml",
+      "data/control-ia-requirements.json"
+    ],
+    "evidence": [
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403753476",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403871371",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403988250"
+    ],
+    "remaining_blockers": [
+      "No authorized independent CONTROL Supabase instance with guaranteed zero cost.",
+      "Real JWT A/B, PostgREST and cross-device synchronization have not been tested.",
+      "Shared central CI UCP invalid incident entry unrelated to CONTROL."
+    ],
+    "next_action": "After user approval of a distinct zero-cost CONTROL Supabase project, run real test users A/B RLS and JWT/session revocation tests; never reuse IAgile, never enable Cloud prematurely."
   }
 }
