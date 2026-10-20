@@ -1,42 +1,40 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261020-account-safe-config-classic",
-    "started_at": "2026-10-20T09:43:36.170Z",
-    "expires_at": "2026-10-20T10:26:36.170Z",
-    "objective": "Rendre fail-closed la configuration publique Supabase CONTROL, refuser secrets/JWT et URL ambiguës, tester client et UI avec Cloud désactivé."
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-20T09:43:18.402Z",
+    "updated_at": "2026-10-20T09:57:40.777Z",
     "main": true,
-    "stage": "v39_pwa_verified_public",
+    "stage": "cloud_config_safety_tested_backend_still_blocked",
     "files": [
-      "service-worker.js",
-      "tests/pwa-atomic-install.test.mjs",
-      "tests/service-worker-navigation.test.mjs",
-      "tests/control-ia-browser-smoke.mjs"
+      "assets/cloud-app.js",
+      "config/cloud.example.json",
+      "tests/control-cloud-config-gate.test.mjs",
+      "tests/control-cloud-session-isolation.test.mjs",
+      ".github/workflows/control-cloud-config.yml",
+      "data/control-ia-requirements.json"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39401977906",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39401998657"
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403753476",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403871371",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403988250"
     ],
     "remaining_blockers": [
-      "Independent CONTROL Cloud backend not authorized; enabled:false",
-      "Shared UCP sprint-report CI incident (separate project)",
-      "Real Android/iOS hardware testing pending"
+      "No authorized independent CONTROL Supabase instance with guaranteed zero cost.",
+      "Real JWT A/B, PostgREST and cross-device synchronization have not been tested.",
+      "Shared central CI UCP invalid incident entry unrelated to CONTROL."
     ],
-    "next_action": "CONTROL-ACCOUNT: harden safeClientConfig for explicit public keys and clean Supabase URLs, add tests and keep Cloud disabled."
+    "next_action": "After user approval of a distinct zero-cost CONTROL Supabase project, run real test users A/B RLS and JWT/session revocation tests; never reuse IAgile, never enable Cloud prematurely."
   },
   "last_completed": {
-    "run_id": "control-ia-20261020-v38-pwa-resume-classic",
-    "started_at": "2026-10-20T09:31:27.421Z",
-    "ended_at": "2026-10-20T09:43:18.402Z",
-    "summary": "Recovered unpublished v38, shipped v39 atomic public cache and V1.2 offline; Chromium local+Pages parity passed; 17 focused PWA tests pass; shared CI red only for unrelated UCP incident.",
-    "stage": "verified_online",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39401977906",
-    "commit_sha": "196becba2accbdc69d8170d96a52b6423f4e4c76"
+    "run_id": "control-ia-20261020-account-safe-config-classic",
+    "started_at": "2026-10-20T09:43:36.170Z",
+    "ended_at": "2026-10-20T09:57:40.777Z",
+    "summary": "Hardened CONTROL Cloud browser project config, only sb_publishable_ keys, rejected legacy JWT/unsafe URLs; 20 dedicated Cloud tests passed incl 5 simulated A/B session races; T-16 remains partial; Cloud disabled.",
+    "stage": "tested_not_operational",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403753476",
+    "commit_sha": "ba145f15c60ab86820c8644cdbe8632473023236"
   },
   "recovered_from": {
     "run_id": "control-ia-20261019-1754-paris-r9",
