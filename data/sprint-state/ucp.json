@@ -11,16 +11,17 @@
   "checkpoint": {
     "recovered_from": "ucp-20261020T103117Z-v3",
     "branch": "fix/ucp-matchmedia-legacy-20261020",
-    "head": "3768ea42a26521063015f6dc88058d7dc83e5a39",
+    "head": "1f6dd6079bd3759b84c752529aea0f7b4a96bc25",
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.cjs",
       ".github/workflows/vitrine-ci.yml"
     ],
     "tests": [
-      "Vitrine CI 39423143888 en cours"
+      "Vitrine CI 39423143888 réussie",
+      "Seconde CI après scénario matchMedia absent en attente"
     ],
-    "next_action": "Attendre la CI #39423143888, autocritiquer puis corriger et retester.",
+    "next_action": "Attendre la seconde CI puis contrôler main et fusionner uniquement si verte.",
     "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/5"
   },
   "last_completed": {
