@@ -9,7 +9,7 @@ const BACK_IDS=serial('BACK-',22,3);
 const SCENARIO_IDS=serial('T-',42,2);
 const IMP_IDS=serial('IMP-',10,2);
 const STATUS=new Set(['not_verified','partial_mock','real_verified']);
-const URL=/^https:\/\/[^\s/]+\/[^\s]+$/i;
+const URL_RX=/^https:\/\/[^\s/]+\/[^\s]+$/i;
 const same=(a,b)=>JSON.stringify([...a].sort())===JSON.stringify([...b].sort());
 export function summary(registry,legacy,strategy){
  return {
@@ -48,7 +48,7 @@ export function validateRegistry(registry,legacy,strategy){
   if(item.stage!=='not_verified'&&item.stage!=='real_verified')errors.push(item.id+': unsupported verified state');
   if(!Array.isArray(item.evidence_urls))errors.push(item.id+': evidence list missing');
   if(item.stage==='real_verified'){
-   if(!item.evidence_urls?.length||item.evidence_urls.some(url=>!URL.test(url)))errors.push(item.id+': verified ticket missing real evidence');
+   if(!item.evidence_urls?.length||item.evidence_urls.some(url=>!URL_RX.test(url)))errors.push(item.id+': verified ticket missing real evidence');
    if(!(item.acceptance_scenarios||[]).every(id=>tests.get(id)?.verification==='real_verified'))errors.push(item.id+': verified ticket references unverified or mock test');
   }
   // Public artifact intentionally stores IDs, general stage and proof only.
@@ -59,8 +59,8 @@ export function validateRegistry(registry,legacy,strategy){
   const calculated=registry.tickets.filter(x=>x.acceptance_scenarios?.includes(item.id)).map(x=>x.id);
   if(!Array.isArray(item.linked_backlog)||!item.linked_backlog.length||!same(item.linked_backlog,calculated))errors.push(item.id+': backlinks missing or inconsistent');
   if(!Array.isArray(item.evidence))errors.push(item.id+': evidence must be array');
-  if(item.verification==='real_verified'&&!item.evidence?.some(e=>e.type==='real_journey'&&URL.test(e.url)&&e.scope&&e.commit_sha&&e.tested_at))errors.push(item.id+': real verification requires journey, source SHA and timestamp');
-  if(item.verification==='partial_mock'&&!item.evidence?.some(e=>['local_browser','mock_database','simulator'].includes(e.type)&&URL.test(e.url)&&e.scope))errors.push(item.id+': mock/simulated evidence missing or inaccurate');
+  if(item.verification==='real_verified'&&!item.evidence?.some(e=>e.type==='real_journey'&&URL_RX.test(e.url)&&e.scope&&e.commit_sha&&e.tested_at))errors.push(item.id+': real verification requires journey, source SHA and timestamp');
+  if(item.verification==='partial_mock'&&!item.evidence?.some(e=>['local_browser','mock_database','simulator'].includes(e.type)&&URL_RX.test(e.url)&&e.scope))errors.push(item.id+': mock/simulated evidence missing or inaccurate');
   if(item.verification==='not_verified'&&item.evidence?.length)errors.push(item.id+': unverified scenario must not contain success proof');
   if(Object.keys(item).some(key=>!['id','linked_backlog','verification','evidence'].includes(key)))errors.push(item.id+': unexpected possible private requirement field');
  }
