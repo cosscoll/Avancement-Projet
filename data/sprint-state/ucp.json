@@ -1,9 +1,25 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "idle",
-  "lease": null,
-  "checkpoint": null,
+  "status": "running",
+  "lease": {
+    "run_id": "ucp-20261020T212553Z-v3",
+    "owner": "chatgpt-automation-ucp",
+    "started_at": "2026-10-20T21:25:53Z",
+    "expires_at": "2026-10-20T22:10:53Z",
+    "objective": "Maintenir la checklist du brief sans Element.append et après exception de append"
+  },
+  "checkpoint": {
+    "phase": "inspection",
+    "repository": "cosscoll/UnCoupdePouce",
+    "base_branch": "main",
+    "base_sha": "54e0641c809acd2a67fbd057f322ef022e961be6",
+    "branch": null,
+    "pr_url": null,
+    "files": [],
+    "tests": [],
+    "next_action": "Relire la source réelle de la checklist et créer une branche isolée si main reste inchangée."
+  },
   "last_completed": {
     "run_id": "ucp-20261020T202911Z-v3",
     "ended_at": "2026-10-20T20:31:34.118Z",
