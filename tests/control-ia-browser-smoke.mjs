@@ -21,7 +21,7 @@ const deadline=(fn,max=18000,step=180)=>async()=>{
 // Detect stale GitHub Pages before claiming that a browser tested this commit.
 // The fresh public HTML/data/JS must match the checked-out source bytes.
 const PUBLIC_ORIGIN='https://cosscoll.github.io/Avancement-Projet/';
-const PUBLIC_ASSETS=['index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','data/control-ia-delivery.json','data/control-ia-requirements.json'];
+const PUBLIC_ASSETS=['service-worker.js','index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','data/control-ia-delivery.json','data/control-ia-requirements.json'];
 const hash=data=>createHash('sha256').update(data).digest('hex');
 async function verifyPublishedFiles(){
  const expected=new Map(PUBLIC_ASSETS.map(path=>[path,hash(readFileSync(resolve(root,path)))]));
@@ -287,6 +287,7 @@ try{
   await ready(()=>js("Boolean(navigator.serviceWorker.controller)"),12000)();
   const cacheNames=await js("(async()=>await caches.keys())()");
   assert.ok(Array.isArray(cacheNames)&&cacheNames.some(name=>name.startsWith('control-shell-')),'Public PWA must cache the application shell');
+  assert.ok(cacheNames.includes('control-shell-v39')&&cacheNames.includes('control-public-data-v39'),'PWA must have installed the verified v39 caches');
   log('public PWA service worker activated and offline shell cache created');
   await command('Network.enable');
   try{
@@ -294,6 +295,11 @@ try{
    await command('Page.reload',{ignoreCache:false});
    await ready(()=>js("document.querySelector('[data-control-delivery] .control-delivery-count')?.textContent?.includes('9 fonctionnalités')"),16000)();
    assert.ok(await js("!!document.querySelector('[data-control-operator]')"),'Operator UI missing offline');
+
+   await ready(()=>js("document.querySelector('[data-control-v12] .control-delivery-v12-count')?.textContent?.includes('42 scénarios')"),14000)();
+   const offlineRegistry=await js("(async()=>{try{const r=await fetch('./data/control-ia-requirements.json');const data=await r.json();return {ok:r.ok,tickets:data.tickets?.length,scenarios:data.scenarios?.length}}catch(error){return {error:String(error)}}})()");
+   assert.deepEqual(offlineRegistry,{ok:true,tickets:22,scenarios:42},'Published V1.2 register must remain available offline: '+JSON.stringify(offlineRegistry));
+   log('offline CONTROL also renders V1.2 and reads 22-ticket/42-scenario registry from verified cache');
    log('public PWA reloads the assistant and cached tracker when completely offline');
   }finally{
    await command('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:0,uploadThroughput:0});
