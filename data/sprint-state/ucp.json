@@ -11,11 +11,15 @@
   },
   "checkpoint": {
     "base_ref": "e7ff47e53802c4dde5626dce0d009038c3de83d8",
-    "branch": null,
+    "branch": "fix/ucp-copy-legacy-remove-20261020",
+    "head_ref": "340142d5059ad2247818d94e79ff991263485fc6",
     "pr_url": null,
-    "files": [],
+    "files": [
+      "site-vitrine/dist/assets/app.js",
+      "site-vitrine/tests/app-shell.test.cjs"
+    ],
     "checks": [],
-    "next_action": "Relire le verrou, créer une branche depuis le SHA main vérifié puis corriger le nettoyage du textarea."
+    "next_action": "Créer la PR et attendre la première CI ; puis autocritique et seconde passe corrective."
   },
   "last_completed": {
     "run_id": "ucp-20261020T163215Z-v3",
