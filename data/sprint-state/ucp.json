@@ -1,36 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "leased",
-  "lease": {
-    "run_id": "ucp-20261020T152905Z-v3",
-    "owner": "chatgpt-automation",
-    "started_at": "2026-10-20T15:29:05Z",
-    "expires_at": "2026-10-20T16:14:05Z",
-    "objective": "Conserver la copie du brief lorsque Clipboard API est indisponible et nettoyer le contrôle temporaire sans fuite"
-  },
-  "checkpoint": {
-    "phase": "ready-to-merge",
-    "repository": "cosscoll/UnCoupdePouce",
-    "base_commit": "836f767f6b50ddbf380ef574f78dae40902634a8",
-    "branch": "fix/ucp-brief-clipboard-fallback-20261020",
-    "head_commit": "35dcdfac349f66d139e4ec3c748e5d9a852f455e",
-    "pull_request": 8,
-    "files": [
-      "site-vitrine/dist/assets/app.js",
-      "site-vitrine/tests/app-shell.test.cjs"
-    ],
-    "tests": [
-      "Vitrine CI 39449186991: success (première passe)",
-      "Vitrine CI 39449251666: success (seconde passe corrective)"
-    ],
-    "next": "Vérifier PR et main, fusionner avec le head attendu, puis synchroniser statut et journal publics."
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261020T144341Z-v3",
-    "ended_at": "2026-10-20T14:48:58.050Z",
+    "run_id": "ucp-20261020T152905Z-v3",
+    "ended_at": "2026-10-20T15:32:58.411Z",
     "outcome": "merged",
-    "summary": "PR #7 repli de téléchargement du brief fusionnée sur main 836f767f après deux CI vertes ; navigateur réel non vérifié.",
+    "summary": "PR #8 repli de copie du brief fusionnée sur main ec3be79f après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
