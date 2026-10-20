@@ -3,17 +3,17 @@
   "project": "banque-ia",
   "status": "running",
   "lease": {
-    "run_id": "banque-ia-20261019211804401-v3-r11",
-    "started_at": "2026-10-19T21:18:04.401Z",
-    "expires_at": "2026-10-19T22:03:04.401Z",
-    "objective": "Reprendre la correction de pause/reprise WebGL et reduced-motion avec tests de régression sur branche existante"
+    "run_id": "banque-ia-20261020082131971-v3-r12",
+    "started_at": "2026-10-20T08:21:31.971Z",
+    "expires_at": "2026-10-20T09:06:31.971Z",
+    "objective": "Corriger la pause/reprise de la cartographie WebGL en préservant reduced-motion; tests de régression"
   },
   "checkpoint": {
-    "step": "code-write-refused-by-safety-check",
+    "step": "lease-acquisition-pending",
     "branch": "fix/reduced-motion-toggle-20261019",
     "pr_url": null,
     "files": [],
-    "next_action": "Ne pas contourner le refus de mise à jour assets/atlas.js ; obtenir une voie d'écriture explicitement autorisée, puis appliquer horloge animation suspendable, tests Chromium reduced-motion, PR et CI"
+    "next_action": "Appliquer le correctif d'horloge d'animation suspendable sur branche existante puis tester et soumettre une PR"
   },
   "last_completed": {
     "run_id": "banque-ia-20261019-1618-v3-r5",
@@ -22,14 +22,14 @@
     "pr_url": null
   },
   "recovered_from": {
-    "run_id": "banque-ia-20261019171821-v3-r8",
+    "run_id": "banque-ia-20261019211804401-v3-r11",
     "checkpoint": {
-      "step": "lease-acquired-pending-code",
+      "step": "code-write-refused-by-safety-check",
       "branch": "fix/reduced-motion-toggle-20261019",
       "pr_url": null,
       "files": [],
-      "next_action": "Corriger assets/atlas.js et ajouter tests de régression sur branche existante, vérifier CI avant PR"
+      "next_action": "Ne pas contourner le refus de mise à jour assets/atlas.js ; obtenir une voie d'écriture explicitement autorisée, puis appliquer horloge animation suspendable, tests Chromium reduced-motion, PR et CI"
     },
-    "lease_expired_at": "2026-10-19T18:03:21.589Z"
+    "lease_expired_at": "2026-10-19T22:03:04.401Z"
   }
 }
