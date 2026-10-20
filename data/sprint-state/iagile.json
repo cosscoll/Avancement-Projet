@@ -3,10 +3,10 @@
   "project": "iagile",
   "status": "running",
   "lease": {
-    "run_id": "iagile-20261020T014520159Z-m8-security-review",
-    "started_at": "2026-10-20T01:45:20.159Z",
-    "expires_at": "2026-10-20T02:30:20.159Z",
-    "objective": "M8 Processus : vérifier et documenter les critères de prévisualisation sécurisée formateur et la recette RLS avant tout déploiement"
+    "run_id": "iagile-20261020T043915356Z-m8-gate",
+    "started_at": "2026-10-20T04:39:15.356Z",
+    "expires_at": "2026-10-20T05:24:15.356Z",
+    "objective": "M8 Processus: vérifier la capacité de prévisualisation formateur et produire un critère de recette Auth/RLS vérifiable"
   },
   "checkpoint": {
     "branch": "feature/academy-private-rebased-20261010",
@@ -21,5 +21,5 @@
     "result": "blocked",
     "summary": "M8 preview candidate checked in memory, GitHub code write refused; SQL permissions confirmed; V3 journal synchronized."
   },
-  "recovered_from": "iagile-20261019T213542636Z-m8-preview-v3"
+  "recovered_from": "iagile-20261020T014520159Z-m8-security-review"
 }
