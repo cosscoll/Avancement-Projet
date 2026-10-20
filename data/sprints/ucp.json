@@ -2773,5 +2773,92 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
       }
     ]
+  },
+  {
+    "schema_version": 3,
+    "id": "ucp-20261020T183251Z-v3",
+    "started_at": "2026-10-20T18:32:51Z",
+    "ended_at": "2026-10-20T18:35:56.812Z",
+    "objectives": [
+      {
+        "before": "Le repli de copie laisse son textarea temporaire dans le DOM lorsque Element.remove est absent ou lève une exception.",
+        "after": "Le textarea est retiré par remove() ou parentNode.removeChild() sans altérer le message de réussite.",
+        "acceptance": "Deux scénarios DOM simulés passent en CI, puis le correctif est fusionné sur main sans toucher application/**."
+      }
+    ],
+    "summary": "PR #10 fusionnée sur main c5783609 : le repli de copie nettoie désormais son textarea sur les anciens DOM ; deux CI vertes, aucune recette navigateur ou staging.",
+    "done": [
+      "Directives #1 et #2 relues : demande de connexion Codex lue mais bloquée par les interdictions permanentes.",
+      "Verrou coopératif V3 acquis et vérifié avant toute mutation.",
+      "Repli removeChild ajouté au nettoyage du textarea temporaire de copie, sans modification de application/**.",
+      "Première CI Vitrine 39475940386 réussie ; autocritique P1 : exception de textarea.remove non couverte.",
+      "Test correctif ajouté pour textarea.remove qui lève une exception ; CI finale 39476029283 réussie.",
+      "PR #10 fusionnée prudemment sur main c5783609 après vérification du head, de la base et du bail."
+    ],
+    "deliverables": [
+      {
+        "name": "Nettoyage legacy du champ temporaire de copie",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "c5783609e6305548e4134fc71f34fc212a7dc442",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/c5783609e6305548e4134fc71f34fc212a7dc442",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "quality": {
+      "checks_run": [
+        "Vitrine CI première passe #39475940386",
+        "Vitrine CI corrective #39476029283",
+        "Vérification des blobs app.js et app-shell.test.cjs sur main"
+      ],
+      "checks_passed": [
+        "Structure statique",
+        "Syntaxe JavaScript",
+        "Tests Node de la vitrine",
+        "Reconstruction déterministe build/dist",
+        "Blobs attendus présents sur main"
+      ],
+      "checks_failed": [],
+      "real_browser_verified": false,
+      "ci": "success"
+    },
+    "blockers": [
+      "Aucun navigateur, appareil réel, site public ou staging autorisé n’a été vérifié.",
+      "Le clone Windows dev/ucp-codex reste volontairement non lu et non synchronisé.",
+      "Les consignes publiques #1 et #2 demandant Codex restent bloquées par les interdictions permanentes."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "ucp-public-site-unverified",
+        "status": "open",
+        "consecutive_sprints": 9,
+        "next_action": "Effectuer une recette navigateur réelle à 320/360/390/768 px sur un staging explicitement autorisé ; sinon poursuivre un bug indépendant hors application/**."
+      }
+    ],
+    "next": "Tester un autre défaut réel et indépendant hors application/**, ou effectuer la recette WebView/navigateur sur staging autorisé.",
+    "links": [
+      {
+        "label": "PR #10",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/10"
+      },
+      {
+        "label": "Commit main",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/c5783609e6305548e4134fc71f34fc212a7dc442"
+      },
+      {
+        "label": "CI initiale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39475940386"
+      },
+      {
+        "label": "CI corrective",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39476029283"
+      },
+      {
+        "label": "Statut UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      }
+    ]
   }
 ]
