@@ -134,7 +134,7 @@
     },
     {
       "title": "Vitrine intégrée, recette réelle non vérifiée",
-      "description": "PR UCP #2 à #8 fusionnées sur main jusqu’au commit ec3be79f : navigation mobile restaurée, état public durable, sorties build/dist contrôlées et replis ajoutés pour MediaQueryList, Element.replaceChildren, téléchargement et copie du brief. Les CI Vitrine 39449186991 et 39449251666 sont vertes ; la seconde vérifie le basculement vers le repli historique après rejet asynchrone de Clipboard API ainsi que le nettoyage du champ temporaire. L’incident ucp-public-site-unverified reste ouvert : aucun navigateur, lecteur d’écran, appareil réel, site public ou staging n’a été vérifié.",
+      "description": "PR UCP #2 à #9 fusionnées sur main jusqu’au commit e7ff47e5 : navigation mobile restaurée, état public durable, sorties build/dist contrôlées et replis ajoutés pour MediaQueryList, Element.replaceChildren, copie et téléchargement du brief. Les CI Vitrine 39458542561 et 39458631314 sont vertes ; la seconde vérifie le nettoyage du lien temporaire par removeChild lorsque Element.remove est absent ou échoue. L’incident ucp-public-site-unverified reste ouvert : aucun navigateur, lecteur d’écran, appareil réel, site public ou staging n’a été vérifié.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-54 ; PR #2 à #8 fusionnées sur main jusqu’à ec3be79f avec CI Vitrine verte, contrôle build/dist et tests des replis DOM, téléchargement et copie. Les contrôles isolés et simulés ne valent pas recette navigateur, appareil, site public ou staging.",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-54 ; PR #2 à #9 fusionnées sur main jusqu’à e7ff47e5 avec CI Vitrine verte, contrôle build/dist et replis DOM du brief. Les contrôles isolés et simulés ne valent pas recette navigateur, appareil, site public ou staging.",
   "baseline_date": "2026-10-20"
 }
