@@ -1,9 +1,22 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "idle",
-  "lease": null,
-  "checkpoint": null,
+  "status": "running",
+  "lease": {
+    "run_id": "ucp-20261020T183251Z-v3",
+    "owner": "chatgpt-automation-ucp",
+    "started_at": "2026-10-20T18:32:51Z",
+    "expires_at": "2026-10-20T19:17:51Z",
+    "objective": "Nettoyer le champ temporaire de copie sur les anciens DOM sans Element.remove et après exception de remove"
+  },
+  "checkpoint": {
+    "base_ref": "e7ff47e53802c4dde5626dce0d009038c3de83d8",
+    "branch": null,
+    "pr_url": null,
+    "files": [],
+    "checks": [],
+    "next_action": "Relire le verrou, créer une branche depuis le SHA main vérifié puis corriger le nettoyage du textarea."
+  },
   "last_completed": {
     "run_id": "ucp-20261020T163215Z-v3",
     "ended_at": "2026-10-20T16:35:30.655Z",
