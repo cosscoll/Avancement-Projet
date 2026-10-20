@@ -1354,7 +1354,10 @@
         "stage": "verified_online",
         "url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
-        "ref": "59a2677bd9c5f1428c734ddca1275084b4a6e4a3"
+        "ref": "59a2677bd9c5f1428c734ddca1275084b4a6e4a3",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39388870475",
+        "online_verified_at": "2026-10-20T07:49:02Z"
       },
       {
         "name": "Refonte de l'univers 3D",
@@ -1370,7 +1373,10 @@
         "stage": "verified_online",
         "url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39388870475",
         "repository": "cosscoll/Pack-Proc-dures-Pro",
-        "ref": "5c5368886e95c80d71f85a98feef7591ad85b446"
+        "ref": "5c5368886e95c80d71f85a98feef7591ad85b446",
+        "online_url": "https://cosscoll.github.io/Pack-Proc-dures-Pro/",
+        "online_evidence_url": "https://github.com/cosscoll/Pack-Proc-dures-Pro/actions/runs/39388870475",
+        "online_verified_at": "2026-10-20T07:49:02Z"
       },
       {
         "name": "Contrat de direction artistique",
@@ -1407,6 +1413,14 @@
         "Ajouté vérification public externe post-merge"
       ]
     },
-    "next": "Ne pas revenir aux documents abstraits. Priorité à retour visuel honnête sur V4, performance mobile réelle et renforcement de l'esthétique architecturale; ensuite recueillir retours métiers des conciergeries sans relance automatique."
+    "next": "Ne pas revenir aux documents abstraits. Priorité à retour visuel honnête sur V4, performance mobile réelle et renforcement de l'esthétique architecturale; ensuite recueillir retours métiers des conciergeries sans relance automatique.",
+    "blockers": [
+      "Accessibilité manuelle lecteur écran et compatibilité iPhone Safari / Android matériel non attestées.",
+      "Aucune preuve de conversion, aucune validation professionnelle SOP/CSV et aucune vente réelle. Prix indicatif non adopté."
+    ],
+    "metadata_repair": {
+      "date": "2026-10-20",
+      "note": "Normalized V3 blockers from originally recorded risks and linked existing successful public Chromium run; no additional test invented."
+    }
   }
 ]
