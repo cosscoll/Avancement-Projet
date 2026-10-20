@@ -1,30 +1,62 @@
 /* CONTROL PWA — public static shell only; no private instructions, secrets or GitHub API responses. */
 'use strict';
-const CACHE_SHELL='control-shell-v37';
-const CACHE_PUBLIC='control-public-data-v37';
+const CACHE_SHELL='control-shell-v39';
+const CACHE_PUBLIC='control-public-data-v39';
 const ROOT=new URL(self.registration.scope);
 const ASSETS=['./','./index.html','./legacy.html','./assets/automations-hub.js','./assets/command-center.js','./assets/command-center.css','./assets/tool-catalog.js','./assets/tool-catalog.css','./assets/deployment-guides.js','./assets/deployment-guides.css','./assets/control-help.js','./assets/control-help.css','./assets/ai-lab.js','./assets/ai-lab.css','./assets/ux-clarity.css','./assets/multi-ai-command.js','./assets/multi-ai-command.css','./assets/visio-center.js','./assets/visio-center.css','./assets/control-delivery.js','./assets/control-delivery.css','./assets/local-ai.js','./assets/control-operator-core.js','./assets/control-operator.js','./assets/control-coach.js','./assets/local-ai.css','./assets/local-ai-worker.js','./assets/app.js','./assets/codex.js','./assets/style.css','./assets/theme.css','./assets/pwa.js','./assets/icon.svg','./assets/icon-192.png','./assets/icon-512.png','./manifest.webmanifest'];
-const PUBLIC_DATA=/^data\/control-ia-delivery\.json$|^data\/(?:projects|catalog|automations|ai-tool-libraries|deployment-guides|help-center)\.json$|^data\/(?:sprints|status)\/[a-z0-9-]+\.json$/;
-const INITIAL_DATA=['./data/control-ia-delivery.json','./data/projects.json','./data/catalog.json','./data/automations.json','./data/ai-tool-libraries.json','./data/deployment-guides.json','./data/help-center.json',...['pack-pro','banque-ia','ucp','iagile','tcg'].map(id=>'./data/sprints/'+id+'.json')];
+const CRITICAL_SHELL=new Set(['./index.html','./assets/command-center.js','./assets/command-center.css','./assets/control-operator-core.js','./assets/control-operator.js','./assets/local-ai.js','./assets/local-ai.css','./assets/control-delivery.js','./assets/control-delivery.css','./assets/pwa.js','./manifest.webmanifest']);
+const PUBLIC_DATA=/^data\/control-ia-(?:delivery|requirements)\.json$|^data\/(?:projects|catalog|automations|ai-tool-libraries|deployment-guides|help-center)\.json$|^data\/(?:sprints|status)\/[a-z0-9-]+\.json$/;
+const INITIAL_DATA=['./data/control-ia-delivery.json','./data/control-ia-requirements.json','./data/projects.json','./data/catalog.json','./data/automations.json','./data/ai-tool-libraries.json','./data/deployment-guides.json','./data/help-center.json',...['pack-pro','banque-ia','ucp','iagile','tcg'].map(id=>'./data/sprints/'+id+'.json')];
+// Validate types during install and network-first refresh.
+// Prevent 200 HTML fallbacks from overwriting valid cached JS.
+function validAssetType(asset,response){
+ if(!response?.ok||response.type==='opaque')return false;
+ const mime=String(response.headers?.get?.('content-type')||'').toLowerCase();
+ if(asset.endsWith('.js'))return /(?:javascript|ecmascript)/.test(mime);
+ if(asset.endsWith('.css'))return mime.startsWith('text/css');
+ if(asset==='./'||asset.endsWith('.html'))return mime.startsWith('text/html');
+ if(asset.endsWith('.webmanifest'))return /(?:json|manifest)/.test(mime);
+ return true;
+}
+
+// A server may return HTTP 200 with an HTML fallback for a missing JSON URL.
+// Protect public offline state and the V1.2 matrix from cache contamination.
+function validPublicJson(response){
+ if(!response?.ok||response.type==='opaque')return false;
+ const type=String(response.headers?.get?.('content-type')||'').toLowerCase();
+ return type.startsWith('application/json')||/\+json(?:;|$)/.test(type);
+}
+
 self.addEventListener('install',(e)=>{
   e.waitUntil((async()=>{
+    try {
     const cache=await caches.open(CACHE_SHELL);
     // Six parallel requests per batch prevent the long sequential cold-install delay on Android.
     for(let i=0;i<ASSETS.length;i+=6){
-      await Promise.allSettled(ASSETS.slice(i,i+6).map(async a=>{
+      const batch=ASSETS.slice(i,i+6);
+      const results=await Promise.allSettled(batch.map(async a=>{
         const url=new URL(a,ROOT),resp=await fetch(url,{cache:'reload'});
-        if(resp.ok)await cache.put(url,resp);
+        if(!resp.ok)throw Error('HTTP '+resp.status+' for '+a);
+        if(!validAssetType(a,resp))throw Error('Type de contenu CONTROL invalide pour '+a);
+        await cache.put(url,resp);
       }));
+      const failed=batch.filter((asset,j)=>CRITICAL_SHELL.has(asset)&&results[j].status==='rejected');
+      if(failed.length)throw Error('Installation CONTROL incomplète : '+failed.join(', '));
     }
     const dataCache=await caches.open(CACHE_PUBLIC);
     for(let i=0;i<INITIAL_DATA.length;i+=6){
       await Promise.allSettled(INITIAL_DATA.slice(i,i+6).map(async a=>{
         const url=new URL(a,ROOT),response=await fetch(url,{cache:'no-store'});
-        if(response.ok)await dataCache.put(url,response);
+        if(validPublicJson(response))await dataCache.put(url,response);
       }));
     }
+    // Never activate a worker whose essential shell failed to install.
+    await self.skipWaiting();
+    } catch(error) {
+      await Promise.allSettled([caches.delete(CACHE_SHELL),caches.delete(CACHE_PUBLIC)]);
+      throw error;
+    }
   })());
-  self.skipWaiting();
 });
 self.addEventListener('activate',e=>{
   e.waitUntil((async()=>{for(const key of await caches.keys())if(key.startsWith('control-')&&!([CACHE_SHELL,CACHE_PUBLIC].includes(key)))await caches.delete(key);await self.clients.claim()})());
@@ -48,7 +80,7 @@ self.addEventListener('fetch',e=>{
       try{
         const response=await fetch(request);
         // Navigating to a legacy or unknown page must never overwrite the offline CONTROL homepage.
-        if(response.ok&&isHome){const cache=await caches.open(CACHE_SHELL);await cache.put(new URL('./index.html',ROOT),response.clone())}
+        if(response.ok&&isHome&&validAssetType('./index.html',response)){const cache=await caches.open(CACHE_SHELL);await cache.put(new URL('./index.html',ROOT),response.clone())}
         return response;
       }catch{
         const cache=await caches.open(CACHE_SHELL);
@@ -59,7 +91,7 @@ self.addEventListener('fetch',e=>{
  }
  if(PUBLIC_DATA.test(path)){
    e.respondWith((async()=>{
-     try{const response=await fetch(request);if(response.ok){const cache=await caches.open(CACHE_PUBLIC);await cache.put(request,response.clone())}return response}catch{
+     try{const response=await fetch(request);if(validPublicJson(response)){const cache=await caches.open(CACHE_PUBLIC);await cache.put(request,response.clone());return response}const cache=await caches.open(CACHE_PUBLIC);return await cache.match(request)||response}catch{
        const cache=await caches.open(CACHE_PUBLIC);return await cache.match(request)||Response.error()
      }
    })());
@@ -72,7 +104,7 @@ self.addEventListener('fetch',e=>{
    const cache=await caches.open(CACHE_SHELL);
    try {
      const response=await fetch(request,{cache:'no-cache'});
-     if(response.ok){await cache.put(request,response.clone());return response}
+     if(response.ok&&validAssetType('./'+path,response)){await cache.put(request,response.clone());return response}
      return await cache.match(request)||response;
    } catch {
      return await cache.match(request)||Response.error();
