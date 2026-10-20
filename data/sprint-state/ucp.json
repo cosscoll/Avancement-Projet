@@ -1,9 +1,24 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "idle",
-  "lease": null,
-  "checkpoint": null,
+  "status": "leased",
+  "lease": {
+    "run_id": "ucp-20261020T152905Z-v3",
+    "owner": "chatgpt-automation",
+    "started_at": "2026-10-20T15:29:05Z",
+    "expires_at": "2026-10-20T16:14:05Z",
+    "objective": "Conserver la copie du brief lorsque Clipboard API est indisponible et nettoyer le contrôle temporaire sans fuite"
+  },
+  "checkpoint": {
+    "phase": "lock-acquired",
+    "repository": "cosscoll/UnCoupdePouce",
+    "base_commit": "836f767f6b50ddbf380ef574f78dae40902634a8",
+    "branch": null,
+    "pull_request": null,
+    "files": [],
+    "tests": [],
+    "next": "Relire le gestionnaire de copie et ses tests, puis créer une branche depuis le HEAD exact de main."
+  },
   "last_completed": {
     "run_id": "ucp-20261020T144341Z-v3",
     "ended_at": "2026-10-20T14:48:58.050Z",
