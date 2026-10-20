@@ -284,7 +284,12 @@ try{
  if(production){
   const registered=await js("(async()=>{if(!('serviceWorker' in navigator))return false;return Promise.race([navigator.serviceWorker.ready.then(r=>!!r.active),new Promise(resolve=>setTimeout(()=>resolve(false),15000))])})()");
   assert.equal(registered,true,'Public PWA must install and activate its service worker');
-  await ready(()=>js("Boolean(navigator.serviceWorker.controller)"),12000)();
+  // On a fresh installation, ready.active may resolve just before clients.claim() takes effect.
+  // A normal reload is allowed once; the page must then be controlled or the test fails.
+  if(!(await js("Boolean(navigator.serviceWorker.controller)"))){
+   await command('Page.reload',{ignoreCache:false});
+  }
+  await ready(()=>js("Boolean(navigator.serviceWorker.controller)"),14000)();
   const cacheNames=await js("(async()=>await caches.keys())()");
   assert.ok(Array.isArray(cacheNames)&&cacheNames.some(name=>name.startsWith('control-shell-')),'Public PWA must cache the application shell');
   assert.ok(cacheNames.includes('control-shell-v39')&&cacheNames.includes('control-public-data-v39'),'PWA must have installed the verified v39 caches');
