@@ -1,33 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-20261020T193421Z-v3",
-    "owner": "chatgpt-automation-ucp",
-    "started_at": "2026-10-20T19:34:21Z",
-    "expires_at": "2026-10-20T20:19:21Z",
-    "objective": "Empêcher une exception de removeChild d’annuler une copie du brief déjà réussie"
-  },
-  "checkpoint": {
-    "base_ref": "c5783609e6305548e4134fc71f34fc212a7dc442",
-    "branch": "fix/ucp-copy-cleanup-error-20261020",
-    "head_ref": "68132219aaa104b194665fa307f92fc3c57c966c",
-    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/11",
-    "files": [
-      "site-vitrine/dist/assets/app.js",
-      "site-vitrine/tests/app-shell.test.cjs"
-    ],
-    "checks": [
-      "Vitrine CI #39484846931 success (première passe)"
-    ],
-    "next_action": "Attendre la CI corrective couvrant l’absence totale de removeChild, puis vérifier la base et fusionner prudemment."
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261020T183251Z-v3",
-    "ended_at": "2026-10-20T18:35:56.812Z",
+    "run_id": "ucp-20261020T193421Z-v3",
+    "ended_at": "2026-10-20T19:37:18.631Z",
     "outcome": "merged",
-    "summary": "PR #10 nettoyage legacy du champ de copie fusionnée sur main c5783609 après deux CI vertes ; navigateur réel non vérifié.",
+    "summary": "PR #11 résilience du nettoyage après copie fusionnée sur main 1de0fc44 après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
