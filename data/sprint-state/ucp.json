@@ -1,32 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-20261020T132616Z-v3",
-    "started_at": "2026-10-20T13:26:16Z",
-    "expires_at": "2026-10-20T14:11:16Z",
-    "objective": "Maintenir le générateur de brief fonctionnel quand Element.replaceChildren est indisponible"
-  },
-  "checkpoint": {
-    "branch": "fix/ucp-brief-legacy-dom-20261020",
-    "head": "32fa3b1fc07620ba5e9de227e2719d47e6e37675",
-    "files": [
-      "site-vitrine/dist/assets/app.js",
-      "site-vitrine/tests/app-shell.test.cjs"
-    ],
-    "tests": [
-      "Vitrine CI 39431176318 réussie",
-      "Seconde CI après tests des deux chemins DOM en attente"
-    ],
-    "next_action": "Attendre la seconde CI, contrôler main et fusionner uniquement si verte.",
-    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/6"
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261020T122924Z-v3",
-    "ended_at": "2026-10-20T12:34:53.854Z",
+    "run_id": "ucp-20261020T132616Z-v3",
+    "ended_at": "2026-10-20T13:33:21.316Z",
     "outcome": "merged",
-    "summary": "PR #5 compatibilité matchMedia fusionnée sur main 88db2dad après deux CI vertes ; navigateur réel non vérifié.",
+    "summary": "PR #6 repli DOM du brief fusionnée sur main 828eb1bb après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
