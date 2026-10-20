@@ -1,0 +1,41 @@
+name: CONTROL Cloud — Configuration et protections avant connexion
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/cloud-app.js'
+      - 'app.html'
+      - 'config/cloud.json'
+      - 'config/cloud.example.json'
+      - 'tests/control-cloud-config-gate.test.mjs'
+      - '.github/workflows/control-cloud-config.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: control-cloud-config-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  safe-config:
+    name: Cloud désactivé, projet indépendant et clés publiques seulement
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Charger le dépôt sans authentification persistante
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Installer Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Contrôler les syntaxes JavaScript et JSON
+        run: |
+          node --check assets/cloud-app.js
+          node --check tests/control-cloud-config-gate.test.mjs
+          node -e "JSON.parse(require('node:fs').readFileSync('config/cloud.json','utf8'));JSON.parse(require('node:fs').readFileSync('config/cloud.example.json','utf8'))"
+      - name: Protéger le compte avant toute activation
+        run: node --test tests/control-cloud-config-gate.test.mjs tests/cloud-smoke.test.mjs
