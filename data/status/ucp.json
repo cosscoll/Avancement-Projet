@@ -134,7 +134,7 @@
     },
     {
       "title": "Vitrine intégrée, recette réelle non vérifiée",
-      "description": "PR UCP #2 à #13 fusionnées sur main jusqu’au commit 02585c09 : navigation mobile restaurée, état public durable, sorties build/dist contrôlées et replis ajoutés pour MediaQueryList, NodeList legacy, Element.replaceChildren, Element.append, copie et téléchargement du brief. Les CI Vitrine 39500532130 et 39500601579 sont vertes ; la seconde vérifie le repli appendChild lorsque Element.append lève une exception. L’incident ucp-public-site-unverified reste ouvert : aucun navigateur, lecteur d’écran, appareil réel, site public ou staging n’a été vérifié.",
+      "description": "PR UCP #2 à #14 fusionnées sur main jusqu’au commit 16f3143d : navigation mobile restaurée, état public durable, sorties build/dist contrôlées et replis DOM ajoutés pour le menu, la checklist, la copie et le téléchargement du brief. Les CI Vitrine 39508853215 et 39508906620 sont vertes ; la seconde vérifie le repli appendChild lorsque document.body.append lève une exception. L’incident ucp-public-site-unverified reste ouvert : aucun navigateur, lecteur d’écran, appareil réel, site public ou staging n’a été vérifié.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-54 ; PR #2 à #13 fusionnées sur main jusqu’à 02585c09 avec CI Vitrine verte, contrôle build/dist et replis DOM de navigation/brief. Les contrôles isolés et simulés ne valent pas recette navigateur, appareil, site public ou staging.",
-  "baseline_date": "2026-10-20"
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-54 ; PR #2 à #14 fusionnées sur main jusqu’à 16f3143d avec CI Vitrine verte, contrôle build/dist et replis DOM de navigation/brief. Les contrôles isolés et simulés ne valent pas recette navigateur, appareil, site public ou staging.",
+  "baseline_date": "2026-10-21"
 }
