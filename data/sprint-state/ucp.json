@@ -1,34 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
+  "last_completed": {
     "run_id": "ucp-20261020T072624Z-v3",
-    "started_at": "2026-10-20T07:26:24Z",
-    "expires_at": "2026-10-20T08:11:24Z",
-    "objective": "Corriger un bug réel et indépendant sur la vitrine publique UCP, avec PR et contrôle CI"
-  },
-  "checkpoint": {
-    "at": "2026-10-20T07:32:41Z",
-    "branch": "fix/ucp-avancement-mobile-nav-v3",
-    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/2",
-    "files": [
-      "site-vitrine/dist/avancement.html",
-      "site-vitrine/scripts/check_site.py",
-      ".github/workflows/vitrine-ci.yml"
-    ],
-    "stage": "merged",
-    "main_sha": "8da708c0815221c0fbef9fdbb24976aeacbb4a96",
-    "branch_sha": "91451849d6bdedb37ed66c3d8075805c7a8587e6",
-    "checks": [
-      "Vitrine CI run 39387060851: success",
-      "Structure statique: success",
-      "Syntaxe JavaScript: success",
-      "Tests générateur de brief: success",
-      "PR #2 mergeable=true puis fusion squash sur head SHA attendu"
-    ],
-    "blocker": "Recette navigateur, lecteur d’écran et appareil réel non exécutée ; site/staging non vérifié.",
-    "next_action": "Recetter le menu à 320/360/390/768 px, Échap, clic extérieur et focus sur un navigateur réel avant de clôturer l’alerte."
-  },
-  "last_completed": null
+    "ended_at": "2026-10-20T07:34:00Z",
+    "outcome": "merged",
+    "summary": "PR #2 navigation mobile fusionnée sur main 8da708c avec CI Vitrine verte ; recette navigateur et site non vérifiés.",
+    "report_synced": true
+  }
 }
