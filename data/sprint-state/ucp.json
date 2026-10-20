@@ -9,18 +9,20 @@
     "objective": "Supprimer l’état daté et périssable du 14 octobre des pages Projet FR/EN et relier durablement aux preuves publiques"
   },
   "checkpoint": {
-    "stage": "coded",
+    "stage": "second_pass",
     "repository": "cosscoll/UnCoupdePouce",
     "branch": "fix/ucp-project-status-freshness-20261020",
-    "head_sha": "81baffa0c59bc1da861b9bca224ba27bae9f9932",
+    "pull_request": 4,
+    "head_sha": "86fc54ddbc5ee2c780d96cf44575a5ac56272a0e",
     "files": [
       "site-vitrine/build.py",
       "site-vitrine/dist/projet.html",
       "site-vitrine/dist/en/index.html",
-      "site-vitrine/scripts/check_site.py"
+      "site-vitrine/scripts/check_site.py",
+      ".github/workflows/vitrine-ci.yml"
     ],
-    "tests": "En attente de la CI Vitrine sur pull request",
-    "next_action": "Créer la PR, examiner le diff et vérifier que le générateur et les deux pages portent le même statut durable"
+    "tests": "Première CI en cours sur 81baffa ; seconde CI attendue après correction P1 de synchronisation build/dist",
+    "next_action": "Attendre la CI finale, contrôler main et fusionner seulement si la reconstruction déterministe ne produit aucun diff"
   },
   "last_completed": {
     "run_id": "ucp-20261020T083418Z-v3",
