@@ -1,13 +1,8 @@
 {
   "schema_version": 3,
   "project": "banque-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "banque-ia-20261020082131971-v3-r12",
-    "started_at": "2026-10-20T08:21:31.971Z",
-    "expires_at": "2026-10-20T09:06:31.971Z",
-    "objective": "Corriger la pause/reprise de la cartographie WebGL en préservant reduced-motion; tests de régression"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
     "step": "code-write-refused-by-safety-check",
     "branch": "fix/reduced-motion-toggle-20261019",
@@ -16,8 +11,8 @@
     "next_action": "Blocage P0 : obtenir une autorisation d'écriture du fichier assets/atlas.js via la voie GitHub prévue. Correctif horloge suspendable identifié mais NON enregistré. Ne pas contourner le refus ; après autorisation, appliquer puis tester Chromium pause/reprise et reduced-motion."
   },
   "last_completed": {
-    "run_id": "banque-ia-20261019-1618-v3-r5",
-    "ended_at": "2026-10-19T14:20:21.996Z",
+    "run_id": "banque-ia-20261020082131971-v3-r12",
+    "ended_at": "2026-10-20T08:22:35.847Z",
     "result": "blocked-github-code-write-safety",
     "pr_url": null
   },
