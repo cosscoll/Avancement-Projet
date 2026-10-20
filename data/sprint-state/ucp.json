@@ -13,13 +13,15 @@
     "base_ref": "e7ff47e53802c4dde5626dce0d009038c3de83d8",
     "branch": "fix/ucp-copy-legacy-remove-20261020",
     "head_ref": "340142d5059ad2247818d94e79ff991263485fc6",
-    "pr_url": null,
+    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/10",
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.cjs"
     ],
-    "checks": [],
-    "next_action": "Créer la PR et attendre la première CI ; puis autocritique et seconde passe corrective."
+    "checks": [
+      "Vitrine CI #39475940386 success (première passe)"
+    ],
+    "next_action": "Ajouter le test correctif pour textarea.remove() qui lève une exception, puis relancer la CI."
   },
   "last_completed": {
     "run_id": "ucp-20261020T163215Z-v3",
