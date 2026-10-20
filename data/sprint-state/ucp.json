@@ -8,7 +8,20 @@
     "expires_at": "2026-10-20T10:18:01Z",
     "objective": "Supprimer l’état daté et périssable du 14 octobre des pages Projet FR/EN et relier durablement aux preuves publiques"
   },
-  "checkpoint": null,
+  "checkpoint": {
+    "stage": "coded",
+    "repository": "cosscoll/UnCoupdePouce",
+    "branch": "fix/ucp-project-status-freshness-20261020",
+    "head_sha": "81baffa0c59bc1da861b9bca224ba27bae9f9932",
+    "files": [
+      "site-vitrine/build.py",
+      "site-vitrine/dist/projet.html",
+      "site-vitrine/dist/en/index.html",
+      "site-vitrine/scripts/check_site.py"
+    ],
+    "tests": "En attente de la CI Vitrine sur pull request",
+    "next_action": "Créer la PR, examiner le diff et vérifier que le générateur et les deux pages portent le même statut durable"
+  },
   "last_completed": {
     "run_id": "ucp-20261020T083418Z-v3",
     "ended_at": "2026-10-20T08:42:12Z",
