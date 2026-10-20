@@ -16,9 +16,10 @@
       "site-vitrine/tests/app-shell.test.cjs"
     ],
     "tests": [
-      "CI de PR à lancer"
+      "Vitrine CI 39431176318 en attente"
     ],
-    "next_action": "Créer la PR, attendre la première CI, autocritiquer puis corriger et retester."
+    "next_action": "Attendre la CI #39431176318, autocritiquer puis corriger et retester.",
+    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/6"
   },
   "last_completed": {
     "run_id": "ucp-20261020T122924Z-v3",
