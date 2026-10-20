@@ -1,37 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-20261020T212553Z-v3",
-    "owner": "chatgpt-automation-ucp",
-    "started_at": "2026-10-20T21:25:53Z",
-    "expires_at": "2026-10-20T22:10:53Z",
-    "objective": "Maintenir la checklist du brief sans Element.append et après exception de append"
-  },
-  "checkpoint": {
-    "phase": "ready_to_merge",
-    "repository": "cosscoll/UnCoupdePouce",
-    "base_branch": "main",
-    "base_sha": "54e0641c809acd2a67fbd057f322ef022e961be6",
-    "branch": "fix/ucp-brief-appendchild-legacy-20261020",
-    "branch_sha": "8cb7cfcbd54a26eb2bcc3ee00dac16f0b993648e",
-    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/13",
-    "files": [
-      "site-vitrine/dist/assets/app.js",
-      "site-vitrine/tests/app-shell.test.cjs"
-    ],
-    "tests": [
-      "Vitrine CI première passe: success (39500532130)",
-      "Vitrine CI seconde passe: success (39500601579)"
-    ],
-    "next_action": "Fusionner PR #13 avec SHA de tête attendu, puis vérifier main et synchroniser le journal public."
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261020T202911Z-v3",
-    "ended_at": "2026-10-20T20:31:34.118Z",
+    "run_id": "ucp-20261020T212553Z-v3",
+    "ended_at": "2026-10-20T21:29:25.872Z",
     "outcome": "merged",
-    "summary": "PR #12 compatibilité NodeList legacy du menu fusionnée sur main 54e0641c après deux CI vertes ; navigateur réel non vérifié.",
+    "summary": "PR #13 compatibilité appendChild de la checklist fusionnée sur main 02585c09 après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
