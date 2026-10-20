@@ -3,10 +3,10 @@
   "project": "iagile",
   "status": "running",
   "lease": {
-    "run_id": "iagile-20261019T213542636Z-m8-preview-v3",
-    "started_at": "2026-10-19T21:35:42.636Z",
-    "expires_at": "2026-10-19T22:20:42.636Z",
-    "objective": "Preview draft M8 deliverables for assigned active instructors without learner answers; no premium public release"
+    "run_id": "iagile-20261020T003517914Z-m8-preview-v3",
+    "started_at": "2026-10-20T00:35:17.914Z",
+    "expires_at": "2026-10-20T01:20:17.914Z",
+    "objective": "M8 Processus: make assigned instructor draft exercise preview independent of learner answers; retain premium private"
   },
   "checkpoint": {
     "branch": "feature/academy-private-rebased-20261010",
@@ -20,5 +20,5 @@
     "result": "blocked",
     "summary": "Diagnostic M8 and RLS completed; code and journal writes refused."
   },
-  "recovered_from": "iagile-20261019T183709915Z-preview-m8"
+  "recovered_from": "iagile-20261019T213542636Z-m8-preview-v3"
 }
