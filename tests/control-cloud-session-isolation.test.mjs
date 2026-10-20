@@ -22,6 +22,7 @@ function harness(){
  const visible=s=>state.screens.push(s);
  const live=s=>state.messages.push({text:String(s),info:true});
  const render=()=>state.rendered++;
+ const panel=(title,body)=>'<section>'+title+body+'</section>';
  const client={
   auth:{async getUser(){return {data:{user:state.user?{id:state.user,email:state.user+'@example.test'}:null}}}},
   from(table){
@@ -37,11 +38,11 @@ function harness(){
    return {select(){return {order(){return {limit:query}},eq(){return {maybeSingle:query}}}}};
   }
  };
- const factory=new Function('client','window','byId','render','visible','live','message',
+ const factory=new Function('client','window','byId','render','visible','live','message','panel',
    "let epoch=0,authUser=null,waiting=false,waitingOwner=null,cache={projects:[],items:[],preferences:null};\n"+
    functions+
    "\nreturn {verifiedSession,reload,read:()=>({epoch,owner:authUser?.id||null,projects:cache.projects,items:cache.items,preferences:cache.preferences,waitingOwner})};");
- const app=factory(client,window,byId,render,visible,live,message);
+ const app=factory(client,window,byId,render,visible,live,message,panel);
  return {state,app,makeSlow(table,owner='A'){const d=makeDeferred();state.delays.set(owner+':'+table,d);return d}};
 }
 test('ordinary signed-in user A can read only own RLS-shaped synthetic data',async()=>{
