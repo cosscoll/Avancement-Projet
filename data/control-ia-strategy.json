@@ -30,7 +30,13 @@
     "common_lock_file": "data/sprint-state/control-ia.json",
     "lease_minutes": 45,
     "allow_security_interrupt": true,
-    "definition_of_done": "Critères d'acceptation prouvés par parcours réel + permissions + dépendances, pas seulement PR/CI/déploiement."
+    "definition_of_done": "Critères d'acceptation prouvés par parcours réel + permissions + dépendances, pas seulement PR/CI/déploiement.",
+    "delivery_mode": "direct_main",
+    "preflight_required": true,
+    "post_commit_ci_required": true,
+    "rollback_on_new_critical_regression": true,
+    "no_pull_request_required": true,
+    "staged_writes_must_verify_blob_sha": true
   },
   "roadmap_phases": [
     {
@@ -96,12 +102,12 @@
     "Éviter de commencer des fonctionnalités indépendantes simplement pour augmenter le nombre de commits."
   ],
   "handoff": {
-    "next_sprint_goal": "Reprendre le checkpoint PWA v38 non fusionné si les preuves/permissions l'autorisent, puis poursuivre les tests de compte CONTROL isolé, sans activer Cloud.",
+    "next_sprint_goal": "Reprendre le checkpoint PWA v38 puis avancer CONTROL-ACCOUNT, après préflight; publier les changements sûrs directement sur main (aucune fusion PR).",
     "checkpoint_to_review": "data/sprint-state/control-ia.json : control-ia/pwa-atomic-v38-20261019-1754 ; write GitHub refusé ; tests locaux déclarés 16/16 non intégrés",
     "next_steps": [
-      "Vérifier si PWA v38 a été récupérée sur main ou existe sur branche avant de recréer le correctif.",
-      "Vérifier CI actuelle et distinguer les échecs des rapports d'autres projets ; ne pas masquer les erreurs.",
-      "Renforcer les tests d'identité/RLS et les préparatifs de CONTROL-ACCOUNT sans créer de backend non autorisé."
+      "Vérifier si le checkpoint PWA v38 existe réellement dans main/branche et reprendre les preuves ou tests sans réécrire à l'aveugle.",
+      "Exécuter tests ciblés avant écriture directe main; vérifier le SHA de chaque fichier créé/modifié; contrôler la CI et la publication après chaque lot.",
+      "Poursuivre le socle CONTROL-ACCOUNT par tests d'isolation et sécurité sans activer Cloud ni créer une ressource payante."
     ],
     "external_decision_required": "Nouvelle organisation/projet Supabase exclusivement CONTROL, coût attesté 0 € et consentement explicite avant création/activation."
   },
