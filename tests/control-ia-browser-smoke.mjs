@@ -21,7 +21,7 @@ const deadline=(fn,max=18000,step=180)=>async()=>{
 // Detect stale GitHub Pages before claiming that a browser tested this commit.
 // The fresh public HTML/data/JS must match the checked-out source bytes.
 const PUBLIC_ORIGIN='https://cosscoll.github.io/Avancement-Projet/';
-const PUBLIC_ASSETS=['index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/command-center.js','assets/control-delivery.js','data/control-ia-delivery.json'];
+const PUBLIC_ASSETS=['index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','data/control-ia-delivery.json','data/control-ia-requirements.json'];
 const hash=data=>createHash('sha256').update(data).digest('hex');
 async function verifyPublishedFiles(){
  const expected=new Map(PUBLIC_ASSETS.map(path=>[path,hash(readFileSync(resolve(root,path)))]));
@@ -109,6 +109,17 @@ try{
  assert.match(await js("document.querySelector('.control-delivery-focus h3').textContent"),/Compte unique/);
  assert.match(await js("document.querySelector('.control-delivery-count').textContent"),/0 \/ 9/);
  log('9 objectives, 36 criteria and focus visible in actual Chromium DOM');
+
+ await ready(()=>js("document.querySelector('[data-control-v12] .control-delivery-v12-count')?.textContent?.includes('42 scénarios')"),14000)();
+ const v12=await js("({text:document.querySelector('[data-control-v12]')?.textContent||'',link:document.querySelector('[data-control-v12] a')?.href})");
+ assert.match(v12.text,/22 tickets de développement/);
+ assert.match(v12.text,/10 améliorations/);
+ assert.match(v12.text,/30 critères supplémentaires/);
+ assert.match(v12.text,/0 \/ 42 scénarios entièrement vérifiés/);
+ assert.match(v12.text,/4 contrôles partiels\/simulés/);
+ assert.equal(new URL(v12.link).pathname,'/Avancement-Projet/data/control-ia-requirements.json');
+ log('public V1.2 requirement overview renders 22 tickets/42 scenarios/10 additions with no fake verification');
+
  assert.ok(await js("!!document.querySelector('[data-control-operator]')"),'Operator panel missing');
  assert.equal(await js("document.querySelector('[data-op-consent]').checked"),false);
  await js("document.querySelector('[data-op-form] textarea').value='Mes tâches';document.querySelector('[data-op-form]').requestSubmit()");
