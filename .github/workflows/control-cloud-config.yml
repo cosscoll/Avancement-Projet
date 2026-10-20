@@ -8,6 +8,7 @@ on:
       - 'config/cloud.json'
       - 'config/cloud.example.json'
       - 'tests/control-cloud-config-gate.test.mjs'
+      - 'tests/control-cloud-session-isolation.test.mjs'
       - '.github/workflows/control-cloud-config.yml'
   workflow_dispatch:
 
@@ -36,6 +37,7 @@ jobs:
         run: |
           node --check assets/cloud-app.js
           node --check tests/control-cloud-config-gate.test.mjs
+          node --check tests/control-cloud-session-isolation.test.mjs
           node -e "JSON.parse(require('node:fs').readFileSync('config/cloud.json','utf8'));JSON.parse(require('node:fs').readFileSync('config/cloud.example.json','utf8'))"
       - name: Protéger le compte avant toute activation
-        run: node --test tests/control-cloud-config-gate.test.mjs tests/cloud-smoke.test.mjs
+        run: node --test tests/control-cloud-config-gate.test.mjs tests/control-cloud-session-isolation.test.mjs tests/cloud-smoke.test.mjs
