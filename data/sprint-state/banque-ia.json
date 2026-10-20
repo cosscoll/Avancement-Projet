@@ -9,11 +9,11 @@
     "objective": "Corriger la pause/reprise de la cartographie WebGL en préservant reduced-motion; tests de régression"
   },
   "checkpoint": {
-    "step": "lease-acquisition-pending",
+    "step": "code-write-refused-by-safety-check",
     "branch": "fix/reduced-motion-toggle-20261019",
     "pr_url": null,
     "files": [],
-    "next_action": "Appliquer le correctif d'horloge d'animation suspendable sur branche existante puis tester et soumettre une PR"
+    "next_action": "Blocage P0 : obtenir une autorisation d'écriture du fichier assets/atlas.js via la voie GitHub prévue. Correctif horloge suspendable identifié mais NON enregistré. Ne pas contourner le refus ; après autorisation, appliquer puis tester Chromium pause/reprise et reduced-motion."
   },
   "last_completed": {
     "run_id": "banque-ia-20261019-1618-v3-r5",
