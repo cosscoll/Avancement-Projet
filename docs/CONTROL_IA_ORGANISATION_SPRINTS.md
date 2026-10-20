@@ -1,6 +1,6 @@
 # CONTROL IA — Organisation permanente des sprints (autonomes et conversations)
 
-**Édition : 20 octobre 2026** · Responsable : CONTROL IA uniquement. Cette procédure complète les protocoles [V3](PROTOCOLE_SPRINTS_V3.md) et [V2](PROTOCOLE_SPRINTS_V2.md), sans supprimer l'autocritique, la seconde passe corrective, les tests ni les règles de publication. Les instructions privées V1.1 et BACK-001..042 restent privées.
+**Édition : 20 octobre 2026** · Responsable : CONTROL IA uniquement. Cette procédure complète les protocoles [V3](PROTOCOLE_SPRINTS_V3.md) et [V2](PROTOCOLE_SPRINTS_V2.md), sans supprimer l'autocritique, la seconde passe corrective, les tests ni les règles de publication. Le cahier V1.2 intégral reste privé : 22 tickets BACK-001..022 et 42 recettes T-01..T-42. Les dix améliorations ajoutent 30 critères supplémentaires. Le registre public expurgé est documenté dans [le suivi V1.2](CONTROL_IA_CAHIER_V1_2_SUIVI.md).
 
 ## 1. Ce que nous construisons et comment nous mesurons le résultat
 
