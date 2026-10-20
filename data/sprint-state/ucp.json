@@ -10,14 +10,20 @@
     "objective": "Maintenir le téléchargement du brief lorsque Element.remove est indisponible et vérifier le nettoyage legacy"
   },
   "checkpoint": {
-    "phase": "lock-acquired",
+    "phase": "first-pass-committed",
     "repository": "cosscoll/UnCoupdePouce",
     "base_commit": "ec3be79fc20ffbabe980324db3e96a00a01801c9",
-    "branch": null,
+    "branch": "fix/ucp-download-legacy-remove-20261020",
+    "head_commit": "ea21ca8e7477da7041b87570db9bf8996c4a1067",
     "pull_request": null,
-    "files": [],
-    "tests": [],
-    "next": "Relire le téléchargement du brief, créer une branche depuis le HEAD exact de main et ajouter un repli removeChild."
+    "files": [
+      "site-vitrine/dist/assets/app.js",
+      "site-vitrine/tests/app-shell.test.cjs"
+    ],
+    "tests": [
+      "CI première passe en attente"
+    ],
+    "next": "Ouvrir la PR, attendre la CI, puis tester le repli removeChild lorsque Element.remove existe mais lève une exception."
   },
   "last_completed": {
     "run_id": "ucp-20261020T152905Z-v3",
