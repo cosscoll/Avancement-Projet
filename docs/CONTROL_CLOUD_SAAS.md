@@ -99,3 +99,18 @@ Le code n'engage aucune dépense. Créer un nouveau projet Supabase, héberger d
 **Toujours NON testé :** aucune authentification Supabase Auth réelle, signature et rotation JWT, vraie API PostgREST, permissions/configuration du futur projet CONTROL, appels multi-appareils, backend connecté, suppression des comptes ni Android physique. Un rôle authenticated et une fonction auth.uid() **simulés** ne valident pas les sessions fournisseur ; il ne s'agit pas d'un audit de sécurité complet. Critères ACC-01 à ACC-04 **non vérifiés**. Cloud enabled:false inchangé.
 
 **Prochaine recette après confirmation/autorisation d'une instance CONTROL réellement indépendante à coût nul :** deux utilisateurs de TEST authentifiés par Supabase, leurs propres JWT (jamais enregistrés dans un dépôt public), tests PostgREST A/B, sessions expirées et révoquées, synchronisation sur deux appareils autorisés, export et suppression. L'échec d'un seul scénario bloque l'activation publique.
+
+
+## Renforcement de la configuration et des sessions — 20 octobre 2026
+
+**Code déployé sur `main` ; authentification réelle toujours NON ACTIVÉE.**
+
+Le frontal refuse maintenant toute initialisation Supabase lorsque l'URL ne correspond pas à un projet proprement indiqué : `enabled:true` doit être accompagné de `independentProjectConfirmed:true` et de `controlProjectRef` égal au sous-domaine du projet distinct `.supabase.co`. Une URL avec identifiants, paramètres, fragment, chemin secondaire, protocole non HTTPS ou port non standard est refusée. Ces drapeaux ne constituent **pas** une preuve de séparation réelle : ils obligent seulement à passer une vérification explicite avant toute tentative de connexion.
+
+**Clé publique uniquement :** seuls les identifiants modernes `sb_publishable_...` sont acceptés par la configuration du navigateur. Les anciens JWT `eyJ...` sont refusés, car un token de rôle `service_role` peut se présenter sous cette forme sans texte visible `service_role`. Les clés `sb_secret_...`, `service_role` et tous secrets ne doivent jamais apparaître dans les fichiers publics. Le contrôle JavaScript est complémentaire à de vraies règles RLS, OAuth et tests serveur ; ne pas le considérer comme substitut.
+
+Exemple : [`config/cloud.example.json`](../config/cloud.example.json), conservant `enabled:false` et `independentProjectConfirmed:false` par défaut. Ne renseigner la référence d'un futur projet CONTROL indépendant qu'après accord utilisateur, contrôle de son prix et vérification qu'il n'est pas IAgile. Sans ces conditions, le panneau « CONTROL Cloud se prépare » reste le seul parcours autorisé.
+
+**Preuves disponibles :** [CI de configuration et tests de session synthétique](https://github.com/cosscoll/Avancement-Projet/actions/runs/39403753476), 20/20 réussis. Parmi eux, les fonctions `verifiedSession` et `reload` de la vraie application Cloud sont exercées avec deux utilisateurs fictifs : isolation des réponses tardives A→B, déconnexion pendant un chargement, refus d'afficher des erreurs obsolètes de A, et fusion de rafraîchissements simultanés. Ces scénarios restent des **simulations du client**, pas des connexions Supabase avec JWT vérifiés. Le cahier `T-16` est suivi comme preuve partielle uniquement, sans validation complète.
+
+**Blocage P0 maintenu :** absence de projet CONTROL indépendant approuvé, absence de recette Auth/PostgREST par deux utilisateurs réels et synchronisation multi-appareils. Les critères réels `ACC-01..04`, `T-15/16/21` restent non certifiés.
