@@ -1,37 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-20261020T093301Z-v3",
-    "started_at": "2026-10-20T09:33:01Z",
-    "expires_at": "2026-10-20T10:18:01Z",
-    "objective": "Supprimer l’état daté et périssable du 14 octobre des pages Projet FR/EN et relier durablement aux preuves publiques"
-  },
-  "checkpoint": {
-    "stage": "merged",
-    "repository": "cosscoll/UnCoupdePouce",
-    "branch": "fix/ucp-project-status-freshness-20261020",
-    "pull_request": 4,
-    "head_sha": "e725599e001a9df7e2d643b6a033493dafbad4f6",
-    "main_sha": "5471ff9cb52b1aaeabc7791c6d52bc3fb2668b49",
-    "files": [
-      ".github/workflows/vitrine-ci.yml",
-      "site-vitrine/build.py",
-      "site-vitrine/dist/404.html",
-      "site-vitrine/dist/en/index.html",
-      "site-vitrine/dist/informations.html",
-      "site-vitrine/dist/projet.html",
-      "site-vitrine/scripts/check_site.py"
-    ],
-    "tests": "CI Vitrine 39401930217 success après correction de la dérive build/dist",
-    "next_action": "Relire les blobs main, synchroniser statut et journal V3, puis libérer le bail"
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261020T083418Z-v3",
-    "ended_at": "2026-10-20T08:42:12Z",
+    "run_id": "ucp-20261020T093301Z-v3",
+    "ended_at": "2026-10-20T09:37:49Z",
     "outcome": "merged",
-    "summary": "PR #3 page Avancement factuelle fusionnée sur main 4eefa80 avec seconde CI Vitrine verte ; recette navigateur/site non vérifiée.",
+    "summary": "PR #4 statut Projet durable fusionnée sur main 5471ff9 avec contrôle CI build/dist vert ; site réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
