@@ -9,20 +9,23 @@
     "objective": "Supprimer l’état daté et périssable du 14 octobre des pages Projet FR/EN et relier durablement aux preuves publiques"
   },
   "checkpoint": {
-    "stage": "second_pass",
+    "stage": "merged",
     "repository": "cosscoll/UnCoupdePouce",
     "branch": "fix/ucp-project-status-freshness-20261020",
     "pull_request": 4,
-    "head_sha": "86fc54ddbc5ee2c780d96cf44575a5ac56272a0e",
+    "head_sha": "e725599e001a9df7e2d643b6a033493dafbad4f6",
+    "main_sha": "5471ff9cb52b1aaeabc7791c6d52bc3fb2668b49",
     "files": [
+      ".github/workflows/vitrine-ci.yml",
       "site-vitrine/build.py",
-      "site-vitrine/dist/projet.html",
+      "site-vitrine/dist/404.html",
       "site-vitrine/dist/en/index.html",
-      "site-vitrine/scripts/check_site.py",
-      ".github/workflows/vitrine-ci.yml"
+      "site-vitrine/dist/informations.html",
+      "site-vitrine/dist/projet.html",
+      "site-vitrine/scripts/check_site.py"
     ],
-    "tests": "Première CI en cours sur 81baffa ; seconde CI attendue après correction P1 de synchronisation build/dist",
-    "next_action": "Attendre la CI finale, contrôler main et fusionner seulement si la reconstruction déterministe ne produit aucun diff"
+    "tests": "CI Vitrine 39401930217 success après correction de la dérive build/dist",
+    "next_action": "Relire les blobs main, synchroniser statut et journal V3, puis libérer le bail"
   },
   "last_completed": {
     "run_id": "ucp-20261020T083418Z-v3",
