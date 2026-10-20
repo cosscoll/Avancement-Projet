@@ -3034,5 +3034,94 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
       }
     ]
+  },
+  {
+    "schema_version": 3,
+    "id": "ucp-20261020T212553Z-v3",
+    "started_at": "2026-10-20T21:25:53Z",
+    "ended_at": "2026-10-20T21:29:25.872Z",
+    "objectives": [
+      {
+        "before": "Le générateur de brief appelle Element.append sans repli et peut interrompre la checklist sur un ancien WebView.",
+        "after": "Chaque conseil utilise append quand disponible puis appendChild si append manque ou lève une exception.",
+        "acceptance": "Les deux variantes DOM simulées passent dans deux CI, puis le correctif est fusionné sur main hors application/**."
+      }
+    ],
+    "summary": "PR #13 fusionnée sur main 02585c09 : la checklist du brief accepte désormais les DOM sans Element.append ou avec append en exception ; deux CI vertes, aucune recette navigateur ou staging.",
+    "done": [
+      "Directives #1 et #2 relues : connexion Codex lue mais bloquée par les interdictions permanentes.",
+      "Verrou coopératif V3 acquis et relu avant mutation.",
+      "Repli appendChild ajouté au rendu de la checklist sans toucher application/**.",
+      "Première CI Vitrine 39500532130 réussie ; autocritique P1 : exception de Element.append non couverte.",
+      "Test correctif ajouté pour Element.append qui lève une exception ; CI finale 39500601579 réussie.",
+      "PR #13 fusionnée prudemment sur main 02585c09 après vérification du head, de la base et du bail.",
+      "Blobs de app.js et app-shell.test.cjs relus sur le commit main fusionné."
+    ],
+    "deliverables": [
+      {
+        "name": "Compatibilité appendChild de la checklist du brief",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "02585c096e270c185a031827673720f9c797862b",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/02585c096e270c185a031827673720f9c797862b",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "quality": {
+      "checks_run": [
+        "Vitrine CI première passe #39500532130",
+        "Vitrine CI corrective #39500601579",
+        "Vérification des blobs app.js et app-shell.test.cjs sur main"
+      ],
+      "checks_passed": [
+        "Structure statique",
+        "Syntaxe JavaScript",
+        "Tests Node de la vitrine",
+        "Reconstruction déterministe build/dist",
+        "Scénarios append absent et append en exception",
+        "Blobs attendus présents sur main"
+      ],
+      "checks_failed": [],
+      "real_browser_verified": false,
+      "ci": "success"
+    },
+    "blockers": [
+      "Aucun navigateur, appareil réel, site public ou staging autorisé n’a été vérifié.",
+      "Le clone Windows dev/ucp-codex reste volontairement non lu et non synchronisé.",
+      "Les consignes publiques #1 et #2 demandant Codex restent bloquées par les interdictions permanentes."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "ucp-public-site-unverified",
+        "status": "open",
+        "consecutive_sprints": 12,
+        "next_action": "Effectuer une recette navigateur réelle à 320/360/390/768 px sur un staging explicitement autorisé ; sinon poursuivre un bug indépendant hors application/**."
+      }
+    ],
+    "next": "Tester un autre défaut réel et indépendant hors application/**, ou effectuer la recette WebView/navigateur sur staging autorisé.",
+    "links": [
+      {
+        "label": "PR #13",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/13"
+      },
+      {
+        "label": "Commit main",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/02585c096e270c185a031827673720f9c797862b"
+      },
+      {
+        "label": "CI initiale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39500532130"
+      },
+      {
+        "label": "CI corrective",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39500601579"
+      },
+      {
+        "label": "Statut UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      }
+    ]
   }
 ]
