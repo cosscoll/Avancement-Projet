@@ -1,25 +1,20 @@
 {
   "schema_version": 3,
   "project": "iagile",
-  "status": "running",
-  "lease": {
-    "run_id": "iagile-20261020T043915356Z-m8-gate",
-    "started_at": "2026-10-20T04:39:15.356Z",
-    "expires_at": "2026-10-20T05:24:15.356Z",
-    "objective": "M8 Processus: vérifier la capacité de prévisualisation formateur et produire un critère de recette Auth/RLS vérifiable"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
     "branch": "feature/academy-private-rebased-20261010",
     "pr_url": "https://github.com/cosscoll/IAgile/pull/12",
     "files": [],
     "journal_commit": "68c900c7810d1cf244dc51aae19443a7bf0ce86e",
-    "next_action": "P0: resolve GitHub code write safety refusal through normal authorized support, not retries/bypass. Then implement M8 independent instructor preview on PR #12, review unapplied RLS migration, restore private M8 R3, obtain approval for synthetic Auth tests."
+    "next_action": "P0: GitHub app code write safety refusal; seek normal authorized resolution. M8: add instructor-only preview independent of enrollments, review proposed RLS policy, restore private M8 R3, obtain consent for synthetic Auth tests. Journal append blocked 2026-10-20T04:40:39Z."
   },
   "last_completed": {
-    "run_id": "iagile-20261020T003517914Z-m8-preview-v3",
-    "ended_at": "2026-10-20T00:36:59Z",
+    "run_id": "iagile-20261020T043915356Z-m8-gate",
+    "ended_at": "2026-10-20T04:40:48.499Z",
     "result": "blocked",
-    "summary": "M8 preview candidate checked in memory, GitHub code write refused; SQL permissions confirmed; V3 journal synchronized."
+    "summary": "Read-only audit verified 3 UI blockers and absent draft prompt RLS; no app mutation, journal write refused."
   },
   "recovered_from": "iagile-20261020T014520159Z-m8-security-review"
 }
