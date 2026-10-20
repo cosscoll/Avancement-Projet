@@ -2657,5 +2657,121 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
       }
     ]
+  },
+  {
+    "id": "ucp-20261020T163215Z-v3",
+    "schema_version": 2,
+    "protocol_version": 3,
+    "started_at": "2026-10-20T16:32:15Z",
+    "ended_at": "2026-10-20T16:35:30.655Z",
+    "summary": "Le téléchargement du brief reste désormais déclaré comme réussi sur les anciens DOM sans Element.remove : le lien temporaire est nettoyé par removeChild, y compris si remove existe mais échoue.",
+    "objectives": [
+      {
+        "before": "Après un clic de téléchargement réussi, link.remove pouvait être absent ou lever une exception ; le gestionnaire basculait alors à tort vers l’échec et pouvait laisser le lien temporaire dans le DOM.",
+        "after": "Le nettoyage tente remove puis parentNode.removeChild ; le succès du téléchargement est conservé lorsque le repli nettoie correctement le lien.",
+        "acceptance": "PR #9 fusionnée au commit e7ff47e53802c4dde5626dce0d009038c3de83d8 après deux CI Vitrine réussies."
+      }
+    ],
+    "done": [
+      "Issues centrales #1/#2 relues en premier avec author:cosscoll ; toujours ouvertes, demande Codex lue mais bloquée par les interdictions permanentes.",
+      "Protocoles V3/V2, état, deux derniers journaux, incident, PR, branches, CI et main contrôlés avant mutation.",
+      "Bail V3 ucp-20261020T163215Z-v3 acquis avec le SHA courant puis relu avec le bon propriétaire.",
+      "Correctif limité à site-vitrine/dist/assets/app.js et site-vitrine/tests/app-shell.test.cjs ; aucun fichier application/** ni dev/ucp-codex modifié.",
+      "Première CI 39458542561 réussie avec Element.remove absent et nettoyage par removeChild.",
+      "Autocritique P1 corrigée par le scénario où Element.remove existe mais lève une exception ; seconde CI 39458631314 réussie.",
+      "Main est resté au blob app.js f647edab avant fusion ; PR #9 fusionnée avec le head attendu 70a6fda6, nouveau main e7ff47e53802c4dde5626dce0d009038c3de83d8.",
+      "Les deux blobs ont été relus sur main et le statut public central a été synchronisé au commit 5d6fdcd1."
+    ],
+    "deliverables": [
+      {
+        "name": "PR UCP #9 fusionnée",
+        "kind": "pull_request",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "9",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/9",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Commit main nettoyage legacy du téléchargement",
+        "kind": "commit",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "e7ff47e53802c4dde5626dce0d009038c3de83d8",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/e7ff47e53802c4dde5626dce0d009038c3de83d8",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "CI Vitrine finale",
+        "kind": "ci",
+        "stage": "tested",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "39458631314",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39458631314",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "quality": {
+      "p0": [],
+      "p1": [
+        "La première passe ne couvrait pas un Element.remove présent mais défaillant ; scénario ajouté et réussi."
+      ],
+      "p2": [
+        "Les tests utilisent un DOM simulé Node ; le comportement réel d’un ancien WebView reste à recetter sur un environnement autorisé."
+      ],
+      "second_pass": "corrected_and_retested",
+      "checks_run": [
+        "Vitrine CI 39458542561",
+        "Vitrine CI 39458631314",
+        "Relecture des deux blobs sur main"
+      ],
+      "checks_passed": [
+        "CI initiale",
+        "CI finale après exception de remove simulée",
+        "Blobs main conformes"
+      ],
+      "checks_failed": [],
+      "real_browser_verified": false,
+      "ci": "success"
+    },
+    "blockers": [
+      "Le clone Windows dev/ucp-codex reste volontairement non lu et non modifié ; aucune synchronisation n’est revendiquée.",
+      "Aucun navigateur, appareil réel, site public ou staging n’a été vérifié ; aucun déploiement n’a été déclenché.",
+      "Les demandes publiques #1/#2 de connexion CONTROL–Codex restent lues mais bloquées."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "ucp-public-site-unverified",
+        "status": "incident",
+        "consecutive_sprints": 8,
+        "next_action": "Ne pas répéter une ouverture sans URL confirmée ; effectuer une recette navigateur bornée seulement sur un staging privé autorisé."
+      }
+    ],
+    "next": "Traiter un autre bug indépendant hors application/** ou, si un staging privé autorisé existe, recetter réellement le téléchargement du brief sur un ancien WebView.",
+    "links": [
+      {
+        "label": "PR UCP #9",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/9"
+      },
+      {
+        "label": "Commit main e7ff47e5",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/e7ff47e53802c4dde5626dce0d009038c3de83d8"
+      },
+      {
+        "label": "CI Vitrine initiale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39458542561"
+      },
+      {
+        "label": "CI Vitrine finale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39458631314"
+      },
+      {
+        "label": "Statut public UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      }
+    ]
   }
 ]
