@@ -1,33 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-20261020T183251Z-v3",
-    "owner": "chatgpt-automation-ucp",
-    "started_at": "2026-10-20T18:32:51Z",
-    "expires_at": "2026-10-20T19:17:51Z",
-    "objective": "Nettoyer le champ temporaire de copie sur les anciens DOM sans Element.remove et après exception de remove"
-  },
-  "checkpoint": {
-    "base_ref": "e7ff47e53802c4dde5626dce0d009038c3de83d8",
-    "branch": "fix/ucp-copy-legacy-remove-20261020",
-    "head_ref": "340142d5059ad2247818d94e79ff991263485fc6",
-    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/10",
-    "files": [
-      "site-vitrine/dist/assets/app.js",
-      "site-vitrine/tests/app-shell.test.cjs"
-    ],
-    "checks": [
-      "Vitrine CI #39475940386 success (première passe)"
-    ],
-    "next_action": "Ajouter le test correctif pour textarea.remove() qui lève une exception, puis relancer la CI."
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261020T163215Z-v3",
-    "ended_at": "2026-10-20T16:35:30.655Z",
+    "run_id": "ucp-20261020T183251Z-v3",
+    "ended_at": "2026-10-20T18:35:56.812Z",
     "outcome": "merged",
-    "summary": "PR #9 nettoyage legacy du téléchargement fusionnée sur main e7ff47e5 après deux CI vertes ; navigateur réel non vérifié.",
+    "summary": "PR #10 nettoyage legacy du champ de copie fusionnée sur main c5783609 après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
