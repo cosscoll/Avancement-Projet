@@ -1,9 +1,11 @@
 {
   "enabled": false,
+  "independentProjectConfirmed": false,
+  "controlProjectRef": "",
   "allowRegistration": false,
   "allowGoogleLogin": false,
   "accountDeletionEnabled": false,
-  "supabaseUrl": "https://PROJECT_REF.supabase.co",
+  "supabaseUrl": "https://DEDICATED_CONTROL_PROJECT_REF.supabase.co",
   "supabasePublishableKey": "sb_publishable_REPLACE_WITH_PUBLIC_PROJECT_KEY",
   "aiDispatchEnabled": false
 }
