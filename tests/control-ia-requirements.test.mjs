@@ -24,7 +24,7 @@ test('all 42 scenarios are linked bidirectionally to a real development ticket',
 test('explicitly distinguishes mocked tests from fully verified user journeys',()=>{
  const stats=summary(registry,legacy,strategy);
  assert.equal(stats.scenarios_verified,0);
- assert.equal(stats.scenarios_partial_mock,4);
+ assert.equal(stats.scenarios_partial_mock,5);
  assert.equal(stats.backlog_verified,0);
  assert.equal(stats.improvement_criteria_verified,0);
  assert.equal(stats.legacy_criteria_verified,3);
