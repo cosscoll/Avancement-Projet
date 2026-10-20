@@ -1850,5 +1850,88 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/issues"
       }
     ]
+  },
+  {
+    "id": "ucp-20261020T072624Z-v3",
+    "schema_version": 2,
+    "protocol_version": 3,
+    "started_at": "2026-10-20T07:26:24Z",
+    "ended_at": "2026-10-20T07:34:00Z",
+    "summary": "Le défaut réel de navigation mobile de la page Avancement est corrigé, contrôlé par CI, fusionné dans main et tracé selon le protocole V3.",
+    "objectives": [
+      "Rendre la navigation de la page Avancement utilisable à 760 px et moins.",
+      "Ajouter un contrôle de non-régression statique.",
+      "Obtenir une CI de PR verte puis fusionner sans toucher au chantier local Codex."
+    ],
+    "done": [
+      "Issues centrales #1 et #2 relues : ouvertes, authentifiées cosscoll, sans nouvelle décision ; leur demande de connexion Codex reste bloquée par les interdictions permanentes.",
+      "Bail V3 ucp-20261020T072624Z-v3 acquis sous SHA puis relu avant toute mutation du dépôt UCP.",
+      "PR #2 créée sur la branche fix/ucp-avancement-mobile-nav-v3 : bouton mobile accessible, navigation #main-nav et chargement différé du contrôleur partagé.",
+      "Passe corrective : le lien d’évitement utilisait une classe non stylée ; classe corrigée de skip-link vers skip et assertion ajoutée.",
+      "Vitrine CI run 39387060851 terminée avec succès : structure statique, syntaxe app.js/brief.js et tests Node du générateur de brief.",
+      "PR #2 jugée fusionnable, base main restée af2bba35, puis fusion squash avec head SHA attendu ; nouveau main 8da708c0815221c0fbef9fdbb24976aeacbb4a96.",
+      "Statut public central mis à jour sans déclarer de recette navigateur, staging ou mise en ligne."
+    ],
+    "deliverables": [
+      {
+        "type": "pull_request",
+        "stage": "merged",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/2"
+      },
+      {
+        "type": "commit",
+        "stage": "merged",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/8da708c0815221c0fbef9fdbb24976aeacbb4a96"
+      },
+      {
+        "type": "ci",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39387060851"
+      }
+    ],
+    "quality": {
+      "p0": [],
+      "p1": [
+        "Aucune recette navigateur, lecteur d’écran ou appareil réel ; l’utilisabilité visuelle et le comportement natif restent à confirmer."
+      ],
+      "p2": [
+        "Lien d’évitement non stylable détecté lors de la revue du diff, corrigé puis couvert avant la CI finale."
+      ],
+      "second_pass": "corrected_and_retested",
+      "ci": "success"
+    },
+    "blockers": [
+      "Le clone Windows dev/ucp-codex reste volontairement non lu et non modifié ; aucune synchronisation n’est revendiquée.",
+      "Site public et staging non vérifiés ; aucun déploiement n’a été déclenché.",
+      "Les demandes publiques #1/#2 de connexion CONTROL–Codex restent lues mais bloquées."
+    ],
+    "incidents": [],
+    "next": "Recetter la page Avancement dans un navigateur réel à 320/360/390/768 px, avec ouverture/fermeture, Échap, clic extérieur et focus, puis seulement clôturer l’alerte mobile.",
+    "links": [
+      {
+        "label": "PR UCP #2",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/2"
+      },
+      {
+        "label": "Commit main fusionné",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/8da708c0815221c0fbef9fdbb24976aeacbb4a96"
+      },
+      {
+        "label": "CI Vitrine verte",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39387060851"
+      },
+      {
+        "label": "Statut public UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      },
+      {
+        "label": "Issue UCP #1",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues/1"
+      },
+      {
+        "label": "Issue UCP #2",
+        "url": "https://github.com/cosscoll/Avancement-Projet/issues/2"
+      }
+    ]
   }
 ]
