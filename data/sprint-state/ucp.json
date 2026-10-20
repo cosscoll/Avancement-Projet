@@ -10,21 +10,22 @@
     "objective": "Maintenir la checklist du brief sans Element.append et après exception de append"
   },
   "checkpoint": {
-    "phase": "coded",
+    "phase": "ready_to_merge",
     "repository": "cosscoll/UnCoupdePouce",
     "base_branch": "main",
     "base_sha": "54e0641c809acd2a67fbd057f322ef022e961be6",
     "branch": "fix/ucp-brief-appendchild-legacy-20261020",
-    "branch_sha": "f48c2e5be23e6e5340c9010ccb6e22f7c3b54e08",
-    "pr_url": null,
+    "branch_sha": "8cb7cfcbd54a26eb2bcc3ee00dac16f0b993648e",
+    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/13",
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.cjs"
     ],
     "tests": [
-      "CI première passe demandée après ouverture de PR"
+      "Vitrine CI première passe: success (39500532130)",
+      "Vitrine CI seconde passe: success (39500601579)"
     ],
-    "next_action": "Ouvrir la PR, attendre la première CI, puis ajouter le test append() en exception."
+    "next_action": "Fusionner PR #13 avec SHA de tête attendu, puis vérifier main et synchroniser le journal public."
   },
   "last_completed": {
     "run_id": "ucp-20261020T202911Z-v3",
