@@ -350,5 +350,127 @@
       ]
     },
     "next": "Revenir au focus CONTROL-ACCOUNT : ajouter des tests des paramètres d'authentification/permissions, puis préparer vraie recette A/B et synchronisation dès qu'une base CONTROL séparée à 0€ est autorisée."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261020-094336-cloud-config-ab-mock",
+    "started_at": "2026-10-20T09:43:36Z",
+    "ended_at": "2026-10-20T09:56:48.972Z",
+    "objectives": [
+      {
+        "before": "Configuration de CONTROL Cloud acceptait encore les JWT en tant que clés frontend, et une URL projet Supabase avec paramètre/credential ; changement A/B de session non testé dans le code client.",
+        "after": "Configuration verrouillée : clé sb_publishable_ seule, HTTPS .supabase.co sans credentials, projet indépendant explicitement déclaré et même référence ; cinq tests de transition A/B fictive de l'auth client, 20 tests Cloud dédiés verts.",
+        "acceptance": "Workflow Cloud 39403753476 : 20/20 tests réels Node sur code client; Chromium public 39403871371 Cloud fail-closed; V1.2 39403988250 : T-16 partiel/simulé seulement, aucune vraie inscription ni dépense."
+      }
+    ],
+    "summary": "Renforcement pratique P0 de l'entrée CONTROL-ACCOUNT : refus de clés JWT service_role/legacy, configuration Supabase ambiguë ou sans validation indépendante, tests simulés du client contre retours tardifs A/B. Toutes les permissions Cloud restent bloquées tant qu'une instance indépendante n'est pas autorisée et vérifiée.",
+    "done": [
+      "Bail CONTROL indépendant acquis après clôture documentée du sprint PWA v39.",
+      "safeClientConfig durci et config/cloud.example.json remis fermé par défaut, sans service ni nouveau projet Supabase.",
+      "12 tests de config secrets/protocoles/projets et 5 tests des vraies fonctions clientes avec réseau synthétique (déconnexion, A→B, réponses obsolètes, refresh concurrent).",
+      "Première autocritique a révélé manque de simulation du cycle A/B ; deuxième passe a ajouté ces tests. Correction du mock panel() puis 5/5 validés.",
+      "CI Cloud autonome verte 20/20 ; Chromium public ferme toujours l'inscription ; V1.2 a validé le cinquième scénario partiel T-16 avec 0 critère réel supplémentaire."
+    ],
+    "blockers": [
+      "Création/autorisation d'une instance Supabase CONTROL dédiée à coût nul et non liée à IAgile non effectuée.",
+      "Aucune vraie session JWT/PostgREST, compte B réel, synchronisation sur deux appareils ou contrôle suppression réelle.",
+      "CI générale demeure rouge sur l'incident de format de journal du projet UCP, hors périmètre/bail CONTROL."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "SHARED-CI-UCP-V3-INCIDENT-FORMAT",
+        "consecutive_sprints": 3,
+        "summary": "Le validateur commun du journal d'un autre projet continue de rejeter l'entrée de sprint UCP.",
+        "strategy": "Conserver l'incident stable ; le projet UCP doit corriger son propre champ incident sous son bail, aucun contournement ni fausse certification CONTROL."
+      }
+    ],
+    "quality": {
+      "ci": "verified",
+      "checks_run": [
+        "Cloud config+session isolated CI 39403753476",
+        "Public Chromium 39403871371",
+        "V1.2 registry CI 39403988250",
+        "GitHub Pages 39403987638",
+        "General suite 39403670989"
+      ],
+      "checks_passed": [
+        "20/20 Cloud Node tests run successfully with no real backend",
+        "Chromium real public account gate remains disabled and PWA v39 remains functional",
+        "12/12 V1.2 requirements tests and registry consistency",
+        "GitHub Pages deployment completed"
+      ],
+      "checks_failed": [
+        "General unrelated shared UCP incident (1 failing out of 174 Node tests)"
+      ],
+      "limitations": [
+        "No real OAuth, external Supabase Auth or tested JWT; account T-16 only simulated.",
+        "No physical Android/iOS session testing; no Cloud production account or synchronization.",
+        "Browser config flag is a secondary check, cannot independently establish project identity."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Durcissement de la configuration Cloud, clés publiques uniquement",
+        "kind": "code",
+        "stage": "tested",
+        "repository": "cosscoll/Avancement-Projet",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/assets/cloud-app.js"
+      },
+      {
+        "name": "Recette A/B client synthétique et Cloud disabled",
+        "kind": "test",
+        "stage": "tested",
+        "repository": "cosscoll/Avancement-Projet",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403753476"
+      },
+      {
+        "name": "Registre V1.2 enrichi d'une preuve T-16 partielle",
+        "kind": "document",
+        "stage": "verified_online",
+        "repository": "cosscoll/Avancement-Projet",
+        "url": "https://cosscoll.github.io/Avancement-Projet/#/control/localai",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/#/control/localai",
+        "online_verified_at": "2026-10-20T09:53:20Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403871371"
+      }
+    ],
+    "links": [
+      {
+        "label": "CI Cloud 20/20",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403753476"
+      },
+      {
+        "label": "Recette Chromium publique",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403871371"
+      },
+      {
+        "label": "CI exigences V1.2",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403988250"
+      },
+      {
+        "label": "Déploiement GitHub Pages",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403987638"
+      }
+    ],
+    "critique": {
+      "p0": [
+        "La configuration d'un projet distinct est une protection client mais ne prouve aucune vraie séparation RLS/JWT ; maintenir Cloud interdit."
+      ],
+      "p1": [
+        "Le changement de compte avec une requête lente était auparavant non testé : désormais couvert avec réseau synthétique.",
+        "Les fonctionnalités externes ne peuvent pas être certifiées avant base CONTROL isolée et comptes tests authentifiés."
+      ],
+      "p2": [
+        "La clé JWT publique legacy ne peut plus être utilisée : choisir sb_publishable_ dans le projet dédié.",
+        "Fichier historique CI partagé peut déclencher un test rouge malgré les protections Cloud validées."
+      ],
+      "corrected": [
+        "Rejet des JWT service_role et clés secrètes",
+        "Validation explicite ref Supabase et URL sans tokens",
+        "Tests client des réponses A tardives sur session B ou déconnectée",
+        "CI Cloud dédiée et preuve T-16 conservée comme partielle"
+      ]
+    },
+    "next": "Faire approuver une instance CONTROL indépendante à 0 € puis tester une vraie inscription/session JWT et les lectures croisées A/B sous RLS, synchronisation et déconnexion, sans altérer IAgile."
   }
 ]
