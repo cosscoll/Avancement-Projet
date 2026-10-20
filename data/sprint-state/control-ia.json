@@ -1,64 +1,41 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261020-v38-pwa-resume-classic",
-    "started_at": "2026-10-20T09:31:27.421Z",
-    "expires_at": "2026-10-20T10:15:27.426Z",
-    "objective": "Comparer archive privée sprint38 au PWA main, corriger sécurité/cache et tester réellement, puis livrer sur main"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-20T09:28:58Z",
-    "files": [
-      "data/control-ia-requirements.json",
-      "docs/CONTROL_IA_CAHIER_V1_2_SUIVI.md",
-      "data/control-ia-strategy.json",
-      "scripts/control-ia-requirements.mjs",
-      "tests/control-ia-requirements.test.mjs",
-      "assets/control-delivery.js",
-      "assets/control-delivery.css",
-      "docs/CONTROL_IA_RETROSPECTIVES.md"
-    ],
-    "private_library": "/CONTROL-IA/CONTROL_IA_Cahier_des_charges_V1_2_PRIVE.md",
+    "updated_at": "2026-10-20T09:43:18.402Z",
     "main": true,
-    "stage": "verified_online_v12_tracking_only",
+    "stage": "v39_pwa_verified_public",
+    "files": [
+      "service-worker.js",
+      "tests/pwa-atomic-install.test.mjs",
+      "tests/service-worker-navigation.test.mjs",
+      "tests/control-ia-browser-smoke.mjs"
+    ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39400570624",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39400244904"
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39401977906",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39401998657"
     ],
     "remaining_blockers": [
-      "CONTROL account backend unauthorized and Cloud disabled",
-      "Historical PWA v38 unreleased",
-      "Shared CI UCP sprint-report incident invalid"
+      "Independent CONTROL Cloud backend not authorized; enabled:false",
+      "Shared UCP sprint-report CI incident (separate project)",
+      "Real Android/iOS hardware testing pending"
     ],
-    "next_action": "Inspect PWA v38 unmerged patch and compare main tests, then advance BACK-004/005, T-15/16/21 with safe account-policy tests. Do not enable Cloud or modify UCP incident outside its project lock."
+    "next_action": "CONTROL-ACCOUNT: harden safeClientConfig for explicit public keys and clean Supabase URLs, add tests and keep Cloud disabled."
   },
   "last_completed": {
-    "run_id": "control-ia-20261020-1106-spec-v12",
-    "started_at": "2026-10-20T09:05:51Z",
-    "ended_at": "2026-10-20T09:28:58Z",
-    "summary": "Cahier V1.2 private Library plus redacted public 22/42/10 registry, 12 tests, Chromium public widget and automated checks; no new user capability or Cloud activation falsely claimed.",
+    "run_id": "control-ia-20261020-v38-pwa-resume-classic",
+    "started_at": "2026-10-20T09:31:27.421Z",
+    "ended_at": "2026-10-20T09:43:18.402Z",
+    "summary": "Recovered unpublished v38, shipped v39 atomic public cache and V1.2 offline; Chromium local+Pages parity passed; 17 focused PWA tests pass; shared CI red only for unrelated UCP incident.",
     "stage": "verified_online",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39400244904",
-    "commit_sha": "c31fa08c88bbc2221b96fa754464102c61d42678"
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39401977906",
+    "commit_sha": "196becba2accbdc69d8170d96a52b6423f4e4c76"
   },
   "recovered_from": {
     "run_id": "control-ia-20261019-1754-paris-r9",
     "expired_at": "2026-10-19T16:39:59.728Z"
-  },
-  "pending_prior_checkpoint": {
-    "branch": "control-ia/pwa-atomic-v38-20261019-1754",
-    "pr_url": null,
-    "files": [
-      "service-worker.js",
-      "tests/pwa-atomic-install.test.mjs",
-      "tests/service-worker-navigation.test.mjs"
-    ],
-    "tests": "16/16 local Node tests passed; no CI",
-    "next_action": "GitHub safety refusal for service-worker code write; inspect permission with authorized path, then publish PWA v38 and CI, verify Pages",
-    "blocker_id": "CONTROL-PWA-WRITE-001",
-    "stage": "tested_local_not_committed"
   },
   "prior_checkpoint": {
     "updated_at": "2026-10-20T07:23:35Z",
@@ -86,5 +63,21 @@
     "summary": "10-feature plan published directly to main without PR; CI Node 130/130, contract 14/14, Pages success; previous PWA checkpoint retained.",
     "stage": "deployed",
     "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39390035544"
+  },
+  "resolved_prior_checkpoint": {
+    "branch": "control-ia/pwa-atomic-v38-20261019-1754",
+    "pr_url": null,
+    "files": [
+      "service-worker.js",
+      "tests/pwa-atomic-install.test.mjs",
+      "tests/service-worker-navigation.test.mjs"
+    ],
+    "tests": "16/16 local Node tests passed; no CI",
+    "next_action": "GitHub safety refusal for service-worker code write; inspect permission with authorized path, then publish PWA v38 and CI, verify Pages",
+    "blocker_id": "CONTROL-PWA-WRITE-001",
+    "stage": "verified_online_v39",
+    "resolved_at": "2026-10-20T09:43:18.402Z",
+    "proof_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39401977906",
+    "note": "Recovered old private v38 local patch, code improved and released as v39 directly on main. No outstanding write refusal on this feature."
   }
 }
