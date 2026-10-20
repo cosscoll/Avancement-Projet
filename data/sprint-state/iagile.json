@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "iagile",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "iagile-20261020T014520159Z-m8-security-review",
+    "started_at": "2026-10-20T01:45:20.159Z",
+    "expires_at": "2026-10-20T02:30:20.159Z",
+    "objective": "M8 Processus : vérifier et documenter les critères de prévisualisation sécurisée formateur et la recette RLS avant tout déploiement"
+  },
   "checkpoint": {
     "branch": "feature/academy-private-rebased-20261010",
     "pr_url": "https://github.com/cosscoll/IAgile/pull/12",
