@@ -421,6 +421,12 @@
         "label": "PR ressources #77",
         "url": "https://github.com/cosscoll/IAgile/pull/77"
       }
-    ]
+    ],
+    "deliverables": [],
+    "metadata_repair": {
+      "scope": "contract_fields_only",
+      "reason": "Explicit empty deliverables: code draft was not published (as report already stated)",
+      "date": "2026-10-20"
+    }
   }
 ]
