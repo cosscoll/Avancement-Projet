@@ -1,0 +1,401 @@
+{
+  "schema_version": 1,
+  "project": "control-ia",
+  "updated_on": "2026-10-20",
+  "mission": "Réduire la fragmentation numérique : depuis une seule conversation, retrouver l'information et réaliser des actions autorisées, avec preuves et reprises fiables.",
+  "governing_sources": [
+    "docs/PROTOCOLE_SPRINTS_V3.md",
+    "docs/PROTOCOLE_SPRINTS_V2.md",
+    "docs/CONTROL_IA_GESTION_FONCTIONNELLE.md",
+    "data/control-ia-delivery.json",
+    "docs/CONTROL_IA_RETROSPECTIVES.md",
+    "data/sprint-state/control-ia.json",
+    "data/sprints/control-ia.json"
+  ],
+  "private_backlog_reference": "CONTROL IA V1.1 / BACK-001..042 (Library, jamais publier le contenu privé)",
+  "focus": {
+    "capability": "CONTROL-ACCOUNT",
+    "reason": "Identité et cloisonnement multi-utilisateurs requis pour les intégrations réelles; en attente d'infrastructure dédiée et autorisation.",
+    "current_gate": "auth_and_real_A_B_RLS_not_verified",
+    "cloud_activation_allowed": false,
+    "operational_claim_allowed": false
+  },
+  "work_policy": {
+    "max_primary_workstreams": 1,
+    "max_subobjectives_per_sprint": 3,
+    "session_types": [
+      "scheduled",
+      "conversation"
+    ],
+    "common_lock_file": "data/sprint-state/control-ia.json",
+    "lease_minutes": 45,
+    "allow_security_interrupt": true,
+    "definition_of_done": "Critères d'acceptation prouvés par parcours réel + permissions + dépendances, pas seulement PR/CI/déploiement."
+  },
+  "roadmap_phases": [
+    {
+      "id": 0,
+      "name": "Socle CONTROL : comptes et données isolées",
+      "targets": [
+        "CONTROL-ACCOUNT"
+      ],
+      "exit": "Deux vrais comptes A/B et synchronisation testés, plus export/suppression, uniquement après autorisation et coût nul confirmé."
+    },
+    {
+      "id": 1,
+      "name": "Confiance, mémoire et découverte",
+      "targets": [
+        "IMP-05",
+        "IMP-03",
+        "IMP-10",
+        "IMP-02"
+      ],
+      "exit": "Actions soumises à permissions, mémoire par projet révisable, recherche sourcée et reprise testée."
+    },
+    {
+      "id": 2,
+      "name": "Pilotage par objectifs",
+      "targets": [
+        "IMP-01"
+      ],
+      "exit": "Une demande devient un plan vérifiable et au moins une action autorisée est exécutée avec reçu."
+    },
+    {
+      "id": 3,
+      "name": "Organisation et supervision",
+      "targets": [
+        "IMP-04",
+        "IMP-06",
+        "IMP-07"
+      ],
+      "exit": "Boîte de réception, exécutions réellement traçables et agenda avec conflits vérifiés."
+    },
+    {
+      "id": 4,
+      "name": "Automatisations sûres",
+      "targets": [
+        "IMP-08"
+      ],
+      "exit": "Un workflow créé par langage naturel passe simulation, validation, exécution et reprise."
+    },
+    {
+      "id": 5,
+      "name": "Expérience mobile représentative",
+      "targets": [
+        "IMP-09"
+      ],
+      "exit": "Parcours de commande éprouvés sur appareils Android et iOS physiques avec tests accessibilité."
+    }
+  ],
+  "priority_rules": [
+    "En cas de vulnérabilité P0 ou de CI bloquante du projet CONTROL IA, corriger d'abord sans fermer artificiellement le chantier principal.",
+    "Reprendre en premier un checkpoint ou une PR CONTROL IA inachevée déjà présente, puis les défauts critiques ouverts.",
+    "Conserver CONTROL-ACCOUNT comme focus tant que le propriétaire n'en décide pas autrement ou qu'une dépendance démontrée impose un changement.",
+    "Si le chantier courant dépend d'un compte ou service non autorisé, avancer sur des tests/contrats/composants sûrs du même chantier; documenter ce qui reste réellement impossible.",
+    "Après deux sprints consécutifs sur le même blocage, changer d'approche autorisée et documenter l'incident stable; ne jamais réessayer aveuglément.",
+    "Éviter de commencer des fonctionnalités indépendantes simplement pour augmenter le nombre de commits."
+  ],
+  "handoff": {
+    "next_sprint_goal": "Reprendre le checkpoint PWA v38 non fusionné si les preuves/permissions l'autorisent, puis poursuivre les tests de compte CONTROL isolé, sans activer Cloud.",
+    "checkpoint_to_review": "data/sprint-state/control-ia.json : control-ia/pwa-atomic-v38-20261019-1754 ; write GitHub refusé ; tests locaux déclarés 16/16 non intégrés",
+    "next_steps": [
+      "Vérifier si PWA v38 a été récupérée sur main ou existe sur branche avant de recréer le correctif.",
+      "Vérifier CI actuelle et distinguer les échecs des rapports d'autres projets ; ne pas masquer les erreurs.",
+      "Renforcer les tests d'identité/RLS et les préparatifs de CONTROL-ACCOUNT sans créer de backend non autorisé."
+    ],
+    "external_decision_required": "Nouvelle organisation/projet Supabase exclusivement CONTROL, coût attesté 0 € et consentement explicite avant création/activation."
+  },
+  "improvements": [
+    {
+      "id": "IMP-01",
+      "title": "Mode Objectif intelligent",
+      "phase": 2,
+      "priority": "P1",
+      "depends_on": [
+        "IMP-02",
+        "IMP-03",
+        "IMP-05",
+        "IMP-10"
+      ],
+      "existing": [
+        "CONTROL-ACTIONS",
+        "CONTROL-ASSISTANT",
+        "CONTROL-AGENTS"
+      ],
+      "first_slice": "Décomposer une demande en résultat mesurable, tâches, responsables et dépendances; proposer un plan éditable sans exécution externe.",
+      "acceptance": [
+        "Une demande métier produit un plan structuré explicable et modifiable, avec sources, étapes et critères de réussite.",
+        "Exécuter une étape autorisée exige la confirmation et produit un reçu consultable.",
+        "En cas d'échec une mission reprend sans duplication ni écriture non autorisée."
+      ],
+      "external_blockers": [
+        "Orchestrateur réellement relié à des outils autorisés, comptes et permissions fournisseurs."
+      ],
+      "status": "planned",
+      "accepted_criteria": [],
+      "evidence_urls": []
+    },
+    {
+      "id": "IMP-02",
+      "title": "Recherche universelle sourcée",
+      "phase": 1,
+      "priority": "P1",
+      "depends_on": [
+        "IMP-03",
+        "IMP-05"
+      ],
+      "existing": [
+        "CONTROL-ACTIONS",
+        "CONTROL-ASSISTANT",
+        "CONTROL-CONNECTORS"
+      ],
+      "first_slice": "Indexer les projets, tâches, décisions et documents CONTROL locaux autorisés avec filtre par projet, date et source.",
+      "acceptance": [
+        "Une recherche renvoie plusieurs types de données CONTROL avec provenance, date et lien ouvrable.",
+        "Un utilisateur ou un projet non autorisé ne peut jamais lire des résultats privés.",
+        "Une source modifiée ou supprimée est réindexée sans persister de résultat périmé."
+      ],
+      "external_blockers": [
+        "Données privées Gmail, Drive et IA accessibles seulement après authentification/consentement fournisseur."
+      ],
+      "status": "planned",
+      "accepted_criteria": [],
+      "evidence_urls": []
+    },
+    {
+      "id": "IMP-03",
+      "title": "Mémoire de travail isolée par projet",
+      "phase": 1,
+      "priority": "P0",
+      "depends_on": [
+        "IMP-05"
+      ],
+      "existing": [
+        "CONTROL-ACTIONS",
+        "CONTROL-ASSISTANT"
+      ],
+      "first_slice": "Modéliser décisions, contraintes, erreurs, sources, dates, version et statut de vérification; aucune mémoire transverse implicite.",
+      "acceptance": [
+        "Une décision validée est retrouvée lors d'une reprise du même projet avec source et version.",
+        "Les projets distincts restent cloisonnés et les suppressions/rectifications se propagent.",
+        "Une information périmée ou contradictoire est signalée sans être réutilisée comme fait certain."
+      ],
+      "external_blockers": [
+        "Synchronisation et contrôle multi-utilisateur réels nécessitent CONTROL-ACCOUNT."
+      ],
+      "status": "planned",
+      "accepted_criteria": [],
+      "evidence_urls": []
+    },
+    {
+      "id": "IMP-04",
+      "title": "Boîte de réception universelle des décisions",
+      "phase": 3,
+      "priority": "P1",
+      "depends_on": [
+        "IMP-05",
+        "IMP-10"
+      ],
+      "existing": [
+        "CONTROL-ACTIONS",
+        "CONTROL-CALENDAR",
+        "CONTROL-CONNECTORS"
+      ],
+      "first_slice": "Regrouper uniquement incidents, approbations et tâches qui exigent une action; distinguer notifications réelles et déclaratives.",
+      "acceptance": [
+        "Une approbation réelle arrive avec son émetteur, contexte, délai, nature et statut.",
+        "Accepter/refuser n'effectue l'action qu'une fois, avec journal et possibilité de retour si prévu.",
+        "Les événements clos/disparus ne restent pas artificiellement en attente."
+      ],
+      "external_blockers": [
+        "Alertes externes impossibles sans connecteurs et permissions."
+      ],
+      "status": "planned",
+      "accepted_criteria": [],
+      "evidence_urls": []
+    },
+    {
+      "id": "IMP-05",
+      "title": "Centre d'autorisations et d'approbations",
+      "phase": 1,
+      "priority": "P0",
+      "depends_on": [],
+      "existing": [
+        "CONTROL-ACCOUNT",
+        "CONTROL-CONNECTORS",
+        "CONTROL-ACTIONS"
+      ],
+      "first_slice": "Définir un contrat d'autorisation projet × ressource × outil × action, consentement révocable et journal des refus; tester sans serveur payé.",
+      "acceptance": [
+        "Une action non autorisée ou hors portée est rejetée avant toute écriture.",
+        "La révocation interdit une action déjà préparée mais pas encore validée.",
+        "Une action sensible affiche diff, risque et cible avant confirmation, puis un reçu traçable."
+      ],
+      "external_blockers": [
+        "Vrai OAuth exige une identité CONTROL et des fournisseurs compatibles."
+      ],
+      "status": "planned",
+      "accepted_criteria": [],
+      "evidence_urls": []
+    },
+    {
+      "id": "IMP-06",
+      "title": "Supervision réelle des IA et des exécutions",
+      "phase": 3,
+      "priority": "P1",
+      "depends_on": [
+        "IMP-01",
+        "IMP-05",
+        "IMP-10"
+      ],
+      "existing": [
+        "CONTROL-AGENTS",
+        "CONTROL-CONNECTORS"
+      ],
+      "first_slice": "Concevoir les états d'exécution et leurs preuves: demandé, autorisé, lancé, fournisseur, succès, échec et attente.",
+      "acceptance": [
+        "Un statut en cours exige un identifiant d'exécution du fournisseur ou du moteur réel.",
+        "Résultat, erreur et horodatages proviennent d'une exécution vérifiée, jamais d'un texte saisi.",
+        "Annulation, doublons et reprise sont testés de bout en bout."
+      ],
+      "external_blockers": [
+        "Accès fournisseurs, quotas gratuits et comptes reliés avec consentement."
+      ],
+      "status": "planned",
+      "accepted_criteria": [],
+      "evidence_urls": []
+    },
+    {
+      "id": "IMP-07",
+      "title": "Planificateur intelligent d'agenda et de travail",
+      "phase": 3,
+      "priority": "P1",
+      "depends_on": [
+        "IMP-01",
+        "IMP-05"
+      ],
+      "existing": [
+        "CONTROL-CALENDAR",
+        "CONTROL-REMINDERS",
+        "CONTROL-CONNECTORS"
+      ],
+      "first_slice": "Proposer un emploi du temps depuis les tâches et créneaux CONTROL avec simulation des conflits, horaires et fuseaux.",
+      "acceptance": [
+        "Les propositions respectent disponibilités, échéances, conflits, fuseaux et changements d'heure.",
+        "L'agenda réel n'est modifié qu'après consentement et contrôle des permissions.",
+        "Une annulation/modification se répercute dans le plan et sa notification sans doublon."
+      ],
+      "external_blockers": [
+        "Connexion aux calendriers externes et notifications serveur autorisées."
+      ],
+      "status": "planned",
+      "accepted_criteria": [],
+      "evidence_urls": []
+    },
+    {
+      "id": "IMP-08",
+      "title": "Constructeur d'automatisations par langage naturel",
+      "phase": 4,
+      "priority": "P1",
+      "depends_on": [
+        "IMP-01",
+        "IMP-05",
+        "IMP-10"
+      ],
+      "existing": [
+        "CONTROL-AGENTS",
+        "CONTROL-REMINDERS",
+        "CONTROL-CONNECTORS"
+      ],
+      "first_slice": "Transformer une instruction en définition de workflow éditable et non activée, avec déclencheurs, permissions et validation.",
+      "acceptance": [
+        "Un workflow demandé peut être prévisualisé, modifié puis explicitement activé.",
+        "Les exécutions utilisent une clé d'idempotence, un journal et une reprise sûre.",
+        "Une panne ou un outil non autorisé met le workflow en attente et notifie le blocage sans fausse réussite."
+      ],
+      "external_blockers": [
+        "Exécuteur persistant et connecteurs effectifs."
+      ],
+      "status": "planned",
+      "accepted_criteria": [],
+      "evidence_urls": []
+    },
+    {
+      "id": "IMP-09",
+      "title": "Poste de commande mobile",
+      "phase": 5,
+      "priority": "P1",
+      "depends_on": [
+        "IMP-04",
+        "IMP-05"
+      ],
+      "existing": [
+        "CONTROL-QUALITY",
+        "CONTROL-CALENDAR",
+        "CONTROL-ACTIONS"
+      ],
+      "first_slice": "Prioriser trois gestes: consulter les urgences, approuver/refuser et retrouver les résultats, y compris réseau instable.",
+      "acceptance": [
+        "Parcours tactiles lisibles et accessibles sans défilement horizontal aux tailles cibles.",
+        "Approbation, refus et réouverture vérifiés sur Android physique et Safari iOS réel.",
+        "Hors-ligne et reconnexion ne causent ni perte silencieuse ni duplication d'une action."
+      ],
+      "external_blockers": [
+        "Recette appareils réels et notifications nécessitent permissions."
+      ],
+      "status": "planned",
+      "accepted_criteria": [],
+      "evidence_urls": []
+    },
+    {
+      "id": "IMP-10",
+      "title": "Reprise et récupération fiable des travaux",
+      "phase": 1,
+      "priority": "P0",
+      "depends_on": [
+        "IMP-05"
+      ],
+      "existing": [
+        "CONTROL-ACTIONS",
+        "CONTROL-AGENTS",
+        "CONTROL-QUALITY"
+      ],
+      "first_slice": "Étendre la reprise V3 existante avec identifiants de mission, checkpoints, événements et règles de reprise sans duplication.",
+      "acceptance": [
+        "Un travail interrompu reprend à son dernier checkpoint validé, sans refaire les actions confirmées.",
+        "Une modification concurrente ou un bail expiré empêche l'écriture non contrôlée.",
+        "Une panne conserve erreur, journal, preuves et prochaine action au lieu de déclarer terminé."
+      ],
+      "external_blockers": [
+        "Synchronisation distante et reprise multi-appareils dépendent de CONTROL-ACCOUNT."
+      ],
+      "status": "planned",
+      "accepted_criteria": [],
+      "evidence_urls": []
+    }
+  ],
+  "metrics": {
+    "north_star": "mission_completion_rate",
+    "definition": "Missions terminées et acceptées avec reçu de résultat / missions autorisées engagées, calculable uniquement à partir d'exécutions réelles.",
+    "guardrails": [
+      "unauthorized_actions=0",
+      "unverified_operational_claims=0",
+      "financial_cost=0"
+    ],
+    "secondary": [
+      "verified_user_journeys",
+      "open_p0_count",
+      "stale_proof_count",
+      "time_to_recovery",
+      "true_release_count"
+    ]
+  },
+  "safety": {
+    "budget_eur": 0,
+    "forbid_paid_services": true,
+    "forbid_limited_work_codex": true,
+    "forbid_synthetic_success": true,
+    "cloud_enabled_required_false_until_authorized": true,
+    "do_not_change_other_projects": true
+  }
+}
