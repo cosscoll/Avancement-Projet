@@ -1,14 +1,40 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
+  "status": "idle",
+  "lease": null,
+  "checkpoint": {
+    "updated_at": "2026-10-20T07:23:35Z",
+    "files": [
+      "data/control-ia-strategy.json",
+      "docs/CONTROL_IA_ORGANISATION_SPRINTS.md",
+      "scripts/control-ia-strategy.mjs",
+      "tests/control-ia-strategy.test.mjs",
+      ".github/workflows/control-ia-strategy.yml"
+    ],
+    "branch": "control-ia/ten-improvements-sprint-roadmap-20261020",
+    "pr_url": "https://github.com/cosscoll/Avancement-Projet/pull/24",
+    "completed_steps": [
+      "10 améliorations détaillées en 6 phases avec 30 critères additionnels",
+      "Protocole commun sessions classiques + tâches automatisées",
+      "Validateur et 12 tests de continuité passés : GitHub Actions 39385973596",
+      "Automatisation CONTROL IA mise à jour sans changer son état désactivé"
+    ],
+    "next_action": "PR #24 bloquée par CI globale déjà rouge (historiques pack-pro et iagile). Préserver tests et preuves, obtenir réparation autorisée par les responsables sans modifier ces autres projets, puis revalider CI et fusionner PR #24. Reprendre également checkpoint PWA v38."
+  },
+  "last_completed": {
     "run_id": "control-ia-20261020-0914-chat-10-features",
     "started_at": "2026-10-20T07:14:11Z",
-    "expires_at": "2026-10-20T07:59:11Z",
-    "objective": "Organiser les 10 améliorations CONTROL IA entre sessions classiques et automatisées, conserver le checkpoint PWA"
+    "ended_at": "2026-10-20T07:23:35Z",
+    "summary": "Roadmap de 10 améliorations + protocole commun et test CI spécifique 12/12 verts ; PR #24 en attente de CI globale (échecs historiques d'autres projets). Automatisation mise à jour mais désactivée.",
+    "stage": "tested",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39385973596"
   },
-  "checkpoint": {
+  "recovered_from": {
+    "run_id": "control-ia-20261019-1754-paris-r9",
+    "expired_at": "2026-10-19T16:39:59.728Z"
+  },
+  "pending_prior_checkpoint": {
     "branch": "control-ia/pwa-atomic-v38-20261019-1754",
     "pr_url": null,
     "files": [
@@ -20,14 +46,5 @@
     "next_action": "GitHub safety refusal for service-worker code write; inspect permission with authorized path, then publish PWA v38 and CI, verify Pages",
     "blocker_id": "CONTROL-PWA-WRITE-001",
     "stage": "tested_local_not_committed"
-  },
-  "last_completed": {
-    "run_id": "control-ia-20261019165416-s39",
-    "ended_at": "2026-10-19T16:55:49.373Z",
-    "summary": "PWA v38 tested locally; GitHub code/journal writes blocked; no feature published"
-  },
-  "recovered_from": {
-    "run_id": "control-ia-20261019-1754-paris-r9",
-    "expired_at": "2026-10-19T16:39:59.728Z"
   }
 }
