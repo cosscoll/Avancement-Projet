@@ -3123,5 +3123,95 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
       }
     ]
+  },
+  {
+    "schema_version": 3,
+    "id": "ucp-20261020T223101Z-v3",
+    "started_at": "2026-10-20T22:31:01Z",
+    "ended_at": "2026-10-20T22:33:30.081Z",
+    "objectives": [
+      {
+        "before": "La copie et le téléchargement du brief appellent document.body.append directement et échouent sur certains anciens WebView.",
+        "after": "Les nœuds temporaires sont insérés par append puis appendChild si append manque ou lève une exception.",
+        "acceptance": "La copie sans body.append et le téléchargement avec body.append en exception passent dans deux CI, puis le correctif est fusionné hors application/**."
+      }
+    ],
+    "summary": "PR #14 fusionnée sur main 16f3143d : la copie et le téléchargement du brief utilisent désormais appendChild si document.body.append manque ou échoue ; deux CI vertes, aucune recette navigateur ou staging.",
+    "done": [
+      "Directives #1 et #2 relues : connexion Codex lue mais bloquée par les interdictions permanentes.",
+      "Verrou coopératif V3 acquis et relu avant mutation.",
+      "Fonction d’insertion temporaire ajoutée pour la copie et le téléchargement sans toucher application/**.",
+      "Première CI Vitrine 39508853215 réussie ; autocritique P1 : body.append présent mais en exception sur le téléchargement non couvert.",
+      "Test correctif ajouté pour l’exception de body.append ; CI finale 39508906620 réussie.",
+      "PR #14 fusionnée prudemment sur main 16f3143d après vérification du head, de la base et du bail.",
+      "Blobs de app.js et app-shell.test.cjs relus sur le commit main fusionné."
+    ],
+    "deliverables": [
+      {
+        "name": "Compatibilité appendChild des nœuds temporaires du brief",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "16f3143d9a481e6f3c1e2aa7b83ed9a7748ee2c3",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/16f3143d9a481e6f3c1e2aa7b83ed9a7748ee2c3",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "quality": {
+      "checks_run": [
+        "Vitrine CI première passe #39508853215",
+        "Vitrine CI corrective #39508906620",
+        "Vérification des blobs app.js et app-shell.test.cjs sur main"
+      ],
+      "checks_passed": [
+        "Structure statique",
+        "Syntaxe JavaScript",
+        "Tests Node de la vitrine",
+        "Reconstruction déterministe build/dist",
+        "Copie sans body.append",
+        "Téléchargement avec body.append en exception",
+        "Blobs attendus présents sur main"
+      ],
+      "checks_failed": [],
+      "real_browser_verified": false,
+      "ci": "success"
+    },
+    "blockers": [
+      "Aucun navigateur, appareil réel, site public ou staging autorisé n’a été vérifié.",
+      "Le clone Windows dev/ucp-codex reste volontairement non lu et non synchronisé.",
+      "Les consignes publiques #1 et #2 demandant Codex restent bloquées par les interdictions permanentes."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "ucp-public-site-unverified",
+        "status": "open",
+        "consecutive_sprints": 13,
+        "next_action": "Effectuer une recette navigateur réelle à 320/360/390/768 px sur un staging explicitement autorisé ; sinon poursuivre un bug indépendant hors application/**."
+      }
+    ],
+    "next": "Tester un autre défaut réel et indépendant hors application/**, ou effectuer la recette WebView/navigateur sur staging autorisé.",
+    "links": [
+      {
+        "label": "PR #14",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/14"
+      },
+      {
+        "label": "Commit main",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/16f3143d9a481e6f3c1e2aa7b83ed9a7748ee2c3"
+      },
+      {
+        "label": "CI initiale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39508853215"
+      },
+      {
+        "label": "CI corrective",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39508906620"
+      },
+      {
+        "label": "Statut UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      }
+    ]
   }
 ]
