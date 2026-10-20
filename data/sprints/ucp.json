@@ -1958,5 +1958,120 @@
       "reason": "Normalisation explicite des objectifs et noms de livrables d'un rapport V2; ne prouve ni recette navigateur ni livraison mobile physique",
       "date": "2026-10-20"
     }
+  },
+  {
+    "id": "ucp-20261020T083418Z-v3",
+    "schema_version": 2,
+    "protocol_version": 3,
+    "started_at": "2026-10-20T08:34:18Z",
+    "ended_at": "2026-10-20T08:42:12Z",
+    "summary": "La page Avancement obsolète a été remplacée par un état public factuel daté du 20 octobre, couvert par CI et fusionné sur main via la PR #3.",
+    "objectives": [
+      {
+        "before": "La page Avancement datait du 16 octobre et citait 110 tests annoncés sans distinguer clairement la copie isolée de l’intégration réelle.",
+        "after": "La page distingue les preuves intégrées sur main, l’historique QA-54 isolé et les limites de recette.",
+        "acceptance": "PR #3 fusionnée sur main; commit 4eefa8077e724f32dcd2f5e29cf53f08a6f3cea0 et CI finale 39395075160 réussie; aucune recette navigateur revendiquée."
+      },
+      {
+        "before": "La fraîcheur de la date, les réserves QA-54 et les liens GitHub n’étaient pas protégés par le contrôle statique.",
+        "after": "Le contrôle de non-régression impose la date actuelle, les réserves et quatre liens de preuve.",
+        "acceptance": "La CI Vitrine exécute le contrôle enrichi et termine avec succès."
+      }
+    ],
+    "done": [
+      "Issues centrales #1 et #2 relues : ouvertes, authentifiées cosscoll, sans nouvelle décision ; leur demande de connexion Codex reste lue mais bloquée par les interdictions permanentes.",
+      "Protocoles V3/V2, dernier journal, branches, PR, CI et main contrôlés avant mutation ; aucun incident public préexistant trouvé.",
+      "Bail V3 ucp-20261020T083418Z-v3 acquis sous SHA, relu et conservé avec checkpoints avant toute mutation UCP.",
+      "Branche dev/ucp-codex distante inspectée sans lire le clone Windows : elle modifie largement application/**, donc ce périmètre a été exclu.",
+      "PR #3 limitée à site-vitrine/dist/avancement.html et site-vitrine/scripts/check_site.py, sans toucher à application/**.",
+      "Première CI verte ; autocritique P1 corrigée en explicitant que les contrôles CI n’incluent aucun navigateur réel, puis seconde CI 39395075160 verte.",
+      "Main vérifiée inchangée à 8da708c avant fusion ; PR #3 fusionnée par squash avec head attendu e2f8b4a, nouveau main 4eefa8077e724f32dcd2f5e29cf53f08a6f3cea0.",
+      "Les deux blobs modifiés ont été relus sur main et le statut public central a été synchronisé."
+    ],
+    "deliverables": [
+      {
+        "type": "pull_request",
+        "stage": "merged",
+        "repo": "cosscoll/UnCoupdePouce",
+        "ref": "3",
+        "online": null,
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/3",
+        "name": "PR UCP #3 fusionnée"
+      },
+      {
+        "type": "commit",
+        "stage": "merged",
+        "repo": "cosscoll/UnCoupdePouce",
+        "ref": "4eefa8077e724f32dcd2f5e29cf53f08a6f3cea0",
+        "online": null,
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/4eefa8077e724f32dcd2f5e29cf53f08a6f3cea0",
+        "name": "Commit main de la page Avancement"
+      },
+      {
+        "type": "ci",
+        "stage": "tested",
+        "repo": "cosscoll/UnCoupdePouce",
+        "ref": "39395075160",
+        "online": null,
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39395075160",
+        "name": "Seconde CI Vitrine verte"
+      }
+    ],
+    "quality": {
+      "p0": [],
+      "p1": [
+        "Aucune recette navigateur, lecteur d’écran, appareil, site public ou staging : le rendu et les interactions réels restent non prouvés."
+      ],
+      "p2": [
+        "La première version ne plaçait pas la limite navigateur au voisinage immédiat de la preuve CI ; wording corrigé et assertion ajoutée."
+      ],
+      "second_pass": "corrected_and_retested",
+      "checks_run": [
+        "Vitrine CI run 39394984568",
+        "Vitrine CI run 39395075160",
+        "Relecture des blobs main"
+      ],
+      "checks_passed": 3,
+      "checks_failed": 0,
+      "real_browser_verified": false,
+      "ci": "success"
+    },
+    "blockers": [
+      "Le clone Windows dev/ucp-codex reste volontairement non lu et non modifié ; aucune synchronisation n’est revendiquée.",
+      "Aucun navigateur, appareil réel, site public ou staging n’a été vérifié ; aucun déploiement n’a été déclenché.",
+      "Les demandes publiques #1/#2 de connexion CONTROL–Codex restent lues mais bloquées."
+    ],
+    "incidents": [
+      {
+        "id": "ucp-public-site-unverified",
+        "status": "incident",
+        "consecutive_sprints": 2,
+        "summary": "Deux sprints consécutifs ont livré une CI statique verte sans pouvoir vérifier un site public ou un staging autorisé.",
+        "strategy": "Ne plus répéter une ouverture web sans URL de déploiement confirmée ; prochaine action utile : obtenir ou créer un staging privé autorisé, puis exécuter une recette navigateur bornée."
+      }
+    ],
+    "next": "Sur un staging privé autorisé, recetter la page Avancement à 320/360/390/768 px avec clavier, Échap, clic extérieur et focus ; sinon traiter un autre bug indépendant sans répéter la vérification en ligne bloquée.",
+    "links": [
+      {
+        "label": "PR UCP #3",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/3"
+      },
+      {
+        "label": "Commit main fusionné",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/4eefa8077e724f32dcd2f5e29cf53f08a6f3cea0"
+      },
+      {
+        "label": "CI Vitrine finale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39395075160"
+      },
+      {
+        "label": "Page Avancement sur main",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/blob/main/site-vitrine/dist/avancement.html"
+      },
+      {
+        "label": "Statut public UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      }
+    ]
   }
 ]
