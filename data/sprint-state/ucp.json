@@ -1,36 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "leased",
-  "lease": {
-    "run_id": "ucp-20261020T144341Z-v3",
-    "owner": "chatgpt-automation",
-    "started_at": "2026-10-20T14:43:41Z",
-    "expires_at": "2026-10-20T15:28:41Z",
-    "objective": "Afficher un repli utilisateur lorsque le téléchargement du brief est indisponible et libérer l’URL objet sans fuite"
-  },
-  "checkpoint": {
-    "phase": "ready-to-merge",
-    "repository": "cosscoll/UnCoupdePouce",
-    "base_commit": "828eb1bb808897bcd73e5d17f85494980f25f04a",
-    "branch": "fix/ucp-brief-download-fallback-20261020",
-    "head_commit": "c21ad2cc86317b30402f4c0b2fcf9bed394fc623",
-    "pull_request": 7,
-    "files": [
-      "site-vitrine/dist/assets/app.js",
-      "site-vitrine/tests/app-shell.test.cjs"
-    ],
-    "tests": [
-      "Vitrine CI 39442334617: success (première passe)",
-      "Vitrine CI 39442423184: success (seconde passe corrective)"
-    ],
-    "next": "Fusionner prudemment la PR #7 avec vérification du head, puis synchroniser statut et journal publics."
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261020T132616Z-v3",
-    "ended_at": "2026-10-20T13:33:21.316Z",
+    "run_id": "ucp-20261020T144341Z-v3",
+    "ended_at": "2026-10-20T14:48:58.050Z",
     "outcome": "merged",
-    "summary": "PR #6 repli DOM du brief fusionnée sur main 828eb1bb après deux CI vertes ; navigateur réel non vérifié.",
+    "summary": "PR #7 repli de téléchargement du brief fusionnée sur main 836f767f après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
