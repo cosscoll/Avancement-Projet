@@ -1,9 +1,24 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "idle",
-  "lease": null,
-  "checkpoint": null,
+  "status": "leased",
+  "lease": {
+    "run_id": "ucp-20261020T163215Z-v3",
+    "owner": "chatgpt-automation",
+    "started_at": "2026-10-20T16:32:15Z",
+    "expires_at": "2026-10-20T17:17:15Z",
+    "objective": "Maintenir le téléchargement du brief lorsque Element.remove est indisponible et vérifier le nettoyage legacy"
+  },
+  "checkpoint": {
+    "phase": "lock-acquired",
+    "repository": "cosscoll/UnCoupdePouce",
+    "base_commit": "ec3be79fc20ffbabe980324db3e96a00a01801c9",
+    "branch": null,
+    "pull_request": null,
+    "files": [],
+    "tests": [],
+    "next": "Relire le téléchargement du brief, créer une branche depuis le HEAD exact de main et ajouter un repli removeChild."
+  },
   "last_completed": {
     "run_id": "ucp-20261020T152905Z-v3",
     "ended_at": "2026-10-20T15:32:58.411Z",
