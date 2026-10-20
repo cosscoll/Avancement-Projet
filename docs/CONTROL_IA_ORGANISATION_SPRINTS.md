@@ -40,7 +40,7 @@ Les dix nouvelles améliorations sont décrites et dépendancées dans [`data/co
 | 2. Définir objectif | **Une** capacité principale, sous-objectif AVANT→APRÈS et test pré-définis ; trois sous-objectifs maximum. | La priorité reste identique sauf décision utilisateur explicite ; documenter toute réorientation. |
 | 3. Première passe | Développement effectif et tests dans le périmètre autorisé. | Développement effectif ; possibilité de lot plus large si vérifiable dans la session. |
 | 4. Autocritique | Liste P0/P1/P2 prouvée, lacunes et limites. | Identique, aucune autocritique décorative. |
-| 5. Seconde passe | Corriger le défaut le plus grave réalisable, retester et refaire une critique. | Identique ; répéter si une correction utile reste réalisable. |
+| 5. Deuxième passe | Corriger le défaut le plus grave réalisable, retester et refaire une critique. | Identique ; répéter si une correction utile reste réalisable. |
 | 6. Livrer | Branche/PR, CI, fusion sécurisée, main et site public vérifiés distinctement. | Identique. Une session sans accès ne prétend pas avoir fusionné/pubié. |
 | 7. Transmettre | Checkpoint, critères, incidents, preuves, prochain pas, libérer son bail. | Identique : le sprint automatique **reprend exactement ce checkpoint**. |
 
