@@ -101,5 +101,139 @@
       ]
     },
     "next": "Reprendre le checkpoint PWA v38 et son blocage GitHub réel; corriger le code applicatif par lot sûr directement dans main avec tests préalables; maintenir focus CONTROL-ACCOUNT et Cloud disabled jusqu'à approbation."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261020-1105-spec-v12-traceability",
+    "started_at": "2026-10-20T09:05:51Z",
+    "ended_at": "2026-10-20T09:27:47Z",
+    "objectives": [
+      {
+        "before": "Cahier V1.1 privé mais confusion entre 22 tickets BACK et 42 scénarios T; aucune matrice de traçabilité ni affichage V1.2 de ces critères.",
+        "after": "Cahier V1.2 privé sauvegardé dans Library; registre public de 22 BACK, 42 T et 10 IMP avec backlinks, douze tests de non-régression, CI dédiée et statut visible sur le site public CONTROL.",
+        "acceptance": "Fichier privé disponible uniquement en bibliothèque CONTROL ; registre 22/42/10 sans texte privé ; 12/12 tests V1.2 et gouvernance verts ; Chromium réel local/public vérifie le panneau, le lien, les parcours sans erreur, avec preuve et SHA."
+      }
+    ],
+    "summary": "V1.2 consolidée : cahier privé conservant V1.1, 22 tickets et 42 recettes distincts, dix améliorations/30 critères, registre public expurgé et tableau visible sur CONTROL GitHub Pages. Aucune fausse validation de fonctionnalité, aucun achat.",
+    "done": [
+      "Bail unique CONTROL acquis avec SHA confirmé, et checkpoint PWA v38 préservé.",
+      "V1.2 intégrale privée uploadée en Library /CONTROL-IA sans divulgation publique.",
+      "Registre data/control-ia-requirements.json : 22 tickets, 42 tests, dix améliorations et liens inverses, 4 simulations séparées de vraies preuves.",
+      "Validateur scripts/control-ia-requirements.mjs, 12 tests Node, workflow CI V1.2, guide public expurgé.",
+      "Tableau UI CONTROL IA amélioré pour montrer chiffres V1.2 et distinguer simulé vs réel ; responsive et test Chromium local/public.",
+      "Références obsolètes BACK-001..042 corrigées dans stratégie, script et protocole; automation CONTROL actualisée sans changement de cadence/activation.",
+      "Autocritique 1 puis 2 et correctifs : liens manquants, shadowing URL, base-path local/public et timeout Chrome, tests relancés."
+    ],
+    "blockers": [
+      "Absence de base CONTROL séparée avec vraie Auth JWT testée sur comptes A/B. Cloud reste désactivé.",
+      "Checkpoint PWA v38 encore inachevé, patch antérieur refusé ; à auditer au sprint suivant.",
+      "CI générale centralisée reste en échec sur l'entrée d'incident invalide d'un rapport UCP, indépendant du développement CONTROL ; ne pas modifier l'historique UCP hors de son propre bail."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "SHARED-CI-UCP-V3-INCIDENT-FORMAT",
+        "consecutive_sprints": 1,
+        "summary": "Ancienne entrée UCP non conforme au contrat sprint V3 provoque un test rouge dans la CI globale.",
+        "strategy": "Signaler à l'automatisation UCP et préserver le contrat; maintenir les tests CONTROL ciblés, ne pas contourner les assertions."
+      }
+    ],
+    "quality": {
+      "ci": "verified",
+      "checks_run": [
+        "V1.2 validation 39400570624",
+        "Strategy/governance 39400570658",
+        "Chromium local + public 39400244904",
+        "GitHub Pages 39400570591",
+        "General suite 39400525720"
+      ],
+      "checks_passed": [
+        "12/12 V1.2 specification tests and validator",
+        "10-improvement strategy validator",
+        "Chromium local and public user journeys and 11 asset SHA-256 equality",
+        "Pages deployment succeeded for governance commit"
+      ],
+      "checks_failed": [
+        "Global CI still fails on UCP unrelated invalid incident entry"
+      ],
+      "limitations": [
+        "No real CONTROL Cloud users, sessions, OAuth, external AI executor or physical Android/iOS checks.",
+        "Partial/mock scenarios remain partial; registry statuses all pending real acceptance.",
+        "Private cahier version stored in Library; public GitHub only has redacted IDs and progress."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Registre V1.2 public de traçabilité (22 BACK, 42 T, 10 IMP)",
+        "kind": "code",
+        "stage": "tested",
+        "repository": "cosscoll/Avancement-Projet",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/control-ia-requirements.json"
+      },
+      {
+        "name": "Tableau V1.2 visible dans CONTROL IA",
+        "kind": "feature",
+        "stage": "verified_online",
+        "repository": "cosscoll/Avancement-Projet",
+        "url": "https://cosscoll.github.io/Avancement-Projet/#/control/localai",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/#/control/localai",
+        "online_verified_at": "2026-10-20T09:23:47Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39400244904"
+      },
+      {
+        "name": "Tests Node indépendants du cahier V1.2",
+        "kind": "test",
+        "stage": "tested",
+        "repository": "cosscoll/Avancement-Projet",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39400570624"
+      },
+      {
+        "name": "Cahier intégral V1.2 conservé PRIVÉ dans Library",
+        "kind": "document",
+        "stage": "coded",
+        "repository": "cosscoll/Avancement-Projet"
+      }
+    ],
+    "links": [
+      {
+        "label": "Recette Chromium réelle et site public",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39400244904"
+      },
+      {
+        "label": "CI cahier V1.2 12/12",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39400570624"
+      },
+      {
+        "label": "CI gouvernance 10 améliorations",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39400570658"
+      },
+      {
+        "label": "GitHub Pages",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39400570591"
+      },
+      {
+        "label": "CI générale bloquée UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39400525720"
+      }
+    ],
+    "critique": {
+      "p0": [
+        "Vrai compte CONTROL Auth/RLS/données impossible à déclarer opérationnel sans base indépendante et autorisation; aucun critère de ce bloc ne devient verified."
+      ],
+      "p1": [
+        "CI centralisée est couplée aux rapports d'autres projets et peut échouer malgré tests CONTROL verts; pas de contournement.",
+        "PWA v38 locale n'a pas été revalidée ou publiée ; reprise nécessaire."
+      ],
+      "p2": [
+        "Chaque écriture directe sur main peut déclencher une validation intermédiaire rouge ou annulée, mieux grouper les prochaines modifications."
+      ],
+      "corrected": [
+        "Désambiguïsation BACK 22 vs tests T 42",
+        "Registre auto-validé et contrôles de confidentialité",
+        "Bug shadowing URL, test path local vs production",
+        "Timeout Chromium runner diagnosable + marge de démarrage",
+        "Tableau et preuve navigateur public plutôt que rapports seuls"
+      ]
+    },
+    "next": "Analyser les sources du checkpoint PWA v38, corriger le défaut de façon reproductible si prouvé, puis ajouter un test/contrat utile à CONTROL-ACCOUNT (T-15/16/21), sans création de service, sans masquer la CI UCP et en gardant Cloud enabled:false."
   }
 ]
