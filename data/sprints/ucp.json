@@ -1859,9 +1859,21 @@
     "ended_at": "2026-10-20T07:34:00Z",
     "summary": "Le défaut réel de navigation mobile de la page Avancement est corrigé, contrôlé par CI, fusionné dans main et tracé selon le protocole V3.",
     "objectives": [
-      "Rendre la navigation de la page Avancement utilisable à 760 px et moins.",
-      "Ajouter un contrôle de non-régression statique.",
-      "Obtenir une CI de PR verte puis fusionner sans toucher au chantier local Codex."
+      {
+        "before": "La navigation mobile de la page Avancement manque de fiabilité à 760 px et moins",
+        "after": "Correctif de navigation mobile intégré et fusionné sur main UCP",
+        "acceptance": "PR UCP #2 fusionnée; commit 8da708c0815221c0fbef9fdbb24976aeacbb4a96 et test CI 39387060851 réussis (pas de recette Android physique)"
+      },
+      {
+        "before": "Le comportement mobile de l'interface n'avait pas de contrôle de non-régression identifié dans cette livraison",
+        "after": "Assertion statique de non-régression et test de code ajoutés",
+        "acceptance": "Vérifier dans la CI UCP le test correspondant sans affirmer une recette navigateur absente"
+      },
+      {
+        "before": "Le correctif préparé n'était pas encore livré sur main",
+        "after": "Changement intégré à la branche principale via PR #2",
+        "acceptance": "Vérifier les SHA PR/main et l'exécution de la CI verte"
+      }
     ],
     "done": [
       "Issues centrales #1 et #2 relues : ouvertes, authentifiées cosscoll, sans nouvelle décision ; leur demande de connexion Codex reste bloquée par les interdictions permanentes.",
@@ -1876,17 +1888,20 @@
       {
         "type": "pull_request",
         "stage": "merged",
-        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/2"
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/2",
+        "name": "PR UCP #2 fusionnée"
       },
       {
         "type": "commit",
         "stage": "merged",
-        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/8da708c0815221c0fbef9fdbb24976aeacbb4a96"
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/8da708c0815221c0fbef9fdbb24976aeacbb4a96",
+        "name": "Commit UCP main"
       },
       {
         "type": "ci",
         "stage": "tested",
-        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39387060851"
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39387060851",
+        "name": "CI UCP tests statiques"
       }
     ],
     "quality": {
@@ -1932,6 +1947,16 @@
         "label": "Issue UCP #2",
         "url": "https://github.com/cosscoll/Avancement-Projet/issues/2"
       }
-    ]
+    ],
+    "source_objectives": [
+      "Rendre la navigation de la page Avancement utilisable à 760 px et moins.",
+      "Ajouter un contrôle de non-régression statique.",
+      "Obtenir une CI de PR verte puis fusionner sans toucher au chantier local Codex."
+    ],
+    "metadata_repair": {
+      "scope": "contract_fields_only",
+      "reason": "Normalisation explicite des objectifs et noms de livrables d'un rapport V2; ne prouve ni recette navigateur ni livraison mobile physique",
+      "date": "2026-10-20"
+    }
   }
 ]
