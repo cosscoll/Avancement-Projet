@@ -18,9 +18,10 @@
       ".github/workflows/vitrine-ci.yml"
     ],
     "tests": [
-      "CI de PR à lancer"
+      "Vitrine CI 39423143888 en cours"
     ],
-    "next_action": "Créer la PR, attendre la CI, autocritiquer puis corriger et retester."
+    "next_action": "Attendre la CI #39423143888, autocritiquer puis corriger et retester.",
+    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/5"
   },
   "last_completed": {
     "run_id": "ucp-20261020T093301Z-v3",
