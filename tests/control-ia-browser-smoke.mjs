@@ -52,7 +52,7 @@ const waitPort=deadline(async()=>{
  if(!existsSync(filename))return null;
  const port=Number(readFileSync(filename,'utf8').split('\n')[0]);
  return port>0?port:null;
-},12000);
+},30000);
 
 const server=createServer((req,res)=>{
  try{
@@ -72,8 +72,9 @@ try{
  const candidates=[process.env.CHROME_BIN,'google-chrome','google-chrome-stable','chromium','chromium-browser'].filter(Boolean);
  const binary=candidates.find(c=>spawnSync('which',[c],{stdio:'ignore'}).status===0);
  assert.ok(binary,'No preinstalled Chromium/Chrome found. Browser verification cannot be declared successful.');
- browser=spawn(binary,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--no-first-run','--no-default-browser-check','--disable-background-networking','--remote-allow-origins=*','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:'ignore',detached:true});
- const debugPort=await waitPort();
+ browser=spawn(binary,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--no-first-run','--no-default-browser-check','--disable-background-networking','--remote-allow-origins=*','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe'],detached:true});
+ let chromeError='';browser.stderr?.on('data',chunk=>{chromeError+=String(chunk).slice(-900);chromeError=chromeError.slice(-1800)});
+ const debugPort=await waitPort().catch(error=>{throw Error('Chrome startup failed (status '+String(browser.exitCode)+'): '+chromeError.slice(-900)+' | '+error.message)});
  const targets=await (await fetch('http://127.0.0.1:'+debugPort+'/json')).json();
  const page=targets.find(t=>t.type==='page'&&t.webSocketDebuggerUrl);
  assert.ok(page,'No Chrome page target');
