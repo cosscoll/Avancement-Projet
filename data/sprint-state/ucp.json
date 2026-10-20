@@ -1,9 +1,22 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "idle",
-  "lease": null,
-  "checkpoint": null,
+  "status": "running",
+  "lease": {
+    "run_id": "ucp-20261020T202911Z-v3",
+    "owner": "chatgpt-automation-ucp",
+    "started_at": "2026-10-20T20:29:11Z",
+    "expires_at": "2026-10-20T21:14:11Z",
+    "objective": "Maintenir le menu mobile avec une NodeList legacy sans forEach"
+  },
+  "checkpoint": {
+    "base_ref": "1de0fc4406367cdab46809c5fd0071dadeab4a06",
+    "branch": null,
+    "pr_url": null,
+    "files": [],
+    "checks": [],
+    "next_action": "Relire le verrou, inspecter le shell et créer une branche depuis le SHA main vérifié."
+  },
   "last_completed": {
     "run_id": "ucp-20261020T193421Z-v3",
     "ended_at": "2026-10-20T19:37:18.631Z",
