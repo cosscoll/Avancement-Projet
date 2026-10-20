@@ -25,13 +25,13 @@ Le registre machine consultable [`data/control-ia-requirements.json`](../data/co
 | Critères historiques | 36 | 3 validés |
 | Tickets BACK | 22 | 0 ticket clos avec preuve exhaustive |
 | Recettes T | 42 | 0 recette intégrale certifiée |
-| Recettes T avec preuve partielle/simulée | 4 | Non équivalentes à une recette réelle |
+| Recettes T avec preuve partielle/simulée | 5 | Non équivalentes à une recette réelle |
 | Améliorations IMP | 10 | 0 opérationnelle |
 | Critères d'amélioration | 30 | 0 validé |
 
 **Une CI verte, une application statique disponible ou un test avec un utilisateur fictif ne suffisent pas à attester une authentification réelle, une intégration externe, un appareil Android/iOS physique ou une disponibilité serveur.**
 
-Preuves techniques déjà identifiées : [recette navigateur locale](https://github.com/cosscoll/Avancement-Projet/actions/runs/39230180420), [RLS PostgreSQL A/B fictif](https://github.com/cosscoll/Avancement-Projet/actions/runs/39233284788). Les tests partiels portent sur les identifiants `T-05`, `T-14`, `T-15`, `T-25`. Ils gardent le statut `partial_mock`, pas `real_verified`.
+Preuves techniques déjà identifiées : [recette navigateur locale](https://github.com/cosscoll/Avancement-Projet/actions/runs/39230180420), [RLS PostgreSQL A/B fictif](https://github.com/cosscoll/Avancement-Projet/actions/runs/39233284788). Les tests partiels portent sur les identifiants `T-05`, `T-14`, `T-15`, `T-16`, `T-25`. Ils gardent le statut `partial_mock`, pas `real_verified`.
 
 ## MVP : cinq jalons successifs
 
@@ -57,3 +57,6 @@ L'outil [`scripts/control-ia-requirements.mjs`](../scripts/control-ia-requiremen
 - **CI générale partagée :** le dernier run rouge observé après les écritures UCP contient un incident de format de journal UCP ; il n'autorise pas à désactiver les tests, à réécrire des preuves ou à modifier l'application UCP hors de son propre sprint.
 
 Le prochain sprint CONTROL peut avancer sur les contrats de permissions et tests liés au compte tout en gardant l'activation Cloud bloquée, conformément au cahier.
+
+
+**Complément sécurité du 20/10 :** la [preuve simulée T-16](https://github.com/cosscoll/Avancement-Projet/actions/runs/39403753476) couvre cinq transitions du client A/B avec réponses tardives ; aucune authentification JWT réelle n'a été effectuée, donc T-16 reste **non vérifié intégralement** et les comptes Cloud restent désactivés.
