@@ -10,6 +10,18 @@ test('ten user-requested improvements are distinct, measurable and compatible wi
  assert.ok(summary(original).criteria>=30);
  assert.deepEqual([...original.improvements.map(x=>x.id)].sort(),[...REQUIRED_IMPROVEMENTS].sort());
 });
+test('owner requested safe direct-main workflow, no new PR or forced merge',()=>{
+ const policy=original.work_policy;
+ assert.equal(policy.delivery_mode,'direct_main');
+ assert.equal(policy.no_pull_request_required,true);
+ assert.equal(policy.preflight_required,true);
+ assert.equal(policy.post_commit_ci_required,true);
+ assert.equal(policy.staged_writes_must_verify_blob_sha,true);
+ assert.equal(policy.rollback_on_new_critical_regression,true);
+ const changed=copy();changed.work_policy.delivery_mode='pull_request';
+ assert.ok(validateStrategy(changed,delivery).some(e=>e.includes('direct-main delivery')));
+});
+
 test('classic sessions and automation share a single WIP=1 checkpoint and lease',()=>{
  assert.equal(original.work_policy.max_primary_workstreams,1);
  assert.equal(original.work_policy.common_lock_file,'data/sprint-state/control-ia.json');
