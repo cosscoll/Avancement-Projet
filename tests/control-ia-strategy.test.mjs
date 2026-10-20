@@ -53,7 +53,7 @@ test('sprint handoff must be executable, bounded and concrete',()=>{
  const s=copy();s.handoff.next_steps=[];
  assert.ok(validateStrategy(s,delivery).some(e=>e.includes('one to three')));
 });
-test('mandatory protocol content documents both execution modes and evidence boundaries',()=>{
+test('mandatory protocol content documents both execution modes and evidence boundaries',async()=>{
  const {readFileSync}=await import('node:fs');
  const doc=readFileSync('docs/CONTROL_IA_ORGANISATION_SPRINTS.md','utf8');
  for(const phrase of ['conversation classique','automatisation','autocritique','deuxième passe','data/control-ia-strategy.json','45 minutes','0 €'])assert.ok(doc.toLowerCase().includes(phrase.toLowerCase()),phrase);
