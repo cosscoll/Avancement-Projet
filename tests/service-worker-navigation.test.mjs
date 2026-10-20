@@ -7,6 +7,8 @@ const source=readFileSync(new URL('../service-worker.js',import.meta.url),'utf8'
 const origin='https://cosscoll.github.io/Avancement-Projet/';
 const shellName=source.match(/const CACHE_SHELL='([^']+)'/)?.[1];
 const publicName=source.match(/const CACHE_PUBLIC='([^']+)'/)?.[1];
+const mime=url=>url.endsWith('.js')?'text/javascript':url.endsWith('.css')?'text/css':url.endsWith('.webmanifest')?'application/manifest+json':url.endsWith('.json')?'application/json':url.endsWith('.html')||url.endsWith('/')?'text/html':'image/png';
+const headers=url=>({get(name){return name==='content-type'?mime(url):null}});
 assert.ok(shellName&&publicName,'Cache versions must be declared');
 
 function harness(fetcher){
@@ -35,7 +37,7 @@ function harness(fetcher){
 
 test('Legacy or unknown pages cannot poison the offline CONTROL homepage',async()=>{
  let online=true;
- const h=harness(async request=>{if(!online)throw Error('offline');const url=request.url||String(request);return{ok:true,content:url,clone(){return this}}});
+ const h=harness(async request=>{if(!online)throw Error('offline');const url=request.url||String(request);return{ok:true,content:url,headers:headers(url),clone(){return this}}});
  const shell=await h.open(shellName);
  const home=await h.navigate('index.html');
  assert.equal(home.content,origin+'index.html');
@@ -57,7 +59,7 @@ test('Cold PWA install precaches only public files in bounded parallel batches',
   active++;maxActive=Math.max(maxActive,active);total++;
   await tick();
   active--;
-  return {ok:true,clone(){return this}};
+  return {ok:true,headers:headers(request.url||String(request)),clone(){return this}};
  });
  let awaited;
  h.callbacks.install({waitUntil(p){awaited=p}});
