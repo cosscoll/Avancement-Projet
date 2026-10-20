@@ -134,7 +134,7 @@
     },
     {
       "title": "Navigation mobile de la page Avancement",
-      "description": "UCP-QA-04 a démontré que les liens de navigation disparaissent à 760 px et moins sur avancement.html ; correctif isolé préparé, non intégré et non testé en navigateur réel.",
+      "description": "PR UCP #2 fusionnée sur main au commit 8da708c : la page Avancement dispose désormais du bouton mobile accessible, de la relation aria-controls vers #main-nav, du contrôleur app.js et d’un lien d’évitement stylable. La CI Vitrine run 39387060851 est verte (structure statique, syntaxe JavaScript et tests du générateur de brief). Aucun navigateur, lecteur d’écran, appareil réel, site public ou staging n’a été vérifié ; l’alerte reste ouverte jusqu’à cette recette.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-54 ; QA-54 valide le reçu minimal non sensible de résidu, 415/415 contrôles, un ZIP audité et son reçu détaché sur copie isolée. HEAD public af2bba35, lot sauvegardé hors GitHub applicatif, non fusionné et non déployé",
-  "baseline_date": "2026-10-19"
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-54 ; PR #2 fusionnée sur main 8da708c avec CI Vitrine verte. Les contrôles isolés historiques ne valent pas recette navigateur, appareil ou staging.",
+  "baseline_date": "2026-10-20"
 }
