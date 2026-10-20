@@ -8,6 +8,24 @@
     "expires_at": "2026-10-20T08:11:24Z",
     "objective": "Corriger un bug réel et indépendant sur la vitrine publique UCP, avec PR et contrôle CI"
   },
-  "checkpoint": null,
+  "checkpoint": {
+    "at": "2026-10-20T07:33:00Z",
+    "branch": "fix/ucp-avancement-mobile-nav-v3",
+    "pr_url": null,
+    "files": [
+      "site-vitrine/dist/avancement.html",
+      "site-vitrine/scripts/check_site.py",
+      ".github/workflows/vitrine-ci.yml"
+    ],
+    "stage": "coded",
+    "main_sha": "af2bba353089a382843f6997ea92239b03d8a2dc",
+    "branch_sha": "eee82349ed12553d6cf26f6c4e7b9eeda3a7067d",
+    "checks": [
+      "Contrat attendu: bouton mobile aria-controls=main-nav, nav #main-nav, app.js différé",
+      "Contrôle statique ajouté; exécution CI attendue sur PR"
+    ],
+    "blocker": null,
+    "next_action": "Créer la PR, attendre la CI et corriger toute régression avant décision de fusion."
+  },
   "last_completed": null
 }
