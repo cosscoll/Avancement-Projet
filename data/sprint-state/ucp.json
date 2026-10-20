@@ -10,21 +10,22 @@
     "objective": "Préserver la copie et le téléchargement du brief sans document.body.append"
   },
   "checkpoint": {
-    "phase": "coded",
+    "phase": "ready_to_merge",
     "repository": "cosscoll/UnCoupdePouce",
     "base_branch": "main",
     "base_sha": "02585c096e270c185a031827673720f9c797862b",
     "branch": "fix/ucp-body-appendchild-legacy-20261021",
-    "branch_sha": "8519fe923db182ad916d62804a4200ebd64fdb1c",
-    "pr_url": null,
+    "branch_sha": "fcc9bf2fe55903150ba955814f9297832fb3442c",
+    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/14",
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.cjs"
     ],
     "tests": [
-      "CI première passe à lancer après ouverture de PR"
+      "Vitrine CI première passe: success (39508853215)",
+      "Vitrine CI seconde passe: success (39508906620)"
     ],
-    "next_action": "Ouvrir la PR, attendre la première CI, puis tester body.append présent mais en exception sur le téléchargement."
+    "next_action": "Fusionner PR #14 avec SHA de tête attendu, vérifier main et synchroniser statut/journal."
   },
   "last_completed": {
     "run_id": "ucp-20261020T212553Z-v3",
