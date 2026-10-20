@@ -2947,5 +2947,92 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
       }
     ]
+  },
+  {
+    "schema_version": 3,
+    "id": "ucp-20261020T202911Z-v3",
+    "started_at": "2026-10-20T20:29:11Z",
+    "ended_at": "2026-10-20T20:31:34.118Z",
+    "objectives": [
+      {
+        "before": "Le menu appelle NodeList.forEach directement et peut interrompre toute la vitrine sur un ancien WebView.",
+        "after": "Les collections de liens sont normalisées par Array.from avant la liaison des événements.",
+        "acceptance": "Les collections legacy sans forEach et les tableaux modernes lient leurs liens en CI, puis le correctif est fusionné hors application/**."
+      }
+    ],
+    "summary": "PR #12 fusionnée sur main 54e0641c : le menu accepte désormais les NodeList legacy sans forEach ; deux CI vertes, aucune recette navigateur ou staging.",
+    "done": [
+      "Directives #1 et #2 relues : connexion Codex lue mais bloquée par les interdictions permanentes.",
+      "Verrou coopératif V3 acquis et relu avant mutation.",
+      "Collection des liens du menu normalisée par Array.from sans toucher application/**.",
+      "Première CI Vitrine 39492538718 réussie ; autocritique P2 : liaison des collections modernes non vérifiée explicitement.",
+      "Test correctif ajouté pour deux liens modernes ; CI finale 39492612467 réussie.",
+      "PR #12 fusionnée prudemment sur main 54e0641c après vérification du head, de la base et du bail."
+    ],
+    "deliverables": [
+      {
+        "name": "Compatibilité NodeList legacy du menu",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "54e0641c809acd2a67fbd057f322ef022e961be6",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/54e0641c809acd2a67fbd057f322ef022e961be6",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "quality": {
+      "checks_run": [
+        "Vitrine CI première passe #39492538718",
+        "Vitrine CI corrective #39492612467",
+        "Vérification des blobs app.js et app-shell.test.cjs sur main"
+      ],
+      "checks_passed": [
+        "Structure statique",
+        "Syntaxe JavaScript",
+        "Tests Node de la vitrine",
+        "Reconstruction déterministe build/dist",
+        "Blobs attendus présents sur main"
+      ],
+      "checks_failed": [],
+      "real_browser_verified": false,
+      "ci": "success"
+    },
+    "blockers": [
+      "Aucun navigateur, appareil réel, site public ou staging autorisé n’a été vérifié.",
+      "Le clone Windows dev/ucp-codex reste volontairement non lu et non synchronisé.",
+      "Les consignes publiques #1 et #2 demandant Codex restent bloquées par les interdictions permanentes."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "ucp-public-site-unverified",
+        "status": "open",
+        "consecutive_sprints": 11,
+        "next_action": "Effectuer une recette navigateur réelle à 320/360/390/768 px sur un staging explicitement autorisé ; sinon poursuivre un bug indépendant hors application/**."
+      }
+    ],
+    "next": "Tester un autre défaut réel et indépendant hors application/**, ou effectuer la recette WebView/navigateur sur staging autorisé.",
+    "links": [
+      {
+        "label": "PR #12",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/12"
+      },
+      {
+        "label": "Commit main",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/54e0641c809acd2a67fbd057f322ef022e961be6"
+      },
+      {
+        "label": "CI initiale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39492538718"
+      },
+      {
+        "label": "CI corrective",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39492612467"
+      },
+      {
+        "label": "Statut UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      }
+    ]
   }
 ]
