@@ -2194,5 +2194,119 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
       }
     ]
+  },
+  {
+    "id": "ucp-20261020T122924Z-v3",
+    "schema_version": 2,
+    "protocol_version": 3,
+    "started_at": "2026-10-20T12:29:24Z",
+    "ended_at": "2026-10-20T12:34:53.854Z",
+    "summary": "Le shell de la vitrine ne plante plus lorsque MediaQueryList.addEventListener est indisponible ; le repli legacy et l’absence totale de matchMedia sont couverts par CI, puis la PR #5 a été fusionnée sur main.",
+    "objectives": [
+      {
+        "before": "app.js appelait inconditionnellement MediaQueryList.addEventListener, ce qui interrompait le menu, les onglets et le brief sur certains anciens navigateurs ou WebView.",
+        "after": "Le shell choisit addEventListener, addListener ou continue sans abonnement si matchMedia est absent.",
+        "acceptance": "PR #5 fusionnée au commit 88db2dad0e4e243e60f0ca7e474a3cc27894ef09 après deux CI Vitrine réussies."
+      }
+    ],
+    "done": [
+      "Issues centrales #1/#2 relues en premier : authentifiées cosscoll, toujours ouvertes ; demande Codex lue mais bloquée par les interdictions permanentes.",
+      "Protocoles V3/V2, état, derniers journaux, branches, PR, incidents et main revalidés.",
+      "Le bail précédent expiré a été récupéré ; sa branche existante a été vérifiée identique à main avant acquisition et relecture du nouveau bail.",
+      "Correctif limité à site-vitrine/dist/assets/app.js, nouveau test Node et workflow Vitrine ; aucun fichier application/** ni dev/ucp-codex modifié.",
+      "Première CI 39423143888 réussie avec API moderne et addListener legacy.",
+      "Autocritique P1 corrigée par un troisième scénario sans matchMedia ; seconde CI 39423214897 réussie.",
+      "Main est resté à 5471ff9 avant fusion ; PR #5 fusionnée par squash avec le head attendu 1f6dd607, nouveau main 88db2dad0e4e243e60f0ca7e474a3cc27894ef09.",
+      "Les trois blobs ont été relus sur main et le statut public central a été synchronisé."
+    ],
+    "deliverables": [
+      {
+        "name": "PR UCP #5 fusionnée",
+        "kind": "pull_request",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "5",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/5",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Commit main compatibilité matchMedia",
+        "kind": "commit",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "88db2dad0e4e243e60f0ca7e474a3cc27894ef09",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/88db2dad0e4e243e60f0ca7e474a3cc27894ef09",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "CI Vitrine finale",
+        "kind": "ci",
+        "stage": "tested",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "39423214897",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39423214897",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "quality": {
+      "p0": [],
+      "p1": [
+        "Aucune recette navigateur ou WebView réel : la compatibilité est prouvée par exécution Node simulée, pas sur appareil."
+      ],
+      "p2": [],
+      "second_pass": "corrected_and_retested",
+      "checks_run": [
+        "Vitrine CI 39423143888",
+        "Vitrine CI 39423214897",
+        "Relecture des trois blobs sur main"
+      ],
+      "checks_passed": [
+        "CI initiale",
+        "CI finale après scénario sans matchMedia",
+        "Blobs main conformes"
+      ],
+      "checks_failed": [],
+      "real_browser_verified": false,
+      "ci": "success"
+    },
+    "blockers": [
+      "Le clone Windows dev/ucp-codex reste volontairement non lu et non modifié ; aucune synchronisation n’est revendiquée.",
+      "Aucun navigateur, appareil réel, site public ou staging n’a été vérifié ; aucun déploiement n’a été déclenché.",
+      "Les demandes publiques #1/#2 de connexion CONTROL–Codex restent lues mais bloquées."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "ucp-public-site-unverified",
+        "status": "incident",
+        "consecutive_sprints": 4,
+        "next_action": "Ne pas répéter une ouverture sans URL confirmée ; effectuer une recette navigateur bornée seulement sur un staging privé autorisé."
+      }
+    ],
+    "next": "Traiter le prochain bug indépendant hors application/** ou, si un staging privé autorisé existe, recetter le shell à 320/360/390/768 px sur navigateur réel.",
+    "links": [
+      {
+        "label": "PR UCP #5",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/5"
+      },
+      {
+        "label": "Commit main 88db2dad",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/88db2dad0e4e243e60f0ca7e474a3cc27894ef09"
+      },
+      {
+        "label": "CI Vitrine initiale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39423143888"
+      },
+      {
+        "label": "CI Vitrine finale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39423214897"
+      },
+      {
+        "label": "Statut public UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      }
+    ]
   }
 ]
