@@ -4,6 +4,8 @@
   "updated_on": "2026-10-20",
   "mission": "Réduire la fragmentation numérique : depuis une seule conversation, retrouver l'information et réaliser des actions autorisées, avec preuves et reprises fiables.",
   "governing_sources": [
+    "data/control-ia-requirements.json",
+    "docs/CONTROL_IA_CAHIER_V1_2_SUIVI.md",
     "docs/PROTOCOLE_SPRINTS_V3.md",
     "docs/PROTOCOLE_SPRINTS_V2.md",
     "docs/CONTROL_IA_GESTION_FONCTIONNELLE.md",
@@ -102,12 +104,12 @@
     "Éviter de commencer des fonctionnalités indépendantes simplement pour augmenter le nombre de commits."
   ],
   "handoff": {
-    "next_sprint_goal": "Reprendre le checkpoint PWA v38 puis avancer CONTROL-ACCOUNT, après préflight; publier les changements sûrs directement sur main (aucune fusion PR).",
+    "next_sprint_goal": "Terminer la reprise du PWA v38 sans écraser la production, puis avancer l'identité/permissions CONTROL-ACCOUNT vers un parcours A/B réellement certifiable à coût 0 €.",
     "checkpoint_to_review": "data/sprint-state/control-ia.json : control-ia/pwa-atomic-v38-20261019-1754 ; write GitHub refusé ; tests locaux déclarés 16/16 non intégrés",
     "next_steps": [
-      "Vérifier si le checkpoint PWA v38 existe réellement dans main/branche et reprendre les preuves ou tests sans réécrire à l'aveugle.",
-      "Exécuter tests ciblés avant écriture directe main; vérifier le SHA de chaque fichier créé/modifié; contrôler la CI et la publication après chaque lot.",
-      "Poursuivre le socle CONTROL-ACCOUNT par tests d'isolation et sécurité sans activer Cloud ni créer une ressource payante."
+      "Comparer le checkpoint PWA v38 et ses tests 16/16 annoncés aux fichiers sur main ; ne publier le correctif que si la régression est prouvée et le test navigateur public vert.",
+      "Préparer les tests de permissions de CONTROL-ACCOUNT à partir du registre V1.2 BACK-004/005 et T-15/16/21 ; conserver Cloud désactivé tant qu'une base dédiée/autorisation n'est pas établie.",
+      "À chaque modification, vérifier le registre 22 BACK / 42 T / 10 IMP, les 12 tests V1.2, la recette Chromium et la CI générale, en signalant distinctement l'incident de format UCP."
     ],
     "external_decision_required": "Nouvelle organisation/projet Supabase exclusivement CONTROL, coût attesté 0 € et consentement explicite avant création/activation."
   },
@@ -403,5 +405,6 @@
     "forbid_synthetic_success": true,
     "cloud_enabled_required_false_until_authorized": true,
     "do_not_change_other_projects": true
-  }
+  },
+  "specification_version": "1.2"
 }
