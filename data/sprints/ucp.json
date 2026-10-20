@@ -2308,5 +2308,122 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
       }
     ]
+  },
+  {
+    "id": "ucp-20261020T132616Z-v3",
+    "schema_version": 2,
+    "protocol_version": 3,
+    "started_at": "2026-10-20T13:26:16Z",
+    "ended_at": "2026-10-20T13:33:21.316Z",
+    "summary": "Le générateur de brief ne dépend plus exclusivement de Element.replaceChildren : le repli textContent est intégré sur main et les chemins DOM moderne et legacy sont couverts par deux CI vertes.",
+    "objectives": [
+      {
+        "before": "app.js appelait Element.replaceChildren sans repli, pouvant interrompre l’initialisation du brief sur certains anciens navigateurs ou WebView.",
+        "after": "La liste est vidée avec replaceChildren quand disponible, sinon avec textContent, puis les trois conseils sont reconstruits.",
+        "acceptance": "PR #6 fusionnée au commit 828eb1bb808897bcd73e5d17f85494980f25f04a après deux CI Vitrine réussies."
+      }
+    ],
+    "done": [
+      "Issues centrales #1/#2 relues en premier : authentifiées cosscoll, toujours ouvertes ; demande Codex lue mais bloquée.",
+      "Protocoles V3/V2, état, deux derniers journaux, branches, PR, incident et main contrôlés avant mutation.",
+      "Bail V3 ucp-20261020T132616Z-v3 acquis avec le SHA courant puis relu avec le bon propriétaire.",
+      "dev/ucp-codex recontrôlée comme divergente ; application/**, README et fichiers locaux inconnus ont été exclus.",
+      "Correctif limité à site-vitrine/dist/assets/app.js et site-vitrine/tests/app-shell.test.cjs.",
+      "Première CI 39431176318 réussie avec exécution de app.js sans replaceChildren.",
+      "Autocritique P1/P2 corrigée par la vérification d’une liste préexistante et du chemin moderne ; seconde CI 39431257753 réussie.",
+      "Main est resté à 88db2dad avant fusion ; PR #6 fusionnée par squash avec le head attendu 32fa3b1f, nouveau main 828eb1bb808897bcd73e5d17f85494980f25f04a.",
+      "Les deux blobs ont été relus sur main et le statut public central a été synchronisé."
+    ],
+    "deliverables": [
+      {
+        "name": "PR UCP #6 fusionnée",
+        "kind": "pull_request",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "6",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/6",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Commit main repli DOM du brief",
+        "kind": "commit",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "828eb1bb808897bcd73e5d17f85494980f25f04a",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/828eb1bb808897bcd73e5d17f85494980f25f04a",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "CI Vitrine finale",
+        "kind": "ci",
+        "stage": "tested",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "39431257753",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39431257753",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "quality": {
+      "p0": [],
+      "p1": [
+        "La première passe ne prouvait pas la suppression de conseils déjà présents ; scénario ajouté et réussi."
+      ],
+      "p2": [
+        "Le chemin moderne replaceChildren n’était pas explicitement protégé ; assertion ajoutée et réussie."
+      ],
+      "second_pass": "corrected_and_retested",
+      "checks_run": [
+        "Vitrine CI 39431176318",
+        "Vitrine CI 39431257753",
+        "Relecture des deux blobs sur main"
+      ],
+      "checks_passed": [
+        "CI initiale",
+        "CI finale après tests legacy et moderne",
+        "Blobs main conformes"
+      ],
+      "checks_failed": [],
+      "real_browser_verified": false,
+      "ci": "success"
+    },
+    "blockers": [
+      "Le clone Windows dev/ucp-codex reste volontairement non lu et non modifié ; aucune synchronisation n’est revendiquée.",
+      "Aucun navigateur, appareil réel, site public ou staging n’a été vérifié ; aucun déploiement n’a été déclenché.",
+      "Les demandes publiques #1/#2 de connexion CONTROL–Codex restent lues mais bloquées."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "ucp-public-site-unverified",
+        "status": "incident",
+        "consecutive_sprints": 5,
+        "next_action": "Ne pas répéter une ouverture sans URL confirmée ; effectuer une recette navigateur bornée seulement sur un staging privé autorisé."
+      }
+    ],
+    "next": "Traiter un autre bug indépendant hors application/** ou, si un staging privé autorisé existe, recetter réellement le générateur de brief et le menu à 320/360/390/768 px.",
+    "links": [
+      {
+        "label": "PR UCP #6",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/6"
+      },
+      {
+        "label": "Commit main 828eb1bb",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/828eb1bb808897bcd73e5d17f85494980f25f04a"
+      },
+      {
+        "label": "CI Vitrine initiale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39431176318"
+      },
+      {
+        "label": "CI Vitrine finale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39431257753"
+      },
+      {
+        "label": "Statut public UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      }
+    ]
   }
 ]
