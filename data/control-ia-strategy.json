@@ -104,12 +104,12 @@
     "Éviter de commencer des fonctionnalités indépendantes simplement pour augmenter le nombre de commits."
   ],
   "handoff": {
-    "next_sprint_goal": "Terminer la reprise du PWA v38 sans écraser la production, puis avancer l'identité/permissions CONTROL-ACCOUNT vers un parcours A/B réellement certifiable à coût 0 €.",
-    "checkpoint_to_review": "data/sprint-state/control-ia.json : control-ia/pwa-atomic-v38-20261019-1754 ; write GitHub refusé ; tests locaux déclarés 16/16 non intégrés",
+    "next_sprint_goal": "CONTROL-ACCOUNT BACK-004/005 : renforcer les garde-fous d'identité, la validation de configuration et les tests de changement de session A/B, sans activer Cloud.",
+    "checkpoint_to_review": "RÉSOLU : correctif privé control-ia/pwa-atomic-v38-20261019-1754 repris et publié en PWA v39 ; vrai Chromium en ligne 39401977906 et 17 tests PWA. Conserver l'archive historique dans Library, ne plus présenter la v38 comme chantier bloqué.",
     "next_steps": [
-      "Comparer le checkpoint PWA v38 et ses tests 16/16 annoncés aux fichiers sur main ; ne publier le correctif que si la régression est prouvée et le test navigateur public vert.",
-      "Préparer les tests de permissions de CONTROL-ACCOUNT à partir du registre V1.2 BACK-004/005 et T-15/16/21 ; conserver Cloud désactivé tant qu'une base dédiée/autorisation n'est pas établie.",
-      "À chaque modification, vérifier le registre 22 BACK / 42 T / 10 IMP, les 12 tests V1.2, la recette Chromium et la CI générale, en signalant distinctement l'incident de format UCP."
+      "Durcir la validation du projet et de la clé Supabase côté client : refuser les URL avec credentials/query, refuser tout JWT service_role/anonyme non attesté, conserver enabled:false.",
+      "Tester les transitions de session et le cloisonnement local dans un environnement synthétique pour T-15/16/21 ; garder ces critères non validés tant que deux comptes réels et un backend dédié ne sont pas disponibles.",
+      "Réaliser la recette navigateur Cloud fermé et suite contrôle PWA v39 + exigences V1.2 ; vérifier déploiement et preuves sans toucher à la base IAgile."
     ],
     "external_decision_required": "Nouvelle organisation/projet Supabase exclusivement CONTROL, coût attesté 0 € et consentement explicite avant création/activation."
   },
