@@ -1,9 +1,22 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "idle",
-  "lease": null,
-  "checkpoint": null,
+  "status": "running",
+  "lease": {
+    "run_id": "ucp-20261020T193421Z-v3",
+    "owner": "chatgpt-automation-ucp",
+    "started_at": "2026-10-20T19:34:21Z",
+    "expires_at": "2026-10-20T20:19:21Z",
+    "objective": "Empêcher une exception de removeChild d’annuler une copie du brief déjà réussie"
+  },
+  "checkpoint": {
+    "base_ref": "c5783609e6305548e4134fc71f34fc212a7dc442",
+    "branch": null,
+    "pr_url": null,
+    "files": [],
+    "checks": [],
+    "next_action": "Relire le verrou, inspecter app.js et ses tests puis créer une branche depuis le SHA main vérifié."
+  },
   "last_completed": {
     "run_id": "ucp-20261020T183251Z-v3",
     "ended_at": "2026-10-20T18:35:56.812Z",
