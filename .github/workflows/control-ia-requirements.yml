@@ -7,6 +7,8 @@ on:
       - 'data/control-ia-strategy.json'
       - 'data/control-ia-delivery.json'
       - 'scripts/control-ia-requirements.mjs'
+      - 'scripts/control-ia-strategy.mjs'
+      - 'docs/CONTROL_IA_ORGANISATION_SPRINTS.md'
       - 'tests/control-ia-requirements.test.mjs'
       - 'docs/CONTROL_IA_CAHIER_V1_2_SUIVI.md'
       - '.github/workflows/control-ia-requirements.yml'
