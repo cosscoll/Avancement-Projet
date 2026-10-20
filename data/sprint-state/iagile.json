@@ -3,10 +3,10 @@
   "project": "iagile",
   "status": "running",
   "lease": {
-    "run_id": "iagile-20261020T133641646Z-m8-preview-11",
-    "started_at": "2026-10-20T13:36:41.646Z",
-    "expires_at": "2026-10-20T14:21:41.646Z",
-    "objective": "M8 Processus : prévisualisation brouillons réservée aux formateurs affectés, sans dépendance aux apprenants"
+    "run_id": "iagile-20261020T163635018Z-m8-12",
+    "started_at": "2026-10-20T16:36:35.018Z",
+    "expires_at": "2026-10-20T17:21:35.018Z",
+    "objective": "M8 Processus V0.9.1 : sécuriser la prévisualisation des consignes brouillons pour formateurs affectés"
   },
   "checkpoint": {
     "branch": "feature/academy-private-rebased-20261010",
@@ -24,7 +24,7 @@
     "result": "partial",
     "summary": "M8 instructor HTML preview scaffold committed on draft PR #12; JS and CI writes denied; Academy remains NO-GO."
   },
-  "recovered_from": "iagile-20261020T104256Z-m8-preview-11",
+  "recovered_from": "iagile-20261020T133641646Z-m8-preview-11",
   "maintenance_last_run": {
     "run_id": "iagile-20261020-0951-central-report-quality-repair",
     "ended_at": "2026-10-20T08:01:29Z",
