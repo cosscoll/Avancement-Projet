@@ -235,5 +235,120 @@
       ]
     },
     "next": "Analyser les sources du checkpoint PWA v38, corriger le défaut de façon reproductible si prouvé, puis ajouter un test/contrat utile à CONTROL-ACCOUNT (T-15/16/21), sans création de service, sans masquer la CI UCP et en gardant Cloud enabled:false."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261020-093127-pwa-v39-public",
+    "started_at": "2026-10-20T09:31:27Z",
+    "ended_at": "2026-10-20T09:42:21.255Z",
+    "objectives": [
+      {
+        "before": "PWA en production v37, ancienne archive v38 de correctif sécurité non publiée après refus outil ; cache sensible à des HTTP 200 de type HTML ; suivi V1.2 non précaché.",
+        "after": "PWA v39 en service sur GitHub Pages, installation atomique des fichiers critiques et rejet des mauvais types MIME, cache public V1.2 consultable complètement hors ligne.",
+        "acceptance": "15 nouvelles assertions install/cache plus deux navigation, Chromium local ET Pages sur commit 196becba2accbdc69d8170d96a52b6423f4e4c76; égalité SHA-256 de 12 assets publics et affichage/JSON V1.2 hors ligne."
+      }
+    ],
+    "summary": "Archive privée Sprint38 récupérée puis véritable correctif PWA v39 publié directement sur main. Tests anti-cache poisoning HTTP 200 HTML, installation atomique, registre V1.2 hors ligne et contrôle Chromium public réussis. Aucun Cloud ni ressource payante activé.",
+    "done": [
+      "Bail coopératif acquis et confirmé avant toute écriture; archive/retrospective Sprint38 examinées; branche ancienne sans code publié vérifiée.",
+      "Première passe archive PWA v38 testée localement 15/15 puis autocritique des MIME/ressources/V1.2.",
+      "Deuxième passe : service-worker.js v39 publié directement main, contrôle MIME et installation des fichiers critiques; données publiques V1.2 précachées sans risque d'injecter de HTML à la place de JSON.",
+      "15 tests dédiés install/cache ajoutés et deux tests navigation ajustés aux vrais headers HTTP; validation CI des tests PWA, sans masquer l'ancien échec UCP.",
+      "Recette Chromium sur URL Pages avec correspondance SHA des 12 actifs et test de rechargement complètement hors ligne : succès."
+    ],
+    "blockers": [
+      "CONTROL-ACCOUNT : pas de vraie base et de vraies sessions JWT A/B, Cloud enabled:false conservé.",
+      "CI générale partagée en échec sur incident V3 du rapport UCP non modifiable sous bail CONTROL.",
+      "Vérification sur appareils Android et iOS physiques non réalisée."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "SHARED-CI-UCP-V3-INCIDENT-FORMAT",
+        "consecutive_sprints": 2,
+        "summary": "La CI globale compte un échec sur une entrée d'incident d'un sprint UCP, indépendante du code CONTROL PWA.",
+        "strategy": "Laisser le contrat strict et demander une réparation au sprint UCP autorisé; ne pas éditer d'autres projets, ne pas cocher la CI globale comme verte."
+      }
+    ],
+    "quality": {
+      "ci": "verified",
+      "checks_run": [
+        "15 nouveaux tests Node PWA, plus 2 tests navigation",
+        "GitHub Actions Node run 39401998657",
+        "Chromium local + public run 39401977906",
+        "GitHub Pages run 39401976656"
+      ],
+      "checks_passed": [
+        "17 tests PWA concernés réussis en CI",
+        "156/157 tests Node généraux passent",
+        "Chromium vrai en local et Pages, parité SHA 12 fichiers, lecture V1.2 hors-ligne",
+        "Déploiement GitHub Pages terminé sans erreur pour ce commit"
+      ],
+      "checks_failed": [
+        "1 test global historique échoue sur l'entrée UCP invalid incident entry"
+      ],
+      "limitations": [
+        "Pas de preuve sur appareils physiques Android ou iOS.",
+        "Pas de synchronisation Cloud, d'authentification Supabase réelle ni de notifications quand l'onglet est fermé.",
+        "La publication est attestée pour le SHA de recette; une autre automatisation peut avoir avancé main depuis."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Service worker PWA atomique v39 public",
+        "kind": "code",
+        "stage": "verified_online",
+        "repository": "cosscoll/Avancement-Projet",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/service-worker.js",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/service-worker.js",
+        "online_verified_at": "2026-10-20T09:37:20Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39401977906"
+      },
+      {
+        "name": "Recette Chromium du registre V1.2 hors ligne",
+        "kind": "test",
+        "stage": "tested",
+        "repository": "cosscoll/Avancement-Projet",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39401977906"
+      },
+      {
+        "name": "Suite PWA anti-corruption MIME et installation partielle",
+        "kind": "test",
+        "stage": "tested",
+        "repository": "cosscoll/Avancement-Projet",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/tests/pwa-atomic-install.test.mjs"
+      }
+    ],
+    "links": [
+      {
+        "label": "Chromium réel local et site GitHub Pages",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39401977906"
+      },
+      {
+        "label": "CI générale : 156 succès, 1 historique UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39401998657"
+      },
+      {
+        "label": "Déploiement GitHub Pages",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39401976656"
+      }
+    ],
+    "critique": {
+      "p0": [
+        "Cahier V1.2 BACK-004/005 et scénarios T-15/16/21 encore non opérationnels : aucune authentification externe ni synchronisation multi-compte prouvée."
+      ],
+      "p1": [
+        "Pas de recette physique Android/iOS du service worker.",
+        "CI globale rouge pour un journal UCP non conforme hors projet ; distinguer du succès PWA."
+      ],
+      "p2": [
+        "Le strict contrôle MIME peut refuser une mise en cache d'un serveur aux types non standard ; rejeter plutôt que stocker un faux JS/JSON."
+      ],
+      "corrected": [
+        "Installation atomique et préservation du cache précédent si le nouveau échoue",
+        "MIME contrôlé lors de l'installation, des rafraîchissements JS et JSON",
+        "V1.2 précaché et vérifié réellement hors ligne sur GitHub Pages"
+      ]
+    },
+    "next": "Revenir au focus CONTROL-ACCOUNT : ajouter des tests des paramètres d'authentification/permissions, puis préparer vraie recette A/B et synchronisation dès qu'une base CONTROL séparée à 0€ est autorisée."
   }
 ]
