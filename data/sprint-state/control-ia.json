@@ -1,13 +1,8 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261020-0947-direct-main",
-    "started_at": "2026-10-20T07:46:59Z",
-    "expires_at": "2026-10-20T08:31:59Z",
-    "objective": "Publier directement dans main la stratégie validée 10 améliorations, tester et vérifier résultat sans PR."
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
     "updated_at": "2026-10-20T07:23:35Z",
     "files": [
@@ -28,12 +23,12 @@
     "next_action": "PR #24 bloquée par CI globale déjà rouge (historiques pack-pro et iagile). Préserver tests et preuves, obtenir réparation autorisée par les responsables sans modifier ces autres projets, puis revalider CI et fusionner PR #24. Reprendre également checkpoint PWA v38."
   },
   "last_completed": {
-    "run_id": "control-ia-20261020-0914-chat-10-features",
-    "started_at": "2026-10-20T07:14:11Z",
-    "ended_at": "2026-10-20T07:23:35Z",
-    "summary": "Roadmap de 10 améliorations + protocole commun et test CI spécifique 12/12 verts ; PR #24 en attente de CI globale (échecs historiques d'autres projets). Automatisation mise à jour mais désactivée.",
-    "stage": "tested",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39385973596"
+    "run_id": "control-ia-20261020-0947-direct-main",
+    "started_at": "2026-10-20T07:46:59Z",
+    "ended_at": "2026-10-20T08:01:29Z",
+    "summary": "10-feature plan published directly to main without PR; CI Node 130/130, contract 14/14, Pages success; previous PWA checkpoint retained.",
+    "stage": "deployed",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39390035544"
   },
   "recovered_from": {
     "run_id": "control-ia-20261019-1754-paris-r9",
