@@ -21,6 +21,10 @@ export function validateStrategy(strategy,delivery){
  if(strategy.work_policy?.max_primary_workstreams!==1)errors.push('Only one primary functional workstream may be active');
  if(strategy.work_policy?.max_subobjectives_per_sprint>3||strategy.work_policy?.max_subobjectives_per_sprint<1)errors.push('Invalid sprint subobjective limit');
  if(strategy.work_policy?.common_lock_file!=='data/sprint-state/control-ia.json')errors.push('Both sprint modes must share the CONTROL lease file');
+ if(strategy.work_policy?.delivery_mode!=='direct_main'||strategy.work_policy?.no_pull_request_required!==true)errors.push('CONTROL releases must use owner-requested direct-main delivery mode');
+ if(strategy.work_policy?.preflight_required!==true||strategy.work_policy?.post_commit_ci_required!==true||strategy.work_policy?.staged_writes_must_verify_blob_sha!==true)errors.push('Direct-main releases require preflight, SHA verification and post-write CI');
+ if(strategy.work_policy?.rollback_on_new_critical_regression!==true)errors.push('New critical regressions must trigger correction or safe rollback');
+
  const modes=strategy.work_policy?.session_types;
  if(!Array.isArray(modes)||!modes.includes('scheduled')||!modes.includes('conversation')||modes.length!==2)errors.push('Both scheduled and conversational execution are mandatory');
  if(!Array.isArray(strategy.governing_sources)||!strategy.governing_sources.includes('docs/PROTOCOLE_SPRINTS_V3.md'))errors.push('V3 protocol reference missing');
