@@ -9,23 +9,26 @@
     "objective": "Corriger un bug réel et indépendant sur la vitrine publique UCP, avec PR et contrôle CI"
   },
   "checkpoint": {
-    "at": "2026-10-20T07:33:00Z",
+    "at": "2026-10-20T07:32:41Z",
     "branch": "fix/ucp-avancement-mobile-nav-v3",
-    "pr_url": null,
+    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/2",
     "files": [
       "site-vitrine/dist/avancement.html",
       "site-vitrine/scripts/check_site.py",
       ".github/workflows/vitrine-ci.yml"
     ],
-    "stage": "coded",
-    "main_sha": "af2bba353089a382843f6997ea92239b03d8a2dc",
-    "branch_sha": "eee82349ed12553d6cf26f6c4e7b9eeda3a7067d",
+    "stage": "merged",
+    "main_sha": "8da708c0815221c0fbef9fdbb24976aeacbb4a96",
+    "branch_sha": "91451849d6bdedb37ed66c3d8075805c7a8587e6",
     "checks": [
-      "Contrat attendu: bouton mobile aria-controls=main-nav, nav #main-nav, app.js différé",
-      "Contrôle statique ajouté; exécution CI attendue sur PR"
+      "Vitrine CI run 39387060851: success",
+      "Structure statique: success",
+      "Syntaxe JavaScript: success",
+      "Tests générateur de brief: success",
+      "PR #2 mergeable=true puis fusion squash sur head SHA attendu"
     ],
-    "blocker": null,
-    "next_action": "Créer la PR, attendre la CI et corriger toute régression avant décision de fusion."
+    "blocker": "Recette navigateur, lecteur d’écran et appareil réel non exécutée ; site/staging non vérifié.",
+    "next_action": "Recetter le menu à 320/360/390/768 px, Échap, clic extérieur et focus sur un navigateur réel avant de clôturer l’alerte."
   },
   "last_completed": null
 }
