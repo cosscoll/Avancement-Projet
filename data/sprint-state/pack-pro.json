@@ -1,13 +1,8 @@
 {
   "schema_version": 3,
   "project": "pack-pro",
-  "status": "running",
-  "lease": {
-    "run_id": "pack-pro-20261020-0955-shared-sprint-metadata-validation",
-    "started_at": "2026-10-20T07:55:22Z",
-    "expires_at": "2026-10-20T08:25:22Z",
-    "objective": "Réparer uniquement les champs de qualité du journal central à partir de vraies preuves GitHub Actions déjà disponibles."
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
     "at": "2026-10-20T07:53:15.133Z",
     "branch": null,
@@ -36,5 +31,10 @@
     "summary": "Cinematic 3D V4 public via PR29/PR30, Chromium at 1440/768/390, SVG reduced motion 320, new journal/status synced",
     "report_synced": true
   },
-  "recovered_from": "pack-pro-20261019T190820267Z-automation11"
+  "recovered_from": "pack-pro-20261019T190820267Z-automation11",
+  "maintenance_last_run": {
+    "run_id": "pack-pro-20261020-0955-shared-sprint-metadata-validation",
+    "ended_at": "2026-10-20T08:01:29Z",
+    "summary": "Central public sprint schema/quality metadata only; prior project history and checkpoint preserved."
+  }
 }
