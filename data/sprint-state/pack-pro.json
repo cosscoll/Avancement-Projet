@@ -1,39 +1,35 @@
 {
   "schema_version": 3,
   "project": "pack-pro",
-  "status": "running",
-  "lease": {
-    "run_id": "pack-pro-20261020T075100Z-cinematic-review",
-    "started_at": "2026-10-20T07:51:05.112Z",
-    "expires_at": "2026-10-20T08:36:05.112Z",
-    "objective": "Documenter la refonte cinématographique V4 déployée et vérifiée ; préserver ancien checkpoint avant libération"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "at": "2026-10-19T17:12:49.219Z",
-    "branch": "fix/verify-live-all-main-pushes-20261019-1810",
+    "at": "2026-10-20T07:53:15.133Z",
+    "branch": null,
     "pr_url": null,
     "files": [
-      ".github/workflows/verify-live.yml"
+      "index.html",
+      "assets/apartment-scene.js",
+      "assets/cinematic.css",
+      "assets/experience.js",
+      "docs/DA_CINEMATIQUE_20261020.md"
     ],
-    "stage": "blocked",
-    "main_sha": "2052139d46d3d25339e38a8ff7a380d9be5617fe",
-    "branch_sha": "2052139d46d3d25339e38a8ff7a380d9be5617fe",
+    "stage": "verified_online",
+    "main_sha": "5c5368886e95c80d71f85a98feef7591ad85b446",
     "checks": [
-      "8 static assertions passed against minimal YAML diff",
-      "update_file of workflow rejected by OpenAI safety checks; no product commit",
-      "No open PR; branch remains equal to main",
-      "Latest verify-live successful run 39238837780 on SHA 96349ee, not latest main SHA 2052139d",
-      "Direct site HTTP unavailable due DNS"
+      "GitHub Actions 39388870475 PUBLIC_CINEMATIC_HTML_VERIFIED 200",
+      "CINEMATIC_QA_ACCEPTANCE_OK 4 widths, WebGL2 3 widths, reduced motion fallback 320",
+      "0 JS errors, 0 overflow and automated WCAG no reported violations"
     ],
-    "blocker": "GitHub update_file .github/workflows/verify-live.yml refused: This tool call was blocked by OpenAI's safety checks. Please double check what you are sending.",
-    "next_action": "Do not retry identical denied write; authorized owner should remove push.paths in .github/workflows/verify-live.yml, or review GitHub integration permissions; then PR/CI/merge and verify-live on exact main SHA."
+    "blocker": "No independent professional SOP validation, no mobile physical GPU QA, conversion unverified",
+    "next_action": "Visually compare V4 on actual phone with Igloo/Studio Mirage target, refine scene materials and interactions without returning to generic geometric or document-card interface; preserve user critique."
   },
   "last_completed": {
-    "run_id": "pack-pro-20261019T101510Z-11",
-    "ended_at": "2026-10-19T10:17:41.393Z",
-    "outcome": "blocked",
-    "summary": "PR22 conflict/CI diagnosed; product HTML and sprint journal writes refused; no product merge; checkpoint retained",
-    "report_synced": false
+    "run_id": "pack-pro-20261020T075100Z-cinematic-review",
+    "ended_at": "2026-10-20T07:53:15.133Z",
+    "outcome": "verified_online",
+    "summary": "Cinematic 3D V4 public via PR29/PR30, Chromium at 1440/768/390, SVG reduced motion 320, new journal/status synced",
+    "report_synced": true
   },
   "recovered_from": "pack-pro-20261019T190820267Z-automation11"
 }
