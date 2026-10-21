@@ -41,6 +41,20 @@ export function validateRegistry(registry,legacy,strategy){
  const improvements=new Map(strategy.improvements.map(x=>[x.id,x]));
  const tests=new Map(registry.scenarios.map(x=>[x.id,x]));
  const back=new Map(registry.tickets.map(x=>[x.id,x]));
+ const canonical=new Set(BACK_IDS);
+ let preservedNoncanonical=0;
+ for(const capability of legacy.capabilities){
+  if(!Array.isArray(capability.source_tickets)||new Set(capability.source_tickets).size!==capability.source_tickets.length)errors.push(capability.id+': missing or duplicate canonical source_tickets');
+  for(const ref of capability.source_tickets||[])if(!canonical.has(ref))errors.push(capability.id+': noncanonical source ticket '+ref);
+  const preserved=capability.legacy_unmapped_ticket_refs??[];
+  if(!Array.isArray(preserved)||new Set(preserved).size!==preserved.length)errors.push(capability.id+': invalid historical label list');
+  for(const ref of Array.isArray(preserved)?preserved:[]){
+   if(canonical.has(ref)||!/^BACK-\d{3}$/.test(ref))errors.push(capability.id+': historical label overlaps canonical ticket '+ref);
+   if((capability.source_tickets||[]).includes(ref))errors.push(capability.id+': historical label also in canonical links '+ref);
+   preservedNoncanonical++;
+  }
+ }
+ if(legacy.reference_reconciliation?.status==='historical_labels_unmapped'&&legacy.reference_reconciliation.unmapped_count!==preservedNoncanonical)errors.push('Noncanonical historical count inconsistent');
  for(const item of registry.tickets){
   if(!knownCaps.has(item.capability_id))errors.push(item.id+': unknown main capability');
   if(!Array.isArray(item.acceptance_scenarios)||!item.acceptance_scenarios.length||new Set(item.acceptance_scenarios).size!==item.acceptance_scenarios.length)errors.push(item.id+': missing or duplicate scenario links');
