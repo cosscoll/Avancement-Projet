@@ -2830,5 +2830,122 @@
       "Next design review should measure how users find and finish high-frequency tasks, with special attention to long Cloud project/mission forms."
     ],
     "next": "Collect user feedback on Android for the new main menu; improve deep screen forms, prioritization and contextual actions without adding another global tab. Preserve Cloud disabled until real Auth A/B; advance server-side safety and actual integrations independently."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-visual-redesign-2034",
+    "started_at": "2026-10-21T20:34:00Z",
+    "ended_at": "2026-10-21T20:52:00Z",
+    "summary": "Rebuilt CONTROL personal PWA interface as a true desktop work application rather than cosmetic shortcut edits: fixed dark left rail, asymmetric actionable dashboard, warm paper main canvas, real recently used projects, projects displayed ahead of announcements, Cloud private shell behind Auth, mobile-specific layout, visible V3 marker and rotated offline cache v42. Native Node 472/472, published Chromium 1440px desktop and 320px phone checks succeed for code SHA 8741aaa; Cloud remains disabled.",
+    "objectives": [
+      {
+        "before": "User's screenshot still displayed the earlier centered grey layout with three white shortcut cards, small header search and another promotional announcement above the project grid; changes were navigational but not architectural.",
+        "after": "Public personal CONTROL now uses a 262px permanent navy navigation sidebar at 1440px, distinct warm-white work canvas, an editorial dark hero with purposeful actions, two-column horizontal project entries, actual recent project shortcuts, and announcements visually below projects. Cloud adds analogous shell only in authenticated workspace; mobile keeps 4 bottom destinations and finder.",
+        "acceptance": "After deployment, Chromium measures real sidebar width>=245px, content left>=260px, projects preceding news, non-white hero and no overflow at 1440px; verifies 320px finder; actual native quality suite 472/472, Pages success, Chromium success for source commit 8741aaa."
+      }
+    ],
+    "done": [
+      "Acquired single cooperative GitHub main WIP lease; designed against user-provided browser screenshot, not an abstract redesign.",
+      "Added assets/workspace-shell.css (~14KB) for fixed dark desktop sidebar, warm neutral main canvas, editorial dashboard, horizontal project rows, responsive tablet/phone adaptations and keyboard focus compatible with existing pages.",
+      "Changed index.html markup to create sidebar with work areas, missions, calendar, automations, tools and five actual recent projects; highlighted active navigation without altering stored data or existing routes.",
+      "Replaced original three repetitive white shortcut cards on personal dashboard with one distinct hero and contextual quick-action panel; retained creation, search, pagination, all projects, collapsible updates and underlying full project modules.",
+      "Moved news below the actual projects in visible layout while preserving historical references and retained accessible details.",
+      "Added a private Cloud sidebar and new Cloud projects dashboard without enabling public registration; sidebar hidden on setup/auth and only active in authenticated workspace.",
+      "Inserted explicit INTERFACE V3 version marker to diagnose stale browser/service worker cached presentation and simplified decorative hero geometry.",
+      "Bumped public PWA service-worker generation from v41 to v42 and cached the new workspace stylesheet; updated existing offline tests without disabling them.",
+      "Added tests/control-workspace-shell.test.mjs with six explicit architectural and security contracts; existing bottom-nav tests adjusted to count bottom navigation only rather than new desktop duplicate destinations.",
+      "Added a real GitHub Chromium browser assertion at 1440px checking actual sidebar geometry and project-first visual ordering; retained real 320px mobile finder and offline smoke.",
+      "Fixed one Cloud DOM minimal-test compatibility issue with an optional document.body check; native test suites and published browser checks confirm the working code.",
+      "Verified 472/472 native Node regression tests, Pages deployment success, post-deploy Chromium success for code commit 8741aaa22d5646ecdecaf848d74a23f9fecab3b4.",
+      "Documented V3 and requirement rationale in docs/CONTROL_INTERFACE_V3.md; maintained Cloud disabled and no paid expenses."
+    ],
+    "blockers": [
+      "No owner-driven UX evaluation on real desktop/Android yet; automated Chromium checks prove layout and routes, not subjective usability.",
+      "Cloud private shell is present but cannot be exercised with real JWT users while disabled. A/B tenant Auth and multi-device acceptance are outstanding.",
+      "Existing third-party AI execution, scheduling and API integration remain separate requirements; a new shell does not make them functionally complete.",
+      "Current source SHA 8741aaa has direct native/browser/Pages proofs; subsequent doc/report/checkpoint changes require their own CI and Pages status for final-head claim."
+    ],
+    "quality": {
+      "ci": "success",
+      "real_browser_verified": true,
+      "checks_run": [
+        "Full native Node.js 22 GitHub Actions quality suite at V3 code SHA 8741aaa",
+        "Published GitHub Pages at V3 code SHA",
+        "Chromium viewport 1440px sidebar/dashboard geometrical acceptance and 320px mobile finder/overflow",
+        "Offline PWA v42 critical cache installation",
+        "Cloud disabled and authentication gating static/regression tests"
+      ],
+      "checks_passed": [
+        "472/472 native Node tests (0 failures): https://github.com/cosscoll/Avancement-Projet/actions/runs/39673748827",
+        "GitHub Pages deployment success: https://github.com/cosscoll/Avancement-Projet/actions/runs/39673748015",
+        "Published Chromium desktop/mobile smoke success: https://github.com/cosscoll/Avancement-Projet/actions/runs/39673748853"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "No external design screenshot or independent manual real-device audit, but verified DOM geometry in actual Chromium.",
+        "Private Cloud remains disabled, so live Cloud UX cannot be verified.",
+        "Formal real_verified acceptance counts unchanged."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Actual CONTROL V3 desktop/phone shell",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "8741aaa22d5646ecdecaf848d74a23f9fecab3b4",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/8741aaa22d5646ecdecaf848d74a23f9fecab3b4",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Workspace visual redesign specification",
+        "kind": "document",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "4f4412846773cd6fdd18112eef4256f809fdde26",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/docs/CONTROL_INTERFACE_V3.md",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Published V3 sidebar and responsive browser proof",
+        "kind": "evidence",
+        "stage": "verified_online",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "8741aaa22d5646ecdecaf848d74a23f9fecab3b4",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39673748853",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39673748853",
+        "online_verified_at": "2026-10-21T20:50:41Z"
+      }
+    ],
+    "links": [
+      {
+        "label": "CONTROL V3 site published",
+        "url": "https://cosscoll.github.io/Avancement-Projet/"
+      },
+      {
+        "label": "Native 472 tests",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39673748827"
+      },
+      {
+        "label": "Published desktop/mobile browser",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39673748853"
+      },
+      {
+        "label": "Pages deployment",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39673748015"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "The previous assistant delivered small navigation modifications but not a visual redesign; the screenshot showed the same shallow three-card centered homepage. This sprint fundamentally changed the desktop application shell.",
+      "Responsive navigation still uses the established bottom tab pattern rather than squeezing the desktop rail into mobile.",
+      "Cloud sidebar is hidden pending real Auth. All existing modules remain routed and their state preserved.",
+      "An intermediate native CI reported duplicate nav entries as failures because it counted the new desktop rail together with the four mobile tabs. Updated tests to scope assertions to bottom nav without relaxing the requirement.",
+      "The actual browser geometry check now guards against regressing back to a centered webpage, which the earlier tests had missed."
+    ],
+    "next": "Validate appearance on user's browser at latest UI V3 marker, refresh PWA cache if not visible, obtain usability feedback. Then reorganize overly long missions/tools/settings screens with contextual actions and progressive disclosure, while independently testing CONTROL Cloud with two real JWT users before enabling."
   }
 ]
