@@ -10,3 +10,10 @@
 .cloud-backup-dialog [data-backup-error]{color:#973b3b;min-height:1.2em}
 .cloud-backup-dialog .btnrow{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:4px}
 @media(max-width:460px){.cloud-backup-dialog{padding:18px}.cloud-backup-dialog .btnrow button{flex:1 1 100%}}
+
+/* Account backup inspection is local-only and never uploads file content. */
+.cloud-backup-inspector{display:grid;gap:9px;max-width:630px;margin:14px 0 18px;padding:16px;border:1px solid #dce5ed;border-radius:14px;background:#f6f9fd}
+.cloud-backup-inspector label{font-size:14px;font-weight:700;line-height:1.45}
+.cloud-backup-inspector input[type=file]{max-width:100%;padding:10px 12px;background:#fff;border:1px solid #b9c9d9;border-radius:10px;min-height:48px;color:#253e58}
+.cloud-backup-inspector [role=status]{min-height:2.4em;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:480px){.cloud-backup-inspector{padding:12px}}
