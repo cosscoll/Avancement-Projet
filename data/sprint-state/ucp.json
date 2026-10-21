@@ -10,21 +10,22 @@
     "objective": "Préserver le succès du téléchargement si le nettoyage DOM échoue"
   },
   "checkpoint": {
-    "phase": "coded",
+    "phase": "ready_to_merge",
     "repository": "cosscoll/UnCoupdePouce",
     "base_branch": "main",
     "base_sha": "201ce7e6a45b198229814faa61eeba45fa4f6b69",
     "branch": "fix/ucp-download-cleanup-20261021",
-    "branch_sha": "ae2efa449af1f47061513bce62da31c56ba4fb4b",
-    "pr_url": null,
+    "branch_sha": "0c52409f8faa7de76d76605a4b134cb17b1b019f",
+    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/16",
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.cjs"
     ],
     "tests": [
-      "CI première passe à lancer après ouverture de PR"
+      "Vitrine CI #30 succès (première passe)",
+      "Vitrine CI #31 succès (seconde passe après autocritique)"
     ],
-    "next_action": "Ouvrir la PR, attendre la première CI, puis autocritiquer un cas de nettoyage sans API."
+    "next_action": "Revalider PR, base main et bail, puis fusionner prudemment."
   },
   "last_completed": {
     "run_id": "ucp-20261021T003147Z-v3",
