@@ -10,14 +10,28 @@
     "objective": "Empêcher des getters DOM défaillants pendant le nettoyage du lien de téléchargement de masquer un téléchargement déclenché."
   },
   "checkpoint": {
-    "phase": "inspection_complete",
-    "branch": null,
-    "pr": null,
+    "phase": "ci_green_ready_to_merge",
+    "branch": "fix/ucp-download-remove-getters-20261021",
+    "pr": 30,
     "files": [
       "site-vitrine/dist/assets/app.js"
     ],
-    "tests": [],
-    "next": "Créer une branche isolée, protéger les getters de nettoyage du lien et valider par CI."
+    "head_sha": "3b16a46f04524619b5ec147eb9e37ff4c35f248b",
+    "tests": [
+      {
+        "type": "CI",
+        "run": 62,
+        "conclusion": "success",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39626364034"
+      },
+      {
+        "type": "CI",
+        "run": 63,
+        "conclusion": "success",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39626407972"
+      }
+    ],
+    "next": "Fusionner la PR #30 avec contrôle du head SHA, vérifier main, synchroniser le journal/statut puis libérer le bail."
   },
   "last_completed": {
     "run_id": "ucp-20261021T143126Z-v3",
