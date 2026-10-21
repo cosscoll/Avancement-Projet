@@ -13,16 +13,16 @@ const FEATURES=[
  {id:'tools',title:'Explorer tous les outils',hint:'Parcourir les fonctions par usage',category:'start',keywords:'annuaire catalogue menu fonctions',personal:'#/control/tools',cloud:'tools'},
  {id:'missions',title:'Suivre les missions',hint:'Retrouver les missions IA et leurs résultats',category:'manage',keywords:'statut agents tâches exécution',personal:'#/control/missions',cloud:'missions'},
  {id:'calendar',title:'Calendrier',hint:'Échéances et rendez-vous',category:'manage',keywords:'agenda date planning événement rappel',personal:'#/control/calendar',cloud:'tools:calendar'},
- {id:'meetings',title:'Organiser une visio',hint:'Réunions avec l’équipe, les clients ou prospects',category:'manage',keywords:'meet zoom teams appel vidéo réunion rdv',personal:'#/control/meetings',cloud:'visios'},
+ {id:'meetings',title:'Organiser une visio',hint:'Réunions avec l’équipe, les clients ou prospects',category:'manage',keywords:'creer programmer organiser reunion appel rendez-vous video meet zoom teams rdv',personal:'#/control/meetings',cloud:'visios'},
  {id:'automations',title:'Automatisations',hint:'Consulter les exécutions et programmations',category:'manage',keywords:'sprints tâches récurrentes planifiées rappels',personal:'#/automations',cloud:'automations'},
  {id:'goals',title:'Planifier un objectif',hint:'Transformer un objectif en étapes',category:'manage',keywords:'roadmap plan étapes jalons',personal:'#/control/goals',cloud:null},
- {id:'decisions',title:'Historique des décisions',hint:'Retrouver les choix et versions du projet',category:'manage',keywords:'mémoire historique arbitrage décisions',personal:'#/control/memory',cloud:'tools:memory'},
+ {id:'decisions',title:'Historique des décisions',hint:'Retrouver les choix et versions du projet',category:'manage',keywords:'retrouver decision choix memoire historique arbitrage decisions',personal:'#/control/memory',cloud:'tools:memory'},
  {id:'command',title:'Commander Claude et Gemini',hint:'Préparer des missions multi-IA',category:'ai',keywords:'multi ia pilote agent anthropic google prompt',personal:'#/control/command',cloud:'command'},
  {id:'lab',title:'Laboratoire IA',hint:'Préparer, comparer et vérifier des résultats',category:'ai',keywords:'test brief audit json html création',personal:'#/control/lab',cloud:'lab'},
  {id:'localai',title:'Discuter avec CONTROL IA',hint:'Assistant local et réponses',category:'ai',keywords:'chat discussion modèle conversation générative',personal:'#/control/localai',cloud:null},
  {id:'catalog',title:'Bibliothèque d’outils IA',hint:'Découvrir les outils et kits pratiques',category:'ai',keywords:'catalogue annuaire moteur 3d IA kits formation',personal:'#/control/catalog',cloud:'catalog'},
  {id:'library',title:'Ressources et documents',hint:'Liens, fichiers et références',category:'publish',keywords:'drive dossier bibliothèque liens ressources',personal:'#/control/library',cloud:'tools:library'},
- {id:'deploy',title:'Mettre un site en ligne',hint:'Guides de publication et déploiement',category:'publish',keywords:'github pages vercel netlify héberger site web',personal:'#/control/deploy',cloud:'deploy'},
+ {id:'deploy',title:'Mettre un site en ligne',hint:'Guides de publication et déploiement',category:'publish',keywords:'publier deployer mettre en ligne projet heberger site web github pages vercel netlify',personal:'#/control/deploy',cloud:'deploy'},
  {id:'activity',title:'Activité GitHub et tests',hint:'Suivi des dépôts et preuves publiques',category:'publish',keywords:'ci publication actions commits',personal:'#/control/activity',cloud:null},
  {id:'budget',title:'Budget et quotas',hint:'Consulter les dépenses renseignées',category:'account',keywords:'prix limite forfait argent coût finances',personal:'#/control/budget',cloud:'tools:budget'},
  {id:'backup',title:'Sauvegarder mes données',hint:'Exporter et protéger mes données',category:'account',keywords:'exporter json sauvegarde chiffrer restaurer fichier',personal:'#/control/backup',cloud:'account'},
@@ -45,6 +45,18 @@ let adapter={mode:'personal',getActiveProject:()=>null,getProjects:()=>[],naviga
 let dialog=null,query=null,results=null,category='start',lastFocus=null;
 const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const STOP_WORDS=new Set(['un','une','le','la','les','des','du','de','d','en','a','au','aux','mon','ma','mes','son','sa','ses','pour','je','veux','comment','faire','dans','sur','avec']);
+function findFeatures(raw,entries=catalog()){
+ const parts=norm(raw).split(/\\s+/).filter(w=>w&&!STOP_WORDS.has(w));
+ if(!parts.length)return entries;
+ return entries.map(item=>{
+  const title=norm(item.title),hint=norm(item.hint),keys=norm(item.keywords);
+  const matched=parts.every(word=>title.includes(word)||hint.includes(word)||keys.includes(word));
+  const score=parts.reduce((n,w)=>n+(title.includes(w)?4:hint.includes(w)?2:keys.includes(w)?1:0),0);
+  return {item,matched,score};
+ }).filter(x=>x.matched).sort((a,b)=>b.score-a.score).map(x=>x.item);
+}
+
 const catalog=()=>{
  const mode=adapter.mode==='cloud'?'cloud':'personal';
  const ordinary=FEATURES.filter(x=>x[mode]!==null).map(x=>({...x,target:x[mode]}));
@@ -104,11 +116,7 @@ function render(){
  dialog.querySelector('.control-finder-categories').innerHTML=categories.map(([id,label])=>
  '<button type="button" data-finder-cat="'+id+'" aria-pressed="'+(search?'false':String(category===id))+'" class="'+(!search&&category===id?'is-active':'')+'">'+label+'</button>').join('')+
  '<button type="button" data-finder-cat="all" aria-pressed="'+(!search&&category==='all')+'" class="'+(!search&&category==='all'?'is-active':'')+'">Tout voir</button>';
- const filtered=all.filter(item=>{
-  if(!search)return category==='all'||item.category===category;
-  const words=norm(item.title+' '+item.hint+' '+item.keywords);
-  return search.split(/\s+/).every(word=>words.includes(word));
- });
+ const filtered=search?findFeatures(query.value,all):all.filter(item=>category==='all'||item.category===category);
  results.innerHTML=filtered.length?
  '<div class="control-finder-summary">'+(search?filtered.length+' résultat(s) pour « '+escape(query.value.trim())+' »':filtered.length+' fonctions · '+escape(CAT.find(([id])=>id===category)?.[1]||'Toutes les catégories'))+'</div>'+
  '<div class="control-finder-grid">'+filtered.map(item=>'<button type="button" role="option" aria-selected="false" data-finder-id="'+escape(item.id)+'" class="control-finder-item">'+
@@ -157,5 +165,5 @@ document.addEventListener('keydown',e=>{
  }
  if(e.key==='Escape'&&dialog&&!dialog.hidden)close();
 });
-window.CONTROL_NAVIGATION={open,close,setAdapter,getItems:catalog,normalize:norm};
+window.CONTROL_NAVIGATION={open,close,setAdapter,getItems:catalog,find:findFeatures,normalize:norm};
 })();
