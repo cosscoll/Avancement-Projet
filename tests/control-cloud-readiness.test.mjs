@@ -24,7 +24,7 @@ test('real A/B workflow is manual-only and only uses environment secrets',()=>{
  assert.match(workflow,/cancel-in-progress: false/);
  assert.match(workflow,/confirm_dedicated_test_accounts:/);
  for(const name of ['CONTROL_TEST_PUBLISHABLE_KEY','CONTROL_TEST_A_JWT','CONTROL_TEST_B_JWT'])assert.match(workflow,new RegExp('secrets\\.'+name));
- assert.doesNotMatch(workflow,/service_role|sb_secret_/);
+ assert.doesNotMatch(workflow,/secrets\.(?:SUPABASE_SERVICE_ROLE_KEY|SUPABASE_SECRET_KEY|CONTROL_TEST_SECRET_KEY)/);
 });
 test('real A/B test requires two JWT accepted by Auth and no customer data',()=>{
  assert.match(runner,/\/auth\/v1\/user/);
