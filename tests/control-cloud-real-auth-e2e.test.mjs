@@ -55,7 +55,7 @@ test('real E2E tests refuse to tamper with existing users and fail if cleanup is
  assert.match(script,/finally/);
 });
 test('real E2E does not use privileged keys and never writes to append-only audit',()=>{
- assert.doesNotMatch(script,/service_role[\s\S]*Authorization:/);
+ assert.doesNotMatch(script,/auth\.admin\.|supabaseAdmin\.|sb_secret_[A-Za-z0-9]{10,}|Bearer \+key/);
  assert.match(script,/clé publique sb_publishable/);
  assert.match(script,/control_audit_events'&&mine\.data\.length!==1/);
  assert.doesNotMatch(script,/create\('control_audit_events'/);
