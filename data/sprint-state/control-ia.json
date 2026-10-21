@@ -1,55 +1,51 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-visual-redesign-2034",
-    "started_at": "2026-10-21T20:34:00Z",
-    "expires_at": "2026-10-21T21:25:00Z",
-    "objective": "Visually distinct application shell redesign: persistent desktop sidebar, deliberate dashboard, context navigation, mobile usability, CI and production browser verification directly on main"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T18:28:40Z",
+    "updated_at": "2026-10-21T20:54:00Z",
     "main": true,
-    "stage": "navigation_v2_personal_cloud_native_466_green_pages_chromium_mobile_320_verified",
+    "stage": "actual_visual_v3_desktop_sidebar_asymmetric_dashboard_native_472_pages_chromium_verified",
     "files": [
       "index.html",
       "app.html",
+      "assets/workspace-shell.css",
       "assets/cloud-app.js",
-      "assets/navigation-hub.js",
-      "assets/navigation-hub.css",
       "service-worker.js",
+      "tests/control-workspace-shell.test.mjs",
       "tests/control-navigation-hub.test.mjs",
+      "tests/ux-clarity.test.mjs",
       "tests/control-home-discovery.test.mjs",
       "tests/pwa-atomic-install.test.mjs",
       "tests/control-ia-browser-smoke.mjs",
-      "docs/CONTROL_NAVIGATION_UX_V2.md",
-      "docs/CONTROL_IA_RETROSPECTIVES.md",
+      "docs/CONTROL_INTERFACE_V3.md",
       "data/sprints/control-ia.json"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39652408040",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39652407546",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39652479453",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39652928638",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39652928744"
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39673748827",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39673748015",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39673748853",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39674125484",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39674125554",
+      "https://github.com/cosscoll/Avancement-Projet/blob/main/docs/CONTROL_INTERFACE_V3.md"
     ],
     "remaining_blockers": [
-      "UX feature finder code and personal PWA 320px Chromium are tested, but this is not evidence of every feature's third-party provider integration.",
-      "Real Android/iOS hands-on testing and usability measurement are still needed for user-driven screen-level tuning.",
-      "Cloud app remains deliberately disabled until two real test Supabase Auth users with JWT/RLS A/B isolation and cross-device acceptance.",
-      "Final checkpoint commit must pass its own GitHub quality and Pages CI; published code proof is specific to b518c405."
+      "Manual actual-user ergonomic review of V3 on Windows Chrome and Android hardware remains to be performed; Chromium visual geometry checks pass on 1440px and mobile on 320px.",
+      "Authenticated Cloud private UI cannot be certified without two real Supabase Auth A/B JWT users and live RLS/PostgREST acceptance, so Cloud deliberately remains disabled.",
+      "Actual AI provider execution and scheduled automations not made functional by this UX refactor.",
+      "GitHub Actions CI/Pages evidence is per-code SHA 8741aaa; docs and final checkpoint commit have separate workflows whose status must be read before claiming final-head green."
     ],
-    "next_action": "Follow up with in-device navigation usability test: reach common goals within at most 2-3 taps, simplify long project forms/screens if needed. Preserve four destinations and universal finder, continue CONTROL-ACCOUNT JWT/RLS validation and no-spend rule."
+    "next_action": "If the user still sees legacy three-card interface, verify visible top badge 'INTERFACE V3' after Chrome Ctrl+Shift+R and PWA v42 activation; never ask them to evaluate a stale cache. Continue UI refinement of mission/tool/settings inner screens based on V3 with direct actions, no feature loss; keep Cloud disabled pending real JWT A/B."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-navigation-overhaul-1805",
-    "started_at": "2026-10-21T18:05:00Z",
-    "ended_at": "2026-10-21T18:28:40Z",
-    "summary": "CONTROL navigation V2 in personal and Cloud: task-based universal intent search Ctrl+K/mobile, per-project 11-section finder, current-location breadcrumb, calm task-first home, collapsible news, PWA offline cache v41. Native Node 466/466 for code b518c405, Pages deploy and real Chromium 320px find-visio route success. Cloud disabled and real Auth A/B not claimed.",
-    "stage": "main_navigation_v2_native_466_pages_chromium_verified",
-    "commit_sha": "b518c40594f22de9983b47e4ad4f9d75c36c3a40",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39652479453"
+    "run_id": "control-ia-20261021-visual-redesign-2034",
+    "started_at": "2026-10-21T20:34:00Z",
+    "ended_at": "2026-10-21T20:54:00Z",
+    "summary": "Actual CONTROL V3 visual redesign delivered directly on main: persistent dark desktop sidebar, warm work canvas, asymmetric action dashboard, project-first recent list, matching authenticated-only Cloud design, responsive mobile, visible V3 badge and v42 PWA cache. Code commit 8741aaa passed 472/472 native Node, Pages and real Chromium 1440px/320px; no Cloud Auth claims.",
+    "stage": "main_real_visual_v3_native_472_browser_published",
+    "commit_sha": "8741aaa22d5646ecdecaf848d74a23f9fecab3b4",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39673748853"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
