@@ -60,9 +60,9 @@ async function boot(){live('Vérification de la configuration privée…');let c
  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&authUser)reload(true)});
  }catch{visible('setup');const p=byId('setup').querySelector('.muted');p.textContent='La configuration est prête, mais la bibliothèque sécurisée ou le fournisseur d’authentification n’est pas joignable. Aucun compte n’a été créé.'}}
 async function verifiedSession(){const token=++verificationSeq;try{const r=await client.auth.getUser();if(token!==verificationSeq)return;if(r.error||!r.data?.user){epoch++;authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');return}const changed=authUser?.id!==r.data.user.id;if(changed)epoch++;authUser=r.data.user;if(changed){window.CONTROL_HELP?.reset();waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML=panel('Connexion sécurisée','<p class="muted">Chargement des données du compte…</p>');live('Chargement de votre espace privé…')}visible('workspace');await reload()}catch{if(token===verificationSeq){epoch++;authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth')}}}
-async function reload(silent=false){if(!authUser||!client)return;const owner=authUser.id;if(waiting&&waitingOwner===owner)return;waiting=true;waitingOwner=owner;byId('refresh').disabled=true;const token=epoch;
+async function reload(silent=false){if(!authUser||!client)return false;const owner=authUser.id;if(waiting&&waitingOwner===owner)return false;waiting=true;waitingOwner=owner;byId('refresh').disabled=true;const token=epoch;
  try{const [p,i,pref]=await Promise.all([client.from('control_projects').select('*').eq('owner_id',owner).order('created_at',{ascending:false}).limit(500),client.from('control_items').select('*').eq('owner_id',owner).order('created_at',{ascending:false}).limit(2000),client.from('control_preferences').select('*').eq('owner_id',owner).maybeSingle()]);
- if(token!==epoch||!authUser||authUser.id!==owner)return;
+ if(token!==epoch||!authUser||authUser.id!==owner)return false;
  for(const r of [p,i,pref])if(r.error)throw Error('Accès à vos données refusé : '+r.error.message);
  // Defense in depth: reject unexpected owner IDs even if a server or intermediary
  // mistakenly returns another tenant's rows after an owner-scoped request.
@@ -71,7 +71,8 @@ async function reload(silent=false){if(!authUser||!client)return;const owner=aut
   throw Error('Isolation du compte non confirmée : données privées non affichées.');
  cache={projects:p.data,items:i.data,preferences:pref.data||null};render();
  if(!silent)message('Espace synchronisé avec votre compte.');
- }catch(e){if(token!==epoch||authUser?.id!==owner)return;if(!silent)message(e.message||'Impossible de synchroniser vos données.',true);if(!cache.projects.length&&!cache.items.length)byId('page').innerHTML=panel('Connexion indisponible','<p>Les données privées n’ont pas pu être chargées. Réessaie après vérification de la configuration et des règles d’accès.</p>'+btn('Réessayer','refresh'))}
+ return true;
+ }catch(e){if(token!==epoch||authUser?.id!==owner)return false;if(!silent)message(e.message||'Impossible de synchroniser vos données.',true);if(!cache.projects.length&&!cache.items.length)byId('page').innerHTML=panel('Connexion indisponible','<p>Les données privées n’ont pas pu être chargées. Réessaie après vérification de la configuration et des règles d’accès.</p>'+btn('Réessayer','refresh'));return false}
  finally{if(token===epoch&&waitingOwner===owner){waiting=false;waitingOwner=null;byId('refresh').disabled=false}}}
 function nav(where,pid='',newTab='ai_space'){page=where;picked=pid;tab=newTab;window.scrollTo?.(0,0);render()}
 function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [data-page]').forEach(b=>{const k=b.dataset.page;const active=k==='projects'&&(page==='projects'||page==='project')||k==='inbox'&&page==='inbox'||k==='manager'&&page==='manager'||k==='tools'&&!['projects','project','inbox','manager'].includes(page);b.setAttribute('aria-current',active?'page':'false')});const fns={projects:projectsPage,project:projectPage,inbox:inboxPage,missions:missionsPage,automations:automationsPage,manager:managerPage,tools:toolsPage,account:accountPage,catalog:catalogPage,deploy:deployPage,lab:labPage,command:commandPage,visios:visiosPage};byId('page').innerHTML=(fns[page]||projectsPage)();
@@ -420,7 +421,7 @@ async function saveItem(form,editing=''){
   throw Error('Réponse du serveur non attribuée à votre compte ou à cet élément : actualisez sans recommencer l’écriture.');
  await audit(old?'item_updated':'item_created','item',q.data.id,session.owner);
  if(!session.current())return;
- await reload(true);
+ if(await reload(true)===false&&session.current())throw Error('Écriture confirmée, mais synchronisation non vérifiée : actualisez sans répéter l’opération.');
  if(session.current())message('Enregistré dans votre compte privé.');
 }
 async function saveProject(form,editing=''){
@@ -439,7 +440,7 @@ async function saveProject(form,editing=''){
   throw Error('Réponse du serveur non attribuée à votre compte ou à ce projet : actualisez sans recommencer l’écriture.');
  await audit(old?'project_updated':'project_created','project',q.data.id,session.owner);
  if(!session.current())return;
- await reload(true);
+ if(await reload(true)===false&&session.current())throw Error('Écriture confirmée, mais synchronisation non vérifiée : actualisez sans répéter l’opération.');
  if(session.current()){nav('project',q.data.id);message('Projet enregistré.');}
 }
 async function eraseItem(item){
@@ -451,7 +452,7 @@ async function eraseItem(item){
  if(q.error||q.data?.id!==item.id||q.data?.owner_id!==session.owner)throw Error('Suppression non confirmée : actualise les données.');
  await audit('item_removed','item',item.id,session.owner);
  if(!session.current())return;
- await reload(true);
+ if(await reload(true)===false&&session.current())throw Error('Écriture confirmée, mais synchronisation non vérifiée : actualisez sans répéter l’opération.');
  if(session.current())message('Élément supprimé.');
 }
 async function eraseProject(p){
@@ -463,7 +464,7 @@ async function eraseProject(p){
  if(q.error||q.data?.id!==p.id||q.data?.owner_id!==session.owner)throw Error('Suppression non confirmée : actualise les données.');
  await audit('project_removed','project',p.id,session.owner);
  if(!session.current())return;
- await reload(true);
+ if(await reload(true)===false&&session.current())throw Error('Écriture confirmée, mais synchronisation non vérifiée : actualisez sans répéter l’opération.');
  if(session.current()){nav('projects');message('Projet supprimé.');}
 }
 async function markDone(item){
@@ -473,7 +474,7 @@ async function markDone(item){
  if(q.error||q.data?.id!==item.id||q.data?.owner_id!==session.owner)throw Error('Conflit ou identité de tâche non confirmée : actualise avant de modifier.');
  await audit('item_done','item',item.id,session.owner);
  if(!session.current())return;
- await reload(true);
+ if(await reload(true)===false&&session.current())throw Error('Écriture confirmée, mais synchronisation non vérifiée : actualisez sans répéter l’opération.');
  if(session.current())message('Action terminée dans CONTROL.');
 }
 async function copyText(text){
@@ -502,7 +503,7 @@ async function prepareFourMissions(){
  if(q.error||ids.length!==plan.length||new Set(ids).size!==plan.length||
     q.data.some(x=>typeof x?.id!=='string'||!x.id||x.owner_id!==session.owner||x.project_id!==p.id))
   throw Error('Création des quatre missions non confirmée : vérifier les missions avant toute nouvelle tentative.');
- await reload(true);
+ if(await reload(true)===false&&session.current())throw Error('Écriture confirmée, mais synchronisation non vérifiée : actualisez sans répéter l’opération.');
  if(session.current())message('Quatre missions créées. Aucune IA déclenchée.');
  }finally{
   prepareFourMissions.inFlight=false;
@@ -626,7 +627,7 @@ async function importLegacy(){
  const r=await client.from('control_preferences').upsert({owner_id:session.owner,settings,updated_at:new Date().toISOString()},{onConflict:'owner_id'});
  if(!session.current())return false;
  if(r.error)throw Error('Migration de projets réalisée, mais marqueur final refusé : '+r.error.message);
- await reload(true);
+ if(await reload(true)===false&&session.current())throw Error('Migration enregistrée, mais synchronisation non vérifiée : actualisez avant de réimporter.');
  if(!session.current())return false;
  nav('projects');message(done+' projets et '+added+' éléments historiques transférés.');
  }finally{
