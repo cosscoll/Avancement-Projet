@@ -3668,5 +3668,96 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
       }
     ]
+  },
+  {
+    "schema_version": 3,
+    "id": "ucp-20261021T053016Z-v3",
+    "started_at": "2026-10-21T05:30:16Z",
+    "ended_at": "2026-10-21T05:33:24Z",
+    "objectives": [
+      {
+        "before": "Si matchMedia.addEventListener existe mais lève une exception, le script de navigation s’interrompt avant de pouvoir utiliser addListener.",
+        "after": "Le menu replie sur addListener après une exception moderne et borne aussi l’échec de l’API legacy.",
+        "acceptance": "Les scénarios moderne→legacy et double exception passent dans deux CI, puis le correctif est fusionné sur main hors application/**."
+      }
+    ],
+    "summary": "PR #20 fusionnée sur main b47cb9f9 : les erreurs des listeners matchMedia n’interrompent plus la navigation ; deux CI vertes, aucune recette navigateur, site public ou staging.",
+    "done": [
+      "Directives #1 et #2 relues : connexion Codex lue mais bloquée par les interdictions permanentes.",
+      "Protocoles V3/V2, dernier journal, PR ouvertes, branches, main et incident inspectés avant mutation.",
+      "Verrou coopératif V3 acquis par SHA, relu et propriétaire vérifié avant mutation.",
+      "Première passe : exception addEventListener rattrapée avec repli addListener ; CI Vitrine 39550061780 réussie.",
+      "Autocritique P1 : addListener pouvait encore interrompre le script ; exception legacy bornée et scénario combiné ajouté.",
+      "Seconde CI Vitrine 39550125968 réussie.",
+      "PR #20 fusionnée prudemment sur main b47cb9f9 après vérification du head, de la base, du caractère fusionnable et du bail.",
+      "Commit et blobs app.js/app-shell.test.cjs relus sur main après fusion ; application/** intact."
+    ],
+    "deliverables": [
+      {
+        "name": "Repli sûr des listeners matchMedia",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "b47cb9f9180ece27a621c3947a4221c9cd7f5440",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/b47cb9f9180ece27a621c3947a4221c9cd7f5440",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "quality": {
+      "checks_run": [
+        "Vitrine CI première passe #39550061780",
+        "Vitrine CI corrective #39550125968",
+        "Vérification du commit fusionné et des blobs app.js/app-shell.test.cjs sur main"
+      ],
+      "checks_passed": [
+        "Structure statique",
+        "Syntaxe JavaScript",
+        "Tests Node de la vitrine",
+        "Reconstruction déterministe build/dist",
+        "Repli addListener après exception moderne",
+        "Double exception matchMedia sans interruption",
+        "Blobs attendus présents sur main"
+      ],
+      "checks_failed": [],
+      "real_browser_verified": false,
+      "ci": "success"
+    },
+    "blockers": [
+      "Aucun navigateur, appareil réel, site public ou staging autorisé n’a été vérifié.",
+      "Le clone Windows dev/ucp-codex reste volontairement non lu et non synchronisé.",
+      "Les consignes publiques #1 et #2 demandant Codex restent bloquées par les interdictions permanentes."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "ucp-public-site-unverified",
+        "status": "open",
+        "consecutive_sprints": 19,
+        "next_action": "Effectuer une recette navigateur réelle à 320/360/390/768 px sur un staging explicitement autorisé ; sinon poursuivre un bug indépendant hors application/**."
+      }
+    ],
+    "next": "Tester un autre défaut réel et indépendant hors application/**, ou effectuer la recette WebView/navigateur sur staging autorisé.",
+    "links": [
+      {
+        "label": "PR #20",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/20"
+      },
+      {
+        "label": "Commit main",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/b47cb9f9180ece27a621c3947a4221c9cd7f5440"
+      },
+      {
+        "label": "CI initiale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39550061780"
+      },
+      {
+        "label": "CI corrective",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39550125968"
+      },
+      {
+        "label": "Statut UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      }
+    ]
   }
 ]
