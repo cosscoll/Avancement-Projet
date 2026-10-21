@@ -2047,7 +2047,8 @@
         "status": "incident",
         "consecutive_sprints": 2,
         "summary": "Deux sprints consécutifs ont livré une CI statique verte sans pouvoir vérifier un site public ou un staging autorisé.",
-        "strategy": "Ne plus répéter une ouverture web sans URL de déploiement confirmée ; prochaine action utile : obtenir ou créer un staging privé autorisé, puis exécuter une recette navigateur bornée."
+        "strategy": "Ne plus répéter une ouverture web sans URL de déploiement confirmée ; prochaine action utile : obtenir ou créer un staging privé autorisé, puis exécuter une recette navigateur bornée.",
+        "blocker_id": "ucp-public-site-unverified"
       }
     ],
     "next": "Sur un staging privé autorisé, recetter la page Avancement à 320/360/390/768 px avec clavier, Échap, clic extérieur et focus ; sinon traiter un autre bug indépendant sans répéter la vérification en ligne bloquée.",
