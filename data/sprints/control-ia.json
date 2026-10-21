@@ -2357,5 +2357,129 @@
       "Quality: unit/mocked tests are evidence of code behavior, not actual JWT/PostgREST, mobile hardware, native CI or Pages deployment; no scenario promoted to real_verified."
     ],
     "next": "Recover exact-sha native CI/Pages proof for ACCOUNT code. Under explicit approved two genuine empty CONTROL Auth test accounts and protected GitHub Secrets, run manual A/B real JWT/PostgREST E2E with cleanup, verify real login/logout/revocation/cross-device and full export. Only after that consider Cloud beta activation with 0€ constraints and implement server-side mission/import idempotency."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-native-ci-auth-export-1610",
+    "started_at": "2026-10-21T16:10:00Z",
+    "ended_at": "2026-10-21T16:21:40Z",
+    "summary": "CONTROL-ACCOUNT on main: recovered actual GitHub Actions failure logs, restored native CI by reducing 5 handoff steps to allowed 3, hardened all core Cloud write-confirmation readbacks and per-project/record receipts in AI, Lab, Catalog and Visio. After test fixture regression corrected, native Node CI 423/423, Cloud config success, Pages deployment success and post-deploy Chromium success for code SHA d4e9a45; real two-account JWT and mobile remain unverified, Cloud disabled.",
+    "objectives": [
+      {
+        "before": "CI on prior main failed 1 of 404 due to five strategy handoff actions vs 1-3 contract. Cloud UI could announce write success after silent reload failure, and several AI/calendar integration callbacks trusted receipts with mismatched project or record identifiers.",
+        "after": "Native CI green with 423/423; no false success when readback returns false; AI command/Lab/catalog and visio operations verify user, project and exact record; post-publish Chromium proves public deployment on target code SHA.",
+        "acceptance": "GitHub Actions quality run 39633670993 success (423/423), Cloud guard run 39633670965 success, Pages build run 39633669229 success, Chromium smoke run 39633745069 success; real Supabase JWT A/B not attempted."
+      }
+    ],
+    "done": [
+      "Acquired cooperative CONTROL-only 45-minute lock with verified SHA compare-and-swap on main.",
+      "Used GitHub native Actions API and actual Node job logs to identify legacy CI failure 'Next sprint must have one to three concrete next actions'; changed strategy handoff from five to three, retaining mandatory work scope.",
+      "Confirmed recovered native CI quality run 39632550877, governance run 39632550886, requirements traceability run 39632550963, and Pages run 39632550018 all successful on commit 19637a2.",
+      "Refactored assets/cloud-app.js reload() to explicitly return false when loading failed, session was replaced or a same-owner reload is already pending, and true only after valid account rows are rendered.",
+      "Mutation success messages, four-mission creation and legacy import completion now refuse to claim verified synchronization after failed background reread; added explicit negative tests for failure and concurrent reads.",
+      "Validated original owner, project and record IDs on Lab mission create, Catalog resource add, AI Command create/update/dispatch reread and Visio create/update/delete receipts.",
+      "Added integration negative tests for foreign/missing receipts, plus no false success on denied reread. Fixed a new test expecting empty initial Lab cache despite two actual fixture rows.",
+      "Native Node full-suite green: 423 tests, 423 passed, 0 failed, confirmed through decoded job log 119338272632 on code commit d4e9a45.",
+      "GitHub Cloud gate workflow success 39633670965, Pages build success 39633669229, and published-site Chromium post-deploy job success 39633745069 on code SHA d4e9a45.",
+      "Updated retrospective with URLs and explicit remaining limits; no paid services, Auth user creation, SQL writes or IAgile access."
+    ],
+    "blockers": [
+      "Real Auth two-user CONTROL JWT A/B, RLS with account-scoped HTTP, revoke/session lifecycle and cross-device Android tests require owner-approved dedicated test credentials in protected GitHub Actions Secrets.",
+      "Public Cloud sign-in remains deliberately disabled in config/cloud.json; proven public Pages Chromium does not prove private logged-in Cloud end-to-end.",
+      "Concurrent tabs/devices may still create duplicate batches; implement database transactional idempotency after real Auth acceptance.",
+      "Paginated six-table data export does not guarantee a transaction-consistent snapshot while other devices write."
+    ],
+    "quality": {
+      "ci": "success",
+      "real_browser_verified": true,
+      "checks_run": [
+        "Full native Node.js GitHub Actions tests, exact code commit d4e9a45",
+        "Native Cloud config and protection workflow, exact code SHA d4e9a45",
+        "GitHub Pages build/deploy workflow exact code SHA d4e9a45",
+        "Post-deploy Chromium real GitHub Pages browser job exact code SHA d4e9a45"
+      ],
+      "checks_passed": [
+        "423/423 native Node tests (0 failed): Actions run 39633670993",
+        "Cloud config protection success: Actions run 39633670965",
+        "Pages build/deploy success: Actions run 39633669229",
+        "Chromium after-publication job success: Actions run 39633745069",
+        "CONTROL strategy governance/requirements checks success: 39632550886 / 39632550963"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "Chromium public test does not prove Auth, JWT, real Cloud private session or physical mobile hardware.",
+        "CI/Pages evidence references final code commit d4e9a45; subsequent documentation/state commits require separate evidence to claim exact head green.",
+        "Cloud remains disabled, no two-user authenticated PostgREST run, no server idempotency, no transactional export."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Native CI strategy gate repair",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "19637a2e65f4961c8b162b08992ad91c108674a9",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/19637a2e65f4961c8b162b08992ad91c108674a9",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Guard against false mutation success after failed Cloud reload",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "88a57890058253e333c0cac43f1ca145f03e4ee3",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/88a57890058253e333c0cac43f1ca145f03e4ee3",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "AI and Visio record ownership and targeted receipt verification",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "d9f22cfe735bde21da877c975c627d30fa63bb51",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/d9f22cfe735bde21da877c975c627d30fa63bb51",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "423 green native tests and Chromium published-site validation",
+        "kind": "evidence",
+        "stage": "verified",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "d4e9a45e63d56aa59c5b5b47947b61ddc2731519",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633670993",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T16:19:40Z"
+      }
+    ],
+    "links": [
+      {
+        "label": "Native 423/423",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633670993"
+      },
+      {
+        "label": "Cloud preauth safety",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633670965"
+      },
+      {
+        "label": "Pages deployment",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633669229"
+      },
+      {
+        "label": "Published Chromium checks",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633745069"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "Previous sprint handoff had five next_steps and violated explicit three-step schema, blocking actual CI; repaired actual cause and added logs/evidence.",
+      "Cloud UI previously reported success after silent reload failure; fixed with explicit boolean and tests.",
+      "External response receipts for meetings, missions and library entries require both correct owner and correct source record/project, not HTTP 200 alone.",
+      "New negative test's assumption of empty seeded fixture temporarily broke CI; corrected fixture expectation and verified 423/423 in native Actions.",
+      "Publishing Cloud code with public Pages is not authorization to enable Cloud or evidence of real private account security."
+    ],
+    "next": "CONTROL-ACCOUNT real Auth gating: owner-approved two test users and protected GitHub Actions secrets, manual two-JWT PostgREST E2E run, authenticated browser and mobile cross-device acceptance; until then maintain Cloud disabled. For front-end follow-up pursue native-CI-verified operations and transactional idempotency."
   }
 ]
