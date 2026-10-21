@@ -1,50 +1,46 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-backup-recovery-1749",
-    "started_at": "2026-10-21T17:49:00Z",
-    "expires_at": "2026-10-21T18:34:00Z",
-    "objective": "Build safe cloud backup recovery preview/decryption without writes, verify isolated-account ownership and full native tests on main"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T17:43:00Z",
+    "updated_at": "2026-10-21T17:59:00Z",
     "main": true,
-    "stage": "control_account_complete_paginated_workspace_masked_backup_native_436_ci_success_real_auth_unverified",
+    "stage": "control_backup_inspect_local_decrypt_and_owner_check_native_453_tests_green_real_auth_and_restore_unverified",
     "files": [
       "assets/cloud-app.js",
       "assets/cloud-app.css",
+      "tests/control-cloud-backup-inspection.test.mjs",
       "tests/control-cloud-account-lifecycle.test.mjs",
-      "tests/control-cloud-session-isolation.test.mjs",
       "docs/CONTROL_CLOUD_AUTH_E2E_GUIDE.md",
       "docs/CONTROL_IA_RETROSPECTIVES.md",
-      "docs/CONTROL_IA_CAHIER_V1_2_SUIVI.md",
+      "data/control-ia-strategy.json",
       "data/sprints/control-ia.json"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39645241802",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39645241709",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39645861540",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39645861463",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39645772524"
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39648039792",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39648025505",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39648111947",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39648553774",
+      "https://github.com/cosscoll/Avancement-Projet/commit/403308f4be3ad55a45cfcaa2625efd51b7e47725"
     ],
     "remaining_blockers": [
-      "Two actual owner-approved CONTROL Supabase Auth accounts with valid JWTs and GitHub protected test secrets are still missing; RLS A/B and multi-device private sync cannot be marked real_verified.",
-      "Cloud login intentionally disabled in config/cloud.json, no physical Android/Apple account test or provider AI agent execution.",
-      "Backup currently lacks automatic restore, transactionally consistent snapshots, and backend idempotency across tabs/devices.",
-      "Latest code CI 436/436 verified on d0a1524; documentation/report CI success on d134387; exact Pages deployment of final release-lock commit requires independent verification."
+      "Two genuine approved Supabase CONTROL Auth JWT identities, protected CI secrets and real A/B PostgREST/RLS acceptance remain unavailable; Cloud deliberately disabled.",
+      "Local read-only backup inspection passed AES-GCM WebCrypto tests, but automatic server restoration and rollback transaction remain unimplemented.",
+      "No actual authenticated browser or physical Android/iOS Cloud backup validation; public Pages Chromium is not private account acceptance.",
+      "Cross-device transactional idempotency for mission imports and snapshots still outstanding.",
+      "Last native-453 proof is on tested code SHA 403308f4; docs and checkpoint commits need SHA-specific green CI/Pages before claiming latest full-head green."
     ],
-    "next_action": "CONTROL-ACCOUNT: first confirm final SHA CI and Pages, then with owner-approved two dedicated empty Auth test users and protected GitHub Actions secrets run actual A/B JWT/PostgREST RLS and account deletion/export acceptance; implement server snapshot + transactional idempotency, then private mobile sync. Cloud stays disabled until real acceptance; no spend."
+    "next_action": "CONTROL-ACCOUNT: check final main SHA's native quality/report/Pages; obtain owner approval and two empty dedicated CONTROL Auth users stored in protected GitHub Secrets; run live JWT RLS A/B tests and physical cross-device acceptance. Then implement opt-in restore preview+transaction+rollback and idempotent server writes, no costs and no IAgile data."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-account-export-reliability-1723",
-    "started_at": "2026-10-21T17:23:00Z",
-    "ended_at": "2026-10-21T17:43:00Z",
-    "summary": "On main, Cloud user workspace fully paginates with count verification (5000 projects/10000 elements max), keeps newest-first UX; six-table backup checks per-table counts and late drift, shows encrypted export with password-masked dialog and honest no-restore note. Actual native Node 436/436 on d0a1524; Cloud guard CI green; public documentation corrected; no live JWT/physical mobile validation; Cloud disabled.",
-    "stage": "code_main_native_436_green_docs_updated_auth_jwt_outstanding",
-    "commit_sha": "d0a1524f7c53fcf8a150066aae31bd9b509e3ecd",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39645241802"
+    "run_id": "control-ia-20261021-backup-recovery-1749",
+    "started_at": "2026-10-21T17:49:00Z",
+    "ended_at": "2026-10-21T17:59:00Z",
+    "summary": "Built local-only plaintext/encrypted CONTROL backup inspection, strict owner and six-table schema validation, encrypted AES-GCM/PBKDF2 verification and session-switch protection. Native Node 453/453 on code SHA 403308f, GitHub Pages and post-deploy Chromium pass; actual restore, JWT A/B and mobile remain unverified; Cloud disabled.",
+    "stage": "main_account_backup_inspection_native_453_green",
+    "commit_sha": "403308f4be3ad55a45cfcaa2625efd51b7e47725",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39648039792"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
