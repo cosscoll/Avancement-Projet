@@ -383,7 +383,7 @@ function accountPage(){
  '<p class="muted">Identifiant : '+H(authUser?.id||'')+'</p><div class="btnrow">'+btn('Actualiser','refresh')+btn('Déconnexion','logout')+'</div>')+
  panel('Confidentialité','<p>Chaque projet est rattaché à son propriétaire via les règles d’accès RLS de la base de données.</p>'+
  '<p class="muted">Les liens vers les IA ne constituent pas une connexion API. Les droits Google ne sont pas accordés automatiquement par la connexion au compte.</p>')+
- panel('Données personnelles',btn('Exporter mes données','export-json')+' '+btn('Importer mon ancien espace','import-legacy')+
+ panel('Données personnelles','<p class="muted">Sauvegarde des six collections privées. Privilégie le fichier chiffré : son mot de passe ne peut pas être récupéré.</p>'+btn('Exporter une sauvegarde chiffrée','export-encrypted')+' '+btn('Exporter en clair (attention)','export-json')+' '+btn('Importer mon ancien espace','import-legacy')+
  (cloudConfig?.accountDeletionEnabled===true?'<div class="hint">Suppression définitive : le compte et ses données ne pourront pas être restaurés.</div>'+btn('Supprimer définitivement mon compte','delete-account','','danger'):'<p class="muted">La suppression complète d’un compte nécessite une procédure serveur vérifiée. Elle n’est pas encore activée.</p>'));
 }
 
@@ -537,7 +537,15 @@ async function completeCloudExport(session){
      throw Error('Export incomplet : propriétaire ou identifiant de donnée incohérent ('+table+').');
     ids.add(row.id);rows.push(row);
    }
-   if(q.data.length<pageSize)return rows;
+   if(q.data.length<pageSize){
+    // A paginated read may finish early after concurrent changes or a
+    // misbehaving API. Never label such a partial payload a complete backup.
+    const countResult=await client.from(table).select('id',{count:'exact',head:true}).eq('owner_id',session.owner);
+    if(!session.current())return null;
+    if(countResult.error||!Number.isSafeInteger(countResult.count)||countResult.count!==rows.length)
+     throw Error('Export incomplet : nombre de lignes différent ou impossible à vérifier ('+table+'). Réessaie une fois les autres appareils synchronisés.');
+    return rows;
+   }
   }
   throw Error('Export interrompu : volume supérieur à '+(pageSize*maxPages)+' lignes pour '+table+'. Aucun fichier partiel produit.');
  }
