@@ -60,14 +60,15 @@ Même source de vérité et bail coopératif `data/sprint-state/control-ia.json`
 
 L'outil [`scripts/control-ia-requirements.mjs`](../scripts/control-ia-requirements.mjs) et ses 16 tests protègent la cardinalité et les liens des 22/42/10 entités, les preuves et l'absence de divulgation accidentelle de détails privés. [Workflow de validation V1.2](../.github/workflows/control-ia-requirements.yml). Une modification du registre qui forge un statut entièrement vérifié à partir d'un test fictif doit être refusée.
 
-## Points de décision et blocages
+## Points de décision et blocages — mise à jour du 21 octobre 2026
 
-- **P0 :** absence d'instance CONTROL indépendante et d'authentification réelle, ne pas utiliser la base IAgile.
-- **P1 :** ordonnanceur de rappels, agents IA réels et OAuth exigent une infrastructure / autorisation spécifiques, sans aucun coût non approuvé.
-- **P1 :** checkpoint PWA v38 non publié à examiner avant de reconstruire ; les tests allégués localement ne sont pas une preuve de mise en ligne.
-- **CI générale partagée :** le dernier run rouge observé après les écritures UCP contient un incident de format de journal UCP ; il n'autorise pas à désactiver les tests, à réécrire des preuves ou à modifier l'application UCP hors de son propre sprint.
+- **P0 — Auth réelle :** le projet Supabase indépendant **CONTROL Cloud** est créé et son état a été vérifié `ACTIVE_HEALTHY` ; la séparation avec IAgile est assurée au niveau du projet. En revanche, aucun parcours complet avec **deux véritables utilisateurs Supabase Auth et JWT distincts** n'a été validé. `config/cloud.json.enabled=false` reste obligatoire.
+- **P0 — synchronisation multi-appareils :** l'interface privée a maintenant une lecture paginée avec comptage exact, détection des identifiants doublés, contrôle de propriétaire et limites d'affichage explicites (5 000 projets et 10 000 éléments). Cette qualité de code n'est pas une preuve de fonctionnement multi-utilisateurs ou sur Android physique.
+- **P1 — export privé :** les six tables sont couvertes, les données paginées sont comptées puis recomptées avant téléchargement, et le mot de passe de chiffrement est saisi dans un dialogue masqué adapté au mobile. La restauration automatisée, le snapshot transactionnel et l'idempotence serveur entre appareils restent **à réaliser**.
+- **P1 — orchestration réelle :** les rappels, agents IA, OAuth et commandes effectives de services tiers exigent encore des connexions autorisées et une infrastructure vérifiée. Aucun coût supplémentaire n'est autorisé.
+- **Qualité CI démontrée :** le correctif de fondations au commit `d0a1524f7c53fcf8a150066aae31bd9b509e3ecd` a passé **436/436 tests Node natifs** (preuve [GitHub Actions](https://github.com/cosscoll/Avancement-Projet/actions/runs/39645241802)) et le workflow [Cloud pre-auth](https://github.com/cosscoll/Avancement-Projet/actions/runs/39645241709). Les commits de suivi ou de documentation ultérieurs doivent être vérifiés sur leur propre SHA. La PWA v38 n'est plus un chantier « non publié » à reconstruire : le travail d'intégration a été suivi dans les sprints précédents, avec des recettes Pages/Chromium enregistrées.
 
-Le prochain sprint CONTROL peut avancer sur les contrats de permissions et tests liés au compte tout en gardant l'activation Cloud bloquée, conformément au cahier.
+**Suivi formel conservateur :** les **22 tickets BACK / 42 scénarios T** restent historiques, et les **36 critères des 9 capacités** ne sont pas promus du seul fait d'un test simulé ou d'une publication de code. La validation réelle du compte et la synchronisation sont toujours des portes d'acceptation non franchies.
 
 
 **Complément sécurité du 20/10 :** la [preuve simulée T-16](https://github.com/cosscoll/Avancement-Projet/actions/runs/39403753476) couvre cinq transitions du client A/B avec réponses tardives ; aucune authentification JWT réelle n'a été effectuée, donc T-16 reste **non vérifié intégralement** et les comptes Cloud restent désactivés.
