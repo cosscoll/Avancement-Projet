@@ -76,31 +76,31 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
       startsAt:i.due_at,minutes:Number(i.details.minutes)||30,url:i.url,notes:i.body||'',updatedAt:i.updated_at
     })),
     create:async(m)=>{
-      const owner=authUser?.id;if(!owner)throw Error('Connexion requise.');
+      const session=mutationSession(),owner=session.owner;
       if(m.projectId&&!getProject(m.projectId))throw Error('Projet inaccessible.');
       const payload={owner_id:owner,project_id:m.projectId||null,kind:'event',provider:m.provider,title:m.title,
        url:m.url,body:'',status:'todo',due_at:m.startsAt,details:{controlVisio:true,type:m.type,minutes:m.minutes}};
       const result=await client.from('control_items').insert(payload).select('*').single();
-      if(result.error)throw Error('Enregistrement refusé : '+result.error.message);
-      if(authUser?.id!==owner)throw Error('Compte modifié : recharge ton espace.');
+      if(!session.current())return false;
+      if(result.error||!result.data||result.data.owner_id!==owner)throw Error('Enregistrement refusé ou propriétaire incohérent : '+(result.error?.message||'actualise.'));
       cache.items.unshift(result.data);return true;
     },
     update:async(m,fields)=>{
-      const owner=authUser?.id,row=cache.items.find(i=>i.id===m.id&&i.owner_id===owner&&i.details?.controlVisio===true);
+      const session=mutationSession(),owner=session.owner,row=cache.items.find(i=>i.id===m.id&&i.owner_id===owner&&i.details?.controlVisio===true);
       if(!owner||!row)throw Error('Rendez-vous non accessible.');
       const q=await client.from('control_items').update({body:fields.notes,updated_at:new Date().toISOString()})
         .eq('id',row.id).eq('owner_id',owner).eq('updated_at',row.updated_at).select('*').single();
-      if(q.error||!q.data)throw Error('Fiche modifiée ailleurs ou autorisation refusée. Actualise.');
-      if(authUser?.id!==owner)throw Error('Compte modifié : recharge.');
+      if(!session.current())return false;
+      if(q.error||!q.data||q.data.owner_id!==owner)throw Error('Fiche modifiée ailleurs ou autorisation refusée. Actualise.');
       Object.assign(row,q.data);return true;
     },
     remove:async(m)=>{
-      const owner=authUser?.id,row=cache.items.find(i=>i.id===m.id&&i.owner_id===owner&&i.details?.controlVisio===true);
+      const session=mutationSession(),owner=session.owner,row=cache.items.find(i=>i.id===m.id&&i.owner_id===owner&&i.details?.controlVisio===true);
       if(!owner||!row)throw Error('Fiche non accessible.');
       const q=await client.from('control_items').delete().eq('id',row.id).eq('owner_id',owner)
         .eq('updated_at',row.updated_at).select('id').single();
+      if(!session.current())return false;
       if(q.error||!q.data)throw Error('Suppression refusée ou fiche modifiée ailleurs.');
-      if(authUser?.id!==owner)throw Error('Compte modifié : recharge.');
       cache.items=cache.items.filter(x=>x.id!==row.id);return true;
     }
    });return;
@@ -117,35 +117,37 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
    providerURL:(projectId,provider)=>cache.items.find(x=>x.project_id===projectId&&x.kind==='ai_space'&&x.provider===provider&&safeURL(x.url))?.url||providers[provider]||'',
    canDispatch:()=>cloudConfig?.aiDispatchEnabled===true,
    dispatchMission:async(m)=>{
-     if(cloudConfig?.aiDispatchEnabled!==true||!authUser)throw Error('Envoi API non autorisé.');
-     const owner=authUser.id;
+     if(cloudConfig?.aiDispatchEnabled!==true)throw Error('Envoi API non autorisé.');
+     const session=mutationSession(),owner=session.owner;
+     if(!cache.items.some(x=>x.id===m.id&&x.owner_id===owner&&x.kind==='mission'&&['Claude','Gemini'].includes(x.provider)))throw Error('Mission introuvable dans ce compte.');
      const q=await client.functions.invoke('control-ai-dispatch',{body:{missionId:m.id,approved:true}});
+     if(!session.current())return false;
      if(q.error||q.data?.ok!==true)throw Error(q.data?.error||q.error?.message||'Erreur de connexion au backend.');
-     if(authUser?.id!==owner)throw Error('Compte changé. Actualise la page.');
      const fresh=await client.from('control_items').select('*').eq('id',m.id).eq('owner_id',owner).single();
-     if(fresh.error||!fresh.data)throw Error('Réponse exécutée, mais relecture du résultat indisponible. Actualise le projet.');
-     const local=cache.items.find(x=>x.id===m.id);if(local)Object.assign(local,fresh.data);return true;
+     if(!session.current())return false;
+     if(fresh.error||!fresh.data||fresh.data.owner_id!==owner)throw Error('Réponse exécutée, mais relecture du résultat indisponible. Actualise le projet.');
+     const local=cache.items.find(x=>x.id===m.id&&x.owner_id===owner);if(local)Object.assign(local,fresh.data);return true;
    },
    createMission:async({projectId,provider,title,prompt})=>{
-     const owner=authUser?.id;if(!owner||!getProject(projectId))throw Error('Projet indisponible pour ce compte.');
+     const session=mutationSession(),owner=session.owner;if(!getProject(projectId))throw Error('Projet indisponible pour ce compte.');
      if(!['Claude','Gemini'].includes(provider)||prompt.length>30000)throw Error('Mission non valide.');
      if(cache.items.some(x=>x.project_id===projectId&&x.provider===provider&&x.kind==='mission'&&x.body===prompt))return false;
      const payload={owner_id:owner,project_id:projectId,kind:'mission',provider,title:title.slice(0,200),body:prompt,status:'todo',details:{origin:'manual',source:'CONTROL: préparée non envoyée'}};
      const q=await client.from('control_items').insert(payload).select('*').single();
-     if(q.error)throw Error('Enregistrement refusé : '+q.error.message);
-     if(authUser?.id!==owner)throw Error('Compte changé pendant la création. Actualise.');
+     if(!session.current())return false;
+     if(q.error||!q.data||q.data.owner_id!==owner)throw Error('Enregistrement refusé ou propriétaire incohérent : '+(q.error?.message||'actualise.'));
      cache.items.unshift(q.data);return true;
    },
    updateMission:async(m,patch)=>{
-     const owner=authUser?.id,original=cache.items.find(x=>x.id===m.id&&x.owner_id===owner&&x.kind==='mission');
+     const session=mutationSession(),owner=session.owner,original=cache.items.find(x=>x.id===m.id&&x.owner_id===owner&&x.kind==='mission');
      if(!owner||!original)throw Error('Mission inaccessible dans ce compte.');
      if(patch.result.length>14000)throw Error('Résultat trop long.');
      const updated_at=new Date().toISOString();
      const details={...(original.details||{}),result:patch.result,proofUrl:patch.proofUrl,origin:'manual',resultUpdatedAt:updated_at};
      const q=await client.from('control_items').update({status:patch.status,details,updated_at})
        .eq('id',original.id).eq('owner_id',owner).eq('updated_at',original.updated_at).select('*').single();
-     if(q.error||!q.data)throw Error('Modification concurrente ou refusée. Actualise les données puis réessaie.');
-     if(authUser?.id!==owner)throw Error('Compte changé pendant la sauvegarde. Actualise.');
+     if(!session.current())return false;
+     if(q.error||!q.data||q.data.owner_id!==owner)throw Error('Modification concurrente ou refusée. Actualise les données puis réessaie.');
      Object.assign(original,q.data);return true;
    }
   });return;
@@ -164,14 +166,15 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
    },
    providerURL:(projectId,provider)=>cache.items.find(x=>x.project_id===projectId&&x.kind==='ai_space'&&x.provider===provider&&safeURL(x.url))?.url||providers[provider]||'',
    saveMission:async({projectId,provider,title,instruction})=>{
-    const owner=authUser?.id;if(!owner||!getProject(projectId))throw Error('Connecte-toi à ton projet avant de créer la mission.');
+    const session=mutationSession(),owner=session.owner;if(!getProject(projectId))throw Error('Connecte-toi à ton projet avant de créer la mission.');
     if(instruction.length>29000)throw Error('Brief trop long pour la base de données CONTROL Cloud.');
     if(cache.items.some(x=>x.project_id===projectId&&x.kind==='mission'&&x.provider===provider&&x.body===instruction))return false;
     const row={owner_id:owner,project_id:projectId,kind:'mission',title:String(title).slice(0,200),body:instruction,provider,status:'todo'};
     const result=await client.from('control_items').insert(row).select('id').single();
-    if(result.error)throw Error('Enregistrement impossible : '+result.error.message);
-    if(authUser?.id===owner)await reload(true);
-    return true;
+    if(!session.current())return false;
+    if(result.error||!result.data)throw Error('Enregistrement impossible : '+(result.error?.message||'réponse vide.'));
+    await reload(true);
+    return session.current();
    }
   });return;
  }
@@ -183,11 +186,13 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
    onOpenDeploy:(project)=>nav('deploy',project||''),
    isSaved:(tool,project)=>cache.items.some(x=>x.project_id===project&&x.kind==='resource'&&(x.details?.catalogToolId===tool.id||x.url===tool.url)),
    onAdd:async (tool,project)=>{
-    if(!authUser||!cache.projects.some(p=>p.id===project))throw Error('Sélectionne un projet de ton compte.');
+    const session=mutationSession(),owner=session.owner;
+    if(!cache.projects.some(p=>p.id===project&&p.owner_id===owner))throw Error('Sélectionne un projet de ton compte.');
     if(cache.items.some(x=>x.project_id===project&&x.kind==='resource'&&(x.details?.catalogToolId===tool.id||x.url===tool.url)))return false;
-    const owner=authUser.id,object={owner_id:owner,project_id:project,kind:'resource',title:tool.name,provider:'CONTROL Bibliothèque',url:tool.url,body:(tool.summary||'')+(tool.useCase?'\nCas pratique : '+tool.useCase:''),details:{catalogToolId:tool.id,category:tool.category,course:tool.courses?.[0]||''}};
-    const result=await client.from('control_items').insert(object).select('*').single();if(result.error)throw Error('Enregistrement refusé : '+result.error.message);
-    if(authUser?.id!==owner)return true;
+    const object={owner_id:owner,project_id:project,kind:'resource',title:tool.name,provider:'CONTROL Bibliothèque',url:tool.url,body:(tool.summary||'')+(tool.useCase?'\nCas pratique : '+tool.useCase:''),details:{catalogToolId:tool.id,category:tool.category,course:tool.courses?.[0]||''}};
+    const result=await client.from('control_items').insert(object).select('*').single();
+    if(!session.current())return false;
+    if(result.error||!result.data||result.data.owner_id!==owner)throw Error('Enregistrement refusé ou propriétaire incohérent : '+(result.error?.message||'actualise.'));
     cache.items.unshift(result.data);message('Outil enregistré dans les ressources du projet.');return true;
    }
   });
