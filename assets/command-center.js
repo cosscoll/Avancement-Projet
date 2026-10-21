@@ -154,14 +154,73 @@ function library(){const refs=[...linksPage(),...(db.resources||[])].filter(x=>s
  $('#main [data-act="paste-link"]')?.addEventListener('click',async()=>{try{const v=await navigator.clipboard.readText();const url=safe(v.trim());if(!url)return toast('Le presse-papiers ne contient pas de lien HTTPS accepté.');$('#new-resource').elements.url.value=url;toast('Lien collé. Choisis le projet et enregistre.')}catch{toast('Accès au presse-papiers refusé par le navigateur.')}});
  registerForm('#new-resource',f=>{const url=safe(f.get('url'));if(!url)return toast('Adresse HTTPS invalide.');db.resources??=[];db.resources.push({id:id(),project:String(f.get('project')||''),label:String(f.get('label')||'').trim(),url});save();library();toast('Lien enregistré.')});
 }
-function memory(){const list=db.decisions.slice().reverse();
- $('#main').innerHTML=view('Mémoire','Décisions et contexte conservés par projet',note('Les informations conservées viennent de tes saisies et de bilans importés. CONTROL ne lit pas les conversations privées des IA.')+
- box('Décisions enregistrées',list.length?list.map(d=>'<div class="chatrow"><div><strong>'+h(d.title)+'</strong><small>'+h(pname(d.project))+' · '+date(d.at)+' · '+h(d.source||'Saisie manuelle')+'</small><p>'+h(cap(d.details,300))+'</p></div>'+btn('Supprimer','decision-del:'+d.id)+'</div>').join(''):tiny('Aucune décision enregistrée.'))+
- box('Ajouter une décision','<form id="new-decision">'+field('Titre','title','','text','required maxlength="150"')+selectProject(ctx.projects[0]?.id||'',false)+textarea('Détails et justification','details','','required rows="4"')+field('Source','source','','text')+'<button class="primary">Mémoriser</button></form>')+
+// Local scoped memory: manual records are not external truth, and changes
+// must be confirmed by the same persistent store as their visible state.
+function decisionVersion(row){return Number.isSafeInteger(row?.version)&&row.version>0?row.version:1}
+function writeDecision(form){
+ const project=String(form.get('project')||'');
+ if(!ctx.projects.some(p=>p.id===project))throw Error('Projet introuvable : correction non enregistrée.');
+ const title=String(form.get('title')||'').trim(),details=String(form.get('details')||'').trim();
+ const source=String(form.get('source')||'Saisie manuelle').trim()||'Saisie manuelle';
+ if(!title||title.length>150||!details||details.length>10000||source.length>240)throw Error('Titre, justification ou source invalide.');
+ const record=String(form.get('record')||'');
+ const previous=record?db.decisions.find(x=>x.id===record):null;
+ if(record&&(!previous||previous.project!==project||decisionVersion(previous)!==Number(form.get('expectedVersion'))))throw Error('Décision changée ou supprimée : recharge et recommence.');
+ const conflict=db.decisions.find(x=>x.project===project&&x.id!==record&&String(x.title||'').trim().toLocaleLowerCase('fr-FR')===title.toLocaleLowerCase('fr-FR'));
+ if(conflict)throw Error(conflict.details===details?'Décision déjà présente pour ce projet.':'Décision potentiellement contradictoire : corrige la décision existante au lieu de créer une deuxième version.');
+ const now=new Date().toISOString();
+ const revised=previous?{...previous,title,details,source,version:decisionVersion(previous)+1,updatedAt:now}:
+  {id:id(),project,title,details,source,version:1,at:now,updatedAt:now};
+ const before=db.decisions;
+ db.decisions=previous?before.map(x=>x.id===record?revised:x):[...before,revised];
+ if(save()!==true){db.decisions=before;throw Error('Stockage indisponible : aucune décision confirmée.')}
+ return revised;
+}
+function removeDecision(record){
+ const previous=db.decisions.find(x=>x.id===record);
+ if(!previous||!ctx.projects.some(p=>p.id===previous.project))throw Error('Décision absente ou projet indisponible.');
+ const before=db.decisions;
+ db.decisions=before.filter(x=>x.id!==record);
+ if(save()!==true){db.decisions=before;throw Error('Stockage indisponible : suppression annulée.')}
+ return true;
+}
+function memory(){
+ const list=db.decisions.filter(d=>ctx.projects.some(p=>p.id===d.project)).slice().reverse();
+ $('#main').innerHTML=view('Mémoire','Décisions locales classées par projet, avec source déclarée et version',
+ note('Données saisies manuellement. Le champ Source décrit la provenance déclarée, sans vérification automatique ni accès aux conversations privées.')+
+ box('Décisions enregistrées',list.length?list.map(d=>'<div class="chatrow"><div><strong>'+h(d.title)+'</strong><small>'+h(pname(d.project))+' · '+date(d.updatedAt||d.at)+' · v'+decisionVersion(d)+' · Source déclarée : '+h(d.source||'Saisie manuelle')+'</small><p>'+h(cap(d.details,300))+'</p></div><div class="actions">'+btn('Corriger','decision-edit:'+d.id)+btn('Supprimer','decision-del:'+d.id)+'</div></div>').join(''):tiny('Aucune décision enregistrée.'))+
+ box('Ajouter ou corriger une décision','<form id="new-decision"><input type="hidden" name="record" value=""><input type="hidden" name="expectedVersion" value="">'+
+ field('Titre','title','','text','required maxlength="150"')+selectProject(ctx.projects[0]?.id||'',false)+
+ textarea('Détails et justification','details','','required maxlength="10000" rows="4"')+
+ field('Source déclarée','source','','text','maxlength="240" placeholder="Lien, compte rendu, décision personnelle…"')+
+ '<div class="actions"><button class="primary" type="submit">Mémoriser</button>'+btn('Annuler la correction','decision-edit-cancel')+'</div></form>')+
  box('Partager le contexte','<label>Projet<select class="field" id="memory-project">'+projopts(ctx.projects[0]?.id||'',false)+'</select></label>'+btn('Copier une fiche de contexte','copy-context','primary')));
- registerForm('#new-decision',f=>{db.decisions.push({id:id(),project:String(f.get('project')),title:String(f.get('title')||''),details:String(f.get('details')||''),source:String(f.get('source')||'Saisie manuelle'),at:new Date().toISOString()});save();memory()});
- $('#main').querySelectorAll('[data-act^="decision-del:"]').forEach(b=>b.onclick=()=>{if(!confirm('Supprimer cette décision enregistrée localement ?'))return;db.decisions=db.decisions.filter(x=>x.id!==b.dataset.act.slice(13));save();memory()});
- $('#main [data-act="copy-context"]').onclick=()=>{const p=$('#memory-project').value;copy('PROJET : '+pname(p)+'\nCONSIGNES :\n'+db.globalRules+'\n\nFAITS / SOURCES DISPONIBLES :\n'+contextEvidence(p).join('\n')+'\n\nDÉCISIONS :\n'+db.decisions.filter(x=>x.project===p).map(x=>x.title+' : '+x.details).join('\n')+'\n\nDistinguer toujours faits vérifiés et bilans déclaratifs.')};
+ registerForm('#new-decision',form=>{
+  try{const row=writeDecision(form);memory();toast('Décision '+(row.version>1?'corrigée':'mémorisée')+' localement · v'+row.version)}
+  catch(error){toast(String(error?.message||error).slice(0,240))}
+ });
+ $('#main').querySelectorAll('[data-act^="decision-edit:"]').forEach(button=>button.onclick=()=>{
+  const row=db.decisions.find(x=>x.id===button.dataset.act.slice('decision-edit:'.length));
+  if(!row||!ctx.projects.some(p=>p.id===row.project)){toast('Décision ou projet introuvable.');return}
+  const form=$('#new-decision'),e=form?.elements;if(!e)return;
+  for(const [key,val] of Object.entries({record:row.id,expectedVersion:decisionVersion(row),project:row.project,title:row.title,details:row.details,source:row.source||'Saisie manuelle'}))e.namedItem(key).value=String(val);
+  form.querySelector('button[type="submit"]').textContent='Enregistrer la correction';
+  form.scrollIntoView({behavior:'smooth',block:'center'});
+ });
+ $('#main').querySelector('[data-act="decision-edit-cancel"]').onclick=()=>memory();
+ $('#main').querySelectorAll('[data-act^="decision-del:"]').forEach(button=>button.onclick=()=>{
+  if(!confirm('Supprimer cette décision enregistrée localement ?'))return;
+  try{removeDecision(button.dataset.act.slice('decision-del:'.length));memory();toast('Décision supprimée localement.')}
+  catch(error){toast(String(error?.message||error).slice(0,240))}
+ });
+ $('#main [data-act="copy-context"]').onclick=()=>{
+  const p=$('#memory-project').value;
+  if(!ctx.projects.some(project=>project.id===p)){toast('Projet indisponible.');return}
+  const decisions=db.decisions.filter(x=>x.project===p);
+  copy('PROJET : '+pname(p)+'\nCONSIGNES :\n'+db.globalRules+'\n\nFAITS / SOURCES DISPONIBLES :\n'+contextEvidence(p).join('\n')+
+   '\n\nDÉCISIONS LOCALES (source déclarée) :\n'+decisions.map(x=>x.title+' · v'+decisionVersion(x)+' · source : '+(x.source||'Saisie manuelle')+' · '+(x.updatedAt||x.at)+' : '+x.details).join('\n')+
+   '\n\nCes sources sont déclarées et peuvent être périmées : vérifier avant toute action.');
+ };
 }
 
 function budget(){const month=new Date().toISOString().slice(0,7),rows=db.expenses.filter(x=>x.month===month),spent=rows.reduce((a,x)=>a+Number(x.amount||0),0),revenue=db.income.filter(x=>x.month===month).reduce((a,x)=>a+Number(x.amount||0),0),limit=db.monthLimit;
