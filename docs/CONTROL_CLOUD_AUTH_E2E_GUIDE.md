@@ -76,3 +76,18 @@ La préparation du compte unique a été approfondie dans un sprint conversation
 - **Preuves :** GitHub Actions **Qualité native 436 tests / 436 pass, zéro fail** : https://github.com/cosscoll/Avancement-Projet/actions/runs/39645241802 ; Cloud pre-auth https://github.com/cosscoll/Avancement-Projet/actions/runs/39645241709 (success). Les tests incluent des jeux de 1 205 tâches, le tri récent, les volumes incohérents, les identifiants dupliqués, les sauvegardes tronquées, une dérive de comptage après lecture, et l'annulation du dialogue de chiffrement.
 
 **Limites non levées :** contrôles de comptage répétés et pagination ne constituent pas une capture transactionnelle ; les changements de contenu à volume constant pendant l'export sont encore possibles. La base indépendante CONTROL n'a toujours pas deux comptes de test Auth JWT A/B validés en réel ; `config/cloud.json.enabled=false` reste impératif. Aucun scénario multi-appareil réel, restauration chiffrée ni synchronisation mobile physique ne peut être déclaré opérationnel sur la seule base des tests simulés et de CI.
+
+
+## 21 octobre 2026 — Prévisualisation locale des sauvegardes CONTROL
+
+L'écran « Mon compte » propose maintenant « Vérifier un fichier de sauvegarde de ce compte, sans envoi au serveur » sous forme d'un sélecteur de fichier JSON. C'est une étape **d'inspection et de préparation à la restauration**, pas un outil d'importation/restauration.
+
+**Sécurité et fonctionnement :**
+- Lecture du fichier **uniquement dans le navigateur de la session CONTROL**, sans `fetch`, sans appel à Supabase, sans écriture dans les tables ou le cache des projets. La taille est limitée à 50 Mio ; toute erreur est signalée sans exposer le contenu.
+- Accepte le schéma clair `control-cloud-export-v1` ou le schéma chiffré `control-cloud-encrypted-v1` ; ce dernier est ouvert localement par le même KDF `PBKDF2-SHA256-200000` et `AES-GCM` que l'export. Le mot de passe se saisit dans un dialogue masqué ; un mauvais mot de passe ou un fichier altéré est refusé. Le tampon binaire déchiffré est effacé après analyse.
+- Vérifie l'`accountId` de la sauvegarde contre le `user.id` courant, le profil `user_id`, les préférences `owner_id`, chaque identifiant de collection et son propriétaire, l'absence de doublons, les références d'éléments vers les projets exportés, la date et les collections obligatoires. En cas de changement de session, aucune prévisualisation d'un autre compte n'est affichée.
+- Ne renvoie à l'interface que **la date et le nombre de projets/éléments/connexions/événements d'audit**. Les titres, notes, liens, e-mails, profils et jetons éventuels du fichier ne sont jamais injectés dans l'interface. Aucun appel réseau de restauration n'est fait. L'utilisateur doit conserver le fichier original et son mot de passe.
+
+**Tests:** `tests/control-cloud-backup-inspection.test.mjs` comprend des exercices AES-GCM authentiques sous Node/WebCrypto, vérification du mot de passe, falsification de l'enveloppe, données d'un autre compte, références orphelines, doublons, fichiers volumineux, annulation et changement de session. Le test GitHub Actions natif passe avec le code versionné ; toute preuve finale doit citer le SHA correspondant.
+
+**Non validé :** la restauration effective dans les six tables, le snapshot transactionnel, la synchronisation multi-appareils, les identités Auth réelles A/B, et les permissions serveur restent des critères non acceptés. `config/cloud.json.enabled=false` reste inchangé. Aucun service payant.
