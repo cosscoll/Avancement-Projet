@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "control-ia-20261021-concurrent-auth-session-20261021084346464",
+    "started_at": "2026-10-21T08:43:46.464Z",
+    "expires_at": "2026-10-21T09:28:46.464Z",
+    "objective": "Corriger la double vérification de session même utilisateur, tester A/B, consigner et publier sur main"
+  },
   "checkpoint": {
     "updated_at": "2026-10-21T07:30:02.214Z",
     "main": true,
