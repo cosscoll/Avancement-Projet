@@ -12,6 +12,8 @@ on:
       - 'tests/control-cloud-mutation-session.test.mjs'
       - 'tests/control-cloud-integrations-session.test.mjs'
       - 'tests/control-cloud-account-lifecycle.test.mjs'
+      - 'tests/control-cloud-real-auth-e2e.test.mjs'
+      - 'tests/control-cloud-real-auth-e2e.mjs'
       - '.github/workflows/control-cloud-config.yml'
   workflow_dispatch:
 
@@ -44,6 +46,8 @@ jobs:
           node --check tests/control-cloud-mutation-session.test.mjs
           node --check tests/control-cloud-integrations-session.test.mjs
           node --check tests/control-cloud-account-lifecycle.test.mjs
+          node --check tests/control-cloud-real-auth-e2e.mjs
+          node --check tests/control-cloud-real-auth-e2e.test.mjs
           node -e "JSON.parse(require('node:fs').readFileSync('config/cloud.json','utf8'));JSON.parse(require('node:fs').readFileSync('config/cloud.example.json','utf8'))"
       - name: Protéger le compte avant toute activation
-        run: node --test tests/control-cloud-config-gate.test.mjs tests/control-cloud-session-isolation.test.mjs tests/control-cloud-mutation-session.test.mjs tests/control-cloud-integrations-session.test.mjs tests/control-cloud-account-lifecycle.test.mjs tests/cloud-smoke.test.mjs
+        run: node --test tests/control-cloud-config-gate.test.mjs tests/control-cloud-session-isolation.test.mjs tests/control-cloud-mutation-session.test.mjs tests/control-cloud-integrations-session.test.mjs tests/control-cloud-account-lifecycle.test.mjs tests/control-cloud-real-auth-e2e.test.mjs tests/cloud-smoke.test.mjs
