@@ -1,37 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-20261021T032948Z-v3",
-    "owner": "chatgpt-automation-ucp",
-    "started_at": "2026-10-21T03:29:48Z",
-    "expires_at": "2026-10-21T04:14:48Z",
-    "objective": "Sécuriser le repli après échec du téléchargement et de la révocation URL"
-  },
-  "checkpoint": {
-    "phase": "ready_to_merge",
-    "repository": "cosscoll/UnCoupdePouce",
-    "base_branch": "main",
-    "base_sha": "b2778be9946056b9a32e83f5b775cf199d9e35b8",
-    "branch": "fix/ucp-failed-download-cleanup-20261021",
-    "branch_sha": "c5d83442833e6a6510cf078e4efc545f63cf92c8",
-    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/18",
-    "files": [
-      "site-vitrine/dist/assets/app.js",
-      "site-vitrine/tests/app-shell.test.cjs"
-    ],
-    "tests": [
-      "Vitrine CI #34 succès (première passe)",
-      "Vitrine CI #35 succès (seconde passe après autocritique)"
-    ],
-    "next_action": "Revalider PR, base main et bail, puis fusionner prudemment."
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261021T023450Z-v3",
-    "ended_at": "2026-10-21T02:37:52.314Z",
+    "run_id": "ucp-20261021T032948Z-v3",
+    "ended_at": "2026-10-21T03:32:38.284Z",
     "outcome": "merged",
-    "summary": "PR #17 nettoyage sûr des URL objet fusionnée sur main b2778be9 après deux CI vertes ; navigateur réel non vérifié.",
+    "summary": "PR #18 repli sûr après échec du téléchargement fusionnée sur main 13298223 après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
