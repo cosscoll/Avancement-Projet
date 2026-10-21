@@ -1,53 +1,47 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-native-ci-auth-export-1610",
-    "started_at": "2026-10-21T16:10:00Z",
-    "expires_at": "2026-10-21T16:55:00Z",
-    "objective": "native CI and deployment verification, fix Cloud account correctness/security defects, test and record honest evidence"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T15:13:10Z",
+    "updated_at": "2026-10-21T16:22:30Z",
     "main": true,
-    "stage": "account_secure_receipts_full_export_and_cloud_pin_main_v8_139_ci_pages_unverified",
+    "stage": "control_account_native_423_green_pages_chromium_success_real_JWT_unverified",
     "files": [
       "assets/cloud-app.js",
+      "data/control-ia-strategy.json",
+      "tests/control-cloud-mutation-session.test.mjs",
       "tests/control-cloud-four-missions-session.test.mjs",
       "tests/control-cloud-account-lifecycle.test.mjs",
-      "tests/control-cloud-config-gate.test.mjs",
-      "tests/control-cloud-mutation-session.test.mjs",
-      "config/cloud.json",
-      "docs/CONTROL_CLOUD_AUTH_E2E_GUIDE.md",
+      "tests/control-cloud-session-isolation.test.mjs",
+      "tests/control-cloud-integrations-session.test.mjs",
       "docs/CONTROL_IA_RETROSPECTIVES.md",
-      "data/control-ia-strategy.json",
       "data/sprints/control-ia.json"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/commit/dca57c3f23a5c17643a587e241161a36cd2ba527",
-      "https://github.com/cosscoll/Avancement-Projet/commit/031aa869760cf652db826aa25a946c8f4c0fa59c",
-      "https://github.com/cosscoll/Avancement-Projet/commit/c9f1336d257c294e567bf2572c13e9107af69e40",
-      "https://github.com/cosscoll/Avancement-Projet/commit/1db893028443d5b59d6ac120885f196547923e68",
-      "https://github.com/cosscoll/Avancement-Projet/commit/111c4f7b36136df6ef84cdcd1bed3e969f8bb382"
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633670993",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633670965",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633669229",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633745069",
+      "https://github.com/cosscoll/Avancement-Projet/commit/d4e9a45e63d56aa59c5b5b47947b61ddc2731519"
     ],
     "remaining_blockers": [
-      "Actual two-user CONTROL Supabase Auth/JWT/PostgREST E2E blocked on owner-approved empty test users and protected Secrets; Cloud public remains disabled.",
-      "GitHub Actions native Node full-suite and Pages/public browser evidence for final SHA could not be retrieved; adapted V8 assertions are not production proof.",
-      "Server-side transactional idempotency across tabs/devices for mission batches/imports is not implemented.",
-      "Full account export reads all six tables with safeguards but has no transactionally consistent snapshot under simultaneous remote writes and refuses >50,000 records per collection.",
-      "Physical Android/iOS Auth and cross-device sync acceptance outstanding."
+      "Real 2-user Supabase Auth JWT and PostgREST RLS acceptance requires authorized test credentials and GitHub Secrets; there are currently no owner-approved test JWT accounts for this session.",
+      "Cloud sign-in public deliberately remains disabled; browser Chromium validated public Pages but not actual authenticated private account or cross-device mobile device.",
+      "Server-side transactional idempotency for mission/import cross-tab duplication not implemented.",
+      "Full export is owner verified and paginated but without a transactionally consistent server snapshot across simultaneous device writes.",
+      "Native CI evidence green on code SHA d4e9a45; documentation/report/lock final head revalidation required if claiming full-head green."
     ],
-    "next_action": "CONTROL-ACCOUNT: verify final-sha GitHub Actions quality/cloud-config + Pages run, fix any native regressions. Then after explicit approval provision two genuine test Auth accounts only in the independent zero-cost CONTROL Cloud and place credentials only in GitHub Actions secrets; run manual live JWT A/B PostgREST RLS acceptance, browser session/export and physical Android. Do not enable Cloud before all checks pass."
+    "next_action": "Check newest head CI and Pages after checkpoint. Keep Cloud disabled until owner-approved two dedicated CONTROL Auth test users + protected GitHub Actions credentials and live A/B JWT/PostgREST RLS E2E tests. Then verify physical mobile and backend idempotency. Do not touch IAgile database or spend money."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-hardening-144508",
-    "started_at": "2026-10-21T14:45:08Z",
-    "ended_at": "2026-10-21T15:13:10Z",
-    "summary": "Main direct: hardened four-mission and legacy import reentrancy, pinned CONTROL Supabase ref, identity-scoped mutation receipts, complete six-table paginated account export. Adapted V8 current source 117/117 plus 13/13 Cloud config and 9/9 E2E mocks; 6/6 isolated Node tests; native CI/Pages and actual JWT A/B unverified; Cloud disabled.",
-    "stage": "main_code_v8_verified_ci_pages_not_verified",
-    "commit_sha": "111c4f7b36136df6ef84cdcd1bed3e969f8bb382",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/commit/111c4f7b36136df6ef84cdcd1bed3e969f8bb382"
+    "run_id": "control-ia-20261021-native-ci-auth-export-1610",
+    "started_at": "2026-10-21T16:10:00Z",
+    "ended_at": "2026-10-21T16:22:30Z",
+    "summary": "Repaired native CI schema failure; strengthened Cloud mutation reload truthfulness and AI/visio receipt isolation; code commit d4e9a45 actual native Node 423/423, Cloud gate success, GitHub Pages success and deployed Chromium success. Real Auth A/B and physical devices not tested, Cloud disabled.",
+    "stage": "code_main_native_ci_423_green_browser_pages_validated",
+    "commit_sha": "d4e9a45e63d56aa59c5b5b47947b61ddc2731519",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633670993"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
