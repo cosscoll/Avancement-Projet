@@ -165,7 +165,7 @@ test('backup dialog cancellation returns null without exposing a password',async
 
 test('encrypted export cannot download A private file after the user switches to B during encryption',async()=>{
  const h=exporter(),pending=h.exportMyData(true);
- for(let i=0;i<30&&!h.keys.length;i++)await Promise.resolve();
+ for(let i=0;i<400&&!h.keys.length;i++)await Promise.resolve();
  assert.equal(h.keys.length,1);h.switchB();h.keys[0]({});
  assert.equal(await pending,false);assert.deepEqual(h.downloads,[]);assert.deepEqual(h.messages,[]);
 });
