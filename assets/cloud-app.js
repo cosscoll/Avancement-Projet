@@ -475,6 +475,10 @@ async function copyText(text){
  catch{message('Copie impossible sur cet appareil.',true)}
 }
 async function prepareFourMissions(){
+ // One in-page batch at a time; cross-tab/server idempotency remains pending.
+ if(prepareFourMissions.inFlight)throw Error('Une création de missions est déjà en cours.');
+ prepareFourMissions.inFlight=true;
+ try{
  const session=mutationSession();
  if(!cache.projects.length)throw Error('Créez d’abord un projet.');
  const selected=prompt('Nom exact du projet pour ces missions :',cache.projects[0].name);
@@ -488,11 +492,15 @@ async function prepareFourMissions(){
  if(!session.current())return;
  const q=await client.from('control_items').insert(rows).select('id,owner_id,project_id');
  if(!session.current())return;
- if(q.error||!Array.isArray(q.data)||q.data.length!==plan.length||
-    q.data.some(x=>!x?.id||x.owner_id!==session.owner||x.project_id!==p.id))
-  throw Error('Création des quatre missions non confirmée : actualise les données avant de recommencer.');
+ const ids=Array.isArray(q.data)?q.data.map(x=>x?.id):[];
+ if(q.error||ids.length!==plan.length||new Set(ids).size!==plan.length||
+    q.data.some(x=>typeof x?.id!=='string'||!x.id||x.owner_id!==session.owner||x.project_id!==p.id))
+  throw Error('Création des quatre missions non confirmée : vérifier les missions avant toute nouvelle tentative.');
  await reload(true);
  if(session.current())message('Quatre missions créées. Aucune IA déclenchée.');
+ }finally{
+  prepareFourMissions.inFlight=false;
+ }
 }
 
 const encB64=x=>{let s='';for(const v of x)s+=String.fromCharCode(v);return btoa(s)};
