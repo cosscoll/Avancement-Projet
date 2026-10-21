@@ -39,3 +39,12 @@ Le test A/B a été lancé **dans PostgreSQL réel** sous une transaction `BEGIN
 **Statut fonctionnel honnête :** backend indépendant et schéma de sécurité créés et contrôlés ; Cloud public désactivé ; authentification réelle A/B, synchronisation, permissions multi-appareils et exécution de fournisseurs non vérifiées. Ne pas changer l'état `real_verified` des critères V1.2.
 
 [Documentation officielle des protections Supabase](https://supabase.com/docs/guides/api/securing-your-api)
+
+## Mise à jour — 21 octobre 2026, recette des six tables
+
+- **Test supplémentaire exécuté sur la véritable base CONTROL Cloud** via SQL dans une transaction `BEGIN … ROLLBACK` : insertion temporaire sous deux identités dont le `request.jwt.claim.sub` est **simulé** (A et B), puis test de lecture propriétaire uniquement sur `control_profiles`, `control_projects`, `control_items`, `control_preferences`, `control_connections` et `control_audit_events`.
+- Les six lectures croisées ont été refusées ; les tentatives de modification/suppression du projet ou de l'audit d'autrui et d'usurpation `owner_id` ont échoué ; rôle `anon` sans privilège de lecture sur les six tables.
+- **Résultat post-`ROLLBACK` revérifié** : `auth.users = 0`, six tables CONTROL = 0 ligne. Analyseur Supabase Security = **0 alerte**, projet `ACTIVE_HEALTHY`.
+- **Recette JWT réellement émis non encore exécutée** : un outil de test a été ajouté, `tests/control-cloud-real-auth-e2e.mjs`, avec garde d'identité `/auth/v1/user`, contrôle PostgREST des six tables, rejet des écritures croisées, aucune mutation du journal append-only et nettoyage obligatoire. Disponible dans GitHub Actions **seulement sur lancement manuel** : `.github/workflows/control-cloud-real-auth.yml` ; procédures et préparation des comptes test dans [CONTROL_CLOUD_AUTH_E2E_GUIDE.md](./CONTROL_CLOUD_AUTH_E2E_GUIDE.md).
+- **Interface** : `app.html` affiche que la base indépendante est créée mais que les tests de véritables comptes sont toujours en attente. `config/cloud.json.enabled` reste à `false`. Aucun accès client ne doit être activé sur la base de ces tests SQL simulés.
+
