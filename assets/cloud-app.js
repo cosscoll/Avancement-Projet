@@ -43,7 +43,9 @@ function safeClientConfig(v){
   if(url.protocol!=='https:'||url.username||url.password||url.port||url.search||url.hash||url.pathname!=='/')return false;
   if(!/^[a-z0-9-]+\.supabase\.co$/.test(url.hostname))return false;
   const ref=url.hostname.slice(0,-'.supabase.co'.length);
-  if(ref.length<8||v.controlProjectRef!==ref)return false;
+  // Hard-pin the verified, independent CONTROL Cloud project. A matching URL
+  // and self-declared ref are not sufficient to prevent use of another database.
+  if(ref!=='rvrmjjtdedidjnrkdery'||v.controlProjectRef!==ref)return false;
   const key=v.supabasePublishableKey;
   // Legacy JWTs can encode a service_role credential: never embed any JWT in this public client.
   // Modern sb_publishable_ keys are explicitly intended to be public, but still require RLS.
