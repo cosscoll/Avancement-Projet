@@ -73,3 +73,34 @@ test('regression: existing legacy progress and primary account focus are preserv
  assert.match(errors,/Inconsistent main capability focus/);
  assert.match(errors,/Incorrect declared count legacy_criteria/);
 });
+
+test('all source_tickets belong to BACK-001..BACK-022, old labels archived losslessly',()=>{
+ const canon=new Set(registry.tickets.map(t=>t.id));
+ const expected={
+  'CONTROL-ACCOUNT':['BACK-023','BACK-025','BACK-039'],
+  'CONTROL-CONNECTORS':['BACK-024','BACK-035','BACK-036'],
+  'CONTROL-CALENDAR':['BACK-026','BACK-027','BACK-028','BACK-029','BACK-030','BACK-037','BACK-042'],
+  'CONTROL-REMINDERS':['BACK-031','BACK-032','BACK-033','BACK-034'],
+  'CONTROL-QUALITY':['BACK-040','BACK-041']
+ };
+ for(const cap of legacy.capabilities){
+  assert.ok(cap.source_tickets.every(t=>canon.has(t)),cap.id);
+  assert.deepEqual(cap.legacy_unmapped_ticket_refs||[],expected[cap.id]||[],cap.id);
+ }
+ assert.equal(legacy.reference_reconciliation.unmapped_count,19);
+});
+test('regression: delivery cannot revive BACK-039 as a real source ticket',()=>{
+ const obj=structuredClone(legacy);
+ obj.capabilities[0].source_tickets.push('BACK-039');
+ assert.match(validateRegistry(registry,obj,strategy).join('|'),/noncanonical source ticket/);
+});
+test('regression: preserve old labels without treating canonical BACK as unmapped',()=>{
+ const obj=structuredClone(legacy);
+ obj.capabilities[0].legacy_unmapped_ticket_refs.push('BACK-004');
+ assert.match(validateRegistry(registry,obj,strategy).join('|'),/historical label overlaps canonical ticket/);
+});
+test('regression: historical reference counts cannot silently drift',()=>{
+ const obj=structuredClone(legacy);
+ obj.capabilities[4].legacy_unmapped_ticket_refs.pop();
+ assert.match(validateRegistry(registry,obj,strategy).join('|'),/historical count inconsistent/);
+});
