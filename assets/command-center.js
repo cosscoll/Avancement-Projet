@@ -185,10 +185,13 @@ function removeDecision(record){
  return true;
 }
 function memory(){
+ const wanted=route().param;
+ const selected=wanted?db.decisions.find(d=>d.id===wanted&&ctx.projects.some(p=>p.id===d.project)):null;
  const list=db.decisions.filter(d=>ctx.projects.some(p=>p.id===d.project)).slice().reverse();
  $('#main').innerHTML=view('Mémoire','Décisions locales classées par projet, avec source déclarée et version',
  note('Données saisies manuellement. Le champ Source décrit la provenance déclarée, sans vérification automatique ni accès aux conversations privées.')+
- box('Décisions enregistrées',list.length?list.map(d=>'<div class="chatrow"><div><strong>'+h(d.title)+'</strong><small>'+h(pname(d.project))+' · '+date(d.updatedAt||d.at)+' · v'+decisionVersion(d)+' · Source déclarée : '+h(d.source||'Saisie manuelle')+'</small><p>'+h(cap(d.details,300))+'</p></div><div class="actions">'+btn('Corriger','decision-edit:'+d.id)+btn('Supprimer','decision-del:'+d.id)+'</div></div>').join(''):tiny('Aucune décision enregistrée.'))+
+ (wanted&&!selected?note('Décision introuvable ou supprimée : aucun contenu ancien n’est conservé dans les résultats.'):'')+
+ box('Décisions enregistrées',list.length?list.map(d=>'<div class="chatrow" data-memory-id="'+h(d.id)+'"'+(wanted===d.id?' aria-current="true"':'')+'><div><strong>'+h(d.title)+'</strong><small>'+h(pname(d.project))+' · '+date(d.updatedAt||d.at)+' · v'+decisionVersion(d)+' · Source déclarée : '+h(d.source||'Saisie manuelle')+'</small><p>'+h(cap(d.details,300))+'</p></div><div class="actions">'+btn('Corriger','decision-edit:'+d.id)+btn('Supprimer','decision-del:'+d.id)+'</div></div>').join(''):tiny('Aucune décision enregistrée.'))+
  box('Ajouter ou corriger une décision','<form id="new-decision"><input type="hidden" name="record" value=""><input type="hidden" name="expectedVersion" value="">'+
  field('Titre','title','','text','required maxlength="150"')+selectProject(ctx.projects[0]?.id||'',false)+
  textarea('Détails et justification','details','','required maxlength="10000" rows="4"')+
@@ -199,6 +202,7 @@ function memory(){
   try{const row=writeDecision(form);memory();toast('Décision '+(row.version>1?'corrigée':'mémorisée')+' localement · v'+row.version)}
   catch(error){toast(String(error?.message||error).slice(0,240))}
  });
+ if(selected){const target=[...$('#main').querySelectorAll('[data-memory-id]')].find(el=>el.dataset.memoryId===selected.id);target?.scrollIntoView({block:'nearest'});}
  $('#main').querySelectorAll('[data-act^="decision-edit:"]').forEach(button=>button.onclick=()=>{
   const row=db.decisions.find(x=>x.id===button.dataset.act.slice('decision-edit:'.length));
   if(!row||!ctx.projects.some(p=>p.id===row.project)){toast('Décision ou projet introuvable.');return}
@@ -472,9 +476,51 @@ function backup(){
  try{localStorage.setItem(KEY,JSON.stringify(data.command));localStorage.setItem(HUB,JSON.stringify(data.hub));localStorage.setItem(AUTOS,JSON.stringify(data.automations))}catch(e){for(const [k,v] of old){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch{rollbackUncertain=true}}throw e}
  init();$('#import-status').textContent='Données restaurées. Recharge CONTROL pour actualiser les projets.';toast('Sauvegarde importée.')}catch{$('#import-status').textContent=rollbackUncertain?'Restauration interrompue : le navigateur a aussi refusé le retour arrière. Certaines données locales ont pu changer. Ne supprime pas ton fichier de sauvegarde.':'Import refusé : fichier incorrect, mot de passe erroné ou espace insuffisant. Les anciennes données ont été conservées ou restaurées.'}});
 }
-function search(){const items=[...ctx.projects.map(p=>({t:p.name,s:'Projet',u:'#/project/'+encodeURIComponent(p.id)+'/ai'})),...db.actions.map(x=>({t:x.title,s:'Action · '+pname(x.project),u:'#/control/inbox'})),...db.missions.map(x=>({t:x.title,s:'Mission · '+pname(x.project),u:'#/control/missions'})),...db.decisions.map(x=>({t:x.title,s:'Décision · '+pname(x.project),u:'#/control/memory'})),...[...linksPage(),...(db.resources||[])].filter(x=>safe(x.url)).map(x=>({t:x.label,s:'Ressource · '+pname(x.project),u:x.url}))];
- $('#main').innerHTML=view('Recherche universelle','Trouver un projet, une mission, un document ou une décision',box('Chercher dans CONTROL','<label>Recherche<input id="global-search" type="search" class="field" placeholder="Un projet, une tâche, un fichier…"></label><div id="search-hits"></div>'+tiny('Ne recherche pas le texte privé des conversations ChatGPT, Claude ou Gemini.')));
- const draw=()=>{const q=$('#global-search').value.toLowerCase().trim(),res=items.filter(x=>(x.t+' '+x.s).toLowerCase().includes(q)).slice(0,65);$('#search-hits').innerHTML=res.length?res.map(x=>'<a class="link" href="'+h(x.u)+'" '+(x.u.startsWith('https:')?'target="_blank" rel="noopener noreferrer"':'')+'><span><strong>'+h(x.t)+'</strong><small>'+h(x.s)+'</small></span><span>→</span></a>').join(''):tiny('Aucun résultat.')};draw();$('#global-search').oninput=draw;
+// Search only live, authorized device-local records. No stale cached index.
+// Provenance is user-declared until an authenticated provider is available.
+function searchResults(scope='',query=''){
+ const allowed=new Map(ctx.projects.map(p=>[p.id,p]));
+ if(scope&&!allowed.has(scope))return [];
+ const rows=[],add=(project,kind,title,metadata,url,searchable='')=>{
+  if(!allowed.has(project)||(scope&&project!==scope)||!String(title||'').trim())return;
+  rows.push({project,kind,title:String(title),metadata:String(metadata),url:String(url),searchable:String(searchable)});
+ };
+ const freshness=value=>{
+  const time=Date.parse(value||'');
+  if(!Number.isFinite(time))return 'date non renseignée · à vérifier';
+  const age=Date.now()-time;
+  return date(value)+(age>90*86400000?' · à revalider':' · date déclarée');
+ };
+ for(const p of ctx.projects)add(p.id,'Projet',p.name,'Fiche de projet · '+(p.status||'état non vérifié'),'#/project/'+encodeURIComponent(p.id)+'/pilot',p.short||'');
+ for(const action of db.actions||[])add(action.project,'Action',action.title,'Action locale · '+(action.status||'état inconnu')+' · '+freshness(action.at||action.due),'#/control/inbox',action.priority||'');
+ for(const mission of db.missions||[])add(mission.project,'Mission',mission.title,'Mission déclarée · '+(mission.provider||'IA non renseignée')+' · '+(mission.status||'statut non vérifié'),'#/control/missions');
+ for(const event of db.events||[])add(event.project,'Événement',event.title,'Calendrier local · '+(event.date||'date non renseignée'),'#/control/calendar');
+ for(const decision of db.decisions||[]){
+  const recorded=decision.updatedAt||decision.at;
+  const metadata='Décision locale · v'+decisionVersion(decision)+' · source déclarée : '+(decision.source||'Saisie manuelle')+' · '+freshness(recorded);
+  add(decision.project,'Décision',decision.title,metadata,'#/control/memory/'+encodeURIComponent(decision.id),decision.details||'');
+ }
+ for(const resource of [...linksPage(),...(db.resources||[])]){
+  if(!safe(resource.url))continue;
+  add(resource.project,'Ressource',resource.label,'Lien HTTPS déclaré · vérifier la source',safe(resource.url));
+ }
+ const fold=t=>String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr-FR').trim();
+ const q=fold(query);
+ return rows.filter(x=>fold(x.title+' '+x.kind+' '+x.metadata+' '+x.searchable+' '+allowed.get(x.project).name).includes(q)).slice(0,65);
+}
+function search(){
+ $('#main').innerHTML=view('Recherche universelle','Résultats locaux par projet avec provenance, date et accès direct',
+ box('Chercher dans CONTROL','<div class="row"><label>Recherche<input id="global-search" type="search" class="field" placeholder="Projet, décision, source, échéance…"></label>'+
+ '<label>Limiter à un projet<select id="search-project" class="field">'+projopts('',true)+'</select></label></div>'+
+ '<p class="muted">Sources déclarées, pas certifiées ; les anciennes décisions et dates peuvent être périmées. Les conversations privées des fournisseurs ne sont pas accessibles.</p>'+
+ '<div id="search-hits" role="status" aria-live="polite"></div>'));
+ const draw=()=>{
+  const scope=$('#search-project').value,q=$('#global-search').value,results=searchResults(scope,q);
+  $('#search-hits').innerHTML=results.length?results.map(x=>
+   '<a class="link" href="'+h(x.url)+'" '+(x.url.startsWith('https:')?'target="_blank" rel="noopener noreferrer"':'')+
+   '><span><strong>'+h(x.title)+'</strong><small>'+h(x.kind)+' · '+h(pname(x.project))+'</small><small>'+h(x.metadata)+'</small></span><span>→</span></a>').join(''):tiny('Aucun résultat actuel dans ce périmètre.');
+ };
+ draw();$('#global-search').oninput=draw;$('#search-project').onchange=draw;
 }
 const SPRINT_IDS=['pack-pro','banque-ia','ucp','iagile','control-ia'];
 const SPRINT_NAMES={'pack-pro':'Business 01 · Procédures Pro','banque-ia':'Business 02 · Banque Outils IA','ucp':'Un Coup de Pouce','iagile':'IAgile','control-ia':'CONTROL IA'};
