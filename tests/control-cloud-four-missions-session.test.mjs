@@ -83,3 +83,27 @@ test('logout while reloading prevents late success notice',async()=>{
  await work;
  assert.deepEqual(h.messages,[]);
 });
+
+test('overlapping clicks cannot create a duplicate four-mission batch',async()=>{
+ const h=harness(),active=h.prepareFourMissions();
+ await assert.rejects(()=>h.prepareFourMissions(),/déjà en cours/);
+ assert.equal(h.writes.length,1);
+ h.pending[0]({data:receipts(),error:null});
+ await active;
+ assert.equal(h.messages.length,1);
+});
+test('repeated receipt ID never confirms four distinct missions',async()=>{
+ const h=harness(),active=h.prepareFourMissions();
+ const returned=receipts();returned[3].id=returned[0].id;
+ h.pending[0]({data:returned,error:null});
+ await assert.rejects(active,/non confirmée/);
+ assert.deepEqual(h.messages,[]);
+ assert.deepEqual(h.refreshes,[]);
+});
+test('failed or incomplete batch releases the in-page gate',async()=>{
+ const h=harness(),active=h.prepareFourMissions();
+ h.pending[0]({data:null,error:{message:'Refus RLS'}});
+ await assert.rejects(active,/non confirmée/);
+ assert.equal(h.prepareFourMissions.inFlight,false);
+ assert.deepEqual(h.messages,[]);
+});
