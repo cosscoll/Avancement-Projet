@@ -1,39 +1,38 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-concurrent-auth-session-20261021084346464",
-    "started_at": "2026-10-21T08:43:46.464Z",
-    "expires_at": "2026-10-21T09:28:46.464Z",
-    "objective": "Corriger la double vérification de session même utilisateur, tester A/B, consigner et publier sur main"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T07:30:02.214Z",
+    "updated_at": "2026-10-21T08:48:40.927Z",
     "main": true,
-    "stage": "owner_filter_published_static_checks_pass_ci_unverified",
+    "stage": "auth_same_owner_races_tested_main_ci_pages_unverified",
     "files": [
       "assets/cloud-app.js",
-      "tests/control-cloud-session-isolation.test.mjs"
+      "tests/control-cloud-session-isolation.test.mjs",
+      "data/sprints/control-ia.json",
+      "docs/CONTROL_IA_RETROSPECTIVES.md"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/commit/681fa87e643683955450e05dbcaaa27e47897ba8",
-      "https://github.com/cosscoll/Avancement-Projet/commit/26fb3333cf6caeeec6701247c44b6ec99b1b6d17"
+      "https://github.com/cosscoll/Avancement-Projet/commit/15401dcd7742012499e335de476f2f9c532ad248",
+      "https://github.com/cosscoll/Avancement-Projet/commit/9c66ff2b4ff7c2c11d83aecac5d669f72702fc0c",
+      "https://github.com/cosscoll/Avancement-Projet/commit/87bac45ebdc2c03467791974ea6cf11a7aa74282"
     ],
     "remaining_blockers": [
-      "CI and Pages status for latest code commit not independently confirmed",
-      "First hourly run after task reactivation not observed",
-      "Cloud disabled pending separately approved real Auth/RLS project"
+      "Current CI and GitHub Pages deploy on latest code commit not externally confirmed",
+      "No approved distinct CONTROL Supabase, real A/B JWT RLS auth or multi-device test",
+      "Task runs at XXh50 but end-to-end autonomous sprint completion requires evidence"
     ],
-    "next_action": "Check GitHub CI/Pages for SHA 26fb3333 and next scheduled task execution; only then mark deployed. Continue CONTROL-ACCOUNT with real approved backend when authorized."
+    "next_action": "At next hourly CONTROL Task, read this checkpoint and latest new commits, verify dedicated CI and Pages on 87bac45 (not older green workflows), then move to next CONTROL-ACCOUNT real deficiency without redoing 8/8 proven race tests; maintain zero-cost and Cloud disabled."
   },
   "last_completed": {
-    "run_id": "control-ia-manual-20261021-owner-filter",
-    "started_at": "2026-10-21T07:28:54Z",
-    "ended_at": "2026-10-21T07:30:02.214Z",
-    "summary": "Owner-scoped project/item Supabase queries + regression harness; 6/6 static checks; GitHub CI/public deployment not yet independently verified.",
-    "stage": "published_pending_ci",
-    "commit_sha": "26fb3333cf6caeeec6701247c44b6ec99b1b6d17"
+    "run_id": "control-ia-20261021-concurrent-auth-session-20261021084346464",
+    "started_at": "2026-10-21T08:43:46.464Z",
+    "ended_at": "2026-10-21T08:48:40.927Z",
+    "summary": "Reproduced two same-owner auth load/cleanup races, fixed both directly in main and tested 8/8 synthetic regressions with JS syntax; full Node CI, Pages and real Supabase unverified.",
+    "stage": "tested_not_real_cloud",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/commit/87bac45ebdc2c03467791974ea6cf11a7aa74282",
+    "commit_sha": "87bac45ebdc2c03467791974ea6cf11a7aa74282"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
