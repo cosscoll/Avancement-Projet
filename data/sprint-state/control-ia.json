@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "control-ia-20261021-imp02-project-search-20261021111300000",
+    "started_at": "2026-10-21T11:13:00.000Z",
+    "expires_at": "2026-10-21T11:58:00.000Z",
+    "objective": "IMP-02 project-scoped local universal search: live source provenance/version/date, removed-data exclusion, exact decision navigation and regression/browser validation; direct main no Cloud costs"
+  },
   "checkpoint": {
     "updated_at": "2026-10-21T11:08:01.210Z",
     "main": true,
