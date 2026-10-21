@@ -6,8 +6,8 @@ const source=readFileSync(new URL('../assets/cloud-app.js',import.meta.url),'utf
 const helper=source.slice(source.indexOf('function mutationSession(){'),source.indexOf('async function audit('));
 const oldImport=source.slice(source.indexOf('async function importLegacy(){'),source.indexOf('async function action(button){'));
 const exportCode=source.slice(source.indexOf('async function completeCloudExport('),source.indexOf('async function importLegacy(){'));
-const maskedPasswordCode=source.slice(source.indexOf('function askBackupPassword(){'),source.indexOf('async function completeCloudExport('));
-assert.ok(maskedPasswordCode.startsWith('function askBackupPassword(){'));
+const maskedPasswordCode=source.slice(source.indexOf("function askBackupPassword(mode='encrypt'){"),source.indexOf('async function completeCloudExport('));
+assert.ok(maskedPasswordCode.startsWith("function askBackupPassword(mode='encrypt'){"));
 assert.match(maskedPasswordCode,/type="password"/);
 assert.doesNotMatch(maskedPasswordCode,/\bprompt\s*\(/);
 const logoutStart=source.indexOf("  case 'logout':{");
