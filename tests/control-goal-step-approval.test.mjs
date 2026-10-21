@@ -76,7 +76,7 @@ test('no references to other projects are inserted into the plan step action',()
 test('the actual UI requires consent, renders risk and after-state, and prevents duplicate approval',()=>{
  const ui=src.slice(src.indexOf('function goals(){'),src.indexOf('function searchResults(',src.indexOf('function goals(){')));
  assert.match(ui,/data-goal-step/);assert.match(ui,/goal-action-confirm/);
- assert.match(ui,/IMP-05/);assert.match(ui,/reviewAction\(/);
+ assert.match(ui,/consentement explicite/);assert.match(ui,/reviewAction\(/);
  assert.match(ui,/name="consent" required/);assert.match(ui,/data-goal-after/);
  assert.match(ui,/operatorExecute\(action\)/);assert.match(ui,/operatorReceipt\(\)/);
  assert.match(ui,/some\(x=>x\.approval_id===action\.approvalId\)/);
