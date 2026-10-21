@@ -21,7 +21,7 @@ const deadline=(fn,max=18000,step=180)=>async()=>{
 // Detect stale GitHub Pages before claiming that a browser tested this commit.
 // The fresh public HTML/data/JS must match the checked-out source bytes.
 const PUBLIC_ORIGIN='https://cosscoll.github.io/Avancement-Projet/';
-const PUBLIC_ASSETS=['service-worker.js','index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','data/control-ia-delivery.json','data/control-ia-requirements.json'];
+const PUBLIC_ASSETS=['service-worker.js','index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','assets/navigation-hub.js','assets/navigation-hub.css','data/control-ia-delivery.json','data/control-ia-requirements.json'];
 const hash=data=>createHash('sha256').update(data).digest('hex');
 async function verifyPublishedFiles(){
  const expected=new Map(PUBLIC_ASSETS.map(path=>[path,hash(readFileSync(resolve(root,path)))]));
@@ -372,6 +372,23 @@ try{
  const narrow=await js("({viewport:window.innerWidth,scroll:document.documentElement.scrollWidth})");
  assert.ok(narrow.scroll<=narrow.viewport+4,'320px mobile horizontal overflow detected: '+JSON.stringify(narrow));
  log('very narrow 320px viewport avoids horizontal scroll');
+ // The new universal finder must be operable with touch-sized controls,
+ // and project-independent keywords must lead directly to a real destination.
+ const beforeFinderHash=await js("location.hash");
+ await js("document.querySelector('.control-nav-mobile-trigger[data-control-nav-open]').click()");
+ await ready(()=>js("document.querySelector('.control-finder')?.hidden===false"),8000)();
+ assert.equal(await js("document.querySelector('.control-finder-search input')?.matches(':focus')"),true);
+ await js("(()=>{const input=document.querySelector('.control-finder-search input');input.value='visio';input.dispatchEvent(new Event('input',{bubbles:true}))})()");
+ await ready(()=>js("!!document.querySelector('[data-finder-id=meetings]')"),8000)();
+ assert.equal(await js("document.querySelector('[data-finder-id=meetings]')?.textContent?.includes('Visio')"),true);
+ const finderSize=await js("({viewport:innerWidth,scroll:document.documentElement.scrollWidth,panel:Math.ceil(document.querySelector('.control-finder-panel').getBoundingClientRect().width)})");
+ assert.ok(finderSize.scroll<=finderSize.viewport+4&&finderSize.panel<=finderSize.viewport+1,'Finder must not overflow narrow viewport: '+JSON.stringify(finderSize));
+ await js("document.querySelector('[data-finder-id=meetings]').click()");
+ await ready(()=>js("location.hash==='#/control/meetings'"),8000)();
+ assert.equal(await js("document.querySelector('.control-finder').hidden"),true);
+ await js("location.hash="+JSON.stringify(beforeFinderHash));
+ await ready(()=>js("!!document.querySelector('.control-delivery-focus')"),8000)();
+ log('320px finder finds visio by intent and opens its destination without mobile overflow');
 
  // Only the public HTTPS application registers the service worker.
  if(production){
@@ -385,7 +402,7 @@ try{
   await ready(()=>js("Boolean(navigator.serviceWorker.controller)"),14000)();
   const cacheNames=await js("(async()=>await caches.keys())()");
   assert.ok(Array.isArray(cacheNames)&&cacheNames.some(name=>name.startsWith('control-shell-')),'Public PWA must cache the application shell');
-  assert.ok(cacheNames.includes('control-shell-v40')&&cacheNames.includes('control-public-data-v40'),'PWA must have installed the verified v40 caches');
+  assert.ok(cacheNames.includes('control-shell-v41')&&cacheNames.includes('control-public-data-v41'),'PWA must have installed the verified v41 caches');
   log('public PWA service worker activated and offline shell cache created');
   await command('Network.enable');
   try{
