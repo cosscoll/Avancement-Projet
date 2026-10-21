@@ -49,3 +49,18 @@ Les **46 vérifications ont été exécutées avec succès dans un environnement
 **Contrôle Supabase réel en lecture seule pendant la même session :** projet `ACTIVE_HEALTHY`, six tables CONTROL avec RLS actif, 22 policies centrées sur le propriétaire, 0 alerte du conseiller de sécurité, 0 utilisateur Auth et 0 ligne métier. Les comptes publics restent désactivés dans `config/cloud.json`.
 
 **Étape non franchie :** tests avec deux authentifications Auth réelles et des JWT distincts, parcours navigateur connecté, reprise sur deux appareils et désactivation/révocation de sessions. Aucune clé, compte ou secret ne doit être ajouté dans les fichiers publics pour franchir ce verrou.
+
+
+## Sécurisation avant ouverture des comptes — second sprint du 21/10/2026
+
+Le client `assets/cloud-app.js` impose maintenant explicitement `rvrmjjtdedidjnrkdery` dans `safeClientConfig`. Une configuration fabriquée avec une URL IAgile ou un autre projet Supabase et une référence correspondante est refusée **avant** la création du client Auth. Cela ne suffit pas pour activer le service : `config/cloud.json.enabled` reste `false`, la clé publiable de production n'est pas dans le dépôt, et aucun JWT réel A/B n'a été testé.
+
+Avant toute activation, la recette manuelle doit valider séparément :
+1. Identités Auth réelles A/B et isolation PostgREST/RLS des six tables, sans clé privilégiée et avec nettoyage ;
+2. Connexion / déconnexion / session révoquée / transition A→B sur navigateur et deux appareils ;
+3. Export complet des six tables personnelles : `control_profiles` (propriétaire `user_id`), `control_projects`, `control_items`, `control_preferences`, `control_connections`, `control_audit_events`. Le client parcourt les collections par pages de 400, refuse propriétaires et identifiants incohérents, et n'émet pas de fichier partiel lorsqu'une vérification échoue ;
+4. Suppression du compte réelle et propagation, avec attestation serveur autorisée et contrôle de déconnexion locale.
+
+**Limites :** la pagination n'est pas une sauvegarde transactionnelle contre les écritures concomitantes sur différents appareils ; 50 000 lignes maximum par collection, au-delà le code refuse de produire un fichier. Les gardes des créations de missions et des imports empêchent des doublons dans un onglet, **pas** entre onglets/appareils. Une idempotence serveur et une recette Auth authentique restent indispensables.
+
+**Preuves de développement :** tests V8 simulés sur le code versionné, disponibles dans les suites `control-cloud-*.test.mjs` et exécutés avec les bancs de tests actuels ; **ne pas** les présenter comme un run CI Node complet ou comme une certification E2E Auth/JWT.
