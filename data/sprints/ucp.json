@@ -4314,5 +4314,97 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
       }
     ]
+  },
+  {
+    "schema_version": 3,
+    "id": "ucp-20261021T123012Z-v3",
+    "started_at": "2026-10-21T12:30:12Z",
+    "ended_at": "2026-10-21T12:32:53.396Z",
+    "objectives": [
+      {
+        "before": "URL.createObjectURL est lu deux fois, permettant à un getter instable de refuser l’appel après avoir passé le contrôle.",
+        "after": "La fonction createObjectURL est lue une seule fois sous protection puis appelée avec URL comme receveur.",
+        "acceptance": "Un getter refusant une seconde lecture permet le téléchargement avec un seul accès, le receveur URL est vérifié ; deux CI vertes puis fusion sur main hors application/**."
+      }
+    ],
+    "summary": "PR #27 fusionnée sur main d33d4baf : createObjectURL est stabilisé avec une seule lecture et le bon receveur ; deux CI vertes, aucune recette navigateur, site public ou staging.",
+    "done": [
+      "Directives #1 et #2 relues : connexion Codex lue mais bloquée par les interdictions permanentes.",
+      "Protocoles V3/V2, dernier journal, incident, PR, branches et main inspectés avant mutation.",
+      "Verrou coopératif V3 acquis par SHA, relu et propriétaire vérifié avant mutation.",
+      "URL.createObjectURL lu une seule fois sous protection puis appelé avec URL comme receveur.",
+      "Régression d’un getter refusant la seconde lecture ajoutée ; Vitrine CI 39600300121 réussie.",
+      "Autocritique P2 : le receveur URL restait implicite ; assertion corrective ajoutée.",
+      "Vitrine CI corrective 39600384952 réussie.",
+      "PR #27 fusionnée sur main d33d4baff81f62fd15ac4bacecb7cfb9c2661a87 ; diff vérifié limité à deux fichiers site-vitrine/** et application/** intact."
+    ],
+    "deliverables": [
+      {
+        "name": "Création d’URL objet stabilisée",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "d33d4baff81f62fd15ac4bacecb7cfb9c2661a87",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/d33d4baff81f62fd15ac4bacecb7cfb9c2661a87",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "quality": {
+      "checks_run": [
+        "Vitrine CI première passe #39600300121",
+        "Vitrine CI corrective #39600384952",
+        "Vérification du commit fusionné et de son diff sur main"
+      ],
+      "checks_passed": [
+        "Structure statique",
+        "Syntaxe JavaScript",
+        "Tests Node de la vitrine",
+        "Reconstruction déterministe build/dist",
+        "Getter createObjectURL lu une seule fois",
+        "Receveur URL conservé",
+        "Diff limité à site-vitrine/**",
+        "Commit présent sur main"
+      ],
+      "checks_failed": [],
+      "real_browser_verified": false,
+      "ci": "success"
+    },
+    "blockers": [
+      "Aucun navigateur, appareil réel, site public ou staging autorisé n’a été vérifié.",
+      "Le clone Windows dev/ucp-codex reste volontairement non lu et non synchronisé.",
+      "Les consignes publiques #1 et #2 demandant Codex restent bloquées par les interdictions permanentes."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "ucp-public-site-unverified",
+        "status": "open",
+        "consecutive_sprints": 26,
+        "next_action": "Effectuer une recette navigateur réelle à 320/360/390/768 px sur un staging explicitement autorisé ; sinon poursuivre un bug indépendant hors application/**."
+      }
+    ],
+    "next": "Tester un autre défaut réel et indépendant hors application/**, ou effectuer la recette WebView/navigateur sur staging autorisé.",
+    "links": [
+      {
+        "label": "PR #27",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/27"
+      },
+      {
+        "label": "Commit main",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/d33d4baff81f62fd15ac4bacecb7cfb9c2661a87"
+      },
+      {
+        "label": "CI initiale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39600300121"
+      },
+      {
+        "label": "CI corrective",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39600384952"
+      },
+      {
+        "label": "Statut UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      }
+    ]
   }
 ]
