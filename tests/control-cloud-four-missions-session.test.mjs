@@ -17,7 +17,7 @@ function harness(config={}){
  const writes=[],pending=[],messages=[],refreshes=[],prompts=['Project A','Build a private report'];
  const prompt=()=>{const s=prompts.shift();if(config.logoutOnFirstPrompt&&prompts.length===1){authUser=null;epoch++}return s};
  const message=text=>messages.push({owner:authUser?.id,text});
- const reload=async()=>{refreshes.push(authUser?.id);if(config.delayReload)await new Promise(resolve=>pendingRefresh.push(resolve))};
+ const reload=async()=>{if(config.failedReload)return false;refreshes.push(authUser?.id);if(config.delayReload)await new Promise(resolve=>pendingRefresh.push(resolve))};
  const pendingRefresh=[];
  const client={from(table){
   if(table!=='control_items')throw Error('Unexpected table '+table);
@@ -106,4 +106,14 @@ test('failed or incomplete batch releases the in-page gate',async()=>{
  await assert.rejects(active,/non confirmée/);
  assert.equal(h.prepareFourMissions.inFlight,false);
  assert.deepEqual(h.messages,[]);
+});
+
+
+test('four missions confirmed by PostgREST cannot announce success if workspace refresh fails',async()=>{
+ const h=harness({failedReload:true}),work=h.prepareFourMissions();
+ h.pending[0]({data:receipts(),error:null});
+ await assert.rejects(work,/synchronisation non vérifiée/);
+ assert.equal(h.messages.length,0);
+ assert.equal(h.refreshes.length,0);
+ assert.equal(h.prepareFourMissions.inFlight,false);
 });
