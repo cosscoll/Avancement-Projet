@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "control-ia-20261021-imp01-local-goal-plan-20261021112100000",
+    "started_at": "2026-10-21T11:21:00.000Z",
+    "expires_at": "2026-10-21T12:06:00.000Z",
+    "objective": "IMP-01 deterministic editable evidence-scoped goal plan preview, explicit local save with receipt and deduplication, direct main CI and public browser"
+  },
   "checkpoint": {
     "updated_at": "2026-10-21T11:22:11.134Z",
     "main": true,
