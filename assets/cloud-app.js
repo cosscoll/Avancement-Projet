@@ -624,6 +624,17 @@ async function completeCloudExport(session){
  if(!session.current())return null;
  if(pref.error||(pref.data&&pref.data.owner_id!==session.owner))
   throw Error('Export incomplet : préférences du compte non vérifiées.');
+ // A late write on a second device may invalidate an earlier page count.
+ // A second read catches collection-size drift before creating any file;
+ // this is not a transactionally consistent backend snapshot.
+ for(const [table,length] of [['control_projects',projects.length],['control_items',items.length],
+  ['control_connections',connections.length],['control_audit_events',auditEvents.length]]){
+  if(!session.current())return null;
+  const check=await client.from(table).select('id',{count:'exact',head:true}).eq('owner_id',session.owner);
+  if(!session.current())return null;
+  if(check.error||!Number.isSafeInteger(check.count)||check.count!==length)
+   throw Error('Export interrompu : données modifiées pendant la sauvegarde ('+table+'). Aucun fichier partiel produit.');
+ }
  return {schema:'control-cloud-export-v1',exportedAt:new Date().toISOString(),accountId:session.owner,profile:profile.data||null,projects,items,preferences:pref.data||null,connections,auditEvents};
 }
 async function exportMyData(encrypted){
