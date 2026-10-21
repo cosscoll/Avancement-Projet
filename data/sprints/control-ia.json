@@ -1121,5 +1121,96 @@
       "Registry test passing does not mean all business criteria are fulfilled."
     ],
     "next": "After releasing sprint, prioritize real bug reproduced in Cloud account signout/delete asynchronous continuation: old A signout Promise completion can wipe active B session; fix via owner/epoch guard and regression tests without enabling Cloud; publish to main and verify."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-auth-signout-race-20261021102617728",
+    "started_at": "2026-10-21T10:26:17.728Z",
+    "ended_at": "2026-10-21T10:29:54.724Z",
+    "summary": "CONTROL-ACCOUNT: reproduced delayed auth.signOut for old A wiping new B or new A session; guarded logout and delete-account UI teardown by initiating owner and epoch, and checked local signout failure after server deletion. Added eight permanent regression tests. Cloud CI 97/97, frontend 255/255, Pages and postdeploy browser all green on code SHA 0edd1da2aa561dce7d0352269a1d94f05211bc9c.",
+    "objectives": [
+      {
+        "before": "After old account A clicked logout or backend confirmed delete-account, awaiting client.auth.signOut could resolve after new B login and old handler blindly cleared authUser/cache, showing B false completion.",
+        "after": "Mutation session captured in logout and deletion paths; before/after signOut checks prevent obsolete handlers from wiping replacement user UI; nonconfirmed local signout cannot be described as complete.",
+        "acceptance": "8 regression tests cover account switch, same-user relogin, SDK SIGNED_OUT event, normal logout and signout error; 19/19 lifecycle tests in Node; GitHub CI 97/97 dedicated + 255/255 general; Pages and Chromium same SHA."
+      }
+    ],
+    "done": [
+      "Acquired CONTROL-only cooperative sprint lease and read GitHub main with blob SHA.",
+      "Red reproduction in isolated V8 of logout and delete-account clearing B after delayed signOut response.",
+      "Published direct main fix 372141b2c25904be02402c1016b381e762fedd1b.",
+      "Extended tests/control-cloud-account-lifecycle.test.mjs to 19 cases, including delayed signout races, SDK event order and failure; published 0edd1da2aa561dce7d0352269a1d94f05211bc9c.",
+      "GitHub Actions Cloud config 39584799187 success 97/97; general frontend 39584799394 success 255/255.",
+      "Pages build and deploy success run 39584798321, public postdeploy Chromium success run 39584868792 at exact SHA 0edd1da2.",
+      "No cloud provider instance, real deletion, charges, real user JWT or RLS exercises performed."
+    ],
+    "blockers": [
+      "Supabase Cloud for CONTROL remains disabled and no independent zero-cost owner-approved deployment or A/B RLS test exists.",
+      "Supabase SDK SIGNED_OUT auth callback remains an independent asynchronous auth state listener requiring its own scrutiny; mocked handler isn't a real SDK authorization test.",
+      "Server-side signout already requested can have SDK effects despite avoiding stale UI teardown in our own callback."
+    ],
+    "quality": {
+      "ci": "success",
+      "checks_run": [
+        "Red mock reproduction for delayed signOut in logout and delete flows",
+        "19 lifecycle Node tests on actual production branch snippets",
+        "Cloud CI 97/97",
+        "General CI 255/255",
+        "Pages and postdeploy Chromium"
+      ],
+      "checks_passed": [
+        "8 new regression cases",
+        "Cloud CI successful exact SHA",
+        "General frontend CI successful exact SHA",
+        "Pages & public browser successful exact SHA"
+      ],
+      "checks_failed": [
+        "Before fix stale A signout completion reset B's UI and cache; fixed on client."
+      ],
+      "limitations": [
+        "Synthetic auth stubs and browser smoke, not true multiuser Auth/RLS, physical Android or iOS.",
+        "In-flight SDK signOut can affect provider session before application continuation guard runs."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Account-owned logout and account deletion local signout handling",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/372141b2c25904be02402c1016b381e762fedd1b",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T10:29:09Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584868792"
+      },
+      {
+        "name": "19-case account lifecycle regression test suite",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/0edd1da2aa561dce7d0352269a1d94f05211bc9c"
+      }
+    ],
+    "links": [
+      {
+        "label": "Cloud 97 tests green",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584799187"
+      },
+      {
+        "label": "Frontend 255 tests green",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584799394"
+      },
+      {
+        "label": "Pages deploy green",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584798321"
+      },
+      {
+        "label": "Public Chromium green",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584868792"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "Existing signOut promise may cause SIGNED_OUT before promise resolution; guard intentionally prevents duplicate UI teardown and false user-specific messaging.",
+      "B's actual Supabase SDK authentication state is beyond what client-only mock can guarantee. Future authenticated end-to-end tests are mandatory.",
+      "Need review onAuthStateChange callback itself for out-of-order SIGNED_OUT/SIGNED_IN events without violating fail-closed defaults."
+    ],
+    "next": "Audit auth.onAuthStateChange listener and protected event sequencing for stale SIGNED_OUT; maintain fail-closed state and never activate real Cloud before approved independent 0 € backend and A/B RLS evidence."
   }
 ]
