@@ -1,17 +1,12 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-evidence-contract-repair-1623",
-    "started_at": "2026-10-21T16:23:00Z",
-    "expires_at": "2026-10-21T16:38:00Z",
-    "objective": "repair sprint-report deliverable stage contract and verify native CI on final main after documentation and checkpoint"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T16:22:30Z",
+    "updated_at": "2026-10-21T16:25:30Z",
     "main": true,
-    "stage": "control_account_native_423_green_pages_chromium_success_real_JWT_unverified",
+    "stage": "control_account_native_423_green_pages_chromium_success_report_contract_repaired",
     "files": [
       "assets/cloud-app.js",
       "data/control-ia-strategy.json",
@@ -28,25 +23,27 @@
       "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633670965",
       "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633669229",
       "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633745069",
-      "https://github.com/cosscoll/Avancement-Projet/commit/d4e9a45e63d56aa59c5b5b47947b61ddc2731519"
+      "https://github.com/cosscoll/Avancement-Projet/commit/d4e9a45e63d56aa59c5b5b47947b61ddc2731519",
+      "https://github.com/cosscoll/Avancement-Projet/commit/a3743c381db053e97d7e5e30a5c42604d7c7e987",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39634389157"
     ],
     "remaining_blockers": [
       "Real 2-user Supabase Auth JWT and PostgREST RLS acceptance requires authorized test credentials and GitHub Secrets; there are currently no owner-approved test JWT accounts for this session.",
       "Cloud sign-in public deliberately remains disabled; browser Chromium validated public Pages but not actual authenticated private account or cross-device mobile device.",
       "Server-side transactional idempotency for mission/import cross-tab duplication not implemented.",
       "Full export is owner verified and paginated but without a transactionally consistent server snapshot across simultaneous device writes.",
-      "Native CI evidence green on code SHA d4e9a45; documentation/report/lock final head revalidation required if claiming full-head green."
+      "Code SHA d4e9a45: 423/423 native tests and Pages Chromium passed. Current docs-only head requires check of its GitHub Actions run after final checkpoint commit."
     ],
     "next_action": "Check newest head CI and Pages after checkpoint. Keep Cloud disabled until owner-approved two dedicated CONTROL Auth test users + protected GitHub Actions credentials and live A/B JWT/PostgREST RLS E2E tests. Then verify physical mobile and backend idempotency. Do not touch IAgile database or spend money."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-native-ci-auth-export-1610",
-    "started_at": "2026-10-21T16:10:00Z",
-    "ended_at": "2026-10-21T16:22:30Z",
-    "summary": "Repaired native CI schema failure; strengthened Cloud mutation reload truthfulness and AI/visio receipt isolation; code commit d4e9a45 actual native Node 423/423, Cloud gate success, GitHub Pages success and deployed Chromium success. Real Auth A/B and physical devices not tested, Cloud disabled.",
-    "stage": "code_main_native_ci_423_green_browser_pages_validated",
-    "commit_sha": "d4e9a45e63d56aa59c5b5b47947b61ddc2731519",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633670993"
+    "run_id": "control-ia-20261021-evidence-contract-repair-1623",
+    "started_at": "2026-10-21T16:23:00Z",
+    "ended_at": "2026-10-21T16:25:30Z",
+    "summary": "Corrected sprint log to the supported verified_online stage with valid public Chromium evidence link after native CI found invalid deliverable stage. Sprint-contract run 39634389157 and quality run 39634389138 success for repair commit a3743c; Cloud intentionally disabled.",
+    "stage": "report_contract_repaired_ci_success",
+    "commit_sha": "a3743c381db053e97d7e5e30a5c42604d7c7e987",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39634389157"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
