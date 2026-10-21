@@ -1,53 +1,47 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-classic-account-135047",
-    "started_at": "2026-10-21T13:50:47.000Z",
-    "expires_at": "2026-10-21T14:35:47.000Z",
-    "objective": "CONTROL-ACCOUNT: audit E2E Auth readiness and harden safe session/data isolation tests without enabling Cloud"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T13:37:20.033Z",
+    "updated_at": "2026-10-21T14:15:40Z",
     "main": true,
-    "stage": "control_cloud_6rls_live_sql_ok_real_jwt_e2e_ready_not_run_363_tests_public_progress",
+    "stage": "control_account_client_isolation_and_auth_e2e_mock_46_checks_main_ci_not_verified",
     "files": [
       "tests/control-cloud-real-auth-e2e.mjs",
+      "tests/control-cloud-real-auth-simulated.test.mjs",
       "tests/control-cloud-real-auth-e2e.test.mjs",
       "tests/control-cloud-readiness.test.mjs",
-      ".github/workflows/control-cloud-real-auth.yml",
+      "tests/control-cloud-session-isolation.test.mjs",
+      "tests/control-cloud-four-missions-session.test.mjs",
+      "assets/cloud-app.js",
       ".github/workflows/control-cloud-config.yml",
+      ".github/workflows/control-cloud-real-auth.yml",
       "docs/CONTROL_CLOUD_AUTH_E2E_GUIDE.md",
-      "docs/CONTROL_CLOUD_BOOTSTRAP_20261021.md",
-      "app.html",
-      "index.html",
-      "tests/control-ia-browser-smoke.mjs",
-      "data/sprints/control-ia.json",
-      "docs/CONTROL_IA_RETROSPECTIVES.md"
+      "docs/CONTROL_IA_RETROSPECTIVES.md",
+      "data/sprints/control-ia.json"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39608934073",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39609004604",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39609003181",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39609069781"
+      "https://github.com/cosscoll/Avancement-Projet/commit/f857f8c7ee80f00efc994b1df1de57765f55110a",
+      "https://github.com/cosscoll/Avancement-Projet/commit/4b0523c821bb569ce7350b0205ddc12edd3eb1d8",
+      "https://github.com/cosscoll/Avancement-Projet/commit/347177c68ce4d9104fe80345ddf8fd1a211d761f",
+      "https://github.com/cosscoll/Avancement-Projet/commit/fecad30c035c05265506a27068045a13d4b8fde1"
     ],
     "remaining_blockers": [
-      "Real CONTROL Cloud project rvrmjjtdedidjnrkdery exists, free organization, RLS six tables all pass SQL owner isolation and anon negative; 0 Auth real users and 0 persisted rows; cannot certify real JWT/PGRST without 2 actual test users.",
-      "Real E2E runner added and manually triggered workflow ready. Requires two dedicated fresh Auth users, publishable key and their real JWTs or passwords placed ONLY in GitHub Secrets; never ask for passwords in chat or embed in code.",
-      "config/cloud.json enabled:false and public login/sign-up hidden deliberately until successful real user Auth+JWT/RLS and mobile session tests.",
-      "Cloud project setup page now truthfully says DB ready but real accounts under verification; no actual cross-device sync or live provider agents."
+      "Actual two-user Supabase Auth JWT/PostgREST live E2E has not been performed: no owner-approved test accounts/JWTs.",
+      "GitHub Actions native Node and GitHub Pages proof for this sprint's final SHA could not be retrieved; V8 synthetic tests are not a substitute.",
+      "Public CONTROL Cloud login remains deliberately disabled in config/cloud.json and mobile cross-device flows are not validated."
     ],
-    "next_action": "CONTROL-ACCOUNT: with owner-provisioned two dedicated genuine Supabase Auth test users in CONTROL Cloud, use protected GitHub Actions workflow 'CONTROL Cloud — Vrais JWT A/B (déclenchement manuel)' to execute live JWT/PostgREST A/B, ensure cleanup green; investigate any 4xx/redirect issues without enabling Cloud first. Then mobile Auth session & invite-only login, only after full evidence. No other project DB, no fees; direct main under 45-minute lease and same-SHA publication."
+    "next_action": "CONTROL-ACCOUNT: verify native GitHub Actions and latest Pages SHA; only with two dedicated owner-approved test Auth users and secrets stored in secure GitHub Actions environment, run manual live two-JWT PostgREST A/B tests and confirm mandatory cleanup; keep free tier, do not enable Cloud or modify IAgile."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-real-auth-readiness-20261021131208608",
-    "started_at": "2026-10-21T13:12:08.608Z",
-    "ended_at": "2026-10-21T13:37:20.033Z",
-    "summary": "CONTROL Cloud real database A/B SQL protections proven on all 6 RLS tables and rollback leaves 0 users/rows. Manual real Auth/JWT/PostgREST E2E test runner + GitHub Actions secret-only workflow ready but genuine Auth accounts not available. Read-only progress page published with Cloud signup off; 16 new guard tests, Node 363/363, Pages + public Chromium same code SHA babc5a2a green.",
-    "stage": "verified_online_auth_readiness_not_real_jwt",
-    "commit_sha": "babc5a2a75981cebe80d04dfb624fd68d509eb30",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39609069781"
+    "run_id": "control-ia-20261021-classic-account-135047",
+    "started_at": "2026-10-21T13:50:47Z",
+    "ended_at": "2026-10-21T14:15:40Z",
+    "summary": "Direct main ACCOUNT fail-closed client and E2E negative-write improvements; 46 adapted V8 mock/static tests pass, read-only live Supabase healthy and 6 RLS owner tables confirmed. Native CI/live pages and real JWT remain not verified.",
+    "stage": "main_code_v8_tested_ci_unverified",
+    "commit_sha": "fecad30c035c05265506a27068045a13d4b8fde1",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/commit/fecad30c035c05265506a27068045a13d4b8fde1"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
@@ -144,5 +138,14 @@
     "objective": "IMP-01: permettre de préparer une action locale par étape avec approbation explicite et sans exécution automatique",
     "recovered_at": "2026-10-21T12:40:32.740Z",
     "evidence": "No CONTROL code commits after old lease acquisition (30ae5d78), last main changes UCP-only. Source and checkpoint preserved."
+  },
+  "last_completed_before_classic_account_hardening": {
+    "run_id": "control-ia-20261021-real-auth-readiness-20261021131208608",
+    "started_at": "2026-10-21T13:12:08.608Z",
+    "ended_at": "2026-10-21T13:37:20.033Z",
+    "summary": "CONTROL Cloud real database A/B SQL protections proven on all 6 RLS tables and rollback leaves 0 users/rows. Manual real Auth/JWT/PostgREST E2E test runner + GitHub Actions secret-only workflow ready but genuine Auth accounts not available. Read-only progress page published with Cloud signup off; 16 new guard tests, Node 363/363, Pages + public Chromium same code SHA babc5a2a green.",
+    "stage": "verified_online_auth_readiness_not_real_jwt",
+    "commit_sha": "babc5a2a75981cebe80d04dfb624fd68d509eb30",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39609069781"
   }
 }
