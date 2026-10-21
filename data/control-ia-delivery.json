@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "reviewed_on": "2026-10-19",
+  "reviewed_on": "2026-10-21",
   "title": "CONTROL IA — Pilotage des livraisons fonctionnelles",
   "purpose": "Transformer les capacités partielles en parcours opérationnels, sans confondre code, CI, publication et recette.",
   "focus_id": "CONTROL-ACCOUNT",
@@ -45,10 +45,7 @@
       ],
       "source_tickets": [
         "BACK-004",
-        "BACK-005",
-        "BACK-023",
-        "BACK-025",
-        "BACK-039"
+        "BACK-005"
       ],
       "acceptance": [
         {
@@ -81,7 +78,12 @@
         "ci_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39233284788",
         "deployment_url": null,
         "journey_url": null
-      }
+      },
+      "legacy_unmapped_ticket_refs": [
+        "BACK-023",
+        "BACK-025",
+        "BACK-039"
+      ]
     },
     {
       "id": "CONTROL-ACTIONS",
@@ -206,10 +208,7 @@
       "source_tickets": [
         "BACK-012",
         "BACK-013",
-        "BACK-014",
-        "BACK-024",
-        "BACK-035",
-        "BACK-036"
+        "BACK-014"
       ],
       "acceptance": [
         {
@@ -242,7 +241,12 @@
         "ci_url": null,
         "deployment_url": null,
         "journey_url": null
-      }
+      },
+      "legacy_unmapped_ticket_refs": [
+        "BACK-024",
+        "BACK-035",
+        "BACK-036"
+      ]
     },
     {
       "id": "CONTROL-CALENDAR",
@@ -256,15 +260,7 @@
         "Aucune intégration Google/Microsoft authentifiée.",
         "Gestion d'horaires inter-fuseaux, récurrences et anti-conflits non validée."
       ],
-      "source_tickets": [
-        "BACK-026",
-        "BACK-027",
-        "BACK-028",
-        "BACK-029",
-        "BACK-030",
-        "BACK-037",
-        "BACK-042"
-      ],
+      "source_tickets": [],
       "acceptance": [
         {
           "id": "CAL-01",
@@ -298,7 +294,16 @@
         "ci_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39216159627",
         "deployment_url": "https://cosscoll.github.io/Avancement-Projet/#/control/localai",
         "journey_url": null
-      }
+      },
+      "legacy_unmapped_ticket_refs": [
+        "BACK-026",
+        "BACK-027",
+        "BACK-028",
+        "BACK-029",
+        "BACK-030",
+        "BACK-037",
+        "BACK-042"
+      ]
     },
     {
       "id": "CONTROL-REMINDERS",
@@ -314,12 +319,7 @@
       "blockers": [
         "Serveur, stockage persistant et permissions push non disponibles."
       ],
-      "source_tickets": [
-        "BACK-031",
-        "BACK-032",
-        "BACK-033",
-        "BACK-034"
-      ],
+      "source_tickets": [],
       "acceptance": [
         {
           "id": "REM-01",
@@ -351,7 +351,13 @@
         "ci_url": null,
         "deployment_url": null,
         "journey_url": null
-      }
+      },
+      "legacy_unmapped_ticket_refs": [
+        "BACK-031",
+        "BACK-032",
+        "BACK-033",
+        "BACK-034"
+      ]
     },
     {
       "id": "CONTROL-AGENTS",
@@ -475,9 +481,7 @@
       "source_tickets": [
         "BACK-020",
         "BACK-021",
-        "BACK-022",
-        "BACK-040",
-        "BACK-041"
+        "BACK-022"
       ],
       "acceptance": [
         {
@@ -513,7 +517,17 @@
         "ci_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39228575535",
         "deployment_url": null,
         "journey_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39228575645"
-      }
+      },
+      "legacy_unmapped_ticket_refs": [
+        "BACK-040",
+        "BACK-041"
+      ]
     }
-  ]
+  ],
+  "reference_reconciliation": {
+    "status": "historical_labels_unmapped",
+    "reviewed_on": "2026-10-21",
+    "note": "source_tickets contains only documented BACK-001..BACK-022. Legacy labels above BACK-022 are preserved per capability in legacy_unmapped_ticket_refs for audit only; they are not created development tickets or completed criteria.",
+    "unmapped_count": 19
+  }
 }
