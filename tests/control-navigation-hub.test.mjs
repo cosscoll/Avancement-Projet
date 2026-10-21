@@ -100,7 +100,7 @@ test('both app shells include finder JS, CSS, a visible search control and mobil
 });
 test('mobile keeps exactly four primary destinations but adds an optional finder',()=>{
  assert.equal((index.match(/data-go="(?:home|inbox|manager|tools)"/g)||[]).length,4);
- assert.equal((cloud.match(/data-page="(?:projects|inbox|manager|tools)"/g)||[]).length,4);
+ const bottom=cloud.match(/<nav id="bottomnav"[\s\S]*?<\/nav>/)?.[0]||'';assert.equal((bottom.match(/data-page="(?:projects|inbox|manager|tools)"/g)||[]).length,4);
  assert.match(file('assets/navigation-hub.css'),/position:fixed/);
  assert.match(file('assets/navigation-hub.css'),/max-height:91dvh/);
 });
