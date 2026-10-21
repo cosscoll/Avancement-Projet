@@ -52,7 +52,10 @@ function mount(root,adapter={}){
    const data=snapshot(),answer=window.CONTROL_OPERATOR_CORE.interpret(question,data,scope());
    show(answer.text,answer.links);
    if(answer.kind!=='draft')return;
-   pending=answer.action;preparedScope=scope();const project=data.projects.find(p=>p.id===pending.projectId);
+   // Each explicit proposal gets one stable local idempotency key (not a login credential).
+   const random=window.crypto?.randomUUID?.()?.replace(/-/g,'')||
+    (Date.now().toString(36)+Math.random().toString(36).slice(2).padEnd(12,'0'));
+   pending={...answer.action,approvalId:'local-'+random};preparedScope=scope();const project=data.projects.find(p=>p.id===pending.projectId);
    if(!project)throw Error('Projet introuvable.');
    preparedProjectName=project.name;draft.hidden=false;$('[data-op-project]').textContent=project.name;$('[data-op-description]').textContent=answer.text;
    $('[data-op-title]').value=pending.title||((pending.type==='create_event')?'Rendez-vous':'');
