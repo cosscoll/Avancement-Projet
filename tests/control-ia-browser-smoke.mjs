@@ -389,6 +389,19 @@ try{
  await js("location.hash="+JSON.stringify(beforeFinderHash));
  await ready(()=>js("!!document.querySelector('.control-delivery-focus')"),8000)();
  log('320px finder finds visio by intent and opens its destination without mobile overflow');
+ // Desktop contract: this must now be an actual workspace with a persistent
+ // navigation rail and a project-first dashboard, not a centered card grid.
+ await command('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false});
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('#main .shell-dashboard .shell-feature-primary')"),8000)();
+ const desktop=await js("(()=>{const rail=document.querySelector('.shell-sidebar'),main=document.querySelector('#main'),dashboard=document.querySelector('.shell-dashboard'),projects=dashboard?.querySelector('.shell-dashboard-section'),news=dashboard?.querySelector('.control-whats-new'),hero=dashboard?.querySelector('.shell-feature-primary');return {width:innerWidth,overflow:document.documentElement.scrollWidth,railWidth:rail?.getBoundingClientRect().width,railVisible:rail&&getComputedStyle(rail).display!=='none',mainLeft:main?.getBoundingClientRect().left,heroBackground:hero?getComputedStyle(hero).backgroundColor:'',projectsY:projects?.getBoundingClientRect().top,newsY:news?.getBoundingClientRect().top,links:document.querySelectorAll('.shell-side-link').length}})()");
+ assert.ok(desktop.railVisible&&desktop.railWidth>=245&&desktop.mainLeft>=260,'Desktop must have real fixed sidebar with separate workspace: '+JSON.stringify(desktop));
+ assert.ok(desktop.heroBackground!=='rgb(255, 255, 255)'&&desktop.projectsY<desktop.newsY,'Projects must appear above the announcements in a non-white editorial dashboard: '+JSON.stringify(desktop));
+ assert.ok(desktop.links>=7&&desktop.overflow<=desktop.width+4,'Desktop navigation or page overflows: '+JSON.stringify(desktop));
+ log('1440px desktop has persistent dark navigation, separate content canvas and project-first layout');
+ await command('Emulation.setDeviceMetricsOverride',{width:320,height:700,deviceScaleFactor:2,mobile:true});
+ await js("location.hash="+JSON.stringify(beforeFinderHash));
+ await ready(()=>js("!!document.querySelector('.control-delivery-focus')"),8000)();
 
  // Only the public HTTPS application registers the service worker.
  if(production){
