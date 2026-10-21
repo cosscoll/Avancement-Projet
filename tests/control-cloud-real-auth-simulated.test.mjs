@@ -38,6 +38,8 @@ function mockServer(mode={}){
   const matches=row=>clauses.every(([k,v])=>String(row[k]??'')===v.slice(3));
   const rows=state.rows[table];
   if(method==='GET'){
+   if(mode.refuseVerificationProbe&&(u.searchParams.has('label')||u.searchParams.has('title')))
+    return output(403,{message:'cannot check forbidden-write marker'});
    return output(200,rows.filter(row=>(mode.crossRead||own(row))&&matches(row))
      .slice(0,Number(u.searchParams.get('limit')||100)));
   }
@@ -49,12 +51,14 @@ function mockServer(mode={}){
    const forgedOwner=table==='control_connections'&&row.owner_id!==owner;
    const forbiddenProject=table==='control_items'&&row.project_id&&
       !state.rows.control_projects.some(p=>p.id===row.project_id&&p.owner_id===owner);
-   if((row.owner_id!==owner&&!(mode.forgedInsert&&forgedOwner))||
+   const hiddenWrite=mode.deniedButCommitted&&(forgedOwner||forbiddenProject);
+   if((row.owner_id!==owner&&!(mode.forgedInsert&&forgedOwner)&&!hiddenWrite)||
       (table==='control_profiles'&&row.user_id!==owner)||
-      (forbiddenProject&&!mode.foreignProjectInsert)){
+      (forbiddenProject&&!mode.foreignProjectInsert&&!hiddenWrite)){
     return output(403,{message:'RLS protected'});
    }
    rows.push(row);
+   if(hiddenWrite)return output(403,{message:'HTTP refused after synthetic commit'});
    // RLS may allow an INSERT yet hide the inserted row from return=representation.
    if((forgedOwner&&mode.forgedInsert)||(forbiddenProject&&mode.foreignProjectInsert))return output(201,[]);
    return output(201,[row]);
@@ -105,6 +109,18 @@ test('simulated cross-project INSERT with a hidden response is removed by the ow
  await withMock({foreignProjectInsert:true},async m=>{
   await assert.rejects(()=>run(env),/associer une tâche/);
   assert.equal(m.records(),0,'Cross-project row must be cleaned by owner B');
+ });
+});
+test('HTTP 403 does not conceal a synthetic unauthorized write; the marker is probed and cleaned',async()=>{
+ await withMock({deniedButCommitted:true},async m=>{
+  await assert.rejects(()=>run(env),/usurpant A/);
+  assert.equal(m.records(),0);
+ });
+});
+test('inconclusive negative-write verification fails closed even when HTTP returns 403',async()=>{
+ await withMock({refuseVerificationProbe:true},async m=>{
+  await assert.rejects(()=>run(env),/Nettoyage INCOMPLET/);
+  assert.equal(m.records(),0,'No rows were written, but a failed verification cannot prove this');
  });
 });
 test('cleanup failure is never reported as passing',async()=>{
