@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "control-ia-20261021-async-integrations-20261021094755470",
+    "started_at": "2026-10-21T09:47:55.470Z",
+    "expires_at": "2026-10-21T10:32:55.470Z",
+    "objective": "CONTROL-ACCOUNT: prevent cross-session writes and UI mutations in Visio, Command Missions and AI Lab callbacks; tests and main deploy"
+  },
   "checkpoint": {
     "updated_at": "2026-10-21T09:36:59.165Z",
     "main": true,
