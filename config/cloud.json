@@ -1,4 +1,4 @@
 {
   "enabled": false,
-  "note": "No users may sign up until a dedicated CONTROL Supabase project and RLS checks are deployed. Do not use IAgile databases."
+  "note": "Independent CONTROL Cloud project rvrmjjtdedidjnrkdery exists with 6 protected tables. Public sign-up and Cloud login remain disabled until two genuine Supabase Auth accounts, JWT/PostgREST A/B, session lifecycle, account deletion and cross-device tests are verified. Never use IAgile Academy data."
 }
