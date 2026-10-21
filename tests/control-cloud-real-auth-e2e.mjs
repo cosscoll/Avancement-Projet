@@ -118,28 +118,30 @@ async function run(env=process.env){
   // Recover the ID by this run's unique marker under the legitimate owner,
   // otherwise fail the cleanup explicitly instead of leaving a silent orphan.
   const trackUnexpected=async(table,ownerToken,owner,field,value,result)=>{
-   let ids=Array.isArray(result.data)?result.data.map(row=>row?.id).filter(Boolean):[];
-   if(!ids.length){
-    try{
-     const seen=await obj(table,'GET','?select=id&'+field+'=eq.'+encodeURIComponent(value),ownerToken);
-     ids=Array.isArray(seen.data)?seen.data.map(row=>row?.id).filter(Boolean):[];
-    }catch{}
-   }
-   if(!ids.length)unverifiedCleanup.push(table);
-   for(const id of new Set(ids))work.push({table,id,owner,token:ownerToken});
+   // A failed HTTP request is not proof that the server performed no write.
+   // Always verify that the marker is absent, even after an HTTP 4xx.
+   const direct=Array.isArray(result.data)?result.data.map(row=>row?.id).filter(Boolean):[];
+   let discovered=[],probeVerified=false;
+   try{
+    const seen=await obj(table,'GET','?select=id&'+field+'=eq.'+encodeURIComponent(value),ownerToken);
+    if(Array.isArray(seen.data)){
+     discovered=seen.data.map(row=>row?.id).filter(Boolean);
+     probeVerified=true;
+    }
+   }catch{}
+   const ids=[...new Set([...direct,...discovered])];
+   if(!probeVerified||(result.ok&&!ids.length))unverifiedCleanup.push(table);
+   for(const id of ids)work.push({table,id,owner,token:ownerToken});
+   return ids.length;
   };
   const forgedLabel=marker+' FORGED';
   const forge=await obj('control_connections','POST','?select=id',tokenB,{owner_id:a,provider:'ChatGPT',label:forgedLabel},true);
-  if(forge.ok){
-   await trackUnexpected('control_connections',tokenA,a,'label',forgedLabel,forge);
-   fatal('B peut écrire une connexion en usurpant A');
-  }
+  const forgedCount=await trackUnexpected('control_connections',tokenA,a,'label',forgedLabel,forge);
+  if(forge.ok||forgedCount)fatal('B peut écrire une connexion en usurpant A');
   const foreignTitle=marker+' CROSS PROJECT';
   const inject=await obj('control_items','POST','?select=id',tokenB,{project_id:projA.id,kind:'task',title:foreignTitle},true);
-  if(inject.ok){
-   await trackUnexpected('control_items',tokenB,b,'title',foreignTitle,inject);
-   fatal('B peut associer une tâche au projet de A');
-  }
+  const injectedCount=await trackUnexpected('control_items',tokenB,b,'title',foreignTitle,inject);
+  if(inject.ok||injectedCount)fatal('B peut associer une tâche au projet de A');
   const after=await obj('control_projects','GET','?select=id,name&id=eq.'+projA.id,tokenA);
   assert.equal(after.data[0]?.name,marker+' A');
   report('PATCH/DELETE croisés, usurpation owner_id et FK vers projet étranger : refusés');
