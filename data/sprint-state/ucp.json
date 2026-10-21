@@ -1,9 +1,25 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "idle",
-  "lease": null,
-  "checkpoint": null,
+  "status": "running",
+  "lease": {
+    "run_id": "ucp-20261021T143126Z-v3",
+    "owner": "chatgpt-automation-ucp",
+    "acquired_at": "2026-10-21T14:31:26Z",
+    "expires_at": "2026-10-21T15:16:26Z",
+    "objective": "Empêcher un getter DOM défaillant pendant le nettoyage du champ temporaire de masquer une copie de brief réussie."
+  },
+  "checkpoint": {
+    "phase": "inspection_complete",
+    "branch": null,
+    "pr": null,
+    "files": [
+      "site-vitrine/dist/assets/app.js",
+      "site-vitrine/tests/app-shell.test.js"
+    ],
+    "tests": [],
+    "next": "Créer une branche isolée, ajouter une garde du getter remove et un test de non-régression."
+  },
   "last_completed": {
     "run_id": "ucp-20261021T132702Z-v3",
     "ended_at": "2026-10-21T13:30:06.117Z",
