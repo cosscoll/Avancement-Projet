@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "control-ia-20261021-auth-event-recovery-20261021103149052",
+    "started_at": "2026-10-21T10:31:49.052Z",
+    "expires_at": "2026-10-21T11:16:49.052Z",
+    "objective": "Recover current verified account after late SIGNED_OUT SDK event without resurrecting old private data; regression and same SHA deploy main"
+  },
   "checkpoint": {
     "updated_at": "2026-10-21T10:30:41.017Z",
     "main": true,
