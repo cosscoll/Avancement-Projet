@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "control-ia-20261021-visual-redesign-2034",
+    "started_at": "2026-10-21T20:34:00Z",
+    "expires_at": "2026-10-21T21:25:00Z",
+    "objective": "Visually distinct application shell redesign: persistent desktop sidebar, deliberate dashboard, context navigation, mobile usability, CI and production browser verification directly on main"
+  },
   "checkpoint": {
     "updated_at": "2026-10-21T18:28:40Z",
     "main": true,
