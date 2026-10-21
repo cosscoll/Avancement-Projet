@@ -173,7 +173,7 @@ test('Lab rejects a forged receipt with another project before reporting success
  h.requests[0].resolve({data:{id:'malicious',owner_id:'A',project_id:'pB'},error:null});
  await assert.rejects(pending,/non confirmée pour ce compte et ce projet/);
  assert.deepEqual(h.messages,[]);
- assert.deepEqual(h.read().items,[]);
+ assert.deepEqual(h.read().items.map(x=>x.id),['x','v'],'Previously loaded account items remain intact');
 });
 test('Lab rejects a response without an authenticated owner receipt',async()=>{
  const h=harness();h.mount('lab');
