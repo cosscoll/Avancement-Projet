@@ -23,7 +23,7 @@ const btn=(title,action,ref='',style='')=>'<button type="button" data-action="'+
 const card=(title,desc,action,id)=>'<button class="card" type="button" data-action="'+H(action)+'" data-id="'+H(id)+'"><div class="badge">'+H(title.slice(0,2).toUpperCase())+'</div><strong>'+H(title)+'</strong><small>'+H(desc)+'</small></button>';
 function message(s,bad=false){const el=byId('toast');el.textContent=s;el.hidden=false;el.style.background=bad?'#873c40':'#1f3653';clearTimeout(message.timer);message.timer=setTimeout(()=>el.hidden=true,4200)}
 function live(s){const el=byId('status');el.textContent=s;el.hidden=false}
-function visible(which){for(const id of ['setup','auth','workspace'])byId(id).hidden=id!==which;byId('status').hidden=true;byId('bottomnav').hidden=which!=='workspace';byId('account').hidden=which!=='workspace';byId('refresh').hidden=which!=='workspace';byId('nav-open-cloud').hidden=which!=='workspace';byId('nav-mobile-cloud').hidden=which!=='workspace';byId('control-location').hidden=which!=='workspace';if(which!=='workspace')window.CONTROL_NAVIGATION?.close()}
+function visible(which){for(const id of ['setup','auth','workspace'])byId(id).hidden=id!==which;byId('status').hidden=true;byId('bottomnav').hidden=which!=='workspace';byId('account').hidden=which!=='workspace';byId('refresh').hidden=which!=='workspace';byId('nav-open-cloud').hidden=which!=='workspace';byId('nav-mobile-cloud').hidden=which!=='workspace';byId('control-location').hidden=which!=='workspace';byId('cloud-side').hidden=which!=='workspace';document.body.classList.toggle('shell-cloud-ready',which==='workspace');if(which!=='workspace')window.CONTROL_NAVIGATION?.close()}
 const panel=(title,body)=>'<section class="surface"><h2>'+H(title)+'</h2>'+body+'</section>';
 const header=(title,desc,actions='')=>'<div class="bar"><div><div class="eyebrow">ESPACE PRIVÉ CONTROL</div><h1>'+H(title)+'</h1><p class="muted">'+H(desc)+'</p></div><div class="btnrow">'+actions+'</div></div>';
 const options=(xs,current)=>xs.map(x=>'<option value="'+H(x[0])+'" '+(x[0]===current?'selected':'')+'>'+H(x[1])+'</option>').join('');
@@ -104,6 +104,15 @@ async function reload(silent=false){if(!authUser||!client)return false;const own
  finally{if(token===epoch&&waitingOwner===owner){waiting=false;waitingOwner=null;byId('refresh').disabled=false}}}
 function nav(where,pid='',newTab='ai_space'){page=where;picked=pid;tab=newTab;window.scrollTo?.(0,0);render()}
 function render(){if(!authUser)return;
+ const aside=byId('cloud-side-projects');
+ if(aside){
+  const recent=cache.projects.slice().sort((a,b)=>(b.updated_at||'').localeCompare(a.updated_at||'')).slice(0,5);
+  aside.innerHTML=recent.length?recent.map(p=>'<button type="button" class="shell-side-project-button" data-action="open-project" data-id="'+H(p.id)+'" aria-current="'+(page==='project'&&picked===p.id?'page':'false')+'">'+H(p.name)+'</button>').join(''):'<span class="shell-empty">Aucun projet pour le moment.</span>';
+ }
+ document.querySelectorAll('#cloud-side [data-page]').forEach(button=>{
+  const active=button.dataset.page===page||(button.dataset.page==='projects'&&page==='project');
+  button.setAttribute('aria-current',active?'page':'false');
+ });
  const crumb=byId('control-location');
  if(crumb){
   const labels={projects:'Mes projets',inbox:'À traiter',manager:'Piloter avec CONTROL',tools:'Tous les outils',
@@ -268,14 +277,22 @@ function projectForm(){return '<form id="project-form">'+input('Nom du projet','
 function projectsPage(){
  const recent=cache.projects.slice().sort((a,b)=>(b.updated_at||'').localeCompare(a.updated_at||''));
  const visible=cloudProjectsAll?recent:recent.slice(0,6);
- return header('Mes projets','Retrouve ton travail et tes IA.',btn('+ Nouveau projet','toggle-project-form')+' '+btn('Tous les outils','tools'))+
- '<section class="clarity-shortcuts"><button class="clarity-shortcut" data-action="inbox"><strong>1. Mes priorités</strong><span>Les actions à traiter →</span></button><button class="clarity-shortcut" data-action="manager"><strong>2. Piloter mes projets</strong><span>Faire le point →</span></button><button type="button" class="clarity-shortcut" data-control-nav-open><strong>3. Trouver une fonction</strong><span>Tous les outils et actions →</span></button></section>'+
- '<div class="row clarity-listhead"><h2>Projets <span class="clarity-count">'+cache.projects.length+'</span></h2></div>'+
- '<div class="row"><input class="search" id="project-search" placeholder="Rechercher un projet…" type="search" aria-label="Rechercher un projet"></div>'+
+ return '<div class="shell-dashboard">'+
+ '<div class="shell-dashboard-top"><div><span class="shell-dashboard-eyebrow">ESPACE PRIVÉ</span><h1>Votre espace de travail.</h1><p>Projets, actions et missions regroupés dans un seul espace.</p></div>'+btn('+ Nouveau projet','toggle-project-form','','primary')+'</div>'+
+ '<section class="shell-feature-grid" aria-label="Démarrer une action">'+
+ '<article class="shell-feature-primary"><div><span class="shell-feature-tag">AUJOURD’HUI</span><h2>Votre prochaine étape<br>commence ici.</h2><p>Retrouvez un projet, préparez une mission ou suivez les actions qui demandent votre attention.</p></div><button type="button" data-control-nav-open>Explorer les fonctions ↗</button></article>'+
+ '<div class="shell-feature-aside"><h2>Accès directs</h2>'+
+ '<button type="button" class="shell-action" data-action="inbox"><span class="shell-action-glyph">✓</span><span><strong>Actions à traiter</strong><small>Priorités et échéances</small></span></button>'+
+ '<button type="button" class="shell-action" data-action="manager"><span class="shell-action-glyph">◈</span><span><strong>Centre de pilotage</strong><small>Bilans et prochaines étapes</small></span></button>'+
+ '<button type="button" class="shell-action" data-action="visios"><span class="shell-action-glyph">▤</span><span><strong>Visios et réunions</strong><small>Liens et rendez-vous</small></span></button>'+
+ '</div></section>'+
+ '<section class="clarity-projects shell-dashboard-section"><div class="row clarity-listhead"><div><span class="shell-dashboard-eyebrow">VOS ESPACES</span><h2>Projets <span class="clarity-count">'+cache.projects.length+'</span></h2></div></div>'+
+ '<div class="shell-project-toolbar"><input class="search" id="project-search" placeholder="Rechercher un projet…" type="search" aria-label="Rechercher un projet"></div>'+
  '<section id="new-project" class="surface" hidden><h2>Créer un projet</h2>'+projectForm()+'</section>'+
- '<div id="project-list" class="grid clarity-cards">'+(visible.length?visible.map(projectCard).join(''):'')+'</div>'+
+ '<div id="project-list" class="grid clarity-cards shell-projects-list">'+(visible.length?visible.map(projectCard).join(''):'')+'</div>'+
  (!cache.projects.length?panel('Commencer dans CONTROL',empty('Crée ton premier projet pour y organiser tes IA et ressources.')+btn('Créer mon projet','toggle-project-form','', 'primary')):'')+
- (cache.projects.length>6?'<div class="clarity-more">'+btn(cloudProjectsAll?'Afficher moins de projets':'Afficher tous les projets ('+cache.projects.length+')','projects-more')+'</div>':'');
+ (cache.projects.length>6?'<div class="clarity-more">'+btn(cloudProjectsAll?'Afficher moins de projets':'Afficher tous les projets ('+cache.projects.length+')','projects-more')+'</div>':'')+
+ '</section></div>';
 }
 function projectPage(){
  const p=getProject(picked);if(!p)return projectsPage();const t=tab;
