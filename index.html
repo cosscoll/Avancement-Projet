@@ -18,6 +18,22 @@
 
 
 .auto-grid .card{min-height:160px}.auto-topactions{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:15px 0 22px}.auto-task{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:17px 3px;border-bottom:1px solid #e8edf2}.auto-task:last-child{border:0}.auto-task strong{display:block;margin-bottom:4px}.auto-task small{display:block;color:#708096}.auto-task .chip{white-space:normal;max-width:42%;font-size:11px}.auto-task:hover strong{text-decoration:underline}.auto-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:16px 0}.auto-facts>div{border-radius:11px;background:#f5f7fa;padding:13px;min-width:0;overflow-wrap:anywhere}.auto-facts strong{display:block;margin-top:4px;font-size:14px;line-height:1.45}.auto-text{white-space:pre-wrap;overflow-wrap:anywhere;background:#f8f9fc;border-radius:10px;padding:12px 14px}.auto-provider-card .badge{margin-bottom:14px}@media(max-width:600px){.auto-facts{grid-template-columns:1fr}.auto-task{align-items:flex-start}.auto-topactions .button{flex:1;text-align:center}.auto-task .chip{max-width:44%}}
+.control-whats-new{background:#fff;border:1px solid #dce5f0;border-radius:18px;padding:19px 20px;margin:12px 0 22px;box-shadow:0 3px 13px #1d38550b}
+.control-whats-new-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:14px}
+.control-whats-new-heading h2{font-size:18px;margin:3px 0 2px;color:#1c3354;line-height:1.3}
+.control-whats-new-heading p{font-size:13px;margin:0;color:#62748a;line-height:1.4}
+.control-whats-new-kicker{font-size:10px;letter-spacing:.11em;font-weight:800;color:#5579ad}
+.control-whats-new-more{font-size:12px;font-weight:750;color:#284a80;white-space:nowrap;text-decoration:underline;text-underline-offset:3px}
+.control-whats-new-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.control-whats-new-links a{border:1px solid #e0e8f1;border-radius:12px;display:flex;flex-direction:column;padding:12px 13px;gap:6px;background:#f8faff;transition:background .16s,border-color .16s;min-height:80px}
+.control-whats-new-links a:hover{background:#eef4ff;border-color:#98b8dc}
+.control-whats-new-links a:focus-visible{outline:3px solid #8bbcfb;outline-offset:2px}
+.control-whats-new-links strong{font-size:13px;color:#183962}
+.control-whats-new-links span{font-size:11px;line-height:1.45;color:#526984}
+.control-whats-new-status{display:flex;flex-wrap:wrap;align-items:baseline;gap:5px;background:#f4f6f9;border-radius:10px;padding:10px 12px;margin-top:12px;font-size:12px;line-height:1.55;color:#4e5f73}
+.control-whats-new-status span{color:#8593a4;font-size:11px}
+.control-whats-new-status strong{color:#374a63}
+@media(max-width:640px){.control-whats-new{padding:14px 13px;margin:10px 0 18px}.control-whats-new-heading{align-items:flex-start;flex-direction:column;gap:5px}.control-whats-new-links{grid-template-columns:1fr;gap:7px}.control-whats-new-links a{min-height:0;padding:10px 12px;gap:2px}.control-whats-new-links span{font-size:12px}.control-whats-new-more{margin-top:1px}}
 </style></head><body><div class="wrap"><header class="control-head"><a href="#/" class="logo"><span>◈</span>CONTROL</a><div class="head-actions"><a class="button head-search" href="#/control/search">⌕ Rechercher</a><a class="button head-tools" href="#/control/tools">Tous les outils</a></div></header><main id="main" aria-live="polite"><p>Chargement des projets…</p></main><div class="quiet" style="margin-top:28px">CONTROL · Liens et notes enregistrés sur cet appareil · <a href="legacy.html" style="text-decoration:underline">Ancien tableau de bord</a></div></div><nav class="mobilefoot" aria-label="Navigation principale"><button data-go="home" aria-label="Mes projets"><span>▦</span><br>Projets</button><button data-go="inbox" aria-label="Actions à traiter"><span>▤</span><br>À traiter</button><button data-go="manager" aria-label="CONTROL IA"><span>◈</span><br>CONTROL IA</button><button data-go="tools" aria-label="Tous les outils"><span>☷</span><br>Outils</button></nav><div id="toast" class="toast hidden" role="status"></div>
 <script src="assets/automations-hub.js"></script>
 <script src="assets/command-center.js"></script>
@@ -54,6 +70,13 @@ function home(){
  const search='<input id="search" class="field search" type="search" aria-label="Rechercher un projet" placeholder="Rechercher un projet…" autocomplete="off">';
  $('#main').innerHTML='<section class="clarity-intro"><div class="toprow"><div><div class="quiet">TON ESPACE DE TRAVAIL</div><h1>Mes projets</h1><p class="muted">Retrouve rapidement ton travail et tes IA.</p></div><button id="add-project" class="primary">+ Nouveau projet</button></div>'+
  '<div class="clarity-shortcuts"><a href="#/control/inbox" class="clarity-shortcut"><strong>À traiter</strong><span>Mes priorités →</span></a><a href="#/control/localai" class="clarity-shortcut"><strong>Discuter avec CONTROL IA</strong><span>IA générative locale →</span></a><a href="#/control/tools" class="clarity-shortcut"><strong>Tous les outils</strong><span>Explorer à mon rythme →</span></a></div></section>'+
+ '<section class="control-whats-new" aria-label="Nouveautés CONTROL disponibles">'+
+ '<div class="control-whats-new-heading"><div><div class="control-whats-new-kicker">NOUVEAUTÉS DISPONIBLES</div><h2>Découvre les nouvelles fonctions CONTROL</h2><p>Fonctions testées et accessibles dès maintenant sur cet appareil.</p></div><a class="control-whats-new-more" href="#/control/manager">Centre de pilotage →</a></div>'+
+ '<nav class="control-whats-new-links" aria-label="Fonctions récentes">'+
+ '<a href="#/control/goals"><strong>Planifier un objectif</strong><span>Créer un plan, puis valider chaque tâche séparément →</span></a>'+
+ '<a href="#/control/search"><strong>Recherche par projet</strong><span>Retrouver tâches, décisions et sources →</span></a>'+
+ '<a href="#/control/memory"><strong>Mémoire des décisions</strong><span>Corriger une décision et suivre ses versions →</span></a>'+
+ '</nav><div class="control-whats-new-status"><span aria-hidden="true">●</span><strong>CONTROL Cloud :</strong> infrastructure créée, connexion multi-utilisateurs pas encore activée. Le travail reste enregistré localement sur cet appareil.</div></section>'+
  '<section class="clarity-projects"><div class="toprow clarity-listhead"><h2>Projets <span class="clarity-count">'+projects.length+'</span></h2></div>'+search+'<div id="cards" class="grid clarity-cards"></div><div class="clarity-more"><button type="button" id="more-projects" hidden>Afficher tous les projets</button></div></section>'+
  '<details class="clarity-helpnote"><summary>Comment retrouver les conversations de mes IA ?</summary><p>CONTROL ouvre les projets ChatGPT et Claude depuis leurs liens officiels. Les conversations privées ne sont pas importées automatiquement dans ce site.</p></details>'+
  '<section id="add-box" class="panel hidden"><h2>Nouveau projet</h2><form id="new-project"><label>Nom du projet<input class="field" name="name" required maxlength="90" placeholder="Ex. Mon nouveau projet"></label><label>Lien du projet ChatGPT (facultatif)<input name="url" class="field" type="url" placeholder="https://chatgpt.com/g/g-p-…"></label><button class="primary">Créer l’espace</button></form></section>';
