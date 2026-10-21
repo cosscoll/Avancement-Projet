@@ -416,6 +416,8 @@ async function saveItem(form,editing=''){
  else q=await client.from('control_items').insert(payload).select('*').single();
  if(!session.current())return;
  if(q.error||!q.data)throw Error(old?'Conflit ou écriture refusée : actualise et recommence.':q.error?.message||'Enregistrement non confirmé.');
+ if(typeof q.data.id!=='string'||!q.data.id||q.data.owner_id!==session.owner||(old&&q.data.id!==old.id))
+  throw Error('Réponse du serveur non attribuée à votre compte ou à cet élément : actualisez sans recommencer l’écriture.');
  await audit(old?'item_updated':'item_created','item',q.data.id,session.owner);
  if(!session.current())return;
  await reload(true);
@@ -433,6 +435,8 @@ async function saveProject(form,editing=''){
  else q=await client.from('control_projects').insert(payload).select('*').single();
  if(!session.current())return;
  if(q.error||!q.data)throw Error(old?'Conflit de modification : actualise le projet.':q.error?.message||'Enregistrement non confirmé.');
+ if(typeof q.data.id!=='string'||!q.data.id||q.data.owner_id!==session.owner||(old&&q.data.id!==old.id))
+  throw Error('Réponse du serveur non attribuée à votre compte ou à ce projet : actualisez sans recommencer l’écriture.');
  await audit(old?'project_updated':'project_created','project',q.data.id,session.owner);
  if(!session.current())return;
  await reload(true);
