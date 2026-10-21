@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "control-ia-20261021-classic-account-135047",
+    "started_at": "2026-10-21T13:50:47.000Z",
+    "expires_at": "2026-10-21T14:35:47.000Z",
+    "objective": "CONTROL-ACCOUNT: audit E2E Auth readiness and harden safe session/data isolation tests without enabling Cloud"
+  },
   "checkpoint": {
     "updated_at": "2026-10-21T13:37:20.033Z",
     "main": true,
