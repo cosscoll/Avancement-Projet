@@ -60,16 +60,40 @@ async function boot(){live('Vérification de la configuration privée…');let c
  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&authUser)reload(true)});
  }catch{visible('setup');const p=byId('setup').querySelector('.muted');p.textContent='La configuration est prête, mais la bibliothèque sécurisée ou le fournisseur d’authentification n’est pas joignable. Aucun compte n’a été créé.'}}
 async function verifiedSession(){const token=++verificationSeq;try{const r=await client.auth.getUser();if(token!==verificationSeq)return;if(r.error||!r.data?.user){epoch++;authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');return}const changed=authUser?.id!==r.data.user.id;if(changed)epoch++;authUser=r.data.user;if(changed){window.CONTROL_HELP?.reset();waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML=panel('Connexion sécurisée','<p class="muted">Chargement des données du compte…</p>');live('Chargement de votre espace privé…')}visible('workspace');await reload()}catch{if(token===verificationSeq){epoch++;authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth')}}}
+// Read all rows needed by the workspace, not only the first server page.
+// Supabase can apply its own row cap; count checks prevent silent truncation.
+async function loadCompleteCloudRows(table,owner,token,maxRows){
+ const pageSize=400,rows=[],seen=new Set();let expected=null;
+ for(let start=0;start<maxRows;start+=pageSize){
+  if(token!==epoch||authUser?.id!==owner)return null;
+  const q=await client.from(table).select('*',{count:'exact'}).eq('owner_id',owner)
+   .order('id',{ascending:true}).range(start,start+pageSize-1);
+  if(token!==epoch||authUser?.id!==owner)return null;
+  if(q.error||!Array.isArray(q.data)||!Number.isSafeInteger(q.count)||q.count<0)
+   throw Error('Lecture complète des données non vérifiée ('+table+').');
+  if(q.count>maxRows)throw Error('Ce compte dépasse la limite d’affichage de '+maxRows+' lignes pour '+table+'. L’export complet reste disponible.');
+  if(expected!==null&&expected!==q.count)
+   throw Error('Les données ont changé pendant la synchronisation ('+table+'). Recommence.');
+  expected=q.count;
+  for(const row of q.data){
+   if(row?.owner_id!==owner||typeof row?.id!=='string'||!row.id||seen.has(row.id))
+    throw Error('Données incohérentes ou compte non vérifié ('+table+').');
+   seen.add(row.id);rows.push(row);
+  }
+  if(rows.length===expected)return rows;
+  if(q.data.length!==pageSize||rows.length>expected)
+   throw Error('Synchronisation incomplète ('+table+'). Réessaie.');
+ }
+ throw Error('Limite de synchronisation atteinte ('+table+').');
+}
 async function reload(silent=false){if(!authUser||!client)return false;const owner=authUser.id;if(waiting&&waitingOwner===owner)return false;waiting=true;waitingOwner=owner;byId('refresh').disabled=true;const token=epoch;
- try{const [p,i,pref]=await Promise.all([client.from('control_projects').select('*').eq('owner_id',owner).order('created_at',{ascending:false}).limit(500),client.from('control_items').select('*').eq('owner_id',owner).order('created_at',{ascending:false}).limit(2000),client.from('control_preferences').select('*').eq('owner_id',owner).maybeSingle()]);
+ try{const [projects,items,pref]=await Promise.all([loadCompleteCloudRows('control_projects',owner,token,5000),loadCompleteCloudRows('control_items',owner,token,10000),client.from('control_preferences').select('*').eq('owner_id',owner).maybeSingle()]);
  if(token!==epoch||!authUser||authUser.id!==owner)return false;
- for(const r of [p,i,pref])if(r.error)throw Error('Accès à vos données refusé : '+r.error.message);
- // Defense in depth: reject unexpected owner IDs even if a server or intermediary
- // mistakenly returns another tenant's rows after an owner-scoped request.
- const ownedRows=rows=>Array.isArray(rows)&&rows.every(row=>row&&row.owner_id===owner);
- if(!ownedRows(p.data)||!ownedRows(i.data)||(pref.data&&pref.data.owner_id!==owner))
-  throw Error('Isolation du compte non confirmée : données privées non affichées.');
- cache={projects:p.data,items:i.data,preferences:pref.data||null};render();
+ if(pref.error)throw Error('Accès aux préférences refusé : '+pref.error.message);
+ if(projects===null||items===null)return false;
+ if(pref.data&&pref.data.owner_id!==owner)
+  throw Error('Isolation des préférences non confirmée : données privées non affichées.');
+ cache={projects,items,preferences:pref.data||null};render();
  if(!silent)message('Espace synchronisé avec votre compte.');
  return true;
  }catch(e){if(token!==epoch||authUser?.id!==owner)return false;if(!silent)message(e.message||'Impossible de synchroniser vos données.',true);if(!cache.projects.length&&!cache.items.length)byId('page').innerHTML=panel('Connexion indisponible','<p>Les données privées n’ont pas pu être chargées. Réessaie après vérification de la configuration et des règles d’accès.</p>'+btn('Réessayer','refresh'));return false}
