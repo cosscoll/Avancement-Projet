@@ -212,3 +212,20 @@ test('server deletion confirmed but local signout failed never claims completed 
  assert.equal(h.read().authUser.id,'A');
  assert.deepEqual(h.messages,[]);
 });
+
+
+test('concurrent legacy imports never schedule duplicate writes in one browser session',async()=>{
+ const h=importer(),original=h.importLegacy();
+ await assert.rejects(()=>h.importLegacy(),/déjà en cours/);
+ assert.equal(h.fetches.length,2,'One import starts only one set of catalog requests');
+ await completeCatalog(h);await original;
+ assert.deepEqual(h.writes.map(x=>x.table),['control_projects','control_items','control_preferences']);
+ assert.equal(h.importLegacy.inFlight,false,'The in-page gate must release on completion');
+});
+test('abandoned account import releases its gate without writing old account data',async()=>{
+ const h=importer(),original=h.importLegacy();
+ h.switchB();await completeCatalog(h);
+ assert.equal(await original,false);
+ assert.equal(h.importLegacy.inFlight,false,'Session change must release in-page import gate');
+ assert.deepEqual(h.writes,[]);
+});
