@@ -14,10 +14,30 @@
 <link rel="stylesheet" href="./assets/ai-lab.css">
 <link rel="stylesheet" href="./assets/ux-clarity.css">
 <link rel="stylesheet" href="./assets/navigation-hub.css">
+<link rel="stylesheet" href="./assets/workspace-shell.css">
 <link rel="stylesheet" href="./assets/multi-ai-command.css">
 <link rel="stylesheet" href="./assets/visio-center.css">
 </head>
-<body>
+<body class="cloud-shell-v3">
+<aside id="cloud-side" class="shell-sidebar" hidden aria-label="Navigation Cloud">
+ <a class="shell-brand" href="./index.html"><span class="shell-brand-mark">◈</span><span>CONTROL<span class="shell-brand-sub">ESPACE CLOUD</span></span></a>
+ <nav aria-label="Espace privé">
+  <div class="shell-side-group"><div class="shell-side-heading">Navigation</div>
+   <button type="button" class="shell-side-link" data-page="projects"><span class="shell-glyph">▦</span> Vue d’ensemble</button>
+   <button type="button" class="shell-side-link" data-page="inbox"><span class="shell-glyph">☷</span> À traiter</button>
+   <button type="button" class="shell-side-link" data-page="manager"><span class="shell-glyph">◈</span> CONTROL IA</button>
+   <button type="button" class="shell-side-link shell-side-link--find" data-control-nav-open><span class="shell-glyph">⌕</span> Trouver une fonction<span class="shell-side-shortcut">⌘ K</span></button>
+  </div>
+  <div class="shell-side-group"><div class="shell-side-heading">Organisation</div>
+   <button type="button" class="shell-side-link" data-page="missions"><span class="shell-glyph">◇</span> Missions IA</button>
+   <button type="button" class="shell-side-link" data-page="visios"><span class="shell-glyph">▤</span> Visios et rendez-vous</button>
+   <button type="button" class="shell-side-link" data-page="automations"><span class="shell-glyph">↻</span> Automatisations</button>
+   <button type="button" class="shell-side-link" data-page="tools"><span class="shell-glyph">▧</span> Tous les outils</button>
+  </div>
+  <div class="shell-side-group"><div class="shell-side-heading">Projets récents</div><div id="cloud-side-projects" class="shell-side-projects" aria-label="Projets privés"></div></div>
+ </nav>
+ <div class="shell-side-footer"><strong>Espace privé</strong><span>Données accessibles uniquement après connexion au compte CONTROL.</span><button type="button" class="shell-side-link" data-page="account"><span class="shell-glyph">⚙</span> Mon compte</button></div>
+</aside>
 <header class="header">
   <a class="brand" href="./app.html" aria-label="Accueil CONTROL"><span class="mark">◈</span>CONTROL <span class="soft">Cloud</span></a>
   <div class="header-actions">
