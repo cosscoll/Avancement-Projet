@@ -1,9 +1,21 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "idle",
-  "lease": null,
-  "checkpoint": null,
+  "status": "running",
+  "lease": {
+    "run_id": "ucp-20261021T053016Z-v3",
+    "owner": "chatgpt-automation",
+    "started_at": "2026-10-21T05:30:16Z",
+    "expires_at": "2026-10-21T06:15:16Z",
+    "objective": "Maintenir la navigation lorsque matchMedia.addEventListener échoue."
+  },
+  "checkpoint": {
+    "files": [],
+    "branch": null,
+    "pr_url": null,
+    "tests": [],
+    "next_action": "Ajouter un repli addListener borné hors application/**."
+  },
   "last_completed": {
     "run_id": "ucp-20261021T043105Z-v3",
     "ended_at": "2026-10-21T04:35:12Z",
