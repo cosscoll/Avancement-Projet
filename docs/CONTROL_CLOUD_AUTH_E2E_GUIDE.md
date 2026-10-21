@@ -29,3 +29,23 @@
 **Sécurité :** aucune donnée secrète, clé, JWT, e-mail de test ou mot de passe réel ne figure dans ce document ou dans les fichiers publics du dépôt.
 
 Références : [Supabase API keys](https://supabase.com/docs/guides/getting-started/api-keys), [JWT](https://supabase.com/docs/guides/auth/jwts), [API et RLS](https://supabase.com/docs/guides/api/securing-your-api).
+
+
+## Renforcement des contrôles — session classique du 21 octobre 2026
+
+L'outil de recette E2E contrôle désormais aussi les cas où une requête d'écriture inter-comptes retourne un **identifiant absent ou une erreur HTTP** malgré un effet de bord serveur. Une recherche par **marqueur unique de l'exécution** permet d'identifier un enregistrement inattendu pour tenter son nettoyage sous le véritable propriétaire ; si le contrôle ou le nettoyage ne peut être prouvé, la recette échoue explicitement.
+
+Cette stratégie ne remplace pas une contrainte RLS ou la vérification des véritables JWT. Elle limite les risques d'une recette qui réussirait à tort ou laisserait des données temporaires sans signalement.
+
+**Nouveaux contrôles versionnés :**
+
+- `tests/control-cloud-real-auth-simulated.test.mjs` : 9 scénarios simulant réponses Supabase, fuites A/B, insertions interdites, erreurs HTTP trompeuses, vérification impossible, nettoyage et refus anonyme.
+- `tests/control-cloud-session-isolation.test.mjs` : 15 scénarios sur le code réel des sessions et sur le refus d'afficher une réponse avec un `owner_id` étranger.
+- `tests/control-cloud-four-missions-session.test.mjs` : 6 scénarios supplémentaires sur les confirmations des quatre missions, les réponses incomplètes et les changements de compte.
+- `tests/control-cloud-real-auth-e2e.test.mjs` et `tests/control-cloud-readiness.test.mjs` : 16 contrôles du contrat et du garde d'activation.
+
+Les **46 vérifications ont été exécutées avec succès dans un environnement V8 utilisant des substitutions contrôlées pour les API Node et HTTP** ; ce n'est pas un run Node officiel ni une recette Supabase Auth réelle. Les workflows GitHub Actions habituels et le workflow dédié Cloud incluent les nouvelles suites, mais leur statut doit être vérifié séparément sur le SHA exact.
+
+**Contrôle Supabase réel en lecture seule pendant la même session :** projet `ACTIVE_HEALTHY`, six tables CONTROL avec RLS actif, 22 policies centrées sur le propriétaire, 0 alerte du conseiller de sécurité, 0 utilisateur Auth et 0 ligne métier. Les comptes publics restent désactivés dans `config/cloud.json`.
+
+**Étape non franchie :** tests avec deux authentifications Auth réelles et des JWT distincts, parcours navigateur connecté, reprise sur deux appareils et désactivation/révocation de sessions. Aucune clé, compte ou secret ne doit être ajouté dans les fichiers publics pour franchir ce verrou.
