@@ -1,46 +1,40 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-auth-signout-race-20261021102617728",
-    "started_at": "2026-10-21T10:26:17.728Z",
-    "expires_at": "2026-10-21T11:11:17.728Z",
-    "objective": "Fix proven stale signOut completions clearing replacement accounts during logout and server-confirmed delete-account; CI regression and direct main public proof"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T10:25:38.811Z",
+    "updated_at": "2026-10-21T10:30:41.017Z",
     "main": true,
-    "stage": "v12_canonical_ticket_links_16_tests_pages_browser_green_new_account_signout_race",
+    "stage": "account_signout_races_fixed_97_cloud_255_frontend_browser_green",
     "files": [
-      "data/control-ia-delivery.json",
-      "scripts/control-ia-requirements.mjs",
-      "tests/control-ia-requirements.test.mjs",
-      ".github/workflows/control-ia-requirements.yml",
-      "docs/CONTROL_IA_CAHIER_V1_2_SUIVI.md",
-      "data/sprints/control-ia.json"
+      "assets/cloud-app.js",
+      "tests/control-cloud-account-lifecycle.test.mjs",
+      "data/sprints/control-ia.json",
+      "docs/CONTROL_IA_RETROSPECTIVES.md"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/commit/c26a7b222fbe249a35ecea8528c096183023a488",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584035439",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584036998",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584287643"
+      "https://github.com/cosscoll/Avancement-Projet/commit/372141b2c25904be02402c1016b381e762fedd1b",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584799187",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584799394",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584798321",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584868792"
     ],
     "remaining_blockers": [
-      "Real Cloud remains intentionally disabled without authorized separate zero-cost Supabase and two true Auth/JWT/RLS accounts",
-      "Calendar and Reminders have historical labels but no evidenced canonical BACK mapping",
-      "Old session A signOut() awaited result can wipe newly signed-in session B; reproduced with a stubbed delayed Auth API, not yet fixed"
+      "No separately approved 0€ CONTROL Supabase with two real Auth/JWT/RLS accounts and verified synchronization; Cloud disabled.",
+      "SDK auth event listener can still receive late SIGNED_OUT relative to SIGNED_IN and must be audited separately.",
+      "Server signOut may have started before replacement session despite UI epoch guard."
     ],
-    "next_action": "CONTROL-ACCOUNT P0: fix already reproduced stale `logout` and `delete-account` UI reset after delayed auth.signOut when account B replaces A; add tests for same-account re-login and normal successful logout, preserve SDK SIGNED_OUT listener behavior. Direct main only, 0€ and Cloud disabled."
+    "next_action": "Audit onAuthStateChange out-of-order SDK event processing and verifiedSession; reproduce stale SIGNED_OUT if possible and guard without ever exposing prior private cache. Continue main direct, lease and tests. Do not enable Cloud."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-canonical-backlinks-20261021101757825",
-    "started_at": "2026-10-21T10:17:57.825Z",
-    "ended_at": "2026-10-21T10:25:38.811Z",
-    "summary": "19 noncanonical BACK refs moved to archived per-capability metadata with zero loss; 16/16 V1.2 integrity tests, Pages and Chromium public green at 8c63aa3. No requirement statuses altered.",
-    "stage": "verified_online_traceability_not_operational",
-    "commit_sha": "8c63aa3f2d4505055e13b9addafca09b1743a52f",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584287643"
+    "run_id": "control-ia-20261021-auth-signout-race-20261021102617728",
+    "started_at": "2026-10-21T10:26:17.728Z",
+    "ended_at": "2026-10-21T10:30:41.017Z",
+    "summary": "Fixed delayed signOut response UI cache/identity clobbering across A/B and A/A re-login; 8 added regressions, Cloud CI 97/97, frontend 255/255, Pages and public Chromium green at SHA 0edd1da2. Real Cloud remains disabled.",
+    "stage": "verified_online_client_defense_not_authenticated",
+    "commit_sha": "0edd1da2aa561dce7d0352269a1d94f05211bc9c",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584868792"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
