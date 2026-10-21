@@ -1,27 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-20261021T103347Z-v3",
-    "owner": "chatgpt-automation-ucp",
-    "started_at": "2026-10-21T10:33:47Z",
-    "heartbeat_at": "2026-10-21T10:38:30Z",
-    "expires_at": "2026-10-21T11:23:30Z",
-    "objective": "Rendre immuable la checklist de chaque brief généré afin qu’un appelant ne puisse pas altérer un résultat gelé."
-  },
-  "checkpoint": {
-    "phase": "code_committed",
-    "branch": "fix/ucp-brief-deep-freeze-20261021",
-    "files": ["site-vitrine/dist/assets/brief.js", "site-vitrine/tests/brief.test.cjs"],
-    "tests": "CI pending",
-    "next": "Ouvrir la PR, attendre la CI, autocritiquer puis effectuer une seconde passe corrective."
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261021T092706Z-v3",
-    "ended_at": "2026-10-21T09:29:54.865Z",
+    "run_id": "ucp-20261021T103347Z-v3",
+    "ended_at": "2026-10-21T10:37:57.023Z",
     "outcome": "merged",
-    "summary": "PR #24 getter revokeObjectURL sûr fusionnée sur main e3db8839 après deux CI vertes ; navigateur réel non vérifié.",
+    "summary": "PR #25 checklists de brief immuables fusionnée sur main f2289661 après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
