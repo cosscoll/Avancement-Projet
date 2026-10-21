@@ -384,7 +384,7 @@ try{
   await ready(()=>js("Boolean(navigator.serviceWorker.controller)"),14000)();
   const cacheNames=await js("(async()=>await caches.keys())()");
   assert.ok(Array.isArray(cacheNames)&&cacheNames.some(name=>name.startsWith('control-shell-')),'Public PWA must cache the application shell');
-  assert.ok(cacheNames.includes('control-shell-v39')&&cacheNames.includes('control-public-data-v39'),'PWA must have installed the verified v39 caches');
+  assert.ok(cacheNames.includes('control-shell-v40')&&cacheNames.includes('control-public-data-v40'),'PWA must have installed the verified v40 caches');
   log('public PWA service worker activated and offline shell cache created');
   await command('Network.enable');
   try{
