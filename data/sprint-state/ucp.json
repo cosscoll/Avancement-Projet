@@ -10,19 +10,28 @@
     "objective": "Empêcher un getter DOM défaillant pendant le nettoyage du champ temporaire de masquer une copie de brief réussie."
   },
   "checkpoint": {
-    "phase": "initial_patch_ready",
+    "phase": "ci_green_ready_to_merge",
     "branch": "fix/ucp-copy-remove-getters-20261021",
-    "pr": null,
+    "pr": 29,
     "files": [
-      "site-vitrine/dist/assets/app.js",
-      "site-vitrine/tests/app-shell.test.js"
+      "site-vitrine/dist/assets/app.js"
     ],
-    "commits": [
-      "153c60491a4ac87b95d740f0fefa27a1fc18723a",
-      "a9810f38a5cda29cf61be2c7c5fbd9c5aa831260"
+    "head_sha": "db3da9b230b831ce88bad5b274c0c23e3e0fefcf",
+    "tests": [
+      {
+        "type": "CI",
+        "run": 59,
+        "conclusion": "success",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39617900367"
+      },
+      {
+        "type": "CI",
+        "run": 61,
+        "conclusion": "success",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39618079142"
+      }
     ],
-    "tests": [],
-    "next": "Ouvrir la PR et attendre la première CI."
+    "next": "Fusionner la PR #29 avec contrôle du head SHA, vérifier main, synchroniser puis libérer le bail."
   },
   "last_completed": {
     "run_id": "ucp-20261021T132702Z-v3",
