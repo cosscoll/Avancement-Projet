@@ -358,3 +358,16 @@ L'autocritique a relevé un risque non testé : le raccourci PWA sur téléphone
 
 **Autocritique :** la cohérence des IDs n'est pas une recette fonctionnelle. Elle ne débloque pas un compte Cloud, un rappel serveur, ni la réalisation des 42 scénarios. Toute future correspondance des anciennes étiquettes avec un ticket canonique doit être fondée sur le cahier privé exact, sans le transférer sur GitHub public et sans effacer l'historique. Prochain sprint P0 : corriger une nouvelle course démontrée dans la déconnexion asynchrone Cloud (la fin de la déconnexion de A peut réinitialiser le compte B récemment connecté).
 
+
+## 21 octobre 2026 — Déconnexion asynchrone : une ancienne session ne peut pas effacer la suivante
+
+**Défaut reproduit :** quand A lançait `client.auth.signOut({scope:'local'})`, puis que B se connectait pendant l'attente, la fin de la promesse reprenait un code qui vidait `authUser`, `cache` et l'interface sans vérifier le compte courant. Même problème après confirmation de suppression de compte sur le serveur, au moment de la déconnexion locale ; reproduction avant correctif avec réponses différées en JavaScript isolé.
+
+**Première passe :** capturer `mutationSession()` dans l'action `logout` et revalider avant et après l'attente de `signOut`; faire de même après `signOut` sur la suppression de compte. Vérifier `signedOut.error` avant tout message de réussite de la déconnexion locale. [Commit direct main 372141b](https://github.com/cosscoll/Avancement-Projet/commit/372141b2c25904be02402c1016b381e762fedd1b).
+
+**Deuxième passe :** huit tests complémentaires, portant la suite lifecycle à **19 tests**, garantissent que le retour tardif de A n'efface pas B, ne réinitialise pas une nouvelle session A, ne réagit pas une seconde fois si l'événement SDK `SIGNED_OUT` s'est déclenché entre-temps, n'invente pas de réussite en cas d'échec et préserve la déconnexion normale. [Tests 0edd1da](https://github.com/cosscoll/Avancement-Projet/commit/0edd1da2aa561dce7d0352269a1d94f05211bc9c).
+
+**Vérification exacte SHA `0edd1da2aa561dce7d0352269a1d94f05211bc9c` :** [CI Cloud 97/97](https://github.com/cosscoll/Avancement-Projet/actions/runs/39584799187), [CI générale 255/255](https://github.com/cosscoll/Avancement-Projet/actions/runs/39584799394), [Pages réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/39584798321), [Chromium sur site public après déploiement réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/39584868792).
+
+**Autocritique et suite :** les tests des comptes restent des simulations et ne peuvent pas garantir les effets internes de `signOut` dans un SDK Supabase réel. L'événement `onAuthStateChange('SIGNED_OUT')` possède son propre chemin asynchrone : examiner les événements ordonnés dans le prochain sprint sans désactiver la suppression immédiate des données au logout. `config/cloud.json` reste `enabled:false` ; aucun projet externe supplémentaire, aucune dépense et aucune authentification A/B réelle.
+
