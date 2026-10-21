@@ -1,9 +1,21 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "idle",
-  "lease": null,
-  "checkpoint": null,
+  "status": "running",
+  "lease": {
+    "run_id": "ucp-20261021T073252Z-v3",
+    "owner": "chatgpt-automation-ucp",
+    "started_at": "2026-10-21T07:32:52Z",
+    "expires_at": "2026-10-21T08:17:52Z",
+    "objective": "Empêcher un getter window.matchMedia en erreur d'interrompre la navigation de la vitrine."
+  },
+  "checkpoint": {
+    "files": [],
+    "branch": null,
+    "pr_url": null,
+    "tests": [],
+    "next_action": "Créer une branche depuis main 2882da4b, borner la lecture de window.matchMedia et ajouter une régression DOM."
+  },
   "last_completed": {
     "run_id": "ucp-20261021T063235Z-v3",
     "ended_at": "2026-10-21T06:35:25Z",
