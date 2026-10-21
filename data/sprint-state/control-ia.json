@@ -1,44 +1,41 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-repair-sprint-contract-20261021093538253",
-    "started_at": "2026-10-21T09:35:38.253Z",
-    "expires_at": "2026-10-21T10:20:38.253Z",
-    "objective": "Fix own online evidence fields in CONTROL sprint journal and restore the shared contract CI without changing tests"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T09:34:59.562Z",
+    "updated_at": "2026-10-21T09:36:59.165Z",
     "main": true,
-    "stage": "main_direct_browser_postdeploy_green_exact_sha_cloud_still_disabled",
+    "stage": "main_only_pages_browser_green_report_contract_repaired_cloud_off",
     "files": [
       ".github/workflows/control-ia-browser.yml",
       "data/sprints/control-ia.json",
       "docs/CONTROL_IA_RETROSPECTIVES.md"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/commit/4e88d95cd0e9162cf3b9963058ca280c34c4f2ef",
       "https://github.com/cosscoll/Avancement-Projet/commit/1464cbf69b247702c94a46998f392ea9e1a90352",
       "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577830659",
       "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577830376",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577895141"
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577895141",
+      "https://github.com/cosscoll/Avancement-Projet/commit/04847143b33b846848b1595c87d251b09846ee2f",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39578269985",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39578269932"
     ],
     "remaining_blockers": [
-      "CONTROL Cloud disabled; no approved 0 € independent Supabase environment with real A/B session and RLS tests",
-      "Remaining account-sensitive asynchronous callback flows not fully audited",
-      "No physical Android or iOS device test"
+      "CONTROL Cloud remains intentionally off pending 0-euro distinct Supabase approval and real A/B JWT RLS testing.",
+      "Remaining async Visio/Missions/Lab race review not complete.",
+      "Any subsequent HEAD requires matching CI/Pages live test; prior exact SHA 1464cbf live evidence does not validate future changes."
     ],
-    "next_action": "Develop CONTROL fixes directly on main only after pre-tests, with CONTROL lease and SHA; verify per-commit push browser, Pages and post-deploy Chromium; next inspect visio/mission/lab account mutation race without enabling cloud. Do not create branches/PR."
+    "next_action": "Continue CONTROL development solely in main with lease and precommit tests. Use successful Pages deployment_status trigger and live Chromium on exact main SHA; no PR/side branches. Audit Visio/Mission/Lab owner races; keep Cloud disabled. Ensure future sprint reports include online_url, online_verified_at and online_evidence_url when using verified_online, before writing to main."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-main-postdeploy-gate-20261021093053974",
-    "started_at": "2026-10-21T09:30:53.974Z",
-    "ended_at": "2026-10-21T09:34:59.562Z",
-    "summary": "Published main-only post-deploy Chromium workflow and concurrency correction directly to main; GitHub Pages, push Chromium and post-deploy live Chromium all verified green on exact code SHA 1464cbf69b247702c94a46998f392ea9e1a90352; Cloud off.",
-    "stage": "verified_online_personal_control_not_cloud",
-    "commit_sha": "1464cbf69b247702c94a46998f392ea9e1a90352",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577895141"
+    "run_id": "control-ia-20261021-repair-sprint-contract-20261021093538253",
+    "started_at": "2026-10-21T09:35:38.253Z",
+    "ended_at": "2026-10-21T09:36:59.165Z",
+    "summary": "Repaired missing online evidence fields in a 3-deliverable CONTROL sprint report; verified Node quality and sprint contract GH Actions successful at code SHA 04847143; main-only postdeploy browser passed at 1464cbf; Cloud intentionally off.",
+    "stage": "tested_CI_green",
+    "commit_sha": "04847143b33b846848b1595c87d251b09846ee2f",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39578269932"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
