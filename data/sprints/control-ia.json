@@ -2608,5 +2608,111 @@
       "Accounts remain disabled; no criteria artificially promoted based only on code, mocks or public Pages proof."
     ],
     "next": "CONTROL-ACCOUNT real two-user Auth/JWT A/B and PostgREST acceptance using two owner-approved dedicated empty Supabase test accounts with secrets stored in GitHub Actions; test mobile cross-device, then implement durable transactional idempotency and reliable backup restore before enabling Cloud."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-backup-recovery-1749",
+    "started_at": "2026-10-21T17:49:00Z",
+    "ended_at": "2026-10-21T17:58:00Z",
+    "summary": "CONTROL-ACCOUNT: local-only inspection of clear and PBKDF2/AES-GCM encrypted CONTROL backup files with tenant validation and no DB mutations; native Node 453/453, Pages and post-deploy Chromium successes on code SHA 403308f. No real Supabase user A/B, automatic restore or mobile validation; Cloud disabled.",
+    "objectives": [
+      {
+        "before": "Cloud backups could be downloaded, but there was no in-app mechanism to inspect or authenticate an exported encrypted file or detect a wrong-account restore file before a future recovery attempt.",
+        "after": "Private account screen can select a bounded JSON backup, locally decrypt it using masked password input, validate every owner/record/project link, and display only summary counts/date; it cannot write to Supabase.",
+        "acceptance": "17 new Node tests including real WebCrypto decrypt, owner isolation, stale-session and tamper paths. Native GitHub Actions quality 453/453, Pages and post-deploy Chromium success on code SHA 403308f; no claim of real Auth acceptance or restoration."
+      }
+    ],
+    "done": [
+      "Acquired cooperative WIP=1 ACCOUNT sprint lock using GitHub SHA compare-and-swap on main.",
+      "Added account backup file selector, status region and responsive CSS. File selection handles local JSON only, size limit 50 MiB; never posts file contents to backend.",
+      "Implemented strict inspection of six-table account export schema and encrypted export envelope: accountId vs active user, profile/user_id, preferences/owner_id, all row owners, unique row IDs, valid timestamp and project references.",
+      "Reused PBKDF2-SHA256-200000 and AES-GCM WebCrypto encryption format for decrypt verification; secure dialog masks password and supports cancel; plaintext bytes overwritten after parsing.",
+      "Inspector only renders totals of projects/items/connections/audit and export time with textContent, not record bodies or sensitive metadata; remains read-only and refuses wrong owner data.",
+      "Added 17 Node regression tests in new tests/control-cloud-backup-inspection.test.mjs (real AES-GCM, wrong password, ciphertext tampering, wrong user, malformed data, 50 MiB limit, parallel checks, account switches).",
+      "Updated existing account-lifecycle tests for dual-mode askBackupPassword(mode) without suppressing prior coverage; distinguish decryption errors from authenticated wrong-account data.",
+      "Verified native GitHub Actions quality 453/453 for code SHA 403308f and Pages deployment and post-deploy Chromium browser success for same code.",
+      "Updated privacy/backup guidance, retrospective and CONTROL-ACCOUNT strategic handoff; kept Cloud disabled and zero expenses."
+    ],
+    "blockers": [
+      "Backup inspection is not a server restoration/import tool; transactional rollback, server idempotency and true restore still unimplemented.",
+      "No two authorized real Supabase Auth JWT A/B test users and GitHub protected secrets; private Cloud remains disabled, no real RLS user isolation or mobile cross-device acceptance.",
+      "Local file read and AES-GCM verification are tested in Node WebCrypto, while Chromium public proof cannot exercise logged-in Cloud UI before enablement.",
+      "Files >50 MiB are explicitly rejected; older/future formats without approved migration are not treated as valid backups.",
+      "Server-side multi-tab/device idempotency and transactionally consistent backup snapshot remain open."
+    ],
+    "quality": {
+      "ci": "success",
+      "real_browser_verified": false,
+      "checks_run": [
+        "Native Node.js quality test suite at code SHA 403308f4be3ad55a45cfcaa2625efd51b7e47725",
+        "Native WebCrypto AES-GCM round-trip, tamper/wrong-owner tests",
+        "GitHub Pages build and published Chromium checks for code SHA 403308f4be3ad55a45cfcaa2625efd51b7e47725"
+      ],
+      "checks_passed": [
+        "453/453 native Node tests, GitHub Actions https://github.com/cosscoll/Avancement-Projet/actions/runs/39648039792",
+        "GitHub Pages build/deploy success https://github.com/cosscoll/Avancement-Projet/actions/runs/39648025505",
+        "Post-deploy Chromium workflow success https://github.com/cosscoll/Avancement-Projet/actions/runs/39648111947"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "This is a recovery preflight, not a restore or server migration.",
+        "No actual authenticated CONTROL Cloud with distinct JWT users and mobile devices was exercised.",
+        "Native CI and public Chromium proven for code SHA, not necessarily subsequent docs/report/checkpoint head."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Local tenant-validated Cloud backup inspector and AES-GCM reader",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "4fa73935b06ac9d3dff06e4369e32254e3dc6dfb",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/4fa73935b06ac9d3dff06e4369e32254e3dc6dfb",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Real WebCrypto and account isolation regression suite (17 new tests)",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "403308f4be3ad55a45cfcaa2625efd51b7e47725",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/403308f4be3ad55a45cfcaa2625efd51b7e47725",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Native Node 453/453 and Chromium release proof",
+        "kind": "evidence",
+        "stage": "tested",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "403308f4be3ad55a45cfcaa2625efd51b7e47725",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39648039792",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "links": [
+      {
+        "label": "Node 453/453",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39648039792"
+      },
+      {
+        "label": "Pages deployment",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39648025505"
+      },
+      {
+        "label": "Post-deploy browser",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39648111947"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "Encrypted backups needed a self-service local validation step before implementing a costly or unsafe server restore.",
+      "A wrong-account encrypted payload should say ownership mismatch, not misleadingly suggest wrong password; handled after AES-GCM authenticated decrypt.",
+      "No content from inspected backups must enter the UI through innerHTML, logs or remote APIs; summary output uses textContent and session guard.",
+      "Approval, RLS acceptance and transactional guarantees are prerequisites for real restoration; do not claim ACCOUNT criteria as verified from mock or public Pages."
+    ],
+    "next": "CONTROL-ACCOUNT: secure owner approval for two empty Supabase Auth users and protected GitHub Secrets; run real JWT/RLS A/B and mobile tests, then implement a preview-confirm-transactional-rollback restore service using the local validated backup, server-side deduplication and idempotency. Cloud remains off until acceptance."
   }
 ]
