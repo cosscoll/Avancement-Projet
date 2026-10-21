@@ -77,7 +77,7 @@ function ensure(){
  dialog.addEventListener('click',e=>{
   if(e.target.closest('[data-nav-dismiss]')){close();return}
   const choose=e.target.closest('[data-finder-id]');if(choose){const item=catalog().find(x=>x.id===choose.dataset.finderId);if(item)select(item);return}
-  const filter=e.target.closest('[data-finder-cat]');if(filter){category=filter.dataset.finderCat;render();query.focus()}
+  const filter=e.target.closest('[data-finder-cat]');if(filter){category=filter.dataset.finderCat;query.value='';render();query.focus()}
  });
  query.addEventListener('input',()=>render());
  dialog.addEventListener('keydown',e=>{
