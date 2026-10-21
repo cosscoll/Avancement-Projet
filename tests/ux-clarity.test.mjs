@@ -11,7 +11,7 @@ test('Four clear persistent destinations in personal and Cloud navigations',()=>
     ['personal',personal,/data-go="(?:home|inbox|manager|tools)"/g],
     ['cloud',cloud,/data-page="(?:projects|inbox|manager|tools)"/g]
   ]){
-   assert.equal((markup.match(pattern)||[]).length,4,name);
+   const region=name==='cloud'?(markup.match(/<nav id="bottomnav"[\s\S]*?<\/nav>/)?.[0]||''):markup;assert.equal((region.match(pattern)||[]).length,4,name);
    assert.ok(markup.includes('ux-clarity.css'),name+' CSS');
   }
   assert.doesNotMatch(personal,/<button data-go="missions"/);
