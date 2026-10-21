@@ -39,6 +39,7 @@ test('real test must not create permanent Auth users or mutate append-only audit
 });
 
 test('unexpected foreign writes are tracked for cleanup before the E2E fails',()=>{
- assert.match(runner,/work\.push\(\{table:'control_connections',id:forge\.data\[0\]\.id,owner:a,token:tokenA\}\)/);
- assert.match(runner,/work\.push\(\{table:'control_items',id:inject\.data\[0\]\.id,owner:b,token:tokenB\}\)/);
+ assert.match(runner,/trackUnexpected\('control_connections',tokenA,a,'label',forgedLabel,forge\)/);
+ assert.match(runner,/trackUnexpected\('control_items',tokenB,b,'title',foreignTitle,inject\)/);
+ assert.match(runner,/unverifiedCleanup\.push\(table\)/);
 });
