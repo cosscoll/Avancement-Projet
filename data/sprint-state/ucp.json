@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "ucp-report-fix-20261021-control-shared-ci",
+    "started_at": "2026-10-21T07:08:57.921Z",
+    "expires_at": "2026-10-21T07:28:57.921Z",
+    "objective": "Fix only one legacy UCP report incident schema metadata to restore the central GitHub CI; no changes to UCP code or outcomes."
+  },
   "checkpoint": null,
   "last_completed": {
     "run_id": "ucp-20261021T063235Z-v3",
