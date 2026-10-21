@@ -53,7 +53,7 @@ async function authenticate(env,side,root,key){
 }
 const eq=(field,value)=>'&'+encodeURIComponent(field)+'=eq.'+encodeURIComponent(value);
 async function run(env=process.env){
- const work=[];
+ const work=[],unverifiedCleanup=[];
  const {root,key}=setup(env),marker='CONTROL-E2E-'+randomUUID();
  const tokens=[await authenticate(env,'A',root,key),await authenticate(env,'B',root,key)];
  const users=[];
@@ -114,18 +114,30 @@ async function run(env=process.env){
   if(!edit.ok||edit.data?.length!==0)fatal('B peut modifier le projet de A ou UPDATE ne respecte pas RLS');
   const remove=await obj('control_projects','DELETE','?id=eq.'+projA.id+'&select=id',tokenB,undefined,true);
   if(!remove.ok||remove.data?.length!==0)fatal('B peut supprimer le projet de A');
-  const forge=await obj('control_connections','POST','?select=id',tokenB,{owner_id:a,provider:'ChatGPT',label:'FORGED'},true);
+  // A failed RLS policy can permit INSERT while suppressing its returned row.
+  // Recover the ID by this run's unique marker under the legitimate owner,
+  // otherwise fail the cleanup explicitly instead of leaving a silent orphan.
+  const trackUnexpected=async(table,ownerToken,owner,field,value,result)=>{
+   let ids=Array.isArray(result.data)?result.data.map(row=>row?.id).filter(Boolean):[];
+   if(!ids.length){
+    try{
+     const seen=await obj(table,'GET','?select=id&'+field+'=eq.'+encodeURIComponent(value),ownerToken);
+     ids=Array.isArray(seen.data)?seen.data.map(row=>row?.id).filter(Boolean):[];
+    }catch{}
+   }
+   if(!ids.length)unverifiedCleanup.push(table);
+   for(const id of new Set(ids))work.push({table,id,owner,token:ownerToken});
+  };
+  const forgedLabel=marker+' FORGED';
+  const forge=await obj('control_connections','POST','?select=id',tokenB,{owner_id:a,provider:'ChatGPT',label:forgedLabel},true);
   if(forge.ok){
-   // If a policy regresses, the unexpected write is still tracked for safe
-   // cleanup using the legitimately owning test account A.
-   if(Array.isArray(forge.data)&&forge.data[0]?.id)
-    work.push({table:'control_connections',id:forge.data[0].id,owner:a,token:tokenA});
+   await trackUnexpected('control_connections',tokenA,a,'label',forgedLabel,forge);
    fatal('B peut écrire une connexion en usurpant A');
   }
-  const inject=await obj('control_items','POST','?select=id',tokenB,{project_id:projA.id,kind:'task',title:'CROSS PROJECT'},true);
+  const foreignTitle=marker+' CROSS PROJECT';
+  const inject=await obj('control_items','POST','?select=id',tokenB,{project_id:projA.id,kind:'task',title:foreignTitle},true);
   if(inject.ok){
-   if(Array.isArray(inject.data)&&inject.data[0]?.id)
-    work.push({table:'control_items',id:inject.data[0].id,owner:b,token:tokenB});
+   await trackUnexpected('control_items',tokenB,b,'title',foreignTitle,inject);
    fatal('B peut associer une tâche au projet de A');
   }
   const after=await obj('control_projects','GET','?select=id,name&id=eq.'+projA.id,tokenA);
@@ -137,7 +149,7 @@ async function run(env=process.env){
   // owning user's own token, respecting FK order. Report cleanup failures.
   const rank={control_connections:0,control_items:1,control_preferences:2,control_projects:3,control_profiles:4};
   const cleanup=work.slice().sort((x,y)=>(rank[x.table]??9)-(rank[y.table]??9));
-  const failed=[];
+  const failed=[...unverifiedCleanup];
   for(const row of cleanup){
    const field=row.table==='control_profiles'?'user_id':row.table==='control_preferences'?'owner_id':'id';
    const keyField=field==='id'?row.id:row.owner;
