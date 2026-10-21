@@ -529,6 +529,11 @@ async function exportMyData(encrypted){
  message('Export effectué. Conservez le fichier et son mot de passe en lieu sûr.');
 }
 async function importLegacy(){
+ // Guard against concurrent imports in the same browser tab. Cross-device
+ // idempotency requires backend authorization and remains unverified.
+ if(importLegacy.inFlight)throw Error('Une importation est déjà en cours.');
+ importLegacy.inFlight=true;
+ try{
  const session=mutationSession();
  if(cache.preferences?.settings?.legacyImportedAt)throw Error('Une migration a déjà été effectuée pour ce compte.');
  let local={};try{local=JSON.parse(localStorage.getItem('control-hub-v2')||'{}')}catch{}
@@ -581,6 +586,9 @@ async function importLegacy(){
  await reload(true);
  if(!session.current())return false;
  nav('projects');message(done+' projets et '+added+' éléments historiques transférés.');
+ }finally{
+  importLegacy.inFlight=false;
+ }
 }
 
 async function action(button){
