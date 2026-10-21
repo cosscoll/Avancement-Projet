@@ -17,8 +17,8 @@
   "private_backlog_reference": "CONTROL IA V1.2 PRIVÉE — 22 tickets BACK-001..022 et 42 recettes T-01..T-42; texte intégral uniquement Library /CONTROL-IA, jamais dans le dépôt public.",
   "focus": {
     "capability": "CONTROL-ACCOUNT",
-    "reason": "Identité et cloisonnement multi-utilisateurs requis pour les intégrations réelles; en attente d'infrastructure dédiée et autorisation.",
-    "current_gate": "auth_and_real_A_B_RLS_not_verified",
+    "reason": "Base CONTROL Cloud distincte créée sur organisation gratuite ; écrans de comptes toujours bloqués jusqu'à deux véritables identités Auth, JWT A/B et recette mobile.",
+    "current_gate": "two_real_Auth_JWT_and_mobile_lifecycle_not_verified",
     "cloud_activation_allowed": false,
     "operational_claim_allowed": false
   },
@@ -104,14 +104,16 @@
     "Éviter de commencer des fonctionnalités indépendantes simplement pour augmenter le nombre de commits."
   ],
   "handoff": {
-    "next_sprint_goal": "CONTROL-ACCOUNT BACK-004/005 : renforcer les garde-fous d'identité, la validation de configuration et les tests de changement de session A/B, sans activer Cloud.",
+    "next_sprint_goal": "CONTROL-ACCOUNT : recette Auth/JWT/PostgREST A/B réellement signée sur la base CONTROL indépendante, puis tests de session, export complet et suppression avant toute ouverture du Cloud.",
     "checkpoint_to_review": "RÉSOLU : correctif privé control-ia/pwa-atomic-v38-20261019-1754 repris et publié en PWA v39 ; vrai Chromium en ligne 39401977906 et 17 tests PWA. Conserver l'archive historique dans Library, ne plus présenter la v38 comme chantier bloqué.",
     "next_steps": [
-      "Durcir la validation du projet et de la clé Supabase côté client : refuser les URL avec credentials/query, refuser tout JWT service_role/anonyme non attesté, conserver enabled:false.",
-      "Tester les transitions de session et le cloisonnement local dans un environnement synthétique pour T-15/16/21 ; garder ces critères non validés tant que deux comptes réels et un backend dédié ne sont pas disponibles.",
-      "Réaliser la recette navigateur Cloud fermé et suite contrôle PWA v39 + exigences V1.2 ; vérifier déploiement et preuves sans toucher à la base IAgile."
+      "Vérifier les derniers runs GitHub Actions Node/Pages pour le SHA exact et corriger toute régression sans masquer les échecs ; ne pas confondre V8 mock et CI native.",
+      "Préparer avec l'accord du propriétaire deux comptes Auth de test CONTROL séparés et vides, avec clé sb_publishable_* et identifiants placés uniquement dans des secrets GitHub Actions.",
+      "Déclencher manuellement la recette Auth réelle A/B déjà versionnée, vérifier 6 tables RLS, nettoyage et révocation/expiration, sans clé service_role ni base IAgile.",
+      "Vérifier sur navigateur authentifié le parcours comptes et l'export complet des six tables (pagination, contrôle propriétaire, gestion d'erreur), puis tester deux appareils, avant d'envisager une activation limitée.",
+      "Concevoir ensuite une idempotence serveur pour les lots de missions/imports afin de résister aux doublons entre onglets/appareils ; les garde-fous navigateur existants ne suffisent pas."
     ],
-    "external_decision_required": "Nouvelle organisation/projet Supabase exclusivement CONTROL, coût attesté 0 € et consentement explicite avant création/activation."
+    "external_decision_required": "Deux authentifications de test dédiées et secrets GitHub Actions fournis/validés par le propriétaire avant toute recette Auth réelle ; aucune activation Cloud ni dépense."
   },
   "improvements": [
     {
