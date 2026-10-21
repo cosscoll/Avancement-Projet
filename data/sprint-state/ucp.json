@@ -1,30 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-20261021T123012Z-v3",
-    "owner": "chatgpt-automation-ucp",
-    "started_at": "2026-10-21T12:30:12Z",
-    "heartbeat_at": "2026-10-21T12:32:20Z",
-    "expires_at": "2026-10-21T13:17:20Z",
-    "objective": "Éviter la double lecture de URL.createObjectURL afin de fiabiliser le téléchargement du brief."
-  },
-  "checkpoint": {
-    "phase": "code_committed",
-    "branch": "fix/ucp-create-object-url-getter-20261021",
-    "files": [
-      "site-vitrine/dist/assets/app.js",
-      "site-vitrine/tests/app-shell.test.cjs"
-    ],
-    "tests": "CI pending",
-    "next": "Ouvrir la PR, attendre la CI, autocritiquer puis effectuer une seconde passe corrective."
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261021T112618Z-v3",
-    "ended_at": "2026-10-21T11:29:52.405Z",
+    "run_id": "ucp-20261021T123012Z-v3",
+    "ended_at": "2026-10-21T12:32:53.396Z",
     "outcome": "merged",
-    "summary": "PR #26 getters DOM d’insertion sûrs fusionnée sur main 680ef595 après deux CI vertes ; navigateur réel non vérifié.",
+    "summary": "PR #27 getter createObjectURL stabilisé fusionnée sur main d33d4baf après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
