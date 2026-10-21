@@ -189,10 +189,12 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
     if(instruction.length>29000)throw Error('Brief trop long pour la base de données CONTROL Cloud.');
     if(cache.items.some(x=>x.project_id===projectId&&x.kind==='mission'&&x.provider===provider&&x.body===instruction))return false;
     const row={owner_id:owner,project_id:projectId,kind:'mission',title:String(title).slice(0,200),body:instruction,provider,status:'todo'};
-    const result=await client.from('control_items').insert(row).select('id').single();
+    const result=await client.from('control_items').insert(row).select('id,owner_id,project_id').single();
     if(!session.current())return false;
-    if(result.error||!result.data)throw Error('Enregistrement impossible : '+(result.error?.message||'réponse vide.'));
-    await reload(true);
+    if(result.error||!result.data||!result.data.id||result.data.owner_id!==owner||result.data.project_id!==projectId)
+     throw Error('Création de mission non confirmée pour ce compte et ce projet : actualise avant de recommencer.');
+    if(await reload(true)===false&&session.current())
+     throw Error('Mission enregistrée, mais synchronisation non vérifiée : actualise avant de recommencer.');
     return session.current();
    }
   });return;
@@ -213,7 +215,8 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
     const object={owner_id:owner,project_id:project,kind:'resource',title:tool.name,provider:'CONTROL Bibliothèque',url:tool.url,body:(tool.summary||'')+(tool.useCase?'\nCas pratique : '+tool.useCase:''),details:{catalogToolId:tool.id,category:tool.category,course:tool.courses?.[0]||''}};
     const result=await client.from('control_items').insert(object).select('*').single();
     if(!session.current())return false;
-    if(result.error||!result.data||result.data.owner_id!==owner)throw Error('Enregistrement refusé ou propriétaire incohérent : '+(result.error?.message||'actualise.'));
+    if(result.error||!result.data||!result.data.id||result.data.owner_id!==owner||result.data.project_id!==project)
+     throw Error('Enregistrement refusé ou projet/propriétaire incohérent : '+(result.error?.message||'actualise.'));
     cache.items.unshift(result.data);message('Outil enregistré dans les ressources du projet.');return true;
    }
   });
