@@ -1,30 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-20261021T132702Z-v3",
-    "owner": "chatgpt-automation-ucp",
-    "started_at": "2026-10-21T13:27:02Z",
-    "heartbeat_at": "2026-10-21T13:29:10Z",
-    "expires_at": "2026-10-21T14:14:10Z",
-    "objective": "Stabiliser les getters Clipboard afin qu’un WebView instable ne bloque pas la copie du brief."
-  },
-  "checkpoint": {
-    "phase": "code_committed",
-    "branch": "fix/ucp-clipboard-getters-20261021",
-    "files": [
-      "site-vitrine/dist/assets/app.js",
-      "site-vitrine/tests/app-shell.test.cjs"
-    ],
-    "tests": "CI pending",
-    "next": "Ouvrir la PR, attendre la CI, autocritiquer puis effectuer une seconde passe corrective."
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261021T123012Z-v3",
-    "ended_at": "2026-10-21T12:32:53.396Z",
+    "run_id": "ucp-20261021T132702Z-v3",
+    "ended_at": "2026-10-21T13:30:06.117Z",
     "outcome": "merged",
-    "summary": "PR #27 getter createObjectURL stabilisé fusionnée sur main d33d4baf après deux CI vertes ; navigateur réel non vérifié.",
+    "summary": "PR #28 getters Clipboard stabilisés fusionnée sur main 82cc9498 après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
