@@ -620,8 +620,12 @@ async function action(button){
   case 'refresh':await reload();return;
   case 'account':nav('account');return;
   case 'logout':{
+   const session=mutationSession();
    if(!confirm('Se déconnecter de cet appareil ?'))return;
-   const r=await client.auth.signOut({scope:'local'});if(r.error)throw Error(r.error.message);
+   if(!session.current())return false;
+   const r=await client.auth.signOut({scope:'local'});
+   if(!session.current())return false;
+   if(r.error)throw Error(r.error.message);
    verificationSeq++;epoch++;authUser=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';
    window.CONTROL_HELP?.reset();visible('auth');message('Déconnecté de cet appareil.');return;
   }
@@ -637,7 +641,10 @@ async function action(button){
    const r=await client.functions.invoke('control-delete-account',{body:{confirmation:'SUPPRIMER MON COMPTE'}});
    if(!session.current())return false;
    if(r.error||r.data?.deleted!==true)throw Error('Suppression non confirmée par le serveur. Aucune réussite ne peut être annoncée.');
-   await client.auth.signOut({scope:'local'});verificationSeq++;epoch++;authUser=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');message('Compte et données supprimés par le serveur.');return;
+   const signedOut=await client.auth.signOut({scope:'local'});
+   if(!session.current())return false;
+   if(signedOut.error)throw Error('Suppression confirmée par le serveur, mais déconnexion locale non confirmée : '+signedOut.error.message);
+   verificationSeq++;epoch++;authUser=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');message('Compte et données supprimés par le serveur.');return;
   }
   default:return;
  }
