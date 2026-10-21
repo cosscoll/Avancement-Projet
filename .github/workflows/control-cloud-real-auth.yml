@@ -1,0 +1,51 @@
+name: CONTROL Cloud — Vrais JWT A/B (déclenchement manuel)
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_dedicated_test_accounts:
+        description: 'Confirmer deux comptes TEST distincts, vides et autorisés, jamais des comptes clients'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# Never cancel an in-progress test: its finally block must clean test records.
+concurrency:
+  group: control-cloud-auth-acceptance
+  cancel-in-progress: false
+
+jobs:
+  real-auth:
+    if: inputs.confirm_dedicated_test_accounts == true
+    name: Supabase Auth réel, PostgREST/RLS des 6 tables
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    environment: control-cloud-test
+    steps:
+      - name: Lire le code de recette sans conserver de jeton GitHub
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Installer Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Vérifier la syntaxe et les règles de sécurité de la recette
+        run: |
+          node --check tests/control-cloud-real-auth-e2e.mjs
+          node --test tests/control-cloud-real-auth-e2e.test.mjs
+      - name: Authentifier deux vrais comptes et tester l'isolation serveur puis nettoyer
+        # Secrets must be configured by the owner for the dedicated test environment.
+        # Password OR direct access JWT supported for each side, never service_role.
+        env:
+          CONTROL_TEST_PROJECT_REF: rvrmjjtdedidjnrkdery
+          CONTROL_TEST_PUBLISHABLE_KEY: ${{ secrets.CONTROL_TEST_PUBLISHABLE_KEY }}
+          CONTROL_TEST_A_JWT: ${{ secrets.CONTROL_TEST_A_JWT }}
+          CONTROL_TEST_B_JWT: ${{ secrets.CONTROL_TEST_B_JWT }}
+          CONTROL_TEST_A_EMAIL: ${{ secrets.CONTROL_TEST_A_EMAIL }}
+          CONTROL_TEST_B_EMAIL: ${{ secrets.CONTROL_TEST_B_EMAIL }}
+          CONTROL_TEST_A_PASSWORD: ${{ secrets.CONTROL_TEST_A_PASSWORD }}
+          CONTROL_TEST_B_PASSWORD: ${{ secrets.CONTROL_TEST_B_PASSWORD }}
+        run: node tests/control-cloud-real-auth-e2e.mjs
