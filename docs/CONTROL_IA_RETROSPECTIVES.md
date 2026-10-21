@@ -595,3 +595,23 @@ L'autocritique a relevé un risque non testé : le raccourci PWA sur téléphone
 **Preuves vérifiées pour le code du sprint :** [GitHub Actions qualité run 39648039792](https://github.com/cosscoll/Avancement-Projet/actions/runs/39648039792), **453 tests Node natifs, 453 pass, 0 fail**, code SHA `403308f4be3ad55a45cfcaa2625efd51b7e47725`. [Pages build 39648025505](https://github.com/cosscoll/Avancement-Projet/actions/runs/39648025505) et [Chromium après publication 39648111947](https://github.com/cosscoll/Avancement-Projet/actions/runs/39648111947) succès. Ces contrôles ne simulent pas une authentification Supabase réelle avec deux comptes.
 
 **Limites :** cette fonctionnalité est un **pré-contrôle de restauration**, pas une restauration. Les exports passés dans une autre version ou un autre compte restent refusés plutôt que migrés automatiquement ; toute compatibilité future devra être testée et consentie. La suite du cahier doit prévoir le plan de restauration/rollback transactionnel, un verrou d'idempotence serveur inter-appareils et la recette JWT/RLS A/B après accord du propriétaire. `config/cloud.json.enabled=false`, aucun critère `real_verified` supplémentaire.
+
+
+## 21 octobre 2026 — Refonte de navigation V2 : retrouvailles des fonctionnalités sans menus interminables
+
+**Problème utilisateur :** « on se perd et on ne retrouve plus les boutons » après l'extension de CONTROL. Écrans concernés : application personnelle PWA et espace Cloud (toujours non activé).
+
+**Refonte livrée directement sur `main`** :
+- Quatre destinations persistantes inchangées : Projets / À traiter / CONTROL IA / Outils. Pas d'ajout d'une cinquième case mobile illisible.
+- **Trouver une fonction** accessible depuis l'en-tête, bouton mobile flottant, et raccourci Ctrl+K / ⌘K. Menu de recherche unique dans `assets/navigation-hub.js` et `assets/navigation-hub.css`. Filtre par usage et intention (par exemple « créer une visio », « publier un site », « retrouver une décision »), catégorie « Tout voir » et classements pertinents. **Aucune recherche de contenu privé n'est effectuée par ce menu**, aucune API, aucun enregistrement des termes de recherche.
+- Ajout de l'accès « Dans ce projet » pour ses 11 sous-sections réelles (conversations, ressources, IA, visios, déploiement, connexions…) et fil de position « Vous êtes ici » avec retour vers Projets. Les sous-sections d'un projet autre que celui actuellement ouvert ne sont pas présentées.
+- Accueil limité à trois tâches principales ; les nouveautés restent disponibles dans un panneau repliable pour réduire la surcharge visuelle.
+- Mise en page sur mobile : panneau de recherche accessible au pouce, contrôles de navigation tactiles, navigation clavier, fermeture Échap, focus et lisibilité, compatibilité 320 px.
+- Application Cloud : même mécanique de recherche et repérage, affichée exclusivement lorsque le compte Auth est présent ; routes inexistantes non proposées. **Cloud reste `enabled:false`**.
+- Service worker v41 : cache des deux nouveaux fichiers de navigation, avec ressources critiques et vérification de types. La nouvelle installation PWA utilise cette version de cache.
+
+**Problèmes détectés et réparés pendant la CI :** les tests PWA et Chromium utilisaient encore la valeur figée du cache v40 ; leurs vérifications ont été mises à jour vers v41, sans retirer les assertions offline. Le premier test navigateur mobile exigeait un focus programmatique non garanti et une casse exacte sur « Visio » ; le scénario a été corrigé pour vérifier la vraie entrée et la vraie destination. Le test final vérifie que l'on peut ouvrir le menu à 320 px, trouver « visio », atteindre la page associée et revenir à l'écran précédent sans déborder.
+
+**Résultat natif et publication du code :** commit `b518c40594f22de9983b47e4ad4f9d75c36c3a40` : [Qualité GitHub Actions 39652408040](https://github.com/cosscoll/Avancement-Projet/actions/runs/39652408040) : **466 tests / 466 pass, 0 fail** ; [Pages 39652407546](https://github.com/cosscoll/Avancement-Projet/actions/runs/39652407546) **success** ; [Chromium après publication 39652479453](https://github.com/cosscoll/Avancement-Projet/actions/runs/39652479453) **success**.
+
+**Conformité et limites :** cette livraison améliore les accès aux fonctions existantes, **pas leur degré d'opérabilité**. Auth multiutilisateur avec deux JWT réels et synchronisation Cloud/mobiles physiques non testées. Les scénarios et critères du cahier V1.2 ne sont pas artificiellement marqués `real_verified`. L'usage réel d'Android devrait orienter la prochaine passe d'uniformisation interne des écrans Missions, Outils et Paramètres. Aucun achat ni service facturé.
