@@ -442,3 +442,20 @@ L'autocritique a relevé un risque non testé : le raccourci PWA sur téléphone
 
 **Suite :** avancer vers `IMP-01` via un plan explicable en lecture seule, à partir de la mémoire et des tâches du projet effectivement sélectionné ; toute exécution devra réutiliser les permissions et confirmations `IMP-05`, la protection contre les rejouements `IMP-10`, puis obtenir une preuve distincte d'action effectuée.
 
+
+## 21 octobre 2026 — IMP-01 : objectif local vers plan éditable et sourcé
+
+**Constat :** CONTROL savait synthétiser les états de projets, mais ne proposait pas de parcours explicitement séparé entre « décrire un objectif », « préparer un plan », « vérifier/modifier les étapes » et « enregistrer une proposition ». L'étape inverse — exécution réelle sous permissions — n'est toujours pas disponible.
+
+**Première passe sur `main` :** ajout `proposeGoal(projectId,goal)` dans `assets/command-center.js`. Il prépare une liste déterministe d'étapes assorties de **critères de réussite** et d'une **source** provenant des actions/décisions du seul projet autorisé, ou d'une suggestion locale clairement nommée non vérifiée. Aucune instruction ou conversation privée de fournisseur IA n'est lue. Une route `#/control/goals` et des raccourcis ajoutent un formulaire d'objectif avec prévisualisation modifiable des titres et critères.
+
+**Contrôle de l'enregistrement :** `saveGoalPlan` refuse un projet supprimé, les champs hors limites, les étapes incomplètes et la réutilisation d'un identifiant de proposition avec un contenu différent. Un deuxième enregistrement strictement identique renvoie la même référence de plan. Si le stockage local échoue, la modification de tableau est annulée. La sauvegarde porte le statut **`proposition`** et ne crée aucune tâche, aucun rendez-vous, ni aucune exécution de fournisseur IA. [Code](https://github.com/cosscoll/Avancement-Projet/commit/944be4b144223d276bbc66dc020a893d55bbc637).
+
+**Deuxième passe (tests sur la vraie UI) :** [12 tests Node](https://github.com/cosscoll/Avancement-Projet/commit/2232e92d946087e0d9db678d5f5ead3aa76d5e95) couvrent les projets distincts, les sources des décisions, les critères obligatoires, les modifications, les rejouements, l'échec de stockage et la non-exécution. Le [parcours Chromium](https://github.com/cosscoll/Avancement-Projet/actions/runs/39592103880) a vérifié la séparation UCP/IAgile, la modification d'un critère, l'enregistrement de l'objectif UCP et l'absence d'une création de tâche involontaire.
+
+**Preuves :** [GitHub Actions 329/329](https://github.com/cosscoll/Avancement-Projet/actions/runs/39592107242), [Pages réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/39592108116), [Chromium public postdéploiement réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/39592172395) sur le SHA publié `e2d8306ec0f2c761f136de88fc1bfaa067c30d5d`, qui contient les changements IMP-01.
+
+**Autocritique :** ce planificateur n'est ni un modèle général, ni une recherche approfondie, ni un exécuteur autonome. Les sources utilisées restent des saisies locales et peuvent être périmées. Les plans ne se synchronisent pas entre appareils, et un reçu local ne valide aucune action métier externe. **Ne pas classer `IMP-01` comme intégralement terminé ou certifié** : il lui manque l'exécution étape par étape avec consentement et résultat prouvé, l'idempotence authentifiée et la reprise serveur. Une autre automatisation du dépôt partagé a poussé un commit de bail UCP pendant ce sprint ; les preuves citées portent explicitement sur le SHA de Pages et pas indistinctement sur toutes les révisions suivantes.
+
+**Suite :** relier chaque proposition d'étape à une confirmation locale vérifiée `IMP-05`, avec reçu et `IMP-10` pour les redémarrages, sans jamais exécuter une action ou fournisseur sans autorisation. Préserver la logique du mono-projet, les coûts nuls et les tests Chromium lors de chaque modification.
+
