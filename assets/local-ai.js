@@ -128,7 +128,7 @@ function mount(root,adapter={}){
  root.__controlLocalStop=()=>{disposed=true;stop();worker?.terminate?.();worker=null};
  render();state();
  window.CONTROL_COACH?.mount(root,{onCreateAction:typeof adapter.createAction==='function'?title=>adapter.createAction(chosen,title):undefined});
- window.CONTROL_OPERATOR?.mount(root,{snapshot:adapter.operator?.snapshot,execute:adapter.operator?.execute,getScope:()=>chosen});
+ window.CONTROL_OPERATOR?.mount(root,{snapshot:adapter.operator?.snapshot,execute:adapter.operator?.execute,receipt:adapter.operator?.receipt,getScope:()=>chosen});
  window.CONTROL_DELIVERY?.mount(root);
 }
 function unmount(root){const stop=root?.__controlLocalStop;if(typeof stop==='function'){stop();delete root.__controlLocalStop}}
