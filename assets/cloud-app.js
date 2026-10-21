@@ -65,7 +65,7 @@ async function reload(silent=false){if(!authUser||!client)return;const owner=aut
  cache={projects:p.data||[],items:i.data||[],preferences:pref.data||null};render();
  if(!silent)message('Espace synchronisé avec votre compte.');
  }catch(e){if(token!==epoch||authUser?.id!==owner)return;if(!silent)message(e.message||'Impossible de synchroniser vos données.',true);if(!cache.projects.length&&!cache.items.length)byId('page').innerHTML=panel('Connexion indisponible','<p>Les données privées n’ont pas pu être chargées. Réessaie après vérification de la configuration et des règles d’accès.</p>'+btn('Réessayer','refresh'))}
- finally{if(waitingOwner===owner){waiting=false;waitingOwner=null;byId('refresh').disabled=false}}}
+ finally{if(token===epoch&&waitingOwner===owner){waiting=false;waitingOwner=null;byId('refresh').disabled=false}}}
 function nav(where,pid='',newTab='ai_space'){page=where;picked=pid;tab=newTab;window.scrollTo?.(0,0);render()}
 function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [data-page]').forEach(b=>{const k=b.dataset.page;const active=k==='projects'&&(page==='projects'||page==='project')||k==='inbox'&&page==='inbox'||k==='manager'&&page==='manager'||k==='tools'&&!['projects','project','inbox','manager'].includes(page);b.setAttribute('aria-current',active?'page':'false')});const fns={projects:projectsPage,project:projectPage,inbox:inboxPage,missions:missionsPage,automations:automationsPage,manager:managerPage,tools:toolsPage,account:accountPage,catalog:catalogPage,deploy:deployPage,lab:labPage,command:commandPage,visios:visiosPage};byId('page').innerHTML=(fns[page]||projectsPage)();
  if(page==='visios'){
