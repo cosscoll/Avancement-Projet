@@ -1489,5 +1489,107 @@
       "P0: external services and real accounts are not enabled; IMP-10 acceptance not fully real_verified."
     ],
     "next": "Next independent sprint: inspect project-scoped local memory/decision sources as IMP-03 without duplicating existing features; require project isolation, provenance and explicit consent. If adding data persistence, enforce deletion propagation, conflict indication and source timestamp. Remain direct main with lease, Node/Chromium/Pages proofs, no paid services."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-imp03-local-decisions-20261021110004711",
+    "started_at": "2026-10-21T11:00:04.711Z",
+    "ended_at": "2026-10-21T11:06:52.612Z",
+    "summary": "IMP-03 device-local project decision memory revised: persist and edit records with declared source/version and timestamp; reject same-project conflicting title and optimistic stale-version update; transactionally rollback local state on storage failure and propagate removals. Added 15 permanent tests, full Node CI 305/305, Chromium UI add→version2→delete, GitHub Pages and public Chromium all green exact SHA 741f542b95519e626f10dc92592a6b37235aaea2. Not synced SaaS memory.",
+    "objectives": [
+      {
+        "before": "Creating or deleting decisions locally changed in-memory DB and ignored save() failure, displaying phantom success. Corrections could only be simulated via new duplicate records; no revision number, stale-edit guard or conflict visibility.",
+        "after": "Manual decisions are project-scoped, source-labeled, timestamped, versioned and correctable; stale version and same-title contradictions rejected; create/edit/delete only claim success if local storage confirms, otherwise restore previous state. Context export includes only selected project decision sources and versions.",
+        "acceptance": "15 added Node tests, 305/305 complete Node suite, browser successfully creates, corrects to v2 and deletes local decision, Pages and postdeploy Chromium success at same SHA."
+      }
+    ],
+    "done": [
+      "Acquired own cooperative CONTROL lease, reviewed existing decision render, localStorage and project context; identified unacknowledged save() failures.",
+      "Added writeDecision/removeDecision safe local storage handling with project existence, strict input checks, source, version, correction and optimistic expectedVersion.",
+      "Added same-title contradiction/duplicate guard for a project, while preserving separate projects and legacy records without version as v1.",
+      "Updated Memory UI with correction form prefilled to existing version; displayed declared provenance, update date, and version. Removed decisions from local context on confirmed deletion.",
+      "Improved project-only context export to identify source as user-declared and include timestamp/version, without implying external verification.",
+      "Added 15 Node regressions in tests/control-memory-decisions.test.mjs, including save rollback and stale correction.",
+      "Strengthened real Chromium fixture with add→edit→delete memory journey.",
+      "GitHub Node quality run 39589297732 305/305, local Chromium 39589297700, Pages 39589296550, postdeploy public Chromium 39589355732 all success on 741f542b.",
+      "No private dataset shared, no Cloud enabling, no paid API, and no fake source verification."
+    ],
+    "blockers": [
+      "Local decisions and corrections are not synchronized across devices or authenticated users. Real RLS/JWT role and deletion propagation remain unverified until independent approved cost-free CONTROL backend.",
+      "Conflicting decisions are detected by normalized equal title within same project, not semantic contradiction across different titles; source string is user-entered and unverified.",
+      "LocalStorage writes are not transactionally coordinated across multiple tabs; current save rollback concerns this app instance."
+    ],
+    "quality": {
+      "ci": "success",
+      "checks_run": [
+        "15 source extracted local memory Node tests",
+        "GitHub frontend quality 305/305",
+        "Real Chromium memory create/edit/delete workflow and previously shipped operator UX",
+        "GitHub Pages successful build and postdeploy public Chromium"
+      ],
+      "checks_passed": [
+        "15 new Node tests",
+        "305/305 full frontend Node checks",
+        "local Chromium UI memory flow green",
+        "Pages deployment green",
+        "public Chromium green with source asset parity"
+      ],
+      "checks_failed": [
+        "Existing decision handler accepted save() false and was vulnerable to phantom in-memory writes before correction."
+      ],
+      "limitations": [
+        "Sourced memory is manual, source not verified against live external systems.",
+        "No cross-device deletion propagation, true multi-user isolation or remote index/search yet."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Versioned scoped local decisions with storage rollback",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/895ac20e2f8951a5f937a7f5ffa8b59c11315300",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T11:05:48Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39589355732"
+      },
+      {
+        "name": "15 real-source local memory regressions",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/729db5f5e10f9f2f32ade8832fb2c3a391957c20"
+      },
+      {
+        "name": "Public Chromium memory add, revision and delete",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/741f542b95519e626f10dc92592a6b37235aaea2",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T11:05:48Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39589355732"
+      }
+    ],
+    "links": [
+      {
+        "label": "Node 305/305",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39589297732"
+      },
+      {
+        "label": "Local Chromium UX",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39589297700"
+      },
+      {
+        "label": "Pages success",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39589296550"
+      },
+      {
+        "label": "Public Chromium success",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39589355732"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "P1: source is user-provided text; UI and exported context mark it declared, not a verified URL or authority.",
+      "P1: multiple decisions with normalized identical title and divergent detail could hide contradictions; now requires correcting existing record instead of silently multiplying.",
+      "P1: deleted/edited local decisions must update both current display and copied project context; tested in real browser and local snapshot.",
+      "P0: localStorage rollback prevents phantom UI state on failed save but cannot provide atomic multi-tab or multi-device transactions."
+    ],
+    "next": "Audit IMP-02 sourced local project search: return project-scoped records with source, version, timestamp, and direct navigable target without showing deleted or revoked data. Do not invent a remote search backend. Continue direct main with cooperative lock and real CI/Pages proof."
   }
 ]
