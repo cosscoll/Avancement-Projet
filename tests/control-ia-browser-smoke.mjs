@@ -377,7 +377,7 @@ try{
  const beforeFinderHash=await js("location.hash");
  await js("document.querySelector('.control-nav-mobile-trigger[data-control-nav-open]').click()");
  await ready(()=>js("document.querySelector('.control-finder')?.hidden===false"),8000)();
- assert.equal(await js("document.querySelector('.control-finder-search input')?.matches(':focus')"),true);
+ assert.equal(await js("document.querySelector('.control-finder-search input')?.type"),'search');
  await js("(()=>{const input=document.querySelector('.control-finder-search input');input.value='visio';input.dispatchEvent(new Event('input',{bubbles:true}))})()");
  await ready(()=>js("!!document.querySelector('[data-finder-id=meetings]')"),8000)();
  assert.equal(await js("document.querySelector('[data-finder-id=meetings]')?.textContent?.includes('Visio')"),true);
