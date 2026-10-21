@@ -70,6 +70,36 @@ function inferTitle(query,kind,project){
  if(project){const alias=fold(project.id).replace(/[^a-z0-9-]/g,'');s=s.replace(new RegExp('\\s+(?:dans|sur|pour)\\s+(?:le\\s+|la\\s+)?(?:projet\\s+)?'+alias+'\\s*$','i'),'')}
  return trim(s.replace(/^(?:de |d['’]|pour |: )/i,'').replace(/[.,;:\s]+$/,''),160);
 }
+// A confirmation must describe the actual currently visible local target, not a stale proposal.
+// This is only a device-local preflight. A real server still needs Auth + RLS.
+function reviewAction(action,snapshot={},scope='general'){
+ if(!action||typeof action!=='object')throw Error('Proposition absente.');
+ const project=arr(snapshot.projects).find(p=>p.id===action.projectId);
+ if(!project||scope!=='general'&&scope!==project.id)throw Error('Projet non autorisé ou retiré.');
+ const title=String(action.title||'').trim();
+ if(!title||title.length>160)throw Error('Intitulé manquant ou trop long.');
+ const target='Projet « '+trim(project.name,120)+' »';
+ const type=String(action.type||'');
+ if(type==='create_action')return {target,before:'Aucune nouvelle tâche.',after:'Créer la tâche « '+title+' » (à faire).',risk:'Faible : écriture sur cet appareil uniquement.',projectName:project.name};
+ if(type==='create_event'){
+  if(!validateLocalDateTime(action.date)||new Date(action.date)<=new Date())throw Error('Date future locale invalide ou ambiguë.');
+  return {target,before:'Aucun nouvel événement.',after:'Créer « '+title+' » le '+action.date+' (heure locale).',risk:'Modéré : agenda local seulement, sans invitation externe.',projectName:project.name};
+ }
+ if(type==='complete_action'){
+  const current=arr(snapshot.actions).find(x=>x.id===action.id&&x.project===project.id&&x.title===title);
+  if(!current||current.status==='done'||!action.expectedStatus||current.status!==action.expectedStatus)throw Error('Statut modifié : préparer une nouvelle confirmation.');
+  return {target,before:'« '+title+' » : '+(statuses[current.status]||current.status)+'.',after:'« '+title+' » : terminée (statut déclaratif, aucune exécution automatique).',risk:'Modéré : change uniquement le statut local.',projectName:project.name};
+ }
+ if(type==='update_event'||type==='delete_event'){
+  const current=arr(snapshot.events).find(x=>x.id===action.id&&x.project===project.id&&x.title===title);
+  if(!current||typeof action.expectedDate!=='string'||current.date!==action.expectedDate)throw Error('Événement modifié : préparer une nouvelle confirmation.');
+  if(type==='delete_event')return {target,before:'« '+title+' » : '+current.date+'.',after:'Supprimer définitivement cet événement local.',risk:'Élevé : suppression irréversible sur cet appareil.',projectName:project.name};
+  if(!validateLocalDateTime(action.date)||new Date(action.date)<=new Date())throw Error('Nouvelle date future locale invalide ou ambiguë.');
+  if(action.date===current.date)throw Error('Aucune modification de date à confirmer.');
+  return {target,before:'« '+title+' » : '+current.date+'.',after:'« '+title+' » : '+action.date+' (heure locale).',risk:'Modéré : déplacement local sans invitation externe.',projectName:project.name};
+ }
+ throw Error('Type d’action interdit.');
+}
 function interpret(input,snapshot={},scope='general'){
  const raw=trim(input,1200),q=fold(raw),projects=arr(snapshot?.projects);
  if(scope!=='general'&&!projects.some(p=>p.id===scope))return {kind:'help',text:'Projet introuvable. Accès refusé.'};
@@ -128,5 +158,5 @@ function interpret(input,snapshot={},scope='general'){
  }
  return {kind:'help',text:'Demandes prises en charge : « Où en est UCP ? », « Quelle IA travaille sur UCP ? », « Mes tâches », « Mon agenda », « Crée une tâche préparer le devis pour UCP », « Programme un rendez-vous le 25/10/2026 à 14h30 pour UCP ». Cette fonction consulte CONTROL local ; elle ne code pas encore des sites et ne commande pas les fournisseurs IA.'};
 }
-window.CONTROL_OPERATOR_CORE={interpret,fold,validateDate,validateLocalDateTime,parseDate,findProject};
+window.CONTROL_OPERATOR_CORE={interpret,fold,validateDate,validateLocalDateTime,parseDate,findProject,reviewAction};
 })();
