@@ -121,6 +121,20 @@ try{
  assert.equal(new URL(v12.link).pathname,production?'/Avancement-Projet/data/control-ia-requirements.json':'/data/control-ia-requirements.json');
  log('public V1.2 requirement overview renders 22 tickets/42 scenarios/10 additions with no fake verification');
 
+ // The home screen must show new capabilities without requiring hidden tool navigation.
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('.control-whats-new')"),9000)();
+ const visibleHome=await js("({heading:document.querySelector('.control-whats-new h2')?.textContent||'',links:[...document.querySelectorAll('.control-whats-new-links a')].map(a=>({href:a.getAttribute('href'),title:a.textContent})),cloud:document.querySelector('.control-whats-new-status')?.textContent||''})");
+ assert.match(visibleHome.heading,/nouvelles fonctions/i);
+ for(const target of ['#/control/goals','#/control/search','#/control/memory'])
+  assert.ok(visibleHome.links.some(x=>x.href===target),'New feature link missing from homepage: '+target);
+ assert.match(visibleHome.cloud,/pas encore activée/,'Home must not claim live CONTROL Cloud accounts');
+ await js("document.querySelector('.control-whats-new-links a[href=\"#/control/goals\"]').click()");
+ await ready(()=>js("!!document.querySelector('#goal-request')"),9000)();
+ log('visible homepage links to working goal planner, sourced search and decision memory; Cloud status truthful');
+ await js("location.hash='#/control/localai'");
+ await ready(()=>js("!!document.querySelector('[data-control-operator]')"),9000)();
+
  assert.ok(await js("!!document.querySelector('[data-control-operator]')"),'Operator panel missing');
  assert.equal(await js("document.querySelector('[data-op-consent]').checked"),false);
  await js("document.querySelector('[data-op-form] textarea').value='Mes tâches';document.querySelector('[data-op-form]').requestSubmit()");
