@@ -8,13 +8,17 @@ const a=source.indexOf('async function verifiedSession(){');
 const b=source.indexOf('function nav(',a);
 assert.ok(a>0&&b>a,'Extract real CONTROL Cloud session and database reload implementation');
 const functions=source.slice(a,b);
+const authStart=source.indexOf('client.auth.onAuthStateChange((event,s)=>{');
+const authEnd=source.indexOf('});\n await verifiedSession();',authStart);
+assert.ok(authStart>0&&authEnd>authStart,'Extract actual SDK Auth callback from boot');
+const authBody=source.slice(authStart+'client.auth.onAuthStateChange((event,s)=>{'.length,authEnd);
 const makeDeferred=()=>{let resolve,reject;const promise=new Promise((yes,no)=>{resolve=yes;reject=no});return {promise,resolve,reject}};
 async function waitFor(predicate,description){
  for(let n=0;n<100;n++){if(predicate())return;await delay(10)}
  throw Error('Timeout waiting for '+description);
 }
 function harness(){
- const state={user:'A',delays:new Map(),calls:[],rendered:0,messages:[],screens:[],reset:0};
+ const state={user:'A',delays:new Map(),calls:[],rendered:0,messages:[],screens:[],reset:0,scheduled:[]};
  const nodes=new Map();
  const byId=id=>{if(!nodes.has(id))nodes.set(id,{innerHTML:'',disabled:false});return nodes.get(id)};
  const window={CONTROL_HELP:{reset(){state.reset++}}};
@@ -23,6 +27,7 @@ function harness(){
  const live=s=>state.messages.push({text:String(s),info:true});
  const render=()=>state.rendered++;
  const panel=(title,body)=>'<section>'+title+body+'</section>';
+ const setTimeout=callback=>state.scheduled.push(callback);
  const client={
   auth:{async getUser(){return {data:{user:state.user?{id:state.user,email:state.user+'@example.test'}:null}}}},
   from(table){
@@ -40,12 +45,13 @@ function harness(){
    return {select(){const chain={eq(field,value){if(field==='owner_id')ownerFilter=value;return chain},order(){return chain},limit:query,maybeSingle:query};return chain}};
   }
  };
- const factory=new Function('client','window','byId','render','visible','live','message','panel',
+ const factory=new Function('client','window','byId','render','visible','live','message','panel','setTimeout',
    "let epoch=0,verificationSeq=0,authUser=null,waiting=false,waitingOwner=null,cache={projects:[],items:[],preferences:null};\n"+
    functions+
-   "\nreturn {verifiedSession,reload,read:()=>({epoch,owner:authUser?.id||null,projects:cache.projects,items:cache.items,preferences:cache.preferences,waitingOwner})};");
- const app=factory(client,window,byId,render,visible,live,message,panel);
- return {state,app,makeSlow(table,owner='A'){const d=makeDeferred();state.delays.set(owner+':'+table,d);return d}};
+   "const onAuthEvent=(event,s)=>{"+authBody+"};\n"+
+   "\nreturn {verifiedSession,reload,onAuthEvent,read:()=>({epoch,owner:authUser?.id||null,projects:cache.projects,items:cache.items,preferences:cache.preferences,waitingOwner})};");
+ const app=factory(client,window,byId,render,visible,live,message,panel,setTimeout);
+ return {state,app,async flushEvents(){while(state.scheduled.length)await state.scheduled.shift()()},makeSlow(table,owner='A'){const d=makeDeferred();state.delays.set(owner+':'+table,d);return d}};
 }
 test('ordinary signed-in user A can read only own RLS-shaped synthetic data',async()=>{
  const h=harness();await h.app.verifiedSession();
@@ -144,4 +150,44 @@ test('stale same-owner request cannot release lock belonging to a newer login se
  await fresh;
  assert.equal(h.app.read().projects[0].id,'new-A');
  assert.equal(h.app.read().waitingOwner,null);
+});
+
+test('a late SIGNED_OUT event never strands a valid newly authenticated B account',async()=>{
+ const h=harness();
+ await h.app.verifiedSession();
+ h.state.user='B';h.app.onAuthEvent('SIGNED_IN',{user:{id:'B'}});
+ await h.flushEvents();
+ assert.equal(h.app.read().owner,'B');
+ h.app.onAuthEvent('SIGNED_OUT',null);
+ assert.equal(h.app.read().owner,null,'Fail closed immediately before re-verification');
+ assert.equal(h.app.read().projects.length,0);
+ await h.flushEvents();
+ assert.equal(h.app.read().owner,'B');
+ assert.deepEqual(h.app.read().projects.map(x=>x.owner_id),['B']);
+ assert.deepEqual(h.app.read().items.map(x=>x.owner_id),['B']);
+});
+test('genuine SIGNED_OUT remains fail-closed after scheduled session recheck',async()=>{
+ const h=harness();await h.app.verifiedSession();
+ h.state.user=null;h.app.onAuthEvent('SIGNED_OUT',null);
+ assert.equal(h.app.read().owner,null);
+ assert.deepEqual(h.app.read().projects,[]);
+ await h.flushEvents();
+ assert.equal(h.app.read().owner,null);
+ assert.deepEqual(h.app.read().items,[]);
+ assert.equal(h.state.screens.at(-1),'auth');
+});
+test('SIGNED_OUT and SIGNED_IN reordered events recover only currently verified B',async()=>{
+ const h=harness();await h.app.verifiedSession();
+ h.state.user='B';h.app.onAuthEvent('SIGNED_OUT',null);
+ h.app.onAuthEvent('SIGNED_IN',{user:{id:'B'}});
+ await h.flushEvents();
+ assert.equal(h.app.read().owner,'B');
+ assert.deepEqual(h.app.read().projects.map(x=>x.owner_id),['B']);
+});
+test('same-owner fresh login recovers after an obsolete SIGNED_OUT notification',async()=>{
+ const h=harness();await h.app.verifiedSession();
+ h.state.user='A';h.app.onAuthEvent('SIGNED_OUT',null);
+ await h.flushEvents();
+ assert.equal(h.app.read().owner,'A');
+ assert.equal(h.app.read().projects[0]?.owner_id,'A');
 });
