@@ -1591,5 +1591,108 @@
       "P0: localStorage rollback prevents phantom UI state on failed save but cannot provide atomic multi-tab or multi-device transactions."
     ],
     "next": "Audit IMP-02 sourced local project search: return project-scoped records with source, version, timestamp, and direct navigable target without showing deleted or revoked data. Do not invent a remote search backend. Continue direct main with cooperative lock and real CI/Pages proof."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-imp02-project-search-20261021111300000",
+    "started_at": "2026-10-21T11:13:00.000Z",
+    "ended_at": "2026-10-21T11:20:54.866Z",
+    "summary": "IMP-02 local universal search no longer uses stale mount-time index. Search recalculates authorized current project records across projects, tasks, missions, events, local decisions and HTTPS resources. User selects project scope, decisions include declared source/version/date with staleness warning and exact deep-link navigation, deleted/renamed/revoked entries are excluded from refreshed searches. Added 12 Node regressions, 317/317 Node quality, Chromium local and Pages public success on SHA 6a5311dd; Cloud still disabled.",
+    "objectives": [
+      {
+        "before": "Search gathered all current user local records only once when page mounted, displayed generic labels without decision provenance/version or project filter, and could keep a deleted/renamed decision until page reload. Memory result opened generic page rather than exact record.",
+        "after": "Search reruns on each query or project selection from latest local arrays and existing project list, refuses unknown project scope, displays distinct types with project, declared origin/version/date and old-date warning, deep-links to exact decision and signals missing/deleted record without resurrecting content.",
+        "acceptance": "12 new Node tests pass; 317/317 full Node quality; actual Chromium verifies scope rejection, source/version result, exact memory navigation, removal from search; same-SHA Pages and postdeploy Chromium pass."
+      }
+    ],
+    "done": [
+      "Confirmed prior lease idle and checkpoint after IMP-03; acquired CONTROL-only lease on main.",
+      "Audited search() snapshot defect, missing provenance, scope and exact target.",
+      "Introduced local deterministic searchResults() reading live state with six entity kinds, existing-project authorization and optional project filter; excluded deleted and retired-project records.",
+      "Presented source/version/date and staleness markers for decisions with device-local provenance label, safely escaped results, deep-link to exact memory decision.",
+      "Updated memory route for exact decision selection and no stale display for deleted decision deep-links.",
+      "Added 12 permanent Node search regression cases including scope, update/delete, source/version/date, missing date and source, link filtering and exact navigation.",
+      "Strengthened Chromium flow for other-project denial, source/version, direct row focus and disappearance after deletion.",
+      "GitHub Node CI 317/317 at 39590970137; local Chromium 39590969956 success; Pages 39590968946 success; public postdeploy Chromium 39591100473 success. All same SHA 6a5311dd.",
+      "Cloud config unchanged and no connected services, external API calls or purchases."
+    ],
+    "blockers": [
+      "Search is device-local and cannot provide authenticated multi-user ACL/RLS or a server-updated cross-device index until independent no-cost CONTROL Supabase approved.",
+      "Declared source labels are not externally verified; old-date warning is heuristic after 90 days, not a source freshness guarantee.",
+      "Reindex occurs when query/scope changed or page reopened, not a push synchronization to an already-open tab; no global real-time concurrency claim."
+    ],
+    "quality": {
+      "ci": "success",
+      "checks_run": [
+        "12 new pure-function Node search regressions using production source",
+        "Node full frontend quality 317/317",
+        "Chromium local complete UI including create/edit/search/deep-link/delete",
+        "GitHub Pages deploy exact SHA",
+        "Postdeploy Chromium public file parity and UI flows"
+      ],
+      "checks_passed": [
+        "12/12 new IMP-02 tests",
+        "317/317 Node suite",
+        "Chromium local succeeds",
+        "Pages succeeded",
+        "public Chromium succeeded on exact SHA"
+      ],
+      "checks_failed": [
+        "Before fix index was mount-time snapshot and showed no source/version or project scope; tests defend against reintroduction."
+      ],
+      "limitations": [
+        "No true cross-device live source index, remote search or authenticated permission checks; UI only.",
+        "Date shown is stored local metadata, source is user supplied and may be inaccurate."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "CONTROL local search with live scoped source/version/date and deep-linked decision",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/c7e2e0ee5ff0ad8e63e015cc482d6ed55d1f11c6",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T11:19:45Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39591100473"
+      },
+      {
+        "name": "Twelve IMP-02 source and isolation regressions",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/230da340440a48d6e6dfad88b8a28c8f3c88c833"
+      },
+      {
+        "name": "Real browser project scope, exact link and deleted decision tests",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/6a5311dd2ad47e1f84b79ee9463cbef1894a6806",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T11:19:45Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39591100473"
+      }
+    ],
+    "links": [
+      {
+        "label": "317 Node tests",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39590970137"
+      },
+      {
+        "label": "Chromium local",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39590969956"
+      },
+      {
+        "label": "Pages",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39590968946"
+      },
+      {
+        "label": "Chromium public",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39591100473"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "Search formerly retained deletions in snapshot; recompute from live authorized state during search input and scope changes, but this is not realtime another-tab synchronization.",
+      "The date age flag warns about possible stale data, without claiming source independently verified.",
+      "The memory deep-link uses an exact ID and suppresses selected output if target deleted or its project removed.",
+      "No IMP-02 full acceptance claim: authoritative server permissions, incremental source update propagation and authenticated search not implemented."
+    ],
+    "next": "Advance IMP-02 project evidence on freshness/invalid sources and secure sensitive action UX where local controls allow; or IMP-01 read-only goal planner proposal prototype grounded in project memory, consent, and existing approval safeguards. Keep Cloud disabled and do not assert live multi-user acceptance; main directly under lease with 0€."
   }
 ]
