@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "control-ia-20261021-imp01-step-approval-20261021114821363",
+    "started_at": "2026-10-21T11:48:21.363Z",
+    "expires_at": "2026-10-21T12:33:21.363Z",
+    "objective": "IMP-01: permettre de préparer une action locale par étape avec approbation explicite et sans exécution automatique"
+  },
   "checkpoint": {
     "updated_at": "2026-10-21T11:30:46.883Z",
     "main": true,
