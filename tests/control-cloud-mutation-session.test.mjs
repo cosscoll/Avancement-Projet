@@ -43,7 +43,7 @@ function invoke(h,kind){
  throw Error('Unsupported case '+kind);
 }
 const kinds=['saveItem','saveProject','eraseItem','eraseProject','markDone'];
-const successResponse={data:{id:'item-A'},error:null};
+const successResponse={data:{id:'item-A',owner_id:'A'},error:null};
 
 for(const kind of kinds){
  test(kind+' ignores prior-account HTTP completion after switching to B',async()=>{
@@ -118,3 +118,25 @@ test('logout then login as the same owner invalidates older write notifications'
  assert.deepEqual(h.auditCalls,[]);
  assert.deepEqual(h.messages,[]);
 });
+
+
+for(const kind of ['saveItem','saveProject']){
+ test(kind+' refuses a response attributed to a different user before audit and success',async()=>{
+  const h=harness(),pending=invoke(h,kind);
+  await Promise.resolve();
+  assert.equal(h.requests.length,1);
+  h.requests[0].resolve({data:{id:'item-A',owner_id:'B'},error:null});
+  await assert.rejects(pending,/non attribuée à votre compte/);
+  assert.deepEqual(h.auditCalls,[]);
+  assert.deepEqual(h.messages,[]);
+  assert.deepEqual(h.navCalls,[]);
+ });
+ test(kind+' rejects a missing receipt owner instead of assuming it is safe',async()=>{
+  const h=harness(),pending=invoke(h,kind);
+  await Promise.resolve();
+  h.requests[0].resolve({data:{id:'item-A'},error:null});
+  await assert.rejects(pending,/non attribuée à votre compte/);
+  assert.deepEqual(h.auditCalls,[]);
+  assert.deepEqual(h.messages,[]);
+ });
+}
