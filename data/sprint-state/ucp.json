@@ -10,11 +10,16 @@
     "objective": "Empêcher un getter URL.revokeObjectURL en erreur de masquer le succès ou le repli du téléchargement."
   },
   "checkpoint": {
-    "files": [],
-    "branch": null,
+    "files": [
+      "site-vitrine/dist/assets/app.js",
+      "site-vitrine/tests/app-shell.test.cjs"
+    ],
+    "branch": "fix/ucp-revoke-getter-20261021",
     "pr_url": null,
-    "tests": [],
-    "next_action": "Créer une branche depuis main f8d7d762, sécuriser la lecture de revokeObjectURL et ajouter une régression DOM."
+    "tests": [
+      "Régression succès avec getter revokeObjectURL en erreur ajoutée ; CI en attente."
+    ],
+    "next_action": "Ouvrir la PR, attendre la CI, autocritiquer puis effectuer une passe corrective."
   },
   "last_completed": {
     "run_id": "ucp-20261021T082846Z-v3",
