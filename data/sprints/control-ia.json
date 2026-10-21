@@ -947,5 +947,95 @@
       "P1: dispatchMission action may already have executed server-side even when the user signs out before the response, so its false return must not be presented as proof that nothing occurred."
     ],
     "next": "CONTROL-ACCOUNT follow-up: audit remaining lifecycle operations (export/import, legacy migration, account deletion) for same-epoch cancellation; do not enable Cloud until dedicated approved zero-cost backend and real A/B JWT RLS. Validate every commit directly on main using exact-SHA CI/Pages/Chromium."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-account-lifecycle-20261021100011959",
+    "started_at": "2026-10-21T10:00:11.959Z",
+    "ended_at": "2026-10-21T10:16:05.942Z",
+    "summary": "CONTROL-ACCOUNT: reproduced A-to-B data contamination in a delayed legacy import, fixed owner/epoch isolation across legacy import, export, account deletion; committed 11 lifecycle regression scenarios. Dedicated Cloud CI passed 89/89; GitHub Pages + postdeploy Chromium verified on code SHA 01c1e198af9a9fb5123b605173ebaecfe9ebcbeb. Cloud disabled.",
+    "objectives": [
+      {
+        "before": "Legacy projects and private notes confirmed by A could be inserted into B after account switch during a delayed catalog fetch, with B receiving misleading success.",
+        "after": "Legacy import pins original owner, checks login epoch at fetch and all write boundaries and checks inserted owner; export and deletion cannot act on a replacement account after old async responses.",
+        "acceptance": "11/11 permanent tests plus 89/89 Node Cloud CI tests, Pages and post-deploy Chromium passed on same code SHA; no real Supabase Auth/RLS tests were claimed."
+      }
+    ],
+    "done": [
+      "Reproduced private A import flowing into B after delayed catalog response using actual code.",
+      "Captured stable initiating account owner and session epoch during all import stages and before writes, export download and backend account deletion signout.",
+      "Added 11 Node integration regressions covering A-to-B catalog fetch, same-user relogin, late project/element/settings writes, normal migration, encrypted and clear export, and account deletion response.",
+      "Workflow now triggers on new lifecycle suite. GitHub Cloud CI 39582822619 completed success 89 tests, no failures.",
+      "GitHub Pages 39582822702 succeeded, postdeploy browser 39582888205 succeeded at SHA 01c1e198; Cloud remains fail-closed.",
+      "No purchases, external provisioning or live account deletion executed."
+    ],
+    "blockers": [
+      "Dedicated CONTROL Supabase independently authorized with verified zero cost does not yet exist; real two-user JWT/RLS and mobile sync cannot be validated.",
+      "Synthetic mutation tests are not live authenticated end-to-end tests. An in-flight write already committed to original A is not rolled back by client abort.",
+      "ACCOUNT acceptance criteria remain not_verified."
+    ],
+    "quality": {
+      "ci": "success",
+      "checks_run": [
+        "Red reproduction from actual production importLegacy function",
+        "11 permanent lifecycle Node tests",
+        "Dedicated GitHub Node 89/89 tests",
+        "Pages and post-deploy Chromium on exact commit"
+      ],
+      "checks_passed": [
+        "11/11 lifecycle tests",
+        "89/89 Cloud CI GitHub Actions",
+        "Pages deployment green",
+        "Public Chromium browser and file equality green"
+      ],
+      "checks_failed": [
+        "Original cross-account migration contamination reproduced before fix, now addressed in code/tests"
+      ],
+      "limitations": [
+        "No real Supabase user or RLS tests; accounts feature still gated off.",
+        "Export encryption tests use test doubles rather than a cryptography audit."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Account lifecycle session isolation implementation",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/56648b7c96326daf2be6e389c1fc8c886dc61a2a",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T10:13:10Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39582888205"
+      },
+      {
+        "name": "11 permanent lifecycle regression tests",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/26490addf0b6bd5f659c3a45e90c9d5a73d285ea"
+      },
+      {
+        "name": "Cloud safety workflow 89/89",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39582822619"
+      }
+    ],
+    "links": [
+      {
+        "label": "Cloud 89 passing",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39582822619"
+      },
+      {
+        "label": "Pages deployment",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39582822702"
+      },
+      {
+        "label": "Public browser proof",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39582888205"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "Critical: A-to-B cross-account data contamination was possible during legacy import while Cloud was not active; prevention is now checked before/after every await.",
+      "Partial import is not server transactional. On a failed session check, old A account may own partially completed data and must be reconciled before retry.",
+      "Device verification, server authorization and backend RLS are still missing."
+    ],
+    "next": "After closing lifecycle sprint, prioritize canonical V1.2 source-ticket referential consistency (19 invalid BACK references in delivery metadata) without losing historical labels or forging verification. Work only on CONTROL files directly on main."
   }
 ]
