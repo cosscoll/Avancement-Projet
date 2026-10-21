@@ -1,49 +1,46 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-imp10-idempotent-local-20261021105238055",
-    "started_at": "2026-10-21T10:52:38.055Z",
-    "expires_at": "2026-10-21T11:37:38.055Z",
-    "objective": "IMP-10 prevent duplicate local operator saves on repeated confirmation with stable approval identifiers and persisted audit, including safe replay & rollback"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T10:51:44.522Z",
+    "updated_at": "2026-10-21T10:58:13.236Z",
     "main": true,
-    "stage": "local_imp05_approval_diff_risk_receipt_277_tests_pages_browser_verified",
+    "stage": "imp05_local_review_receipt_imp10_idempotence_290_tests_pages_browser_green",
     "files": [
       "assets/control-operator-core.js",
       "assets/control-operator.js",
       "assets/command-center.js",
       "assets/local-ai.js",
       "tests/control-operator-approval.test.mjs",
+      "tests/control-operator-idempotence.test.mjs",
       "tests/control-ia-browser-smoke.mjs",
-      "docs/CONTROL_IA_RETROSPECTIVES.md",
-      "data/sprints/control-ia.json"
+      "data/sprints/control-ia.json",
+      "docs/CONTROL_IA_RETROSPECTIVES.md"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/commit/8e75c73713dc3bcc0aa5b8685c20cb293d19a7d5",
       "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587241317",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587241379",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587240349",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587349013"
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587349013",
+      "https://github.com/cosscoll/Avancement-Projet/commit/36c366786df0e8502a6c2a3f75b95b2084e4703a",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39588124741",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39588123999",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39588195602"
     ],
     "remaining_blockers": [
-      "The new approval/receipt feature applies only to local CONTROL state; server-side RBAC, genuine revoke-before-write semantics, two-user Auth JWT/RLS remain unverified because dedicated cost-zero CONTROL Supabase is not authorized.",
-      "Account Cloud remains disabled and no cross-device synchronization / real external executor / mobile hardware tests are claimed.",
-      "Developer must not mark IMP-05 as real_verified using browser local mock or synthetic data."
+      "No owner-approved free independent CONTROL Supabase, real two-user JWT/RLS, cross-device permissions, Cloud remains disabled.",
+      "IMP-05/IMP-10 are locally improved, but both still require server-side real permissions/idempotence and acceptance; no real_verified statuses forged.",
+      "Local operator idempotence bounded to 200 audit entries and non-atomic across tabs; physical mobile UX untested."
     ],
-    "next_action": "Choose one meaningful next feature: IMP-10 local idempotent approval/recovery to avoid duplicate user actions after interruption OR IMP-03 project-scoped sourced memory, while preserving guardrails. First check current implementation and acceptance tests, acquire own 45-minute CONTROL lease, code direct on main, verify CI + same-SHA Pages/Chromium, document limitations. Never enable Cloud or pay."
+    "next_action": "Next sprint inspect existing source-backed project-scoped memory (IMP-03) and search for contradictions/deletion; deliver one verified local improvement if gap confirmed. Keep direct main, 45-minute lease, CI and exact-SHA public Chromium; no paid services, no Cloud enablement."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-imp05-local-approval-20261021104120944",
-    "started_at": "2026-10-21T10:41:20.944Z",
-    "ended_at": "2026-10-21T10:51:44.522Z",
-    "summary": "IMP-05 local action review: exact project, before-after, risk, stale permission rejection and actual persisted local audit receipt. 18 new tests, Node 277/277, local Chromium, Pages and public Chromium all green at code SHA 8e75c737. Cloud disabled, no server permission claim.",
-    "stage": "verified_online_local_imp05_not_server_permissions",
-    "commit_sha": "8e75c73713dc3bcc0aa5b8685c20cb293d19a7d5",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587349013"
+    "run_id": "control-ia-20261021-imp10-idempotent-local-20261021105238055",
+    "started_at": "2026-10-21T10:52:38.055Z",
+    "ended_at": "2026-10-21T10:58:13.236Z",
+    "summary": "IMP-10 bounded local idempotence for operator proposals and persisted receipts: 13 new tests, full Node 290/290, Pages and public Chromium successful exact SHA 36c36678. No claim of distributed exactly-once or operational Cloud.",
+    "stage": "verified_online_local_imp10_not_distributed",
+    "commit_sha": "36c366786df0e8502a6c2a3f75b95b2084e4703a",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39588195602"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
