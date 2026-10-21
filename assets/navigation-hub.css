@@ -74,3 +74,12 @@
 .control-whats-new-toggle span{font-size:16px}
 .control-whats-new[open] .control-whats-new-toggle span{transform:rotate(180deg)}
 @media(max-width:720px){#nav-open-cloud{display:none!important}}
+
+/* A reliable answer to “where am I?” on every CONTROL screen. */
+.control-location{max-width:1050px;margin:0 auto 7px;padding:0 18px;display:flex;align-items:center;gap:9px;min-height:35px;font-size:12px;color:#60768f}
+.control-location[hidden]{display:none!important}
+.control-location span{font-weight:650;color:#8191a4}
+.control-location strong{font-size:12px;color:#365371;font-weight:760;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.control-location a,.control-location button{margin-left:auto;flex:0 0 auto;color:#335e89;text-decoration:underline;text-underline-offset:3px;font-size:12px;font-weight:720;padding:5px 7px;background:transparent;border:none;min-height:30px}
+.control-location a:hover,.control-location button:hover{color:#1a436d}
+@media(max-width:720px){.control-location{padding:0 13px;gap:6px;margin:5px 0 4px}.control-location strong{min-width:0}.control-location span{display:none}.control-location a,.control-location button{font-size:11px}}
