@@ -226,3 +226,32 @@ test('frontend rejects a malformed untrusted collection instead of reporting syn
  assert.deepEqual(h.app.read().items,[]);
  assert.ok(h.state.messages.some(x=>x.bad&&x.text.includes('Isolation du compte non confirmée')));
 });
+
+
+test('silent reload returns false when account read fails instead of masking the failure',async()=>{
+ const h=harness();
+ await h.app.verifiedSession();
+ const before=h.app.read().projects[0].id;
+ const slow=h.makeSlow('control_projects');
+ const pending=h.app.reload(true);
+ await waitFor(()=>h.app.read().waitingOwner==='A','account reload');
+ slow.resolve({data:null,error:{message:'RLS refused'}});
+ assert.equal(await pending,false);
+ assert.equal(h.app.read().projects[0].id,before,'Keep last known valid account view');
+ assert.equal(h.state.messages.filter(x=>x.text==='Espace synchronisé avec votre compte.').length,1);
+});
+test('authenticated successful reread returns true to guarded mutations',async()=>{
+ const h=harness();
+ await h.app.verifiedSession();
+ assert.equal(await h.app.reload(true),true);
+});
+test('overlapping account refresh must return false instead of falsely confirming a new reread',async()=>{
+ const h=harness();
+ await h.app.verifiedSession();
+ const slow=h.makeSlow('control_projects');
+ const pending=h.app.reload(true);
+ await waitFor(()=>h.app.read().waitingOwner==='A','first account reload');
+ assert.equal(await h.app.reload(true),false);
+ slow.resolve({data:[{id:'project-A',owner_id:'A',name:'Account A'}]});
+ assert.equal(await pending,true);
+});
