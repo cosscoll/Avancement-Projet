@@ -18,6 +18,7 @@ on:
       - 'tests/control-ia-browser-smoke.mjs'
       - '.github/workflows/control-ia-browser.yml'
   workflow_dispatch:
+  deployment_status:
 
 permissions:
   contents: read
@@ -28,6 +29,7 @@ concurrency:
 
 jobs:
   browser:
+    if: github.event_name != 'deployment_status'
     name: Interface, consentement, persistance et mobile
     runs-on: ubuntu-latest
     timeout-minutes: 8
@@ -46,8 +48,45 @@ jobs:
           node --check tests/control-ia-browser-smoke.mjs
       - name: Recette réelle dans Chromium isolé
         run: node tests/control-ia-browser-smoke.mjs
-      - name: Vérifier également la version en ligne via Chromium
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  # A fresh push is NOT evidence of already deployed pages; only a finished deployment is.
+  published:
+    if: >-
+      github.event_name == 'deployment_status' &&
+      github.event.deployment_status.state == 'success' &&
+      github.event.deployment.environment == 'github-pages'
+    name: Recette Chromium après publication Pages sur main
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Lire main sans conserver de jeton
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          ref: main
+      - name: Comparer commit publié et main actuel
+        id: version
+        env:
+          DEPLOY_SHA: ${{ github.event.deployment.sha }}
+        run: |
+          MAIN_SHA="$(git rev-parse HEAD)"
+          if [ "$MAIN_SHA" = "$DEPLOY_SHA" ]; then
+            echo "current=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "current=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Déploiement $DEPLOY_SHA dépassé par main $MAIN_SHA ; contrôle en ligne de cette ancienne version ignoré."
+          fi
+      - name: Installer Node 22
+        if: steps.version.outputs.current == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Contrôler Chromium et syntaxe de recette
+        if: steps.version.outputs.current == 'true'
+        run: |
+          command -v google-chrome || command -v chromium
+          node --check tests/control-ia-browser-smoke.mjs
+      - name: Comparer octets de Pages puis naviguer en Chromium
+        if: steps.version.outputs.current == 'true'
         env:
           CONTROL_BROWSER_PRODUCTION: '1'
         run: node tests/control-ia-browser-smoke.mjs
