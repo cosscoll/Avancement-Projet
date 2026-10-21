@@ -1,48 +1,40 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-account-lifecycle-20261021100011959",
-    "started_at": "2026-10-21T10:00:11.959Z",
-    "expires_at": "2026-10-21T10:45:11.959Z",
-    "objective": "Prevent stale account legacy import/export/deletion after session change; regression tests; direct main"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T09:59:23.416Z",
+    "updated_at": "2026-10-21T10:16:53.075Z",
     "main": true,
-    "stage": "account_async_integrations_40_cases_ci_232_pages_live_green_saas_disabled",
+    "stage": "account_lifecycle_fixed_ci_89_pages_public_green_next_canonical_delivery_refs",
     "files": [
       "assets/cloud-app.js",
-      "tests/control-cloud-integrations-session.test.mjs",
+      "tests/control-cloud-account-lifecycle.test.mjs",
       ".github/workflows/control-cloud-config.yml",
       "data/sprints/control-ia.json",
       "docs/CONTROL_IA_RETROSPECTIVES.md"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/commit/9e217f75a982f56b77083a4b5326e0c34fe81fc5",
-      "https://github.com/cosscoll/Avancement-Projet/commit/43b5771289bed27faf376bf782055974df354d42",
-      "https://github.com/cosscoll/Avancement-Projet/commit/e280d9921c08259bf853f59b6682bdb66d8809ac",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580789879",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580789994",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580789090",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580913525"
+      "https://github.com/cosscoll/Avancement-Projet/commit/56648b7c96326daf2be6e389c1fc8c886dc61a2a",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39582822619",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39582822702",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39582888205"
     ],
     "remaining_blockers": [
-      "No approved independent 0-euro CONTROL Supabase or real A/B JWT/RLS/multi-device user testing; Cloud remains disabled.",
-      "Export/import/legacy migration and account deletion lifecycle flows not yet scrutinized for epoch/account switch.",
-      "Public browser proof applies to code SHA e280d9921c; following docs/checkpoint commits require new same-SHA proof if described as deployed."
+      "Cloud disabled pending an explicitly approved cost-zero independent CONTROL Supabase with real A/B Auth JWT/RLS and cross-device validation.",
+      "Delivery metadata retains references to 19 nonexistent BACK-023..042 despite official list BACK-001..022.",
+      "Interrupted original account import may be partial and requires reconciliation; no real server transaction tests."
     ],
-    "next_action": "Continue CONTROL-ACCOUNT with a focused safety audit of export/import, legacy migration, delete-account and session lifecycle; reproduce and fix concrete bugs directly on main under 45-min lease, then CI/Pages/Chromium same SHA. Keep distinct Supabase activation blocked pending explicit owner approval and zero-cost proof."
+    "next_action": "Audit and fix 19 out-of-range BACK refs in data/control-ia-delivery.json, preserve historical labels in separate traceability metadata, explicitly map only evidenced canonical ticket references, add validation tests and deploy to main. Do not claim criterion verification without real QA."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-async-integrations-20261021094755470",
-    "started_at": "2026-10-21T09:47:55.470Z",
-    "ended_at": "2026-10-21T09:59:23.416Z",
-    "summary": "Fixed eight async integrations across logout/re-login and stale mounted views; 40 Node regressions, Cloud CI 78/78, frontend 232/232, Pages deployed & live Chromium byte-verified at code SHA e280d992; Cloud off.",
+    "run_id": "control-ia-20261021-account-lifecycle-20261021100011959",
+    "started_at": "2026-10-21T10:00:11.959Z",
+    "ended_at": "2026-10-21T10:16:53.075Z",
+    "summary": "Reproduced and fixed A-to-B legacy migration contamination, encrypted export and delete signout session guard; 11 Node regressions, Cloud CI 89/89, Pages and public Chromium green on SHA 01c1e198. Cloud remains disabled.",
     "stage": "tested_ci_deployed_not_authenticated",
-    "commit_sha": "e280d9921c08259bf853f59b6682bdb66d8809ac",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580913525"
+    "commit_sha": "01c1e198af9a9fb5123b605173ebaecfe9ebcbeb",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39582888205"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
