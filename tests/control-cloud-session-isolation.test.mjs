@@ -27,7 +27,9 @@ function harness(){
   auth:{async getUser(){return {data:{user:state.user?{id:state.user,email:state.user+'@example.test'}:null}}}},
   from(table){
    const owner=state.user;
+   let ownerFilter=null;
    const query=()=>{
+    if(ownerFilter!==owner) return Promise.resolve({data:null,error:{message:'owner_id filter missing or incorrect'}});
     state.calls.push({owner,table});
     const delayed=state.delays.get(owner+':'+table);
     if(delayed)return delayed.promise;
@@ -35,7 +37,7 @@ function harness(){
     if(table==='control_items')return Promise.resolve({data:[{id:'item-'+owner,title:'Private task '+owner,owner_id:owner}]});
     return Promise.resolve({data:{owner_id:owner,settings:{}}});
    };
-   return {select(){return {order(){return {limit:query}},eq(){return {maybeSingle:query}}}}};
+   return {select(){const chain={eq(field,value){if(field==='owner_id')ownerFilter=value;return chain},order(){return chain},limit:query,maybeSingle:query};return chain}};
   }
  };
  const factory=new Function('client','window','byId','render','visible','live','message','panel',
@@ -104,4 +106,11 @@ test('same-account concurrent refreshes coalesce and do not multiply private req
  slow.resolve({data:[{id:'project-A',owner_id:'A',name:'Private A'}]});
  await first;
  assert.equal(h.app.read().waitingOwner,null);
+});
+
+test('all private dataset reads explicitly filter by signed-in owner_id',async()=>{
+ const h=harness();await h.app.verifiedSession();
+ assert.deepEqual(h.state.calls.map(x=>x.table).sort(),['control_items','control_preferences','control_projects']);
+ assert.equal(h.app.read().projects[0].owner_id,'A');
+ assert.equal(h.app.read().items[0].owner_id,'A');
 });
