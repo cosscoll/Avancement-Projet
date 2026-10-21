@@ -3213,5 +3213,96 @@
         "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
       }
     ]
+  },
+  {
+    "schema_version": 3,
+    "id": "ucp-20261021T003147Z-v3",
+    "started_at": "2026-10-21T00:31:47Z",
+    "ended_at": "2026-10-21T00:35:34.308Z",
+    "objectives": [
+      {
+        "before": "Le menu et les onglets appellent Array.from directement et peuvent interrompre toute la vitrine sur un ancien WebView qui ne fournit pas cette API.",
+        "after": "Les collections sont converties par Array.from quand disponible, sinon par Array.prototype.slice.call.",
+        "acceptance": "Le menu puis les onglets fonctionnent sans Array.from dans deux CI successives, et le correctif est fusionné sur main hors application/**."
+      }
+    ],
+    "summary": "PR #15 fusionnée sur main 201ce7e6 : le menu et les onglets restent initialisés sans Array.from ; deux CI vertes, aucune recette navigateur, site public ou staging.",
+    "done": [
+      "Directives #1 et #2 relues : connexion Codex lue mais bloquée par les interdictions permanentes.",
+      "Protocoles V3/V2, journal, PR, CI, branches, main et état d’incident inspectés avant mutation.",
+      "Verrou coopératif V3 acquis, relu et identité du propriétaire vérifiée avant mutation.",
+      "Repli Array.prototype.slice.call ajouté aux collections du menu et des onglets sans toucher application/**.",
+      "Première CI Vitrine 39522058308 réussie ; autocritique P1 : le scénario des onglets sans Array.from restait non couvert.",
+      "Test correctif ajouté pour les onglets legacy ; CI finale 39522126730 réussie.",
+      "PR #15 fusionnée prudemment sur main 201ce7e6 après vérification du head, de la base, du caractère fusionnable et du bail.",
+      "Commit et blobs de app.js et app-shell.test.cjs relus sur main après fusion."
+    ],
+    "deliverables": [
+      {
+        "name": "Compatibilité des collections sans Array.from",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/UnCoupdePouce",
+        "ref": "201ce7e6a45b198229814faa61eeba45fa4f6b69",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/201ce7e6a45b198229814faa61eeba45fa4f6b69",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "quality": {
+      "checks_run": [
+        "Vitrine CI première passe #39522058308",
+        "Vitrine CI corrective #39522126730",
+        "Vérification du commit fusionné et des blobs app.js/app-shell.test.cjs sur main"
+      ],
+      "checks_passed": [
+        "Structure statique",
+        "Syntaxe JavaScript",
+        "Tests Node de la vitrine",
+        "Reconstruction déterministe build/dist",
+        "Menu sans Array.from",
+        "Onglets sans Array.from",
+        "Blobs attendus présents sur main"
+      ],
+      "checks_failed": [],
+      "real_browser_verified": false,
+      "ci": "success"
+    },
+    "blockers": [
+      "Aucun navigateur, appareil réel, site public ou staging autorisé n’a été vérifié.",
+      "Le clone Windows dev/ucp-codex reste volontairement non lu et non synchronisé.",
+      "Les consignes publiques #1 et #2 demandant Codex restent bloquées par les interdictions permanentes."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "ucp-public-site-unverified",
+        "status": "open",
+        "consecutive_sprints": 14,
+        "next_action": "Effectuer une recette navigateur réelle à 320/360/390/768 px sur un staging explicitement autorisé ; sinon poursuivre un bug indépendant hors application/**."
+      }
+    ],
+    "next": "Tester un autre défaut réel et indépendant hors application/**, ou effectuer la recette WebView/navigateur sur staging autorisé.",
+    "links": [
+      {
+        "label": "PR #15",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/pull/15"
+      },
+      {
+        "label": "Commit main",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/commit/201ce7e6a45b198229814faa61eeba45fa4f6b69"
+      },
+      {
+        "label": "CI initiale",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39522058308"
+      },
+      {
+        "label": "CI corrective",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39522126730"
+      },
+      {
+        "label": "Statut UCP",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/data/status/ucp.json"
+      }
+    ]
   }
 ]
