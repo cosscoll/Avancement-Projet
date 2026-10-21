@@ -133,11 +133,17 @@ try{
  await ready(()=>js("document.querySelector('[data-op-draft]').hidden===false"),9000)();
  assert.match(await js("document.querySelector('[data-op-project]').textContent"),/Un Coup de Pouce/);
  assert.match(await js("document.querySelector('[data-op-title]').value"),/Recette Navigateur Unique/);
+ assert.match(await js("document.querySelector('[data-op-target]').textContent"),/Un Coup de Pouce/,'Exact project target must be shown');
+ assert.match(await js("document.querySelector('[data-op-before]').textContent"),/Aucune/,'Previous state must be shown');
+ assert.match(await js("document.querySelector('[data-op-after]').textContent"),/Recette Navigateur Unique/,'Proposed state must be shown');
+ assert.match(await js("document.querySelector('[data-op-risk]').textContent"),/appareil/,'Local-only risk must be shown');
+ assert.equal(await js("document.querySelector('[data-op-confirm]').disabled"),false);
  await js("document.querySelector('[data-op-draft]').requestSubmit()");
  await ready(()=>js("document.querySelector('[data-op-response]').textContent.includes('Action enregistrée')"),8000)();
  const count=await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').actions?.filter(a=>a.project==='ucp'&&a.title.includes('Recette Navigateur Unique')).length||0");
  assert.equal(count,1,'Created test action must persist once to project UCP');
- log('confirmed action written exactly once to correct project');
+ assert.match(await js("document.querySelector('[data-op-response]').textContent"),/Reçu local :/,'Receipt must come from the persisted local audit');
+ log('confirmed action written exactly once to correct project with verified diff, risk and receipt');
  // Test the real "À traiter" route, not only the storage JSON.
  await js("location.hash='#/control/inbox'");
  await ready(()=>js("[...document.querySelectorAll('#main strong')].some(e=>e.textContent.trim()==='Recette Navigateur Unique')"),9000)();
@@ -186,7 +192,8 @@ try{
  await js("document.querySelector('[data-op-form] textarea').value='Crée une tâche Recette Mauvais Scope';document.querySelector('[data-op-form]').requestSubmit()");
  await ready(()=>js("document.querySelector('[data-op-draft]').hidden===false"),8000)();
  await js("document.querySelector('#loc-project').value='iagile';document.querySelector('#loc-project').dispatchEvent(new Event('change',{bubbles:true}));document.querySelector('[data-op-draft]').requestSubmit()");
- await ready(()=>js("document.querySelector('[data-op-response]').textContent.includes('projet sélectionné a changé')"),8000)();
+ await ready(()=>js("document.querySelector('[data-op-response]').textContent.includes('Confirmation refusée')"),8000)();
+ assert.match(await js("document.querySelector('[data-op-review-error]').textContent"),/périmètre a changé/,'Scope revocation must fail closed before any write');
  assert.equal(await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').actions?.filter(a=>a.title==='Recette Mauvais Scope').length||0"),0);
  await js("document.querySelector('#loc-project').value='ucp';document.querySelector('#loc-project').dispatchEvent(new Event('change',{bubbles:true}))");
  log('changing selected project after draft cannot write into the wrong project');
