@@ -370,48 +370,82 @@ function itemPayload(form,existing=null){
  if(kind==='income'||kind==='expense'){const amount=Number(form.get('amount')??details.amount??0);if(!Number.isFinite(amount)||amount<0||amount>1000000)throw Error('Montant invalide.');details.amount=amount}
  return {owner_id:authUser.id,project_id,kind,title,url:url?safeURL(url):'',body,provider:String(form.get('provider')||'').slice(0,60),status:String(form.get('status')||'').slice(0,35),due_at:toISO(form.get('due_at')),details,updated_at:new Date().toISOString()};
 }
-async function audit(action,kind,id){try{await client.from('control_audit_events').insert({owner_id:authUser.id,action,entity_type:kind,entity_id:id})}catch{/* best-effort client log only */}}
+// A completed request must never update an unrelated login's audit or interface.
+function mutationSession(){
+ const owner=authUser?.id,token=epoch;
+ if(!owner)throw Error('Veuillez vous reconnecter.');
+ return {owner,current:()=>authUser?.id===owner&&epoch===token};
+}
+async function audit(action,kind,id,owner=authUser?.id){
+ if(!owner)return;
+ try{await client.from('control_audit_events').insert({owner_id:owner,action,entity_type:kind,entity_id:id})}catch{/* best-effort client log only */}
+}
 async function saveItem(form,editing=''){
+ const session=mutationSession();
  const old=editing?cache.items.find(i=>i.id===editing):null;
  if(editing&&!old)throw Error('Fiche introuvable : actualise les données.');
  const payload=itemPayload(form,old);
  if(old&&old.kind!==payload.kind)throw Error('Il faut créer un nouvel élément pour changer de type.');
  let q;
- if(old)q=await client.from('control_items').update(payload).eq('id',old.id).eq('owner_id',authUser.id).eq('updated_at',old.updated_at).select('*').single();
+ if(old)q=await client.from('control_items').update(payload).eq('id',old.id).eq('owner_id',session.owner).eq('updated_at',old.updated_at).select('*').single();
  else q=await client.from('control_items').insert(payload).select('*').single();
- if(q.error)throw Error(old?'Conflit ou écriture refusée : actualise et recommence.':q.error.message);
- await audit(old?'item_updated':'item_created','item',q.data.id);
- await reload(true);message('Enregistré dans votre compte privé.');
+ if(!session.current())return;
+ if(q.error||!q.data)throw Error(old?'Conflit ou écriture refusée : actualise et recommence.':q.error?.message||'Enregistrement non confirmé.');
+ await audit(old?'item_updated':'item_created','item',q.data.id,session.owner);
+ if(!session.current())return;
+ await reload(true);
+ if(session.current())message('Enregistré dans votre compte privé.');
 }
 async function saveProject(form,editing=''){
+ const session=mutationSession();
  const name=String(form.get('name')||'').trim(),description=String(form.get('description')||'').trim(),category=String(form.get('category')||'').trim();
  if(!name||name.length>140||description.length>6000||category.length>70)throw Error('Champs du projet invalides.');
- const payload={owner_id:authUser.id,name,description,category,updated_at:new Date().toISOString()};
+ const payload={owner_id:session.owner,name,description,category,updated_at:new Date().toISOString()};
  const old=editing?getProject(editing):null;
  let q;
  if(editing&&!old)throw Error('Projet introuvable.');
- if(old)q=await client.from('control_projects').update(payload).eq('id',old.id).eq('owner_id',authUser.id).eq('updated_at',old.updated_at).select('*').single();
+ if(old)q=await client.from('control_projects').update(payload).eq('id',old.id).eq('owner_id',session.owner).eq('updated_at',old.updated_at).select('*').single();
  else q=await client.from('control_projects').insert(payload).select('*').single();
- if(q.error)throw Error(old?'Conflit de modification : actualise le projet.':q.error.message);
- await audit(old?'project_updated':'project_created','project',q.data.id);
- await reload(true);nav('project',q.data.id);message('Projet enregistré.');
+ if(!session.current())return;
+ if(q.error||!q.data)throw Error(old?'Conflit de modification : actualise le projet.':q.error?.message||'Enregistrement non confirmé.');
+ await audit(old?'project_updated':'project_created','project',q.data.id,session.owner);
+ if(!session.current())return;
+ await reload(true);
+ if(session.current()){nav('project',q.data.id);message('Projet enregistré.');}
 }
 async function eraseItem(item){
+ const session=mutationSession();
  if(!confirm('Supprimer cet élément ? Cette opération est irréversible.'))return;
- const q=await client.from('control_items').delete().eq('id',item.id).eq('owner_id',authUser.id);
- if(q.error)throw Error(q.error.message);
- await audit('item_removed','item',item.id);await reload(true);message('Élément supprimé.');
+ if(!session.current())return;
+ const q=await client.from('control_items').delete().eq('id',item.id).eq('owner_id',session.owner).select('id').single();
+ if(!session.current())return;
+ if(q.error||!q.data)throw Error('Suppression non confirmée : actualise les données.');
+ await audit('item_removed','item',item.id,session.owner);
+ if(!session.current())return;
+ await reload(true);
+ if(session.current())message('Élément supprimé.');
 }
 async function eraseProject(p){
+ const session=mutationSession();
  if(prompt('Cette opération supprime ce projet et TOUS ses éléments. Pour confirmer, écrivez le nom exact : '+p.name)!==p.name)return;
- const q=await client.from('control_projects').delete().eq('id',p.id).eq('owner_id',authUser.id);
- if(q.error)throw Error(q.error.message);
- await audit('project_removed','project',p.id);await reload(true);nav('projects');message('Projet supprimé.');
+ if(!session.current())return;
+ const q=await client.from('control_projects').delete().eq('id',p.id).eq('owner_id',session.owner).select('id').single();
+ if(!session.current())return;
+ if(q.error||!q.data)throw Error('Suppression non confirmée : actualise les données.');
+ await audit('project_removed','project',p.id,session.owner);
+ if(!session.current())return;
+ await reload(true);
+ if(session.current()){nav('projects');message('Projet supprimé.');}
 }
 async function markDone(item){
- const q=await client.from('control_items').update({status:'done',updated_at:new Date().toISOString()}).eq('id',item.id).eq('owner_id',authUser.id).eq('updated_at',item.updated_at).select('id').single();
- if(q.error)throw Error('Conflit : actualise avant de modifier.');
- await audit('item_done','item',item.id);await reload(true);message('Action terminée dans CONTROL.');
+ const session=mutationSession();
+ const q=await client.from('control_items').update({status:'done',updated_at:new Date().toISOString()}).eq('id',item.id).eq('owner_id',session.owner).eq('updated_at',item.updated_at).select('id').single();
+ if(!session.current())return;
+ if(q.error||!q.data)throw Error('Conflit : actualise avant de modifier.');
+ await audit('item_done','item',item.id,session.owner);
+ if(!session.current())return;
+ await reload(true);
+ if(session.current())message('Action terminée dans CONTROL.');
 }
 async function copyText(text){
  try{await navigator.clipboard.writeText(text);message('Copié. Ouvrez votre IA pour poursuivre.')}
