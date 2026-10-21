@@ -6,19 +6,19 @@
     "run_id": "ucp-20261021T123012Z-v3",
     "owner": "chatgpt-automation-ucp",
     "started_at": "2026-10-21T12:30:12Z",
-    "heartbeat_at": "2026-10-21T12:30:12Z",
-    "expires_at": "2026-10-21T13:15:12Z",
+    "heartbeat_at": "2026-10-21T12:32:20Z",
+    "expires_at": "2026-10-21T13:17:20Z",
     "objective": "Éviter la double lecture de URL.createObjectURL afin de fiabiliser le téléchargement du brief."
   },
   "checkpoint": {
-    "phase": "inspection",
-    "branch": null,
+    "phase": "code_committed",
+    "branch": "fix/ucp-create-object-url-getter-20261021",
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.cjs"
     ],
-    "tests": "pending",
-    "next": "Créer une branche depuis main 680ef595, stabiliser createObjectURL et ouvrir une PR."
+    "tests": "CI pending",
+    "next": "Ouvrir la PR, attendre la CI, autocritiquer puis effectuer une seconde passe corrective."
   },
   "last_completed": {
     "run_id": "ucp-20261021T112618Z-v3",
