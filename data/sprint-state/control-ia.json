@@ -1,50 +1,43 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-visible-home-20261021125535676",
-    "started_at": "2026-10-21T12:55:35.676Z",
-    "expires_at": "2026-10-21T13:40:35.676Z",
-    "objective": "Show deployed new CONTROL functionality prominently on personal home and indicate Cloud disabled; bump offline PWA shell; test real browser and same-SHA public Pages direct main."
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T12:51:32.047Z",
+    "updated_at": "2026-10-21T13:05:37.529Z",
     "main": true,
-    "stage": "control_cloud_independent_created_6rls_22policies_imp01_step_approval_341_node_pages_browser_verified",
+    "stage": "user_visible_home_local_tools_cloud_disabled_pwa40_347_ci_chromium_public_green",
     "files": [
-      "docs/CONTROL_CLOUD_BOOTSTRAP_20261021.md",
-      "assets/command-center.js",
-      "tests/control-goal-step-approval.test.mjs",
+      "index.html",
+      "service-worker.js",
+      "tests/control-home-discovery.test.mjs",
       "tests/control-ia-browser-smoke.mjs",
+      "tests/pwa-atomic-install.test.mjs",
       "data/sprints/control-ia.json",
-      "docs/CONTROL_IA_RETROSPECTIVES.md",
-      "config/cloud.json"
+      "docs/CONTROL_IA_RETROSPECTIVES.md"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/commit/1eb4621fd4e9002f823a9ffe77c488b3ab14547f",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602311548",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602313933",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602485724",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602558986"
+      "https://github.com/cosscoll/Avancement-Projet/commit/445868ff8b2618f743cd68d680aad16602ba2f9c",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604460675",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604460622",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604458769",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604602243"
     ],
     "remaining_blockers": [
-      "REAL CONTROL CLOUD PROJECT NOW EXISTS: Supabase project rvrmjjtdedidjnrkdery (CONTROL Cloud) in organization IAgile (only billing). Distinct from IAgile Academy daabfmdlgcwcykevvrcm. Owner agreed, get_cost returned 0€/month. 6 tables, 22 RLS policies, zero anonymous grants, and no security lints verified. Migration applied. DO NOT repeat project creation or migrations.",
-      "Database SQL A/B checks used simulated request.jwt.claim.sub within transaction ROLLBACK, NOT two actual signed-in Supabase Auth JWTs; must do full auth/REST and revoked session testing before enabled=true.",
-      "config/cloud.json enabled false and registration/login inactive; no Cloud activation without real Auth approval and secure publishable-only frontend config; do not expose secret keys.",
-      "Local IMP-01/02/03/05/10 are device-only, no external provider execution or cross-device transactions. 341/341 Node code test at 1eb4621, last verified doc-only Pages at ff4c1188.",
-      "Old expired CONTROL lease recovered and preserved in recovered_expired_lease; next automation should not treat it as active."
+      "Separate CONTROL Cloud free Supabase rvrmjjtdedidjnrkdery exists but public auth still disabled; need genuine two Auth JWTs + PostgREST isolation and invite/redirect checks before enabling.",
+      "Personal PWA local records do not sync across devices; installed PWA may need reopening or online hard refresh to activate v40.",
+      "Homepage navigation is now visible and tested but no total visual design overhaul or autonomous external agents has been delivered."
     ],
-    "next_action": "Next CONTROL-ACCOUNT sprint: use the ACTUAL independent CONTROL Cloud backend now created (Supabase project reference rvrmjjtdedidjnrkdery); first inspect README/docs, project Auth registration, RLS and current frontend before changing anything. Arrange two real Auth test users and genuine JWT/PostgREST isolation with proper authorization and no secrets in public GitHub; do not activate Cloud until tests pass. Work under a new 45-min lease, writes direct main and same-SHA public proof. No paid plan, no need to recreate Supabase project. Continue IMP-01 local plan step receipts if safe."
+    "next_action": "CONTROL-ACCOUNT: full genuine authenticated A/B Supabase Auth + PostgREST tests against separately created CONTROL Cloud backend, then publishable-key-only integration with security gates and same-SHA Pages; no pay. Preserve visible home links and run real mobile/browser. Do not tell user Cloud is enabled before auth verified. Use own 45-min lock, direct main only."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-imp01-step-approval-recovery-20261021124032740",
-    "started_at": "2026-10-21T12:40:32.740Z",
-    "ended_at": "2026-10-21T12:51:32.047Z",
-    "summary": "IMP-01 saved plan step converts to explicitly consented local task only after project/risk/before-after review. 12 tests added; general 341/341 green, local Chromium, Pages and postdeploy Chromium pass. Independently approved CONTROL Cloud migrated 6 tables/22 RLS policies, simulated-claim A/B SQL tested with full rollback, no real Auth accounts or Cloud activation.",
-    "stage": "verified_online_imp01_local_step_approval_and_control_cloud_independent_secure_schema_not_auth",
-    "commit_sha": "1eb4621fd4e9002f823a9ffe77c488b3ab14547f",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602558986"
+    "run_id": "control-ia-20261021-visible-home-20261021125535676",
+    "started_at": "2026-10-21T12:55:35.676Z",
+    "ended_at": "2026-10-21T13:05:37.529Z",
+    "summary": "Home 'Mes projets' now displays links to the three newly delivered local CONTROL features and truthful inactive Cloud status. PWA offline cache upgraded v39→v40. Six new regression tests, 347/347 Node, Pages and Chromium public/mobile/offline green same SHA 445868ff; directly on main.",
+    "stage": "verified_online_visible_home_public_chromium_347",
+    "commit_sha": "445868ff8b2618f743cd68d680aad16602ba2f9c",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604602243"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
