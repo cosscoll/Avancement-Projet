@@ -27,6 +27,7 @@ function harness(){
  const live=s=>state.messages.push({text:String(s),info:true});
  const render=()=>state.rendered++;
  const panel=(title,body)=>'<section>'+title+body+'</section>';
+ const btn=(label,action)=>'<button data-action="'+action+'">'+label+'</button>';
  const setTimeout=callback=>state.scheduled.push(callback);
  const client={
   auth:{async getUser(){return {data:{user:state.user?{id:state.user,email:state.user+'@example.test'}:null}}}},
@@ -45,12 +46,12 @@ function harness(){
    return {select(){const chain={eq(field,value){if(field==='owner_id')ownerFilter=value;return chain},order(){return chain},limit:query,maybeSingle:query};return chain}};
   }
  };
- const factory=new Function('client','window','byId','render','visible','live','message','panel','setTimeout',
+ const factory=new Function('client','window','byId','render','visible','live','message','panel','btn','setTimeout',
    "let epoch=0,verificationSeq=0,authUser=null,waiting=false,waitingOwner=null,cache={projects:[],items:[],preferences:null};\n"+
    functions+
    "const onAuthEvent=(event,s)=>{"+authBody+"};\n"+
    "\nreturn {verifiedSession,reload,onAuthEvent,read:()=>({epoch,owner:authUser?.id||null,projects:cache.projects,items:cache.items,preferences:cache.preferences,waitingOwner})};");
- const app=factory(client,window,byId,render,visible,live,message,panel,setTimeout);
+ const app=factory(client,window,byId,render,visible,live,message,panel,btn,setTimeout);
  return {state,app,async flushEvents(){while(state.scheduled.length)await state.scheduled.shift()()},makeSlow(table,owner='A'){const d=makeDeferred();state.delays.set(owner+':'+table,d);return d}};
 }
 test('ordinary signed-in user A can read only own RLS-shaped synthetic data',async()=>{
