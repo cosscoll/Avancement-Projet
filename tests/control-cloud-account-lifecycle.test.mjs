@@ -19,7 +19,7 @@ function importer(options={}){
  const localStorage={getItem:()=>JSON.stringify({legacyA:{memo:'PRIVATE A'}})};
  const fetch=()=>new Promise(resolve=>fetches.push(resolve));
  const prompt=()=> 'IMPORTER',confirm=()=>true,safeURL=x=>x;
- const reload=async()=>messages.push('reload'),nav=x=>messages.push('nav:'+x),message=x=>messages.push(x);
+ const reload=async()=>options.failedReload?false:messages.push('reload'),nav=x=>messages.push('nav:'+x),message=x=>messages.push(x);
  const client={from(table){return{
   insert(data){writes.push({table,data});return{select(){return{single(){if(table==='control_projects'&&options.pauseProject)return new Promise(resolve=>projectRequests.push(resolve));if(table==='control_items'&&options.pauseItem)return new Promise(resolve=>itemRequests.push(resolve));return Promise.resolve({data:table==='control_projects'?{id:'p1',owner_id:data.owner_id,name:data.name}:{id:'i1'},error:null})}}}}},
   upsert(data){writes.push({table,data});if(options.pauseUpsert)return new Promise(resolve=>upsertRequests.push(resolve));return Promise.resolve({error:null})}
@@ -283,4 +283,14 @@ test('abandoned account import releases its gate without writing old account dat
  assert.equal(await original,false);
  assert.equal(h.importLegacy.inFlight,false,'Session change must release in-page import gate');
  assert.deepEqual(h.writes,[]);
+});
+
+
+test('legacy import does not navigate or claim completion if reread fails after writes',async()=>{
+ const h=importer({failedReload:true}),pending=h.importLegacy();
+ await completeCatalog(h);
+ await assert.rejects(pending,/Migration enregistrée, mais synchronisation non vérifiée/);
+ assert.deepEqual(h.writes.map(x=>x.table),['control_projects','control_items','control_preferences']);
+ assert.deepEqual(h.messages,[]);
+ assert.equal(h.importLegacy.inFlight,false);
 });
