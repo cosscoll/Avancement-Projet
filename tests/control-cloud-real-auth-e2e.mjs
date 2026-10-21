@@ -115,9 +115,19 @@ async function run(env=process.env){
   const remove=await obj('control_projects','DELETE','?id=eq.'+projA.id+'&select=id',tokenB,undefined,true);
   if(!remove.ok||remove.data?.length!==0)fatal('B peut supprimer le projet de A');
   const forge=await obj('control_connections','POST','?select=id',tokenB,{owner_id:a,provider:'ChatGPT',label:'FORGED'},true);
-  if(forge.ok)fatal('B peut écrire une connexion en usurpant A');
+  if(forge.ok){
+   // If a policy regresses, the unexpected write is still tracked for safe
+   // cleanup using the legitimately owning test account A.
+   if(Array.isArray(forge.data)&&forge.data[0]?.id)
+    work.push({table:'control_connections',id:forge.data[0].id,owner:a,token:tokenA});
+   fatal('B peut écrire une connexion en usurpant A');
+  }
   const inject=await obj('control_items','POST','?select=id',tokenB,{project_id:projA.id,kind:'task',title:'CROSS PROJECT'},true);
-  if(inject.ok)fatal('B peut associer une tâche au projet de A');
+  if(inject.ok){
+   if(Array.isArray(inject.data)&&inject.data[0]?.id)
+    work.push({table:'control_items',id:inject.data[0].id,owner:b,token:tokenB});
+   fatal('B peut associer une tâche au projet de A');
+  }
   const after=await obj('control_projects','GET','?select=id,name&id=eq.'+projA.id,tokenA);
   assert.equal(after.data[0]?.name,marker+' A');
   report('PATCH/DELETE croisés, usurpation owner_id et FK vers projet étranger : refusés');
