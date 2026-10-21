@@ -28,9 +28,13 @@
   <div id="status" class="status" role="status" aria-live="polite">Chargement de CONTROL…</div>
   <section id="setup" class="surface" hidden>
     <div class="eyebrow">MISE EN SERVICE</div>
-    <h1>CONTROL Cloud se prépare</h1>
-    <p>La plateforme multi-utilisateurs nécessite une base privée CONTROL et une configuration d’authentification indépendante. L’ancien CONTROL personnel reste intact.</p>
-    <p class="muted">Les inscriptions ne sont pas encore ouvertes. Aucun mot de passe ni jeton n’est demandé sur cette page.</p>
+    <h1>CONTROL Cloud : base prête, accès en validation</h1>
+    <p>La base CONTROL Cloud indépendante a été créée en région Paris. Le schéma comprend six tables protégées par RLS et 22 politiques d’accès. L’ancien CONTROL personnel reste intact.</p>
+    <div class="surface" style="margin:16px 0;background:#f6f9fc;box-shadow:none" aria-label="État de mise en service">
+      <p><strong>Réalisé :</strong> infrastructure indépendante et tests PostgreSQL A/B simulés sur les six tables.</p>
+      <p><strong>En attente :</strong> deux connexions Supabase Auth réelles, validation des JWT et droits PostgREST, puis recette multi-appareils.</p>
+    </div>
+    <p class="muted">Les inscriptions ne sont pas encore ouvertes. Aucun mot de passe ni jeton n’est demandé sur cette page. Ne partagez aucun secret par ce site.</p>
     <a class="button primary" href="./index.html">Retourner à CONTROL personnel →</a>
   </section>
   <section id="auth" class="auth-layout" hidden>
