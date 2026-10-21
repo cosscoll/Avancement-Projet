@@ -716,15 +716,17 @@ async function inspectCloudBackupPayload(envelope,owner,passwordProvider=()=>ask
  if(password===null)return null;
  if(typeof password!=='string'||password.length<12)
   throw Error('Mot de passe de sauvegarde invalide.');
- let decrypted;
+ let decrypted,payload;
  try{
   const key=await encKey(password,salt);
   decrypted=new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv},key,cipher));
-  const payload=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(decrypted));
-  return validateCloudBackup(payload,owner);
+  payload=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(decrypted));
  }catch{
   throw Error('Déchiffrement impossible : mot de passe incorrect ou fichier altéré.');
  }finally{if(decrypted)decrypted.fill(0)}
+ // Authentication of the ciphertext succeeded: report a genuine account
+ // mismatch separately from an incorrect password, without exposing content.
+ return validateCloudBackup(payload,owner);
 }
 async function inspectCloudBackupFile(file){
  if(inspectCloudBackupFile.inFlight)throw Error('Une vérification de sauvegarde est déjà en cours.');
