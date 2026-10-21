@@ -10,21 +10,22 @@
     "objective": "Borner la libération de l’URL objet après téléchargement"
   },
   "checkpoint": {
-    "phase": "coded",
+    "phase": "ready_to_merge",
     "repository": "cosscoll/UnCoupdePouce",
     "base_branch": "main",
     "base_sha": "ffb88de84faa92067305371c444c76fe6f19f33f",
     "branch": "fix/ucp-object-url-cleanup-20261021",
-    "branch_sha": "57cf3cc4d726e2edf74f70658ece8a44dc1be822",
-    "pr_url": null,
+    "branch_sha": "537fe81ef6d893017e69675b4fb5dcdeed4b560e",
+    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/17",
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.cjs"
     ],
     "tests": [
-      "CI première passe à lancer après ouverture de PR"
+      "Vitrine CI #32 succès (première passe)",
+      "Vitrine CI #33 succès (seconde passe après autocritique)"
     ],
-    "next_action": "Ouvrir la PR, attendre la CI, puis couvrir l’absence totale de revokeObjectURL."
+    "next_action": "Revalider PR, base main et bail, puis fusionner prudemment."
   },
   "last_completed": {
     "run_id": "ucp-20261021T012725Z-v3",
