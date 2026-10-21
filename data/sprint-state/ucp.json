@@ -10,14 +10,28 @@
     "objective": "Empêcher les getters DOM de la checklist de bloquer la régénération du brief."
   },
   "checkpoint": {
-    "phase": "inspection_complete",
-    "branch": null,
-    "pr": null,
+    "phase": "ci_green_ready_to_merge",
+    "branch": "fix/ucp-checklist-getters-20261021",
+    "pr": 31,
     "files": [
       "site-vitrine/dist/assets/app.js"
     ],
-    "tests": [],
-    "next": "Créer une branche isolée, protéger replaceChildren puis auditer append/appendChild et valider par deux CI."
+    "head_sha": "b8390d3ac5258f438f2fcaecd105d93aab6a8d71",
+    "tests": [
+      {
+        "type": "CI",
+        "run": 64,
+        "conclusion": "success",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39634981446"
+      },
+      {
+        "type": "CI",
+        "run": 65,
+        "conclusion": "success",
+        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39635020012"
+      }
+    ],
+    "next": "Fusionner la PR #31 avec contrôle du head SHA, vérifier main, synchroniser et libérer le bail."
   },
   "last_completed": {
     "run_id": "ucp-20261021T152908Z-v3",
