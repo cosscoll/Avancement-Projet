@@ -6,6 +6,8 @@ const source=readFileSync(new URL('../assets/cloud-app.js',import.meta.url),'utf
 const helper=source.slice(source.indexOf('function mutationSession(){'),source.indexOf('async function audit('));
 const oldImport=source.slice(source.indexOf('async function importLegacy(){'),source.indexOf('async function action(button){'));
 const exportCode=source.slice(source.indexOf('async function exportMyData('),source.indexOf('async function importLegacy(){'));
+const logoutStart=source.indexOf("  case 'logout':{");
+const logoutCode=source.slice(logoutStart,source.indexOf("  case 'export-json':",logoutStart));
 const delStart=source.indexOf("  case 'delete-account':{");
 const deletion=source.slice(delStart,source.indexOf("  default:return;",delStart));
 assert.ok(helper.startsWith('function mutationSession(){')&&oldImport.startsWith('async function importLegacy(){')&&exportCode.startsWith('async function exportMyData(')&&deletion.includes('control-delete-account'));
@@ -89,17 +91,17 @@ test('explicit cleartext export still creates file when A remains logged in',asy
  assert.deepEqual(h.downloads,['url','click']);assert.equal(h.messages.length,1);
 });
 
-function deleter(enabled=true){
+function deleter(enabled=true,settings={}){
  const code=String.raw`
  let authUser={id:'A'},epoch=1,verificationSeq=0,cache={projects:[],items:[],preferences:null};
- const responses=[],signouts=[],messages=[];
+ const responses=[],signouts=[],signoutResolvers=[],messages=[];
  const cloudConfig={accountDeletionEnabled:options.enabled},prompt=()=> 'SUPPRIMER MON COMPTE',confirm=()=>true;
- const client={functions:{invoke:()=>new Promise(resolve=>responses.push(resolve))},auth:{signOut:async args=>{signouts.push(args);return{error:null}}}};
+ const client={functions:{invoke:()=>new Promise(resolve=>responses.push(resolve))},auth:{signOut:async args=>{signouts.push(args);if(options.delaySignOut)return new Promise(resolve=>signoutResolvers.push(resolve));return{error:null}}}};
  const byId=()=>({innerHTML:''}),visible=()=>{},message=x=>messages.push(x),window={CONTROL_HELP:{reset(){}}};
  `;
- return new Function('options',code+helper+"async function action(button){switch(button.dataset.action){"+deletion+"  default:return;}}\n"+String.raw`
- return{action,responses,signouts,messages,switchB(){authUser={id:'B'};epoch++}};
- `)({enabled});
+ return new Function('options',code+helper+"async function action(button){switch(button.dataset.action){"+logoutCode+deletion+"  default:return;}}\n"+String.raw`
+ return{action,responses,signouts,signoutResolvers,messages,read:()=>({authUser,cache}),switchB(){authUser={id:'B'};epoch++;cache={projects:[{id:'pB'}],items:[],preferences:null}},reloginA(){authUser={id:'A'};epoch++;cache={projects:[{id:'pA-new'}],items:[],preferences:null}},sdkSignedOut(){authUser=null;epoch++;cache={projects:[],items:[],preferences:null}}};
+ `)({enabled,delaySignOut:settings.delaySignOut===true});
 }
 test('response for deleted A never signs out B after a session switch',async()=>{
  const h=deleter(),pending=h.action({dataset:{action:'delete-account'}});
@@ -136,5 +138,77 @@ test('switch to B during preferences response cannot navigate to A project',asyn
  assert.equal(h.writes.at(-1).data.owner_id,'A');
  h.switchB();h.upsertRequests[0]({error:null});
  assert.equal(await pending,false);
+ assert.deepEqual(h.messages,[]);
+});
+
+test('late logout completion from A cannot wipe newly signed-in B workspace',async()=>{
+ const h=deleter(true,{delaySignOut:true});
+ const pending=h.action({dataset:{action:'logout'}});
+ assert.equal(h.signoutResolvers.length,1);
+ h.switchB();h.signoutResolvers[0]({error:null});
+ assert.equal(await pending,false);
+ assert.equal(h.read().authUser.id,'B');
+ assert.equal(h.read().cache.projects[0].id,'pB');
+ assert.deepEqual(h.messages,[]);
+});
+test('late logout completion cannot wipe freshly reauthenticated A session',async()=>{
+ const h=deleter(true,{delaySignOut:true});
+ const pending=h.action({dataset:{action:'logout'}});
+ h.reloginA();h.signoutResolvers[0]({error:null});
+ assert.equal(await pending,false);
+ assert.equal(h.read().cache.projects[0].id,'pA-new');
+ assert.deepEqual(h.messages,[]);
+});
+test('SDK SIGNED_OUT callback before signOut resolution does not double-complete logout',async()=>{
+ const h=deleter(true,{delaySignOut:true});
+ const pending=h.action({dataset:{action:'logout'}});
+ h.sdkSignedOut();h.signoutResolvers[0]({error:null});
+ assert.equal(await pending,false);assert.deepEqual(h.messages,[]);
+});
+test('logout still signs out active A session successfully',async()=>{
+ const h=deleter();
+ await h.action({dataset:{action:'logout'}});
+ assert.equal(h.read().authUser,null);
+ assert.equal(h.messages.length,1);
+});
+test('failed logout does not claim successful signout or clear valid A session',async()=>{
+ const h=deleter(true,{delaySignOut:true});
+ const pending=h.action({dataset:{action:'logout'}});
+ h.signoutResolvers[0]({error:new Error('Failed signout')});
+ await assert.rejects(pending,/Failed signout/);
+ assert.equal(h.read().authUser.id,'A');
+ assert.deepEqual(h.messages,[]);
+});
+test('account deletion confirmed for A cannot clear B while signOut is delayed',async()=>{
+ const h=deleter(true,{delaySignOut:true});
+ const pending=h.action({dataset:{action:'delete-account'}});
+ h.responses[0]({data:{deleted:true},error:null});
+ for(let i=0;i<50&&!h.signoutResolvers.length;i++)await Promise.resolve();
+ assert.equal(h.signoutResolvers.length,1);
+ h.switchB();h.signoutResolvers[0]({error:null});
+ assert.equal(await pending,false);
+ assert.equal(h.read().authUser.id,'B');
+ assert.equal(h.read().cache.projects[0].id,'pB');
+ assert.deepEqual(h.messages,[]);
+});
+test('SDK signout event prevents redundant A deletion completion without false UI notice',async()=>{
+ const h=deleter(true,{delaySignOut:true});
+ const pending=h.action({dataset:{action:'delete-account'}});
+ h.responses[0]({data:{deleted:true},error:null});
+ for(let i=0;i<50&&!h.signoutResolvers.length;i++)await Promise.resolve();
+ assert.equal(h.signoutResolvers.length,1);
+ h.sdkSignedOut();h.signoutResolvers[0]({error:null});
+ assert.equal(await pending,false);
+ assert.deepEqual(h.messages,[]);
+});
+test('server deletion confirmed but local signout failed never claims completed local logout',async()=>{
+ const h=deleter(true,{delaySignOut:true});
+ const pending=h.action({dataset:{action:'delete-account'}});
+ h.responses[0]({data:{deleted:true},error:null});
+ for(let i=0;i<50&&!h.signoutResolvers.length;i++)await Promise.resolve();
+ assert.equal(h.signoutResolvers.length,1);
+ h.signoutResolvers[0]({error:new Error('Local logout failed')});
+ await assert.rejects(pending,/déconnexion locale non confirmée/);
+ assert.equal(h.read().authUser.id,'A');
  assert.deepEqual(h.messages,[]);
 });
