@@ -73,7 +73,9 @@ async function complete(h,index){
  const q=h.requests[index];
  assert.ok(q,'Expected pending request '+index);
  q.resolve(q.method==='invoke'?{data:{ok:true},error:null}:q.method==='select'?
-  {data:{id:'x',owner_id:'A',kind:'mission',provider:'Claude',title:'Fresh'},error:null}:
+  {data:{id:'x',owner_id:'A',project_id:'pA',kind:'mission',provider:'Claude',title:'Fresh'},error:null}:
+  q.method==='delete'?{data:{id:'v',owner_id:'A'},error:null}:
+  q.method==='update'?{data:{id:q.payload?.body==='updated'?'v':'x',owner_id:'A',project_id:'pA',updated_at:'t1'},error:null}:
   {data:{id:'created-A',owner_id:'A',project_id:'pA',title:'Confirmed',updated_at:'t1'},error:null});
 }
 for(const c of cases){
@@ -189,4 +191,48 @@ test('Catalog refuses a resource saved into a different project despite a succes
  await assert.rejects(pending,/projet\/propriétaire incohérent/);
  assert.deepEqual(h.messages,[]);
  assert.deepEqual(h.read().items.map(x=>x.id),['x','v']);
+});
+
+
+test('visio deletion requires receipt for the deleted record, not only HTTP success',async()=>{
+ const h=harness();h.mount('visios');const pending=h.mounts.visios.remove({id:'v'});
+ await untilRequest(h,1);
+ h.requests[0].resolve({data:{id:'wrong',owner_id:'A'},error:null});
+ await assert.rejects(pending,/identité du rendez-vous non confirmée/);
+ assert.deepEqual(h.read().items.map(x=>x.id),['x','v']);
+});
+test('visio update refuses receipt with a different event ID',async()=>{
+ const h=harness();h.mount('visios');const pending=h.mounts.visios.update({id:'v'},{notes:'updated'});
+ await untilRequest(h,1);
+ h.requests[0].resolve({data:{id:'different',owner_id:'A'},error:null});
+ await assert.rejects(pending,/identité du rendez-vous non confirmée/);
+ assert.deepEqual(h.read().items[1].updated_at,'t0');
+});
+test('visio creation rejects response inserting event in another project',async()=>{
+ const h=harness();h.mount('visios');const pending=h.mounts.visios.create({projectId:'pA',provider:'Meet',title:'Call',url:'https://example.com',startsAt:'2026-10-21T11:00:00Z',type:'meeting',minutes:30});
+ await untilRequest(h,1);
+ h.requests[0].resolve({data:{id:'event-foreign',owner_id:'A',project_id:'pB'},error:null});
+ await assert.rejects(pending,/projet\/propriétaire incohérent/);
+ assert.deepEqual(h.read().items.map(x=>x.id),['x','v']);
+});
+test('AI command creation rejects a project mismatch from the server',async()=>{
+ const h=harness();h.mount('command');const pending=h.mounts.command.createMission({projectId:'pA',provider:'Claude',title:'Task',prompt:'Prompt unique'});
+ await untilRequest(h,1);
+ h.requests[0].resolve({data:{id:'mission-foreign',owner_id:'A',project_id:'pB'},error:null});
+ await assert.rejects(pending,/projet\/propriétaire incohérent/);
+ assert.deepEqual(h.read().items.map(x=>x.id),['x','v']);
+});
+test('AI command update refuses response for another mission despite correct owner',async()=>{
+ const h=harness();h.mount('command');const pending=h.mounts.command.updateMission({id:'x'},{result:'OK',proofUrl:'',status:'done'});
+ await untilRequest(h,1);
+ h.requests[0].resolve({data:{id:'other',owner_id:'A',project_id:'pA'},error:null});
+ await assert.rejects(pending,/identité de mission incohérente/);
+ assert.equal(h.read().items[0].status,'todo');
+});
+test('AI mission dispatch reread never replaces the target with a different mission ID',async()=>{
+ const h=harness();h.mount('command');const pending=h.mounts.command.dispatchMission({id:'x'});
+ await untilRequest(h,1);await complete(h,0);await untilRequest(h,2);
+ h.requests[1].resolve({data:{id:'other',owner_id:'A',project_id:'pA'},error:null});
+ await assert.rejects(pending,/relecture du résultat indisponible/);
+ assert.equal(h.read().items[0].id,'x');
 });
