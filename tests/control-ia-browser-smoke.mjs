@@ -255,6 +255,22 @@ try{
  await ready(()=>js("document.querySelector('#main')?.textContent.includes('Agenda des projets')"),9000)();
  assert.equal(await js("[...document.querySelectorAll('#main .inbox-item strong')].some(e=>e.textContent.trim()==='Recette Agenda Unique')"),false,'Deleted event must disappear from Calendar UI');
  log('deleted event is absent from the Calendar screen');
+ // IMP-03 live local project memory: add, versioned correction, delete.
+ await js("location.hash='#/control/memory'");
+ await ready(()=>js("!!document.querySelector('#new-decision')"),9000)();
+ await js("document.querySelector('#new-decision').elements.namedItem('project').value='ucp';document.querySelector('#new-decision').elements.namedItem('title').value='Recette Memoire Unique';document.querySelector('#new-decision').elements.namedItem('details').value='V1 approuvee';document.querySelector('#new-decision').elements.namedItem('source').value='Compte rendu test';document.querySelector('#new-decision').requestSubmit()");
+ await ready(()=>js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').decisions?.some(d=>d.title==='Recette Memoire Unique'&&d.project==='ucp'&&d.version===1&&d.source==='Compte rendu test')"),9000)();
+ assert.match(await js("document.querySelector('#main').textContent"),/Source déclarée : Compte rendu test/);
+ log('decision memory persists project scope, declared source and version 1');
+ await js("document.querySelector('[data-act^=\"decision-edit:\"]').click()");
+ await ready(()=>js("document.querySelector('#new-decision').elements.namedItem('record').value.length>0"),7000)();
+ await js("document.querySelector('#new-decision').elements.namedItem('details').value='V2 correction';document.querySelector('#new-decision').requestSubmit()");
+ await ready(()=>js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').decisions?.some(d=>d.title==='Recette Memoire Unique'&&d.details==='V2 correction'&&d.version===2)"),9000)();
+ log('decision correction advances version without duplicate');
+ await js("window.__memoryConfirm=window.confirm;window.confirm=()=>true;document.querySelector('[data-act^=\"decision-del:\"]').click()");
+ await ready(()=>js("!JSON.parse(localStorage.getItem('control-command-v1')||'{}').decisions?.some(d=>d.title==='Recette Memoire Unique')"),9000)();
+ await js("window.confirm=window.__memoryConfirm;delete window.__memoryConfirm");
+ log('decision deletion propagates to persisted memory');
  await js("location.hash='#/control/localai'");
  await ready(()=>js("!!document.querySelector('[data-op-consent]')"),9000)();
  await js("document.querySelector('[data-op-consent]').click()");
