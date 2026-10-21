@@ -515,9 +515,40 @@ async function encKey(pass,salt){
  const root=await crypto.subtle.importKey('raw',new TextEncoder().encode(pass),'PBKDF2',false,['deriveKey']);
  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:200000,hash:'SHA-256'},root,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
 }
+// Exports must read the complete account; UI caches are intentionally capped.
+// Stable id ordering, owner verification and duplicate detection fail closed
+// on incomplete or inconsistent responses (including after a session switch).
+async function completeCloudExport(session){
+ const pageSize=400,maxPages=125;
+ async function readAll(table){
+  const rows=[],ids=new Set();
+  for(let page=0;page<maxPages;page++){
+   if(!session.current())return null;
+   const start=page*pageSize;
+   const q=await client.from(table).select('*').eq('owner_id',session.owner).order('id',{ascending:true}).range(start,start+pageSize-1);
+   if(!session.current())return null;
+   if(q.error||!Array.isArray(q.data))throw Error('Export incomplet : lecture des données refusée ('+table+').');
+   for(const row of q.data){
+    if(row?.owner_id!==session.owner||typeof row?.id!=='string'||!row.id||ids.has(row.id))
+     throw Error('Export incomplet : propriétaire ou identifiant de donnée incohérent ('+table+').');
+    ids.add(row.id);rows.push(row);
+   }
+   if(q.data.length<pageSize)return rows;
+  }
+  throw Error('Export interrompu : volume supérieur à '+(pageSize*maxPages)+' lignes pour '+table+'. Aucun fichier partiel produit.');
+ }
+ const projects=await readAll('control_projects');if(projects===null)return null;
+ const items=await readAll('control_items');if(items===null)return null;
+ const pref=await client.from('control_preferences').select('*').eq('owner_id',session.owner).maybeSingle();
+ if(!session.current())return null;
+ if(pref.error||(pref.data&&pref.data.owner_id!==session.owner))
+  throw Error('Export incomplet : préférences du compte non vérifiées.');
+ return {schema:'control-cloud-export-v1',exportedAt:new Date().toISOString(),accountId:session.owner,projects,items,preferences:pref.data||null};
+}
 async function exportMyData(encrypted){
  const session=mutationSession();
- const data={schema:'control-cloud-export-v1',exportedAt:new Date().toISOString(),accountId:session.owner,projects:cache.projects,items:cache.items,preferences:cache.preferences};
+ const data=await completeCloudExport(session);
+ if(!data)return false;
  let content=data;
  if(encrypted){
   const password=prompt('Choisissez un mot de passe de sauvegarde (12 caractères minimum).');
