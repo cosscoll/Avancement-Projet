@@ -210,12 +210,24 @@ function operatorSnapshot(){
   events:db.events.slice(-500).map(e=>({id:e.id,project:e.project,title:e.title,date:e.date})),
   meetings:db.meetings.slice(-500).map(m=>({id:m.id,projectId:m.projectId||m.project,title:m.title,startsAt:m.startsAt}))};
 }
+// The latest local receipt points to the exact saved/replayed operation, not
+// simply to whichever unrelated audit event was most recently recorded.
+let operatorLastReceiptId=null;
 function operatorExecute(action){
  if(!action||typeof action!=='object')throw Error('Action invalide.');
  const type=String(action.type||''),projectId=String(action.projectId||'');
  if(!ctx.projects.some(p=>p.id===projectId))throw Error('Projet non autorisé ou introuvable.');
  const title=String(action.title||'').trim();
  if(!title||title.length>160)throw Error('Intitulé non valide.');
+ const approvalId=action.approvalId===undefined?'':String(action.approvalId);
+ if(approvalId&&!/^local-[a-z0-9_-]{12,96}$/i.test(approvalId))throw Error('Identifiant de confirmation local invalide.');
+ const signature=JSON.stringify({type,projectId,title,id:action.id||'',date:action.date||'',expectedDate:action.expectedDate||'',expectedStatus:action.expectedStatus||''});
+ const prior=approvalId&&Array.isArray(db.operatorAudit)?db.operatorAudit.find(a=>a.approval_id===approvalId):null;
+ if(prior){
+  if(prior.scope!=='local'||prior.outcome!=='saved'||prior.signature!==signature||prior.project!==projectId)throw Error('Identifiant déjà utilisé pour une autre opération. Action refusée.');
+  operatorLastReceiptId=prior.id;
+  return true; // confirmed exactly once; no second write or receipt is fabricated
+ }
  const oldActions=db.actions.slice(),oldEvents=db.events.slice(),oldAudit=Array.isArray(db.operatorAudit)?db.operatorAudit.slice():[];
  let edited=null,previousStatus=null,previousClosed=null,editedEvent=null,previousDate=null;
  if(type==='create_action'){
@@ -241,7 +253,7 @@ function operatorExecute(action){
   if(typeof action.expectedStatus!=='string'||edited.status!==action.expectedStatus)throw Error('Statut de tâche modifié : nouvelle confirmation nécessaire.');
   previousStatus=edited.status;previousClosed=edited.closedAt;edited.status='done';edited.closedAt=new Date().toISOString();
  }else throw Error('Action non autorisée par CONTROL.');
- db.operatorAudit=oldAudit.concat([{id:id(),type,project:projectId,title,at:new Date().toISOString(),scope:'local',outcome:'saved'}]).slice(-200);
+ db.operatorAudit=oldAudit.concat([{id:id(),type,project:projectId,title,at:new Date().toISOString(),scope:'local',outcome:'saved',...(approvalId?{approval_id:approvalId,signature}:{})}]).slice(-200);
  let saved=false;
  try{saved=save()===true}catch(error){saved=false}
  if(!saved){
@@ -250,10 +262,11 @@ function operatorExecute(action){
   if(editedEvent&&type==='update_event')editedEvent.date=previousDate;
   throw Error('Stockage indisponible : l’action a été annulée.');
  }
+ operatorLastReceiptId=db.operatorAudit.at(-1)?.id||null;
  return true;
 }
 function operatorReceipt(){
- const record=Array.isArray(db.operatorAudit)?db.operatorAudit.at(-1):null;
+ const record=Array.isArray(db.operatorAudit)?db.operatorAudit.find(x=>x.id===operatorLastReceiptId):null;
  if(!record||record.outcome!=='saved'||record.scope!=='local')return null;
  return {id:record.id,project:record.project,type:record.type,at:record.at};
 }
