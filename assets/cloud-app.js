@@ -488,30 +488,35 @@ async function encKey(pass,salt){
  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:200000,hash:'SHA-256'},root,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
 }
 async function exportMyData(encrypted){
- if(!authUser)throw Error('Connexion requise.');
- const data={schema:'control-cloud-export-v1',exportedAt:new Date().toISOString(),accountId:authUser.id,projects:cache.projects,items:cache.items,preferences:cache.preferences};
+ const session=mutationSession();
+ const data={schema:'control-cloud-export-v1',exportedAt:new Date().toISOString(),accountId:session.owner,projects:cache.projects,items:cache.items,preferences:cache.preferences};
  let content=data;
  if(encrypted){
   const password=prompt('Choisissez un mot de passe de sauvegarde (12 caractères minimum).');
   if(password===null)return;if(password.length<12)throw Error('Mot de passe trop court.');
   const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),key=await encKey(password,salt);
+  if(!session.current())return false;
   const bytes=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(JSON.stringify(data)));
   content={schema:'control-cloud-encrypted-v1',salt:encB64(salt),iv:encB64(iv),content:encB64(new Uint8Array(bytes)),kdf:'PBKDF2-SHA256-200000'};
  }else if(!confirm('Exporter les données en clair ? Le fichier peut contenir des documents et liens privés.'))return;
+ if(!session.current())return false;
  const blob=new Blob([JSON.stringify(content,null,2)],{type:'application/json'}),a=document.createElement('a'),url=URL.createObjectURL(blob);
+ if(!session.current()){URL.revokeObjectURL(url);return false;}
  a.href=url;a.download='CONTROL-compte-'+new Date().toISOString().slice(0,10)+(encrypted?'-chiffre':'')+'.json';
  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
  message('Export effectué. Conservez le fichier et son mot de passe en lieu sûr.');
 }
 async function importLegacy(){
- if(!authUser)throw Error('Connexion requise.');
+ const session=mutationSession();
  if(cache.preferences?.settings?.legacyImportedAt)throw Error('Une migration a déjà été effectuée pour ce compte.');
  let local={};try{local=JSON.parse(localStorage.getItem('control-hub-v2')||'{}')}catch{}
  if(!local||typeof local!=='object'||!Object.keys(local).length)throw Error('Aucune donnée de l’ancien CONTROL sur cet appareil. Utilisez le navigateur contenant vos anciens projets.');
  if(!confirm('CONFIRMATION DE PROPRIÉTÉ : ces projets et les liens privés de l’ancien CONTROL doivent vous appartenir. Les importer dans ce compte les rend accessibles uniquement à ce compte. Continuer ?'))return;
  if(prompt('Pour confirmer le transfert, tapez IMPORTER')!=='IMPORTER')return;
+ if(!session.current())return false;
  let baseline=[],catalog=[];
  try{const [a,b]=await Promise.all([fetch('./data/projects.json',{cache:'no-store'}),fetch('./data/catalog.json',{cache:'no-store'})]);if(a.ok)baseline=(await a.json()).projects||[];if(b.ok)catalog=(await b.json()).projects||[]}catch{}
+ if(!session.current())return false;
  let personal=[...baseline,...catalog,...(Array.isArray(local.custom)?local.custom:[])];
  // Include any locally-known project keys even when original catalog is unavailable.
  const known=new Set(personal.map(x=>x.id));
@@ -520,15 +525,17 @@ async function importLegacy(){
  if(!personal.length)throw Error('Aucun ancien projet récupérable.');
  let done=0,added=0;
  for(const p of personal){
-  let row=cache.projects.find(x=>x.name===p.name);
+  if(!session.current())return false;
+  let row=cache.projects.find(x=>x.name===p.name&&x.owner_id===session.owner);
   if(!row){
-   const r=await client.from('control_projects').insert({owner_id:authUser.id,name:String(p.name).slice(0,140),description:String(p.description||p.tagline||p.summary||'').slice(0,6000),category:String(p.category||'').slice(0,70)}).select('*').single();
-   if(r.error)throw Error('Migration partielle (projets) : '+r.error.message);
+   const r=await client.from('control_projects').insert({owner_id:session.owner,name:String(p.name).slice(0,140),description:String(p.description||p.tagline||p.summary||'').slice(0,6000),category:String(p.category||'').slice(0,70)}).select('*').single();
+   if(!session.current())return false;
+   if(r.error||!r.data||r.data.owner_id!==session.owner)throw Error('Migration partielle (projets) : '+(r.error?.message||'réponse incohérente.'));
    row=r.data;cache.projects.push(row);done++;
   }
   const legacy=local[p.id]||{};
   const suggestions=[];
-  const add=(kind,title,url='',body='',provider='')=>{if(suggestions.length<100&&String(title||'').trim()&&(!url||safeURL(url)))suggestions.push({owner_id:authUser.id,project_id:row.id,kind,title:String(title).slice(0,200),url:url?safeURL(url):'',body:String(body).slice(0,30000),provider:String(provider).slice(0,60)})};
+  const add=(kind,title,url='',body='',provider='')=>{if(suggestions.length<100&&String(title||'').trim()&&(!url||safeURL(url)))suggestions.push({owner_id:session.owner,project_id:row.id,kind,title:String(title).slice(0,200),url:url?safeURL(url):'',body:String(body).slice(0,30000),provider:String(provider).slice(0,60)})};
   if(legacy.projectUrl)add('ai_space','Projet ChatGPT',legacy.projectUrl,'','ChatGPT');
   for(const [ai,url] of Object.entries(legacy.spaces||{}))add('ai_space','Espace '+ai,url,'',ai);
   for(const x of legacy.links||[])add('resource',x.label||'Ressource',x.url);
@@ -536,16 +543,22 @@ async function importLegacy(){
   for(const [ai,v] of Object.entries(legacy.reports||{}))if(v?.text)add('report','Bilan '+ai,'',v.text,ai);
   if(legacy.memo)add('note','Consignes du projet','',legacy.memo);
   for(const i of suggestions){
+   if(!session.current())return false;
    if(cache.items.some(x=>x.project_id===row.id&&x.kind===i.kind&&x.title===i.title&&x.url===i.url))continue;
    const q=await client.from('control_items').insert(i).select('id').single();
-   if(q.error)throw Error('Migration partielle (ressources) : '+q.error.message);
+   if(!session.current())return false;
+   if(q.error||!q.data?.id)throw Error('Migration partielle (ressources) : '+(q.error?.message||'réponse vide.'));
    cache.items.push({...i,id:q.data.id});added++;
   }
  }
+ if(!session.current())return false;
  const settings={...(cache.preferences?.settings||{}),legacyImportedAt:new Date().toISOString()};
- const r=await client.from('control_preferences').upsert({owner_id:authUser.id,settings,updated_at:new Date().toISOString()},{onConflict:'owner_id'});
+ const r=await client.from('control_preferences').upsert({owner_id:session.owner,settings,updated_at:new Date().toISOString()},{onConflict:'owner_id'});
+ if(!session.current())return false;
  if(r.error)throw Error('Migration de projets réalisée, mais marqueur final refusé : '+r.error.message);
- await reload(true);nav('projects');message(done+' projets et '+added+' éléments historiques transférés.');
+ await reload(true);
+ if(!session.current())return false;
+ nav('projects');message(done+' projets et '+added+' éléments historiques transférés.');
 }
 
 async function action(button){
@@ -617,9 +630,12 @@ async function action(button){
   case 'import-legacy':await importLegacy();return;
   case 'delete-account':{
    if(cloudConfig?.accountDeletionEnabled!==true)throw Error('Suppression de compte non activée.');
+   const session=mutationSession();
    if(prompt('Pour supprimer définitivement votre compte et ses données, écrivez : SUPPRIMER MON COMPTE')!=='SUPPRIMER MON COMPTE')return;
    if(!confirm('Dernière confirmation : supprimer ce compte et tous ses projets de manière irréversible ?'))return;
+   if(!session.current())return false;
    const r=await client.functions.invoke('control-delete-account',{body:{confirmation:'SUPPRIMER MON COMPTE'}});
+   if(!session.current())return false;
    if(r.error||r.data?.deleted!==true)throw Error('Suppression non confirmée par le serveur. Aucune réussite ne peut être annoncée.');
    await client.auth.signOut({scope:'local'});verificationSeq++;epoch++;authUser=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');message('Compte et données supprimés par le serveur.');return;
   }
