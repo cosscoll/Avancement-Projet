@@ -475,15 +475,24 @@ async function copyText(text){
  catch{message('Copie impossible sur cet appareil.',true)}
 }
 async function prepareFourMissions(){
+ const session=mutationSession();
  if(!cache.projects.length)throw Error('Créez d’abord un projet.');
  const selected=prompt('Nom exact du projet pour ces missions :',cache.projects[0].name);
- const p=cache.projects.find(x=>x.name===selected);if(!p)throw Error('Projet non trouvé.');
- const task=prompt('Quel travail faut-il répartir ?');if(!task?.trim())return;
+ if(!session.current())return;
+ const p=cache.projects.find(x=>x.name===selected&&x.owner_id===session.owner);
+ if(!p)throw Error('Projet non trouvé dans ce compte.');
+ const task=prompt('Quel travail faut-il répartir ?');if(!session.current()||!task?.trim())return;
  const plan=[['ChatGPT','Spécifications et critères de réussite'],['Claude','Analyse des risques et propositions UX'],['Codex','Implémentation isolée, tests et preuves'],['ChatGPT','Validation des livrables et synthèse']];
- // One atomic insert; no partial task creation.
- const rows=plan.map(([provider,title])=>({owner_id:authUser.id,project_id:p.id,kind:'mission',title,provider,status:'todo',body:'Objectif : '+task+'\nMission : '+title+'\nAucune dépense ni action engageante sans autorisation.\nJustifier chaque résultat par des preuves.',updated_at:new Date().toISOString()}));
- const q=await client.from('control_items').insert(rows);if(q.error)throw Error(q.error.message);
- await reload(true);message('Quatre missions créées. Aucune IA déclenchée.');
+ // One server-side batch; verify all four receipts before reporting success.
+ const rows=plan.map(([provider,title])=>({owner_id:session.owner,project_id:p.id,kind:'mission',title,provider,status:'todo',body:'Objectif : '+task+'\nMission : '+title+'\nAucune dépense ni action engageante sans autorisation.\nJustifier chaque résultat par des preuves.',updated_at:new Date().toISOString()}));
+ if(!session.current())return;
+ const q=await client.from('control_items').insert(rows).select('id,owner_id,project_id');
+ if(!session.current())return;
+ if(q.error||!Array.isArray(q.data)||q.data.length!==plan.length||
+    q.data.some(x=>!x?.id||x.owner_id!==session.owner||x.project_id!==p.id))
+  throw Error('Création des quatre missions non confirmée : actualise les données avant de recommencer.');
+ await reload(true);
+ if(session.current())message('Quatre missions créées. Aucune IA déclenchée.');
 }
 
 const encB64=x=>{let s='';for(const v of x)s+=String.fromCharCode(v);return btoa(s)};
