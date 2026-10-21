@@ -252,12 +252,17 @@ function operatorExecute(action){
  }
  return true;
 }
+function operatorReceipt(){
+ const record=Array.isArray(db.operatorAudit)?db.operatorAudit.at(-1):null;
+ if(!record||record.outcome!=='saved'||record.scope!=='local')return null;
+ return {id:record.id,project:record.project,type:record.type,at:record.at};
+}
 function localai(){
  const root=$('#main');
  if(!window.CONTROL_LOCAL_AI){root.innerHTML=note('IA locale indisponible : actualise CONTROL.');return}
  const selected=new URLSearchParams(location.hash.split('?')[1]||'').get('project')||'';
  window.CONTROL_LOCAL_AI.mount(root,{projects:ctx.projects,projectId:selected,
-  operator:{snapshot:operatorSnapshot,execute:operatorExecute},
+  operator:{snapshot:operatorSnapshot,execute:operatorExecute,receipt:operatorReceipt},
   createAction:(projectId,title)=>{
    if(!projectId||projectId==='general'||!ctx.projects.some(p=>p.id===projectId))throw Error('Sélectionne un projet avant d’ajouter une tâche.');
    const action={id:id(),project:projectId,title:cap(title,180),priority:'Normale',status:'todo',due:'',url:'',at:new Date().toISOString()};
