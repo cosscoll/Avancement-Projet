@@ -10,21 +10,22 @@
     "objective": "Maintenir les parcours de navigation sans Array.from"
   },
   "checkpoint": {
-    "phase": "coded",
+    "phase": "ready_to_merge",
     "repository": "cosscoll/UnCoupdePouce",
     "base_branch": "main",
     "base_sha": "16f3143d9a481e6f3c1e2aa7b83ed9a7748ee2c3",
     "branch": "fix/ucp-array-from-legacy-20261021",
-    "branch_sha": "34c5be3aef98ad309102e66bc6cf4ded65012492",
-    "pr_url": null,
+    "branch_sha": "6d1397dbd6a7fdbb5dde25b0ee3f31cda7d4f903",
+    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/15",
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.cjs"
     ],
     "tests": [
-      "CI première passe à lancer après ouverture de PR"
+      "Vitrine CI #28 succès (première passe)",
+      "Vitrine CI #29 succès (seconde passe après autocritique)"
     ],
-    "next_action": "Ouvrir la PR, attendre la première CI, puis couvrir les onglets sans Array.from."
+    "next_action": "Revalider PR, main et bail, puis fusionner prudemment."
   },
   "last_completed": {
     "run_id": "ucp-20261020T223101Z-v3",
