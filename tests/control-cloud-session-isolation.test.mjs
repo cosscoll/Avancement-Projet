@@ -41,7 +41,7 @@ function harness(){
   }
  };
  const factory=new Function('client','window','byId','render','visible','live','message','panel',
-   "let epoch=0,authUser=null,waiting=false,waitingOwner=null,cache={projects:[],items:[],preferences:null};\n"+
+   "let epoch=0,verificationSeq=0,authUser=null,waiting=false,waitingOwner=null,cache={projects:[],items:[],preferences:null};\n"+
    functions+
    "\nreturn {verifiedSession,reload,read:()=>({epoch,owner:authUser?.id||null,projects:cache.projects,items:cache.items,preferences:cache.preferences,waitingOwner})};");
  const app=factory(client,window,byId,render,visible,live,message,panel);
@@ -113,4 +113,17 @@ test('all private dataset reads explicitly filter by signed-in owner_id',async()
  assert.deepEqual(h.state.calls.map(x=>x.table).sort(),['control_items','control_preferences','control_projects']);
  assert.equal(h.app.read().projects[0].owner_id,'A');
  assert.equal(h.app.read().items[0].owner_id,'A');
+});
+
+test('repeated same-account verifiedSession while initial request is pending preserves loaded data',async()=>{
+ const h=harness(),slow=h.makeSlow('control_projects');
+ const first=h.app.verifiedSession();
+ await waitFor(()=>h.app.read().waitingOwner==='A','first private load');
+ const second=h.app.verifiedSession();
+ await second;
+ slow.resolve({data:[{id:'project-A',owner_id:'A',name:'Private A'}]});
+ await first;
+ assert.equal(h.app.read().projects.length,1,'Same-account verification must not invalidate the pending private fetch');
+ assert.equal(h.app.read().projects[0].owner_id,'A');
+ assert.equal(h.app.read().waitingOwner,null);
 });
