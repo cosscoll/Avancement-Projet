@@ -10,11 +10,11 @@
     "objective": "Empêcher une erreur d’initialisation matchMedia() de bloquer tout le script."
   },
   "checkpoint": {
-    "files": [],
-    "branch": null,
-    "pr_url": null,
-    "tests": [],
-    "next_action": "Borner l’appel matchMedia hors application/** et tester le parcours."
+    "files": ["site-vitrine/dist/assets/app.js", "site-vitrine/tests/app-shell.test.cjs"],
+    "branch": "fix/ucp-matchmedia-init-20261021",
+    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/21",
+    "tests": ["CI première passe en attente sur 1d0aad20"],
+    "next_action": "Vérifier la CI, mener l’autocritique, tester un retour matchMedia invalide puis retester."
   },
   "last_completed": {
     "run_id": "ucp-20261021T053016Z-v3",
