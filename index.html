@@ -35,7 +35,7 @@
 .control-whats-new-status span{color:#8593a4;font-size:11px}
 .control-whats-new-status strong{color:#374a63}
 @media(max-width:640px){.control-whats-new{padding:14px 13px;margin:10px 0 18px}.control-whats-new-heading{align-items:flex-start;flex-direction:column;gap:5px}.control-whats-new-links{grid-template-columns:1fr;gap:7px}.control-whats-new-links a{min-height:0;padding:10px 12px;gap:2px}.control-whats-new-links span{font-size:12px}.control-whats-new-more{margin-top:1px}}
-</style></head><body><div class="wrap"><header class="control-head"><a href="#/" class="logo"><span>◈</span>CONTROL</a><div class="head-actions"><button type="button" class="control-nav-main-trigger head-search" data-control-nav-open aria-keyshortcuts="Control+K Meta+K">⌕ Trouver une fonction <kbd>Ctrl K</kbd></button><a class="button head-tools" href="#/control/tools">Tous les outils</a></div></header><main id="main" aria-live="polite"><p>Chargement des projets…</p></main><div class="quiet" style="margin-top:28px">CONTROL · Liens et notes enregistrés sur cet appareil · <a href="legacy.html" style="text-decoration:underline">Ancien tableau de bord</a></div></div><nav class="mobilefoot" aria-label="Navigation principale"><button data-go="home" aria-label="Mes projets"><span>▦</span><br>Projets</button><button data-go="inbox" aria-label="Actions à traiter"><span>▤</span><br>À traiter</button><button data-go="manager" aria-label="CONTROL IA"><span>◈</span><br>CONTROL IA</button><button data-go="tools" aria-label="Tous les outils"><span>☷</span><br>Outils</button></nav><button type="button" class="control-nav-mobile-trigger" data-control-nav-open aria-label="Trouver une fonction CONTROL">⌕ Trouver</button><div id="toast" class="toast hidden" role="status"></div>
+</style></head><body><div class="wrap"><header class="control-head"><a href="#/" class="logo"><span>◈</span>CONTROL</a><div class="head-actions"><button type="button" class="control-nav-main-trigger head-search" data-control-nav-open aria-keyshortcuts="Control+K Meta+K">⌕ Trouver une fonction <kbd>Ctrl K</kbd></button><a class="button head-tools" href="#/control/tools">Tous les outils</a></div></header><div id="control-location" class="control-location" aria-label="Emplacement actuel"><span>Vous êtes ici</span><strong>Mes projets</strong></div><main id="main" aria-live="polite"><p>Chargement des projets…</p></main><div class="quiet" style="margin-top:28px">CONTROL · Liens et notes enregistrés sur cet appareil · <a href="legacy.html" style="text-decoration:underline">Ancien tableau de bord</a></div></div><nav class="mobilefoot" aria-label="Navigation principale"><button data-go="home" aria-label="Mes projets"><span>▦</span><br>Projets</button><button data-go="inbox" aria-label="Actions à traiter"><span>▤</span><br>À traiter</button><button data-go="manager" aria-label="CONTROL IA"><span>◈</span><br>CONTROL IA</button><button data-go="tools" aria-label="Tous les outils"><span>☷</span><br>Outils</button></nav><button type="button" class="control-nav-mobile-trigger" data-control-nav-open aria-label="Trouver une fonction CONTROL">⌕ Trouver</button><div id="toast" class="toast hidden" role="status"></div>
 <script src="assets/automations-hub.js"></script>
 <script src="assets/command-center.js"></script>
 <script src="assets/tool-catalog.js"></script>
@@ -240,6 +240,23 @@ function render(){
  window.CONTROL_MULTI_AI?.unmount?.(workspaceRoot);
  window.CONTROL_LOCAL_AI?.unmount?.(workspaceRoot);
  const current=location.hash;
+ const where=$('#control-location');
+ if(where){
+  let label='Mes projets',trail='';
+  const match=current.match(/^#\/project\/([^/]+)(?:\/([^/?#]+))?/);
+  if(match){
+   const p=projects.find(v=>v.id===decodeURIComponent(match[1]));
+   const section=[['ai','Espaces IA'],['discussions','Conversations'],['pilot','Gestion'],['resources','Ressources'],['localai','CONTROL IA'],['meetings','Visios'],['command','Commander mes IA'],['library','Outils IA'],['deploy','Publication'],['lab','Laboratoire'],['connect','Connexions']].find(x=>x[0]===match[2]);
+   label=(p?nameOf(p):'Projet')+(section?' / '+section[1]:'');
+   trail='<a href="#/">← Mes projets</a>';
+  }else if(current.startsWith('#/control/')||current.startsWith('#/automations')){
+   const route=current.split('?')[0];
+   const item=window.CONTROL_NAVIGATION?.getItems().find(x=>x.target===route);
+   label=item?.title||'Espace de pilotage';
+   trail='<a href="#/">← Projets</a>';
+  }
+  where.innerHTML='<span>Vous êtes ici</span><strong>'+esc(label)+'</strong>'+trail;
+ }
  document.querySelectorAll('.mobilefoot [data-go]').forEach(b=>{
   const k=b.dataset.go,selected=k==='home'&&(current==='#/'||!current||current.startsWith('#/project/'))||k==='inbox'&&current.startsWith('#/control/inbox')||k==='manager'&&current.startsWith('#/control/manager')||k==='tools'&&(current.startsWith('#/control/')&&!current.startsWith('#/control/inbox')&&!current.startsWith('#/control/manager')||current.startsWith('#/automations'));
   b.setAttribute('aria-current',selected?'page':'false');
