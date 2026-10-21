@@ -291,3 +291,15 @@ test('workspace refuses extra large collections rather than claiming complete sy
  assert.deepEqual(h.app.read().items,[]);
  assert.equal(h.state.messages.some(x=>x.bad&&x.text.includes('limite d’affichage')),true);
 });
+
+
+test('paged workspace preserves newest-first ordering after reading complete ID-ordered pages',async()=>{
+ const h=harness();
+ h.state.datasets.set('A:control_projects',[
+  {id:'p-a',owner_id:'A',name:'Older',created_at:'2026-01-01T00:00:00Z'},
+  {id:'p-b',owner_id:'A',name:'Newest',created_at:'2026-10-21T00:00:00Z'},
+  {id:'p-c',owner_id:'A',name:'Middle',created_at:'2026-06-01T00:00:00Z'}
+ ]);
+ await h.app.verifiedSession();
+ assert.deepEqual(h.app.read().projects.map(x=>x.name),['Newest','Middle','Older']);
+});
