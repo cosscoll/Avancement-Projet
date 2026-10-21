@@ -143,3 +143,8 @@ body.cloud-shell-v3 .shell-projects-list>.card>small{grid-column:2;grid-row:2;ma
 body.cloud-shell-v3 .shell-feature-aside>button{width:100%}
 body.cloud-shell-v3 .shell-side-footer>button{margin-top:10px}
 @media(max-width:959px){body.control-shell-v3 .shell-dashboard-top{margin-top:5px}body.cloud-shell-v3 .shell-dashboard-top{margin-top:4px}}
+
+/* Build marker makes stale browser/service-worker UI immediately identifiable. */
+.shell-ui-version{display:inline-block!important;width:auto!important;height:auto!important;min-height:0!important;margin:0 0 0 7px!important;padding:4px 7px!important;vertical-align:middle!important;border-radius:5px!important;background:#e5e3d9!important;color:#435062!important;font-size:9px!important;letter-spacing:1px!important;font-weight:800!important;white-space:nowrap}
+.shell-feature-primary::before,.shell-feature-primary::after{display:none}
+@media(max-width:430px){.shell-ui-version{font-size:8px!important;padding:3px 5px!important}}
