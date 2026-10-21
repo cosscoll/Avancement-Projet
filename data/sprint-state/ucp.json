@@ -6,19 +6,19 @@
     "run_id": "ucp-20261021T112618Z-v3",
     "owner": "chatgpt-automation-ucp",
     "started_at": "2026-10-21T11:26:18Z",
-    "heartbeat_at": "2026-10-21T11:26:18Z",
-    "expires_at": "2026-10-21T12:11:18Z",
+    "heartbeat_at": "2026-10-21T11:29:15Z",
+    "expires_at": "2026-10-21T12:14:15Z",
     "objective": "Empêcher un getter DOM défaillant sur append d’interrompre la copie ou le téléchargement du brief."
   },
   "checkpoint": {
-    "phase": "inspection",
-    "branch": null,
+    "phase": "code_committed",
+    "branch": "fix/ucp-body-append-getters-20261021",
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.cjs"
     ],
-    "tests": "pending",
-    "next": "Créer une branche depuis main f2289661, borner les getters DOM et ouvrir une PR."
+    "tests": "CI pending",
+    "next": "Ouvrir la PR, attendre la CI, autocritiquer puis effectuer une seconde passe corrective."
   },
   "last_completed": {
     "run_id": "ucp-20261021T103347Z-v3",
