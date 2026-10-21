@@ -134,7 +134,7 @@
     },
     {
       "title": "Vitrine intégrée, recette réelle non vérifiée",
-      "description": "PR UCP #2 à #28 fusionnées sur main jusqu’au commit 82cc9498 : navigation mobile restaurée, état public durable, sorties build/dist contrôlées et replis DOM ajoutés pour le menu, les onglets, la checklist, la copie et le téléchargement du brief. Les CI Vitrine 39608343060 et 39608411660 sont vertes ; la seconde confirme une lecture unique de Clipboard et le receveur correct de writeText. L’incident ucp-public-site-unverified reste ouvert : aucun navigateur, lecteur d’écran, appareil réel, site public ou staging n’a été vérifié.",
+      "description": "PR UCP #2 à #29 fusionnées sur main jusqu’au commit 9017fb70 : navigation mobile restaurée, état public durable, sorties build/dist contrôlées et replis DOM ajoutés pour le menu, les onglets, la checklist, la copie et le téléchargement du brief. Les CI Vitrine 39617900367 et 39618079142 sont vertes ; la seconde confirme la garde des getters remove, parentNode et removeChild pendant le nettoyage de copie. L’incident ucp-public-site-unverified reste ouvert : aucun navigateur, lecteur d’écran, appareil réel, site public ou staging n’a été vérifié.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-54 ; PR #2 à #28 fusionnées sur main jusqu’à 82cc9498 avec CI Vitrine verte, contrôle build/dist, replis DOM et API Clipboard stabilisée. Les contrôles isolés et simulés ne valent pas recette navigateur, appareil, site public ou staging.",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-54 ; PR #2 à #29 fusionnées sur main jusqu’à 9017fb70 avec CI Vitrine verte, contrôle build/dist, replis DOM et nettoyage de copie stabilisé. Les contrôles isolés et simulés ne valent pas recette navigateur, appareil, site public ou staging.",
   "baseline_date": "2026-10-21"
 }
