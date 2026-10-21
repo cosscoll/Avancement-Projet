@@ -1,9 +1,29 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "idle",
-  "lease": null,
-  "checkpoint": null,
+  "status": "running",
+  "lease": {
+    "run_id": "ucp-20261021T023450Z-v3",
+    "owner": "chatgpt-automation-ucp",
+    "started_at": "2026-10-21T02:34:50Z",
+    "expires_at": "2026-10-21T03:19:50Z",
+    "objective": "Borner la libération de l’URL objet après téléchargement"
+  },
+  "checkpoint": {
+    "phase": "inspection",
+    "repository": "cosscoll/UnCoupdePouce",
+    "base_branch": "main",
+    "base_sha": "ffb88de84faa92067305371c444c76fe6f19f33f",
+    "branch": null,
+    "branch_sha": null,
+    "pr_url": null,
+    "files": [
+      "site-vitrine/dist/assets/app.js",
+      "site-vitrine/tests/app-shell.test.cjs"
+    ],
+    "tests": [],
+    "next_action": "Créer une branche et rendre la révocation d’URL objet tolérante aux API absentes ou en erreur."
+  },
   "last_completed": {
     "run_id": "ucp-20261021T012725Z-v3",
     "ended_at": "2026-10-21T01:30:38.075Z",
