@@ -12,7 +12,7 @@ const truncate=(s,n=210)=>String(s||'').length>n?String(s).slice(0,n)+'…':Stri
 const providers={ChatGPT:'https://chatgpt.com/',Claude:'https://claude.ai/',Gemini:'https://gemini.google.com/',Codex:'https://chatgpt.com/codex',Perplexity:'https://www.perplexity.ai/'};
 const names={ai_space:'Espaces IA',conversation:'Conversations',resource:'Ressources',task:'Actions',mission:'Missions',automation:'Automatisations',report:'Bilans',decision:'Décisions',note:'Notes',event:'Échéances',expense:'Dépenses',income:'Revenus'};
 const externalKinds=new Set(['ai_space','conversation','resource','automation']);
-let client=null,cloudConfig=null,authUser=null,cache={projects:[],items:[],preferences:null},page='projects',picked='',tab='ai_space',waiting=false,waitingOwner=null,epoch=0,terms='',importing=false,cloudProjectsAll=false;
+let client=null,cloudConfig=null,authUser=null,cache={projects:[],items:[],preferences:null},page='projects',picked='',tab='ai_space',waiting=false,waitingOwner=null,epoch=0,verificationSeq=0,terms='',importing=false,cloudProjectsAll=false;
 const getProject=x=>cache.projects.find(p=>p.id===x);
 const projectName=id=>getProject(id)?.name||'Sans projet';
 const items=(kind,projectId)=>cache.items.filter(x=>(!kind||x.kind===kind)&&(projectId===undefined||x.project_id===projectId));
@@ -53,11 +53,11 @@ function safeClientConfig(v){
 async function boot(){live('Vérification de la configuration privée…');let cfg;
  try{const r=await fetch(CONFIG_URL,{cache:'no-store'});if(!r.ok)throw Error('not ready');cfg=await r.json();if(!safeClientConfig(cfg))throw Error('not configured');cloudConfig=cfg;byId('google-login').hidden=(cfg.allowGoogleLogin!==true);if(cfg.allowRegistration!==true){document.querySelector('.auth-box h2').textContent='Se connecter à la bêta';document.querySelector('.auth-box .muted').textContent='Accès sur invitation uniquement. Les inscriptions publiques ne sont pas encore ouvertes.'}}catch{visible('setup');return}
  try{live('Initialisation de la connexion sécurisée…');const {createClient}=await import(CDN);client=createClient(cfg.supabaseUrl,cfg.supabasePublishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}});
- client.auth.onAuthStateChange((event,s)=>{if(event==='SIGNED_OUT'){window.CONTROL_HELP?.reset();epoch++;authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');return}if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='USER_UPDATED'){setTimeout(()=>verifiedSession(),0)}});
+ client.auth.onAuthStateChange((event,s)=>{if(event==='SIGNED_OUT'){window.CONTROL_HELP?.reset();verificationSeq++;epoch++;authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');return}if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='USER_UPDATED'){setTimeout(()=>verifiedSession(),0)}});
  await verifiedSession();
  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&authUser)reload(true)});
  }catch{visible('setup');const p=byId('setup').querySelector('.muted');p.textContent='La configuration est prête, mais la bibliothèque sécurisée ou le fournisseur d’authentification n’est pas joignable. Aucun compte n’a été créé.'}}
-async function verifiedSession(){const token=++epoch;try{const r=await client.auth.getUser();if(token!==epoch)return;if(r.error||!r.data?.user){authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');return}const changed=authUser?.id!==r.data.user.id;authUser=r.data.user;if(changed){window.CONTROL_HELP?.reset();waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML=panel('Connexion sécurisée','<p class="muted">Chargement des données du compte…</p>');live('Chargement de votre espace privé…')}visible('workspace');await reload()}catch{if(token===epoch){authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth')}}}
+async function verifiedSession(){const token=++verificationSeq;try{const r=await client.auth.getUser();if(token!==verificationSeq)return;if(r.error||!r.data?.user){epoch++;authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');return}const changed=authUser?.id!==r.data.user.id;if(changed)epoch++;authUser=r.data.user;if(changed){window.CONTROL_HELP?.reset();waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML=panel('Connexion sécurisée','<p class="muted">Chargement des données du compte…</p>');live('Chargement de votre espace privé…')}visible('workspace');await reload()}catch{if(token===verificationSeq){epoch++;authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth')}}}
 async function reload(silent=false){if(!authUser||!client)return;const owner=authUser.id;if(waiting&&waitingOwner===owner)return;waiting=true;waitingOwner=owner;byId('refresh').disabled=true;const token=epoch;
  try{const [p,i,pref]=await Promise.all([client.from('control_projects').select('*').eq('owner_id',owner).order('created_at',{ascending:false}).limit(500),client.from('control_items').select('*').eq('owner_id',owner).order('created_at',{ascending:false}).limit(2000),client.from('control_preferences').select('*').eq('owner_id',owner).maybeSingle()]);
  if(token!==epoch||!authUser||authUser.id!==owner)return;
@@ -557,7 +557,7 @@ async function action(button){
   case 'logout':{
    if(!confirm('Se déconnecter de cet appareil ?'))return;
    const r=await client.auth.signOut({scope:'local'});if(r.error)throw Error(r.error.message);
-   epoch++;authUser=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';
+   verificationSeq++;epoch++;authUser=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';
    window.CONTROL_HELP?.reset();visible('auth');message('Déconnecté de cet appareil.');return;
   }
   case 'export-json':await exportMyData(false);return;
@@ -569,7 +569,7 @@ async function action(button){
    if(!confirm('Dernière confirmation : supprimer ce compte et tous ses projets de manière irréversible ?'))return;
    const r=await client.functions.invoke('control-delete-account',{body:{confirmation:'SUPPRIMER MON COMPTE'}});
    if(r.error||r.data?.deleted!==true)throw Error('Suppression non confirmée par le serveur. Aucune réussite ne peut être annoncée.');
-   await client.auth.signOut({scope:'local'});epoch++;authUser=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');message('Compte et données supprimés par le serveur.');return;
+   await client.auth.signOut({scope:'local'});verificationSeq++;epoch++;authUser=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');message('Compte et données supprimés par le serveur.');return;
   }
   default:return;
  }
