@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "control-ia-20261021-auth-signout-race-20261021102617728",
+    "started_at": "2026-10-21T10:26:17.728Z",
+    "expires_at": "2026-10-21T11:11:17.728Z",
+    "objective": "Fix proven stale signOut completions clearing replacement accounts during logout and server-confirmed delete-account; CI regression and direct main public proof"
+  },
   "checkpoint": {
     "updated_at": "2026-10-21T10:25:38.811Z",
     "main": true,
