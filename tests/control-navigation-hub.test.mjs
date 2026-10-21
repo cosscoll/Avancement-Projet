@@ -87,7 +87,7 @@ test('global feature finder never stores query text, sensitive project data or c
  assert.match(code,/aria-modal="true"/);
  assert.match(code,/Escape/);
  assert.match(code,/aria-label="Rechercher une fonction"/);
- assert.match(code,/textContent/);
+ assert.match(code,/escape\(query\.value\.trim\(\)\)/);
 });
 test('personal navigation changes are stable and syntactically valid',()=>{
  const inline=index.match(/<script>([\s\S]*?)<\/script>/)?.[1]||'';
