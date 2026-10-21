@@ -1,31 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-20261021T082846Z-v3",
-    "owner": "chatgpt-automation-ucp",
-    "started_at": "2026-10-21T08:28:46Z",
-    "expires_at": "2026-10-21T09:13:46Z",
-    "objective": "Préserver menu et onglets lorsque Array.from existe mais rejette une collection DOM."
-  },
-  "checkpoint": {
-    "files": [
-      "site-vitrine/dist/assets/app.js",
-      "site-vitrine/tests/app-shell.test.cjs"
-    ],
-    "branch": "fix/ucp-array-from-throw-20261021",
-    "pr_url": null,
-    "tests": [
-      "Régression menu ajoutée ; CI en attente."
-    ],
-    "next_action": "Ouvrir la PR, attendre la CI, autocritiquer puis effectuer une passe corrective."
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261021T073252Z-v3",
-    "ended_at": "2026-10-21T07:37:44.782Z",
+    "run_id": "ucp-20261021T082846Z-v3",
+    "ended_at": "2026-10-21T08:32:47.125Z",
     "outcome": "merged",
-    "summary": "PR #22 getter window.matchMedia sûr fusionnée sur main 5b94db61 après deux CI vertes ; navigateur réel non vérifié.",
+    "summary": "PR #23 repli Array.from robuste fusionnée sur main f8d7d762 après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
