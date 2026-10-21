@@ -70,12 +70,14 @@ function nav(where,pid='',newTab='ai_space'){page=where;picked=pid;tab=newTab;wi
 function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [data-page]').forEach(b=>{const k=b.dataset.page;const active=k==='projects'&&(page==='projects'||page==='project')||k==='inbox'&&page==='inbox'||k==='manager'&&page==='manager'||k==='tools'&&!['projects','project','inbox','manager'].includes(page);b.setAttribute('aria-current',active?'page':'false')});const fns={projects:projectsPage,project:projectPage,inbox:inboxPage,missions:missionsPage,automations:automationsPage,manager:managerPage,tools:toolsPage,account:accountPage,catalog:catalogPage,deploy:deployPage,lab:labPage,command:commandPage,visios:visiosPage};byId('page').innerHTML=(fns[page]||projectsPage)();
  if(page==='visios'){
    const root=byId('visios-root');if(!window.CONTROL_VISIOS){root.textContent='Module visio indisponible. Actualise CONTROL.';return}
+   const mountedSession=mutationSession();
    window.CONTROL_VISIOS.mount(root,{mode:'cloud',allowInlineVideo:false,projectId:picked,projects:cache.projects,
-    list:()=>cache.items.filter(i=>i.kind==='event'&&i.details?.controlVisio===true).map(i=>({
+    list:()=>!mountedSession.current()?[]:cache.items.filter(i=>i.kind==='event'&&i.details?.controlVisio===true).map(i=>({
       id:i.id,title:i.title,projectId:i.project_id||'',type:i.details.type,provider:i.provider,
       startsAt:i.due_at,minutes:Number(i.details.minutes)||30,url:i.url,notes:i.body||'',updatedAt:i.updated_at
     })),
     create:async(m)=>{
+     if(!mountedSession.current())return false;
       const session=mutationSession(),owner=session.owner;
       if(m.projectId&&!getProject(m.projectId))throw Error('Projet inaccessible.');
       const payload={owner_id:owner,project_id:m.projectId||null,kind:'event',provider:m.provider,title:m.title,
@@ -86,6 +88,7 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
       cache.items.unshift(result.data);return true;
     },
     update:async(m,fields)=>{
+     if(!mountedSession.current())return false;
       const session=mutationSession(),owner=session.owner,row=cache.items.find(i=>i.id===m.id&&i.owner_id===owner&&i.details?.controlVisio===true);
       if(!owner||!row)throw Error('Rendez-vous non accessible.');
       const q=await client.from('control_items').update({body:fields.notes,updated_at:new Date().toISOString()})
@@ -95,6 +98,7 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
       Object.assign(row,q.data);return true;
     },
     remove:async(m)=>{
+     if(!mountedSession.current())return false;
       const session=mutationSession(),owner=session.owner,row=cache.items.find(i=>i.id===m.id&&i.owner_id===owner&&i.details?.controlVisio===true);
       if(!owner||!row)throw Error('Fiche non accessible.');
       const q=await client.from('control_items').delete().eq('id',row.id).eq('owner_id',owner)
@@ -108,15 +112,17 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
  if(page==='command'){
   const target=byId('command-root');
   if(!window.CONTROL_MULTI_AI){target.textContent='Poste de commande indisponible. Actualise CONTROL.';return}
-  window.CONTROL_MULTI_AI.mount(target,{mode:'cloud',projectId:picked,projects:cache.projects,
-   listMissions:projectId=>cache.items.filter(x=>x.project_id===projectId&&x.kind==='mission'&&['Claude','Gemini'].includes(x.provider)).map(x=>({
+  const mountedSession=mutationSession();
+   window.CONTROL_MULTI_AI.mount(target,{mode:'cloud',projectId:picked,projects:cache.projects,
+   listMissions:projectId=>!mountedSession.current()?[]:cache.items.filter(x=>x.project_id===projectId&&x.kind==='mission'&&['Claude','Gemini'].includes(x.provider)).map(x=>({
      id:x.id,provider:x.provider,projectId:x.project_id,title:x.title,prompt:x.body,
      status:x.status||'todo',result:String(x.details?.result||''),proofUrl:String(x.details?.proofUrl||''),
      resultOrigin:x.details?.origin==='api'?'api':'manual',updatedAt:x.updated_at,url:x.url||''
    })),
-   providerURL:(projectId,provider)=>cache.items.find(x=>x.project_id===projectId&&x.kind==='ai_space'&&x.provider===provider&&safeURL(x.url))?.url||providers[provider]||'',
-   canDispatch:()=>cloudConfig?.aiDispatchEnabled===true,
+   providerURL:(projectId,provider)=>!mountedSession.current()?'':cache.items.find(x=>x.project_id===projectId&&x.kind==='ai_space'&&x.provider===provider&&safeURL(x.url))?.url||providers[provider]||'',
+   canDispatch:()=>mountedSession.current()&&cloudConfig?.aiDispatchEnabled===true,
    dispatchMission:async(m)=>{
+     if(!mountedSession.current())return false;
      if(cloudConfig?.aiDispatchEnabled!==true)throw Error('Envoi API non autorisé.');
      const session=mutationSession(),owner=session.owner;
      if(!cache.items.some(x=>x.id===m.id&&x.owner_id===owner&&x.kind==='mission'&&['Claude','Gemini'].includes(x.provider)))throw Error('Mission introuvable dans ce compte.');
@@ -129,6 +135,7 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
      const local=cache.items.find(x=>x.id===m.id&&x.owner_id===owner);if(local)Object.assign(local,fresh.data);return true;
    },
    createMission:async({projectId,provider,title,prompt})=>{
+     if(!mountedSession.current())return false;
      const session=mutationSession(),owner=session.owner;if(!getProject(projectId))throw Error('Projet indisponible pour ce compte.');
      if(!['Claude','Gemini'].includes(provider)||prompt.length>30000)throw Error('Mission non valide.');
      if(cache.items.some(x=>x.project_id===projectId&&x.provider===provider&&x.kind==='mission'&&x.body===prompt))return false;
@@ -139,6 +146,7 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
      cache.items.unshift(q.data);return true;
    },
    updateMission:async(m,patch)=>{
+     if(!mountedSession.current())return false;
      const session=mutationSession(),owner=session.owner,original=cache.items.find(x=>x.id===m.id&&x.owner_id===owner&&x.kind==='mission');
      if(!owner||!original)throw Error('Mission inaccessible dans ce compte.');
      if(patch.result.length>14000)throw Error('Résultat trop long.');
@@ -154,8 +162,10 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
  }
  if(page==='lab'){
   const root=byId('lab-root');if(!window.CONTROL_LAB){root.textContent='Laboratoire IA indisponible. Actualise la page.';return}
-  window.CONTROL_LAB.mount(root,{mode:'cloud',projectId:picked,projects:cache.projects,
+  const mountedSession=mutationSession();
+   window.CONTROL_LAB.mount(root,{mode:'cloud',projectId:picked,projects:cache.projects,
    getProject:(projectId)=>{
+    if(!mountedSession.current())return{};
     const p=getProject(projectId);if(!p)return{};
     const rows=cache.items.filter(x=>x.project_id===projectId);
     return{context:[
@@ -164,8 +174,9 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
       ...rows.filter(x=>x.kind==='decision').slice(0,3).map(x=>'Décision : '+x.title+' — '+String(x.body||'').slice(0,140))
     ],reports:rows.filter(x=>x.kind==='report').slice(0,3).map(x=>x.provider+' : '+x.body)}
    },
-   providerURL:(projectId,provider)=>cache.items.find(x=>x.project_id===projectId&&x.kind==='ai_space'&&x.provider===provider&&safeURL(x.url))?.url||providers[provider]||'',
+   providerURL:(projectId,provider)=>!mountedSession.current()?'':cache.items.find(x=>x.project_id===projectId&&x.kind==='ai_space'&&x.provider===provider&&safeURL(x.url))?.url||providers[provider]||'',
    saveMission:async({projectId,provider,title,instruction})=>{
+     if(!mountedSession.current())return false;
     const session=mutationSession(),owner=session.owner;if(!getProject(projectId))throw Error('Connecte-toi à ton projet avant de créer la mission.');
     if(instruction.length>29000)throw Error('Brief trop long pour la base de données CONTROL Cloud.');
     if(cache.items.some(x=>x.project_id===projectId&&x.kind==='mission'&&x.provider===provider&&x.body===instruction))return false;
@@ -182,10 +193,12 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
   const root=byId(page==='catalog'?'catalog-root':'deploy-root');
   const extension=page==='catalog'?window.CONTROL_TOOL_CATALOG:window.CONTROL_DEPLOY_GUIDES;
   if(!extension){root.innerHTML='<div class="hint">Les ressources sont momentanément indisponibles. Réessaie plus tard.</div>';return}
-  extension.mount(root,{mode:'cloud',projectId:picked,projects:cache.projects,
+  const mountedSession=mutationSession();
+   extension.mount(root,{mode:'cloud',projectId:picked,projects:cache.projects,
    onOpenDeploy:(project)=>nav('deploy',project||''),
-   isSaved:(tool,project)=>cache.items.some(x=>x.project_id===project&&x.kind==='resource'&&(x.details?.catalogToolId===tool.id||x.url===tool.url)),
+   isSaved:(tool,project)=>mountedSession.current()&&cache.items.some(x=>x.project_id===project&&x.kind==='resource'&&(x.details?.catalogToolId===tool.id||x.url===tool.url)),
    onAdd:async (tool,project)=>{
+     if(!mountedSession.current())return false;
     const session=mutationSession(),owner=session.owner;
     if(!cache.projects.some(p=>p.id===project&&p.owner_id===owner))throw Error('Sélectionne un projet de ton compte.');
     if(cache.items.some(x=>x.project_id===project&&x.kind==='resource'&&(x.details?.catalogToolId===tool.id||x.url===tool.url)))return false;
