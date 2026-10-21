@@ -209,7 +209,7 @@ test('frontend refuses foreign project rows even if API returns them after an ow
  assert.equal(h.app.read().owner,'A');
  assert.deepEqual(h.app.read().projects,[]);
  assert.deepEqual(h.app.read().items,[]);
- assert.ok(h.state.messages.some(x=>x.bad&&x.text.includes('Isolation du compte non confirmée')));
+ assert.ok(h.state.messages.some(x=>x.bad&&x.text.includes('Données incohérentes ou compte non vérifié')));
 });
 
 test('frontend never renders another owner preference document',async()=>{
@@ -220,7 +220,7 @@ test('frontend never renders another owner preference document',async()=>{
  await load;
  assert.equal(h.app.read().preferences,null);
  assert.deepEqual(h.app.read().projects,[]);
- assert.ok(h.state.messages.some(x=>x.bad&&x.text.includes('Isolation du compte non confirmée')));
+ assert.ok(h.state.messages.some(x=>x.bad&&x.text.includes('Isolation des préférences non confirmée')));
 });
 
 test('frontend rejects a malformed untrusted collection instead of reporting sync success',async()=>{
@@ -230,7 +230,7 @@ test('frontend rejects a malformed untrusted collection instead of reporting syn
  malformed.resolve({data:{owner_id:'A',title:'not an array'}});
  await load;
  assert.deepEqual(h.app.read().items,[]);
- assert.ok(h.state.messages.some(x=>x.bad&&x.text.includes('Isolation du compte non confirmée')));
+ assert.ok(h.state.messages.some(x=>x.bad&&x.text.includes('Lecture complète des données non vérifiée')));
 });
 
 
