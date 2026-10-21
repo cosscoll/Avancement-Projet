@@ -472,5 +472,96 @@
       ]
     },
     "next": "Faire approuver une instance CONTROL indépendante à 0 € puis tester une vraie inscription/session JWT et les lectures croisées A/B sous RLS, synchronisation et déconnexion, sans altérer IAgile."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-070837-repair-scheduler-ci",
+    "started_at": "2026-10-21T07:08:37.936Z",
+    "ended_at": "2026-10-21T07:15:23.615Z",
+    "summary": "CONTROL IA task reactivated at XXh50 Europe/Paris; expired prior sprint lease recovered without false completion; historical UCP incident metadata repaired under its own lease; shared CI and Pages verified green. Next scheduled task run not yet observed.",
+    "objectives": [
+      {
+        "before": "Scheduler disabled, CONTROL lease stale since 20 Oct, shared CI 173/174 red on invalid UCP incident ID shape.",
+        "after": "CONTROL task is_enabled=true, old lease recovered with checkpoint intact, UCP report V2/V3 incident restored, 174/174 general tests and 14/14 contract tests green on same SHA.",
+        "acceptance": "GitHub Actions 39560080318 174/174 PASS, 39560080290 14/14 PASS, Pages 39560079395 PASS; platform Tasks update confirmation is_enabled true, cadence XXh50 Europe/Paris. Actual subsequent hourly execution remains to verify."
+      }
+    ],
+    "done": [
+      "Queried real platform Tasks status (disabled) and GitHub state before modification.",
+      "Recovered only expired CONTROL lease using current SHA and preserved checkpoint, last completed and original interrupted run identity.",
+      "Checked interrupted CONTROL run GitHub commit window: only lease acquisition confirmed, no functional delivery recorded.",
+      "Acquired separate UCP scoped lease; appended blocker_id matching existing incident id to one report, preserved 73 reports and original incident; released UCP lease.",
+      "Verified complete general CI 174/174, report contract 14/14 and Pages all successful at 4c347981.",
+      "Reactivated existing CONTROL hourly Task without modifying its schedule or any other Task; documented unresolved scheduler/run verification."
+    ],
+    "blockers": [
+      "The next live ChatGPT Tasks execution at XXh50 has not yet occurred and therefore cannot be certified in advance.",
+      "Cause of the previous platform-level deactivation is undetermined; scheduler Task notifications are not enabled at platform level.",
+      "CONTROL-ACCOUNT real two-user Auth/JWT and synchronized storage remain blocked pending explicit authorization for separate zero-cost Supabase CONTROL instance."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "CONTROL-AUTOMATION-HALTED-20261020",
+        "status": "open",
+        "consecutive_sprints": 1,
+        "next_action": "At the next scheduled XXh50 execution confirm last_run_time increases, Task stays enabled, checkpoint is resumed safely and a dated report is recorded; escalate if disabled again."
+      }
+    ],
+    "quality": {
+      "ci": "verified",
+      "checks_run": [
+        "GitHub Actions main quality run 39560080318",
+        "Sprint contract run 39560080290",
+        "GitHub Pages deploy run 39560079395",
+        "Task update response with is_enabled true"
+      ],
+      "checks_passed": [
+        "174 / 174 Node general tests",
+        "14 / 14 sprint contract tests",
+        "Pages deployment success at same commit SHA 4c347981",
+        "Scheduler enabled without cadence change (reported directly by Tasks service)"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "No subsequent hourly Task invocation observed as of report",
+        "No proof of ChatGPT push notification delivery",
+        "No real Supabase account, external agent or mobile hardware test newly performed"
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Legacy UCP incident metadata restored without rewriting its history",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/3ac887f75b4ad1a5421c4caa2efac84e32c80e75"
+      },
+      {
+        "name": "CONTROL scheduler reactivated, pending first hourly execution",
+        "stage": "tested"
+      },
+      {
+        "name": "Validated general CI on central repo",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39560080318"
+      }
+    ],
+    "links": [
+      {
+        "label": "Full test suite 174/174",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39560080318"
+      },
+      {
+        "label": "Sprint contract 14/14",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39560080290"
+      },
+      {
+        "label": "GitHub Pages deployed",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39560079395"
+      },
+      {
+        "label": "Original report metadata fix",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/3ac887f75b4ad1a5421c4caa2efac84e32c80e75"
+      }
+    ],
+    "next": "At XXh50 verify task actually fires and can reacquire CONTROL lease. Then resume CONTROL-ACCOUNT pending 2026-10-20 objective: inspect and test race-safe session reload and explicit owner_id filtration, while Cloud stays disabled and the user has not authorized separate free Supabase infrastructure."
   }
 ]
