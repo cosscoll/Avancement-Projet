@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "control-ia-manual-20261021-owner-filter",
+    "started_at": "2026-10-21T07:28:52.424Z",
+    "expires_at": "2026-10-21T08:13:52.424Z",
+    "objective": "Explicit owner filter project/item read + robust session test"
+  },
   "checkpoint": {
     "updated_at": "2026-10-21T07:16:24.819Z",
     "main": true,
