@@ -6,6 +6,10 @@ const source=readFileSync(new URL('../assets/cloud-app.js',import.meta.url),'utf
 const helper=source.slice(source.indexOf('function mutationSession(){'),source.indexOf('async function audit('));
 const oldImport=source.slice(source.indexOf('async function importLegacy(){'),source.indexOf('async function action(button){'));
 const exportCode=source.slice(source.indexOf('async function completeCloudExport('),source.indexOf('async function importLegacy(){'));
+const maskedPasswordCode=source.slice(source.indexOf('function askBackupPassword(){'),source.indexOf('async function completeCloudExport('));
+assert.ok(maskedPasswordCode.startsWith('function askBackupPassword(){'));
+assert.match(maskedPasswordCode,/type="password"/);
+assert.doesNotMatch(maskedPasswordCode,/\bprompt\s*\(/);
 const logoutStart=source.indexOf("  case 'logout':{");
 const logoutCode=source.slice(logoutStart,source.indexOf("  case 'export-json':",logoutStart));
 const delStart=source.indexOf("  case 'delete-account':{");
@@ -74,6 +78,7 @@ function exporter(options={}){
  const prompt=()=> 'long-enough-password-for-export',confirm=()=>true;
  const crypto={getRandomValues:x=>x,subtle:{encrypt:async()=>new Uint8Array([1]).buffer}};
  const encKey=()=>new Promise(resolve=>keys.push(resolve)),encB64=()=> 'test';
+ const askBackupPassword=async()=> 'long-enough-password-for-export';
  const Blob=class{constructor(content){this.content=content;payloads.push(String(content[0]))}};
  const URL={createObjectURL:()=>{downloads.push('url');return 'blob:a'},revokeObjectURL:()=>{}};
  const document={createElement:()=>({click(){downloads.push('click')},remove(){}}),body:{appendChild(){}}};
@@ -107,6 +112,56 @@ function exporter(options={}){
  return {exportMyData,downloads,keys,messages,payloads,pageReads,paused,switchB(){authUser={id:'B'};epoch++;cache={projects:[],items:[],preferences:null}}};
  `)(options);
 }
+
+function maskedPasswordHarness(initial='secret-with-12-or-more-characters'){
+ const events={},formEvents={},buttons={};
+ const input={value:initial,focus(){buttons.focused=true}},errorNode={textContent:''};
+ const cancel={addEventListener:(event,cb)=>{events['cancel-button:'+event]=cb}};
+ const form={
+  addEventListener:(event,cb)=>{formEvents[event]=cb},
+  querySelector:selector=>selector==='[data-backup-error]'?errorNode:selector==='[data-cancel-backup]'?cancel:null
+ };
+ const dialog={
+  innerHTML:'',open:false,removed:false,className:'',
+  querySelector:selector=>selector==='form'?form:selector==='input[type="password"]'?input:null,
+  addEventListener:(event,cb)=>{events['dialog:'+event]=cb},
+  showModal(){this.open=true},
+  close(){this.open=false},
+  remove(){this.removed=true}
+ };
+ const document={createElement:()=>dialog,body:{appendChild(){buttons.appended=true}}};
+ const ask=new Function('document',maskedPasswordCode+'\nreturn askBackupPassword;')(document);
+ return {ask,dialog,input,errorNode,buttons,submit(){formEvents.submit({preventDefault(){}})},
+  cancel(){events['cancel-button:click']()},
+  escape(){events['dialog:cancel']({preventDefault(){}})}};
+}
+test('encrypted backup uses a masked password field with no visible password prompt',async()=>{
+ const h=maskedPasswordHarness(),pending=h.ask();
+ assert.match(h.dialog.innerHTML,/type="password"/);
+ assert.match(h.dialog.innerHTML,/autocomplete="new-password"/);
+ assert.equal(h.buttons.focused,true);
+ h.submit();
+ assert.equal(await pending,'secret-with-12-or-more-characters');
+ assert.equal(h.input.value,'');
+ assert.equal(h.dialog.removed,true);
+});
+test('weak backup password stays in the masked dialog until corrected',async()=>{
+ const h=maskedPasswordHarness('short'),pending=h.ask();
+ h.submit();
+ assert.match(h.errorNode.textContent,/12 caractères/);
+ assert.equal(h.dialog.open,true);
+ h.input.value='a-long-safe-phrase';
+ h.submit();
+ assert.equal(await pending,'a-long-safe-phrase');
+});
+test('backup dialog cancellation returns null without exposing a password',async()=>{
+ const h=maskedPasswordHarness(),pending=h.ask();
+ h.escape();
+ assert.equal(await pending,null);
+ assert.equal(h.input.value,'');
+ assert.equal(h.dialog.removed,true);
+});
+
 test('encrypted export cannot download A private file after the user switches to B during encryption',async()=>{
  const h=exporter(),pending=h.exportMyData(true);
  for(let i=0;i<30&&!h.keys.length;i++)await Promise.resolve();
