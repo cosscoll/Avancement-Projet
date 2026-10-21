@@ -2482,5 +2482,131 @@
       "Publishing Cloud code with public Pages is not authorization to enable Cloud or evidence of real private account security."
     ],
     "next": "CONTROL-ACCOUNT real Auth gating: owner-approved two test users and protected GitHub Actions secrets, manual two-JWT PostgREST E2E run, authenticated browser and mobile cross-device acceptance; until then maintain Cloud disabled. For front-end follow-up pursue native-CI-verified operations and transactional idempotency."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-account-export-reliability-1723",
+    "started_at": "2026-10-21T17:23:00Z",
+    "ended_at": "2026-10-21T17:40:00Z",
+    "summary": "CONTROL-ACCOUNT on main: made full account exports fail closed on incomplete pagination and concurrent count drift, exposed encrypted backup with masked mobile dialog, replaced silently capped Cloud workspace lists with owner-checked count-verified pagination and newest-first UI, updated V1.2 public index. Native GitHub quality green 436/436 on code SHA d0a1524; actual Auth A/B and encrypted restoration not verified.",
+    "objectives": [
+      {
+        "before": "Cloud export trusted short final pages and could omit concurrent additions. Encrypted export used an unmasked browser prompt and had no visible account action. Workspace silently capped 500 projects/2000 items.",
+        "after": "Private export verifies exact per-table counts and rechecks after collecting all six datasets. Masked modal offers encrypted export on account page. Workspace paginates, compares exact totals and owner/IDs, rejects silent truncation or oversize, displays newer records first.",
+        "acceptance": "Native Node quality success 436/436 on code SHA d0a1524; Cloud pre-connection workflow success; no Auth/Android claim until genuine two-account test."
+      }
+    ],
+    "done": [
+      "Acquired cooperative WIP=1 CONTROL lease using GitHub SHA compare-and-swap and worked directly on main.",
+      "Added exact count verification to paginated export; rejects missing/wrong counts and short pages with an explicit refusal to download.",
+      "Added secondary count pass before constructing backup across control_projects, control_items, control_connections and control_audit_events.",
+      "Added encrypted export account button, distinguished plaintext risk, and accurately stated exported files have no implemented automatic restore.",
+      "Replaced plaintext browser prompt for encryption password with native dialog, masked password input, >=12-character validation, Esc/cancel flow and mobile responsive CSS.",
+      "Replaced silently limited Cloud workspace reads with paginated stable-id fetches, count verification, owner checks, duplicate-id rejection, 5000/10000 max explicit limits, and newest-first UI sorting.",
+      "Added and adapted account lifecycle/session isolation regressions: truncated pages, server count drift, post-export concurrency, multiple pages >1000 items, invalid owner/duplicates, sorting and masked dialog interaction.",
+      "Fixed intermediate test mocks, asynchronous test settle conditions and expectations without deleting or weakening any security test.",
+      "Verified native GitHub Actions quality run 39645241802: 436/436 tests passed on code commit d0a1524; Cloud pre-auth run 39645241709 success.",
+      "Updated Cloud Auth E2E guide, retrospectives and public EXPURGATED V1.2 blocker index without publishing private cahier or credentials."
+    ],
+    "blockers": [
+      "Two owner-approved real Supabase Auth test accounts and protected GitHub Action secrets are missing: JWT/PostgREST A/B, actual account registration/logout/deletion and cross-device sync remain unverified.",
+      "Cloud sign-in remains deliberately disabled (config/cloud.json.enabled=false). No real authenticated browser, Android or iOS verification.",
+      "Exports are count-consistent within two passes but NOT transactional snapshots: equal-sized concurrent modifications may still evade detection.",
+      "Automatic recovery/restore from encrypted or plaintext Cloud account export is not implemented; legacy import is distinct.",
+      "Workspace deliberately rejects datasets over 5000 projects or 10000 elements rather than showing misleading partial lists. Real multi-device-scale tests are missing.",
+      "Cross-tab and cross-device idempotency of mission/import writes requires backend transaction and live Auth acceptance.",
+      "Post-sprint documentation/report and checkpoint commits need their own SHA-specific CI/Pages proof; green 436/436 claim applies to code SHA d0a1524."
+    ],
+    "quality": {
+      "ci": "success",
+      "real_browser_verified": false,
+      "checks_run": [
+        "GitHub Actions full native Node suite for code commit d0a1524",
+        "CONTROL Cloud pre-auth native workflow for code commit d0a1524",
+        "Original account lifecycle tests with added export/secure dialog cases",
+        "Original owner-isolation session tests with added >1000 item pagination and ordering cases",
+        "GitHub Pages/Chromium monitoring; exact final-code browser check not claimed"
+      ],
+      "checks_passed": [
+        "436/436 Node native tests, zero failures: https://github.com/cosscoll/Avancement-Projet/actions/runs/39645241802",
+        "Cloud pre-auth guard workflow success: https://github.com/cosscoll/Avancement-Projet/actions/runs/39645241709",
+        "Source data and code committed directly to main via SHA-controlled GitHub updates"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "No owner-approved JWT multiuser live test; Cloud deliberately disabled.",
+        "No transaction-consistent backup snapshot or automatic recovery pathway.",
+        "Browser Pages proof on intermediate commits does not establish private Auth or physical mobile."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Full private backup completeness and late count checks",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "f45755f83a5a0dcd88a5c1292d9ffbcc8830cb64",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/f45755f83a5a0dcd88a5c1292d9ffbcc8830cb64",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Complete paginated Cloud workspace with count/owner checks",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "4a4fdeeec8be6518b4f72bfd0e914776dd9bbcdf",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/4a4fdeeec8be6518b4f72bfd0e914776dd9bbcdf",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Masked password modal and encrypted backup UI",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "d6a5428c24eb42aac0b6ad6c41ce53da915cc86b",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/d6a5428c24eb42aac0b6ad6c41ce53da915cc86b",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Native 436 passing tests",
+        "kind": "evidence",
+        "stage": "tested",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "d0a1524f7c53fcf8a150066aae31bd9b509e3ecd",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39645241802",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "links": [
+      {
+        "label": "Node tests 436/436",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39645241802"
+      },
+      {
+        "label": "Cloud safety CI",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39645241709"
+      },
+      {
+        "label": "Complete workspace pagination",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/4a4fdeeec8be6518b4f72bfd0e914776dd9bbcdf"
+      },
+      {
+        "label": "Masked export password",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/d6a5428c24eb42aac0b6ad6c41ce53da915cc86b"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "Previously, public claims about Cloud backup implied full data despite possible short reads; exact count/recount is a defense but not a database snapshot.",
+      "Workspace silent cap was a substantial correctness risk. Paging now fails closed rather than displaying a silently truncated dataset.",
+      "Encrypted export password previously used a plaintext browser prompt, an avoidable privacy risk; switched to native masked dialog.",
+      "New async network checks invalidated older mock fixture timing. Fixed the test harness and verified native 436-pass suite, without hiding regressions.",
+      "Accounts remain disabled; no criteria artificially promoted based only on code, mocks or public Pages proof."
+    ],
+    "next": "CONTROL-ACCOUNT real two-user Auth/JWT A/B and PostgREST acceptance using two owner-approved dedicated empty Supabase test accounts with secrets stored in GitHub Actions; test mobile cross-device, then implement durable transactional idempotency and reliable backup restore before enabling Cloud."
   }
 ]
