@@ -1694,5 +1694,106 @@
       "No IMP-02 full acceptance claim: authoritative server permissions, incremental source update propagation and authenticated search not implemented."
     ],
     "next": "Advance IMP-02 project evidence on freshness/invalid sources and secure sensitive action UX where local controls allow; or IMP-01 read-only goal planner proposal prototype grounded in project memory, consent, and existing approval safeguards. Keep Cloud disabled and do not assert live multi-user acceptance; main directly under lease with 0€."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-imp01-local-goal-plan-20261021112100000",
+    "started_at": "2026-10-21T11:21:00.000Z",
+    "ended_at": "2026-10-21T11:29:40.656Z",
+    "summary": "IMP-01 local deterministic goal planner: turn scoped objective into editable steps with source references from current same-project decisions/tasks and measurable acceptance conditions; explicitly save without any external executor, idempotent receipt of repeated draft and storage rollback. 12 new Node tests, 329/329 GitHub quality, Chromium local, Pages and public Chromium passed including IMP-01 form, on published SHA e2d8306. A separate UCP lease-only commit was on main during verification, no CONTROL code interference.",
+    "objectives": [
+      {
+        "before": "No dedicated objective-to-plan route existed; project manager could summarize but not produce editable source-backed action plan and store it with clear non-execution status.",
+        "after": "Control local goal-planner route builds a deterministic project-only step list with sources and criteria; user edits titles/criteria, explicitly confirms local save with a plan receipt and repeat-key guard; no task or external service is executed.",
+        "acceptance": "12 new Node cases, full quality 329/329, Chromium local verified scope isolation/edit/save/no tasks, Pages successful and public Chromium exact published SHA e2d8306. Not a real autonomous executor."
+      }
+    ],
+    "done": [
+      "Reserved exclusive CONTROL lease for main while UCP sprint used separate lease, no PR or new branch.",
+      "Added local goalPlans persistent array with safe recovery of old storage lacking field.",
+      "Implemented proposeGoal(project,goal) creating typed steps with sources from only the requested project’s current tasks and local source-declared decisions.",
+      "Implemented saveGoalPlan with data bounds, scope revocation, idempotent proposal key/signature, storage failure rollback, persistent receipt and no external actions.",
+      "Added Goals form to manager quick navigation and tool catalogue with editable step titles and criteria, stored plans visible as unexecuted proposals.",
+      "Added 12 permanent goal planner tests: source isolation, editability, non-execution, bad scope/limits, replay/idempotent collision and failed save rollback.",
+      "Added live Chromium scenario for scoped form, editable acceptance criterion and storage asserting task list unchanged.",
+      "GitHub Node quality run 39592107242 green 329/329 at published SHA e2d8306; local Chrome push-run 39592103880 success on UI code 4e473ee2; Pages 39592108116 success and public Chromium 39592172395 success at published SHA e2d8306."
+    ],
+    "blockers": [
+      "Only local deterministic planning, not automatic inference over private services, no real remote agent execution or resumption across devices.",
+      "Real IMP-01 acceptance requires verified step execution, explicit approval receipts for sensitive actions and interruption-safe server execution; this UI only saves proposals.",
+      "No owner-authorized independently free CONTROL Cloud Supabase, two genuine JWT/RLS accounts or cross-device state; Cloud remains disabled.",
+      "Other project UCP updates share monorepo main and can trigger Pages concurrency; published SHA e2d8306 includes separate UCP lease commit but retains CONTROL changes."
+    ],
+    "quality": {
+      "ci": "success",
+      "checks_run": [
+        "12 new IMP-01 Node tests on actual production source",
+        "Full GitHub Node quality 329 tests",
+        "Chromium local objective creation/edit/source scope and non-execution",
+        "GitHub Pages exact SHA",
+        "Public Chromium postdeploy evidence"
+      ],
+      "checks_passed": [
+        "12/12 new tests",
+        "329/329 GitHub Node",
+        "Chromium local passes planned UI",
+        "Pages successful",
+        "Public Chromium after Pages successful exact SHA"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "The goals model is deterministic based on a small bounded local snapshot; it cannot replace planning research or validate factual assumptions.",
+        "Local storage and same-tab idempotence; not distributed execution or cross-device checkpoint."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Source-scoped editable local goal planner with stored draft receipt",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/944be4b144223d276bbc66dc020a893d55bbc637",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T11:29:00Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592172395"
+      },
+      {
+        "name": "12 IMP-01 replay/scope/save tests",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/2232e92d946087e0d9db678d5f5ead3aa76d5e95"
+      },
+      {
+        "name": "Chromium goal planner user journey",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/4e473ee2a56ef981be6b88a0e39a457ffc7540c1",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T11:29:00Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592172395"
+      }
+    ],
+    "links": [
+      {
+        "label": "Node 329/329",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592107242"
+      },
+      {
+        "label": "Chromium locally exercised",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592103880"
+      },
+      {
+        "label": "Pages success",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592108116"
+      },
+      {
+        "label": "Public Chromium success",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592172395"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "Do not mistake generated static steps for actual intelligent research or an AI executor; UI explicitly says unexecuted proposal.",
+      "Step sources come from same-project local tasks/decisions only; metadata may be stale or declarative, and this is labeled.",
+      "Idempotent plan deduplication is limited to stable draft ID and local storage; no cross-device exactly-once guarantee.",
+      "Use a verified published SHA even when another project commits to shared main; do not mask concurrency or claim proof at all later SHAs."
+    ],
+    "next": "Next IMP-01 step should allow project-scoped plan drafts to become explicit individually approved local action proposals only through existing IMP-05 reviewer, with per-step idempotency of IMP-10, preserving non-execution until confirmation. Also revisit list of plans for edit/refresh and test permissions. Do not trigger providers or cost, direct main and evidence."
   }
 ]
