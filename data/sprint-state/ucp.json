@@ -10,11 +10,11 @@
     "objective": "Maintenir la navigation lorsque matchMedia.addEventListener échoue."
   },
   "checkpoint": {
-    "files": [],
-    "branch": null,
-    "pr_url": null,
-    "tests": [],
-    "next_action": "Ajouter un repli addListener borné hors application/**."
+    "files": ["site-vitrine/dist/assets/app.js", "site-vitrine/tests/app-shell.test.cjs"],
+    "branch": "fix/ucp-matchmedia-errors-20261021",
+    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/20",
+    "tests": ["CI première passe en attente sur f11f9f13"],
+    "next_action": "Vérifier la CI, mener l’autocritique, borner addListener si nécessaire puis retester."
   },
   "last_completed": {
     "run_id": "ucp-20261021T043105Z-v3",
