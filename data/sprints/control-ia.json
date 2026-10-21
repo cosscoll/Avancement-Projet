@@ -804,17 +804,26 @@
       {
         "name": "CONTROL main postdeploy browser gate",
         "stage": "verified_online",
-        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577771105"
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577771105",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T09:33:48Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577895141"
       },
       {
         "name": "Distinct push/deployment concurrency fix",
         "stage": "verified_online",
-        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577895141"
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577895141",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T09:33:48Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577895141"
       },
       {
         "name": "Pages deployment exact SHA",
         "stage": "verified_online",
-        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577830376"
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577830376",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T09:33:48Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577895141"
       }
     ],
     "links": [
