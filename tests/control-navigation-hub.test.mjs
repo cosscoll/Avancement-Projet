@@ -24,6 +24,28 @@ test('intent search normalization works for French accents and mixed case',()=>{
  assert.equal(h.api.normalize('ÉCHÉANCES'), 'echeances');
  assert.equal(h.api.normalize('  Réunions  '),'reunions');
 });
+
+test('natural requests locate the intended feature without knowing menu names',()=>{
+ const h=harness();
+ const cases=[
+  ['créer une visio','meetings'],
+  ['publier un site','deploy'],
+  ['retrouver une décision','decisions'],
+  ['planifier un objectif','goals'],
+  ['mes tâches','inbox']
+ ];
+ for(const [query,id] of cases){
+  assert.ok(h.api.find(query).some(feature=>feature.id===id),query+' → '+id);
+ }
+});
+test('search never leaks private project routes from personal catalog into Cloud mode',()=>{
+ const h=harness();
+ h.api.setAdapter({mode:'personal',getActiveProject:()=>({id:'private-project'})});
+ assert.ok(h.api.find('laboratoire').some(x=>x.id==='project:lab'));
+ h.api.setAdapter({mode:'cloud',isAvailable:()=>false});
+ assert.ok(!h.api.find('laboratoire').some(x=>x.category==='project'));
+});
+
 test('every public menu entry has a unique local route',()=>{
  const h=harness(),items=h.api.getItems();
  assert.equal(new Set(items.map(i=>i.id)).size,items.length);
