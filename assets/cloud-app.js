@@ -23,7 +23,7 @@ const btn=(title,action,ref='',style='')=>'<button type="button" data-action="'+
 const card=(title,desc,action,id)=>'<button class="card" type="button" data-action="'+H(action)+'" data-id="'+H(id)+'"><div class="badge">'+H(title.slice(0,2).toUpperCase())+'</div><strong>'+H(title)+'</strong><small>'+H(desc)+'</small></button>';
 function message(s,bad=false){const el=byId('toast');el.textContent=s;el.hidden=false;el.style.background=bad?'#873c40':'#1f3653';clearTimeout(message.timer);message.timer=setTimeout(()=>el.hidden=true,4200)}
 function live(s){const el=byId('status');el.textContent=s;el.hidden=false}
-function visible(which){for(const id of ['setup','auth','workspace'])byId(id).hidden=id!==which;byId('status').hidden=true;byId('bottomnav').hidden=which!=='workspace';byId('account').hidden=which!=='workspace';byId('refresh').hidden=which!=='workspace';byId('nav-open-cloud').hidden=which!=='workspace';byId('nav-mobile-cloud').hidden=which!=='workspace';if(which!=='workspace')window.CONTROL_NAVIGATION?.close()}
+function visible(which){for(const id of ['setup','auth','workspace'])byId(id).hidden=id!==which;byId('status').hidden=true;byId('bottomnav').hidden=which!=='workspace';byId('account').hidden=which!=='workspace';byId('refresh').hidden=which!=='workspace';byId('nav-open-cloud').hidden=which!=='workspace';byId('nav-mobile-cloud').hidden=which!=='workspace';byId('control-location').hidden=which!=='workspace';if(which!=='workspace')window.CONTROL_NAVIGATION?.close()}
 const panel=(title,body)=>'<section class="surface"><h2>'+H(title)+'</h2>'+body+'</section>';
 const header=(title,desc,actions='')=>'<div class="bar"><div><div class="eyebrow">ESPACE PRIVÉ CONTROL</div><h1>'+H(title)+'</h1><p class="muted">'+H(desc)+'</p></div><div class="btnrow">'+actions+'</div></div>';
 const options=(xs,current)=>xs.map(x=>'<option value="'+H(x[0])+'" '+(x[0]===current?'selected':'')+'>'+H(x[1])+'</option>').join('');
@@ -103,7 +103,21 @@ async function reload(silent=false){if(!authUser||!client)return false;const own
  }catch(e){if(token!==epoch||authUser?.id!==owner)return false;if(!silent)message(e.message||'Impossible de synchroniser vos données.',true);if(!cache.projects.length&&!cache.items.length)byId('page').innerHTML=panel('Connexion indisponible','<p>Les données privées n’ont pas pu être chargées. Réessaie après vérification de la configuration et des règles d’accès.</p>'+btn('Réessayer','refresh'));return false}
  finally{if(token===epoch&&waitingOwner===owner){waiting=false;waitingOwner=null;byId('refresh').disabled=false}}}
 function nav(where,pid='',newTab='ai_space'){page=where;picked=pid;tab=newTab;window.scrollTo?.(0,0);render()}
-function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [data-page]').forEach(b=>{const k=b.dataset.page;const active=k==='projects'&&(page==='projects'||page==='project')||k==='inbox'&&page==='inbox'||k==='manager'&&page==='manager'||k==='tools'&&!['projects','project','inbox','manager'].includes(page);b.setAttribute('aria-current',active?'page':'false')});const fns={projects:projectsPage,project:projectPage,inbox:inboxPage,missions:missionsPage,automations:automationsPage,manager:managerPage,tools:toolsPage,account:accountPage,catalog:catalogPage,deploy:deployPage,lab:labPage,command:commandPage,visios:visiosPage};byId('page').innerHTML=(fns[page]||projectsPage)();
+function render(){if(!authUser)return;
+ const crumb=byId('control-location');
+ if(crumb){
+  const labels={projects:'Mes projets',inbox:'À traiter',manager:'Piloter avec CONTROL',tools:'Tous les outils',
+   missions:'Missions',automations:'Automatisations',catalog:'Outils IA',deploy:'Mise en ligne',
+   lab:'Laboratoire IA',command:'Commander mes IA',visios:'Visios',account:'Mon compte'};
+  const project=getProject(picked);
+  const t=({ai_space:'Espaces IA',conversation:'Conversations',task:'Actions',resource:'Ressources',
+    mission:'Missions',automation:'Automatisations',report:'Bilans',decision:'Décisions',
+    note:'Notes',event:'Calendrier',expense:'Budget',income:'Revenus'})[tab]||'Espaces IA';
+  const label=page==='project'?(project?.name||'Projet')+' / '+t:labels[page]||'Mes projets';
+  crumb.innerHTML='<span>Vous êtes ici</span><strong>'+H(label)+'</strong>'+
+   (page!=='projects'?'<button type="button" data-action="projects">← Projets</button>':'');
+ }
+ document.querySelectorAll('#bottomnav [data-page]').forEach(b=>{const k=b.dataset.page;const active=k==='projects'&&(page==='projects'||page==='project')||k==='inbox'&&page==='inbox'||k==='manager'&&page==='manager'||k==='tools'&&!['projects','project','inbox','manager'].includes(page);b.setAttribute('aria-current',active?'page':'false')});const fns={projects:projectsPage,project:projectPage,inbox:inboxPage,missions:missionsPage,automations:automationsPage,manager:managerPage,tools:toolsPage,account:accountPage,catalog:catalogPage,deploy:deployPage,lab:labPage,command:commandPage,visios:visiosPage};byId('page').innerHTML=(fns[page]||projectsPage)();
  if(page==='visios'){
    const root=byId('visios-root');if(!window.CONTROL_VISIOS){root.textContent='Module visio indisponible. Actualise CONTROL.';return}
    const mountedSession=mutationSession();
