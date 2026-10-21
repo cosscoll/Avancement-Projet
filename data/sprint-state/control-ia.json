@@ -1,43 +1,39 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-auth-mutation-race-20261021090853361",
-    "started_at": "2026-10-21T09:08:53.361Z",
-    "expires_at": "2026-10-21T09:53:53.361Z",
-    "objective": "Empêcher les journaux/mensonges de réussite entre comptes lors de sauvegardes asynchrones; reproduire tester publier main"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T08:48:40.927Z",
+    "updated_at": "2026-10-21T09:17:31.385Z",
     "main": true,
-    "stage": "auth_same_owner_races_tested_main_ci_pages_unverified",
+    "stage": "auth_mutation_owner_epoch_guards_tested_local_v8_main_ci_pages_unverified",
     "files": [
       "assets/cloud-app.js",
-      "tests/control-cloud-session-isolation.test.mjs",
+      "tests/control-cloud-mutation-session.test.mjs",
+      ".github/workflows/control-cloud-config.yml",
       "data/sprints/control-ia.json",
       "docs/CONTROL_IA_RETROSPECTIVES.md"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/commit/15401dcd7742012499e335de476f2f9c532ad248",
-      "https://github.com/cosscoll/Avancement-Projet/commit/9c66ff2b4ff7c2c11d83aecac5d669f72702fc0c",
-      "https://github.com/cosscoll/Avancement-Projet/commit/87bac45ebdc2c03467791974ea6cf11a7aa74282"
+      "https://github.com/cosscoll/Avancement-Projet/commit/05cda5bcc2cff617e7d8f38c60925fa5318231b2",
+      "https://github.com/cosscoll/Avancement-Projet/commit/bfa62af5e73094cfc0aa6796fe7425277a4f49ae",
+      "https://github.com/cosscoll/Avancement-Projet/commit/5d97836f4cf6078b02bce1b60981a247c655e6d9"
     ],
     "remaining_blockers": [
-      "Current CI and GitHub Pages deploy on latest code commit not externally confirmed",
-      "No approved distinct CONTROL Supabase, real A/B JWT RLS auth or multi-device test",
-      "Task runs at XXh50 but end-to-end autonomous sprint completion requires evidence"
+      "Actions workflow status and GitHub Pages public HTTP for latest commits unverified (source queries blocked)",
+      "No authorized independent CONTROL Supabase instance; actual A/B JWT RLS, data persistence and cross-device sign-in untested",
+      "Other async planner/visio/mission flows still need an account-switch audit"
     ],
-    "next_action": "At next hourly CONTROL Task, read this checkpoint and latest new commits, verify dedicated CI and Pages on 87bac45 (not older green workflows), then move to next CONTROL-ACCOUNT real deficiency without redoing 8/8 proven race tests; maintain zero-cost and Cloud disabled."
+    "next_action": "Read latest CI run and Pages at actual main code SHA (without reusing historical runs); review other async planner/visio/mission CRUD callbacks and add regression only for reproduced bugs. Keep Cloud disabled and never reuse IAgile."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-concurrent-auth-session-20261021084346464",
-    "started_at": "2026-10-21T08:43:46.464Z",
-    "ended_at": "2026-10-21T08:48:40.927Z",
-    "summary": "Reproduced two same-owner auth load/cleanup races, fixed both directly in main and tested 8/8 synthetic regressions with JS syntax; full Node CI, Pages and real Supabase unverified.",
-    "stage": "tested_not_real_cloud",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/commit/87bac45ebdc2c03467791974ea6cf11a7aa74282",
-    "commit_sha": "87bac45ebdc2c03467791974ea6cf11a7aa74282"
+    "run_id": "control-ia-20261021-auth-mutation-race-20261021090853361",
+    "started_at": "2026-10-21T09:08:53.361Z",
+    "ended_at": "2026-10-21T09:17:31.385Z",
+    "summary": "Fixed cross-account stale CRUD confirmations and audit ownership; 15/15 new async mutation tests + 8/8 prior auth tests in V8; CI workflow updated; Pages/Node Actions not confirmed; no real backend.",
+    "stage": "tested_not_cloud_operational",
+    "commit_sha": "bfa62af5e73094cfc0aa6796fe7425277a4f49ae",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/commit/bfa62af5e73094cfc0aa6796fe7425277a4f49ae"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
