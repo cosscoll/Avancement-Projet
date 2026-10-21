@@ -1,46 +1,45 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-imp01-local-goal-plan-20261021112100000",
-    "started_at": "2026-10-21T11:21:00.000Z",
-    "expires_at": "2026-10-21T12:06:00.000Z",
-    "objective": "IMP-01 deterministic editable evidence-scoped goal plan preview, explicit local save with receipt and deduplication, direct main CI and public browser"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T11:22:11.134Z",
+    "updated_at": "2026-10-21T11:30:46.883Z",
     "main": true,
-    "stage": "imp02_local_search_imp03_memory_imp05_approvals_imp10_idempotence_317_tests_pages_browser_green",
+    "stage": "imp01_local_goal_planner_imp02_scoped_search_imp03_memory_imp05_approvals_imp10_idempotence_329_green",
     "files": [
       "assets/command-center.js",
+      "tests/control-goal-planner.test.mjs",
       "tests/control-local-search.test.mjs",
       "tests/control-ia-browser-smoke.mjs",
       "data/sprints/control-ia.json",
       "docs/CONTROL_IA_RETROSPECTIVES.md"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/commit/c7e2e0ee5ff0ad8e63e015cc482d6ed55d1f11c6",
       "https://github.com/cosscoll/Avancement-Projet/actions/runs/39590970137",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39590969956",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39590968946",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39591100473"
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39591100473",
+      "https://github.com/cosscoll/Avancement-Projet/commit/944be4b144223d276bbc66dc020a893d55bbc637",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592107242",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592103880",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592108116",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592172395"
     ],
     "remaining_blockers": [
-      "No independent approved 0€ CONTROL Supabase with true Auth and RLS; Cloud disabled; all IMP-02/03/05/10 additions device-local only.",
-      "Local search source declared, recency warning heuristic; no remote reindex or cross-device deletion propagation.",
-      "No full authenticated project permission, external provider, physical Android/iOS acceptance."
+      "No independent authorized zero-cost CONTROL Cloud backend with real A/B JWT/RLS or cross-device state; Cloud remains disabled.",
+      "IMP-01 is a deterministic device-local proposal generator, no real provider execution, step approval backend or distributed resumption.",
+      "IMP-02/03 source data remains user-declared and not externally verified; IMP-05/10 local guards not server authorization.",
+      "Physical Android and iOS acceptance still to be verified; shared monorepo may receive concurrent UCP commits."
     ],
-    "next_action": "Next CONTROL IMP-01 sprint: inspect assistant planner and task list, implement a safely project-scoped read-only goal breakdown with provenance and editable proposals, no claims of external execution. Tests and same SHA Pages public Chromium, direct main under own lease, 0€."
+    "next_action": "Continue from IMP-01: add explicit per-step local action proposals with user confirmation only using IMP-05 and IMP-10 (never auto-execute or spend); implement direct-main code with 45-min CONTROL lock, regression and same-SHA public Chromium. Coordinate separate UCP lease without modifying its work. Do not claim finished SaaS criteria."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-imp02-project-search-20261021111300000",
-    "started_at": "2026-10-21T11:13:00.000Z",
-    "ended_at": "2026-10-21T11:22:11.134Z",
-    "summary": "IMP-02 local scoped live search with six entity categories, decision source/version/date and stale warning, project ACL filter and exact decision direct navigation; 12 added regressions, CI 317/317, Pages and public Chromium successful SHA 6a5311dd. Cloud remains disabled.",
-    "stage": "verified_online_local_imp02_not_remote",
-    "commit_sha": "6a5311dd2ad47e1f84b79ee9463cbef1894a6806",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39591100473"
+    "run_id": "control-ia-20261021-imp01-local-goal-plan-20261021112100000",
+    "started_at": "2026-10-21T11:21:00.000Z",
+    "ended_at": "2026-10-21T11:30:46.883Z",
+    "summary": "IMP-01 local project-scoped objective planner with editable sourced steps, measurable criteria, idempotent explicit plan save and storage rollback. 12 new regressions, 329/329 Node, Chromium local/Pages/public green at published SHA e2d8306. No external execution; Cloud disabled.",
+    "stage": "verified_online_local_imp01_plan_not_executor",
+    "commit_sha": "e2d8306ec0f2c761f136de88fc1bfaa067c30d5d",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592172395"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
