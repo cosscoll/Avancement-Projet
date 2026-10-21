@@ -10,11 +10,16 @@
     "objective": "Empêcher un getter window.matchMedia en erreur d'interrompre la navigation de la vitrine."
   },
   "checkpoint": {
-    "files": [],
-    "branch": null,
+    "files": [
+      "site-vitrine/dist/assets/app.js",
+      "site-vitrine/tests/app-shell.test.cjs"
+    ],
+    "branch": "fix/ucp-matchmedia-getter-20261021",
     "pr_url": null,
-    "tests": [],
-    "next_action": "Créer une branche depuis main 2882da4b, borner la lecture de window.matchMedia et ajouter une régression DOM."
+    "tests": [
+      "Régression DOM ajoutée ; CI en attente."
+    ],
+    "next_action": "Ouvrir la PR, attendre la CI, autocritiquer puis effectuer une passe corrective."
   },
   "last_completed": {
     "run_id": "ucp-20261021T063235Z-v3",
