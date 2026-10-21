@@ -9,7 +9,7 @@ CONTROL a accumulé de nombreuses fonctionnalités. Le menu de quatre destinatio
 ## Architecture retenue
 
 - **Navigation persistante :** quatre destinations seulement — **Projets / À traiter / CONTROL IA / Outils**. La barre mobile reste courte, sans cinquième onglet compressé.
-- **Accès transversal « Trouver une fonction » :** bouton évident sur ordinateur, bouton fixe « Trouver » au-dessus de la navigation basse sur mobile ; raccourci clavier **Ctrl+K** ou **⌘K**. La recherche fonctionne par nom et par intention, sans accès à des conversations privées. Exemple : `visio`, `décision`, `publier un site`, `budget`.
+- **Accès transversal « Trouver une fonction » :** bouton évident sur ordinateur, bouton fixe « Trouver » au-dessus de la navigation basse sur mobile ; raccourci clavier **Ctrl+K** ou **⌘K**. La recherche fonctionne par nom et par intention, avec synonymes, mots usuels ignorés et classement des résultats les plus pertinents, sans accès à des conversations privées. Exemple : `visio`, `décision`, `publier un site`, `budget`.
 - **Catégories à dévoilement progressif :** Essentiels, Organiser, IA & création, Ressources & publication, Compte & sécurité, et Dans ce projet lorsque pertinent. Le bouton « Tout voir » est disponible ; aucune catégorie ne supprime le chemin d’accès d’une autre fonction.
 - **Parcours projet :** quatre catégories immédiates et un accès « Sections du projet » qui révèle directement les sections auparavant sous « Plus ». Le moteur propose les sections de **ce projet actif** uniquement, jamais celles d’un autre.
 - **Repère de position :** fil « Vous êtes ici » sur les pages et accès direct aux projets, y compris depuis l’espace Cloud authentifié.
@@ -27,7 +27,7 @@ L’utilisation du service worker public est conservée pour la PWA : version **
 - `tests/control-navigation-hub.test.mjs` : concordance des liens publics et Cloud, support clavier, maintien des 11 sections de projet, filtres et sécurité.
 - `tests/control-ia-browser-smoke.mjs` : **vrai Chromium** en viewport 320 px, ouverture du menu, recherche d’intention `visio`, accès à la page Visios et absence de débordement horizontal. Vérification des octets publiés de `navigation-hub.js` et `navigation-hub.css`.
 - `tests/pwa-atomic-install.test.mjs` : nouvelle génération de cache offline v41 avec les ressources de navigation indispensables.
-- Sur le commit de code `db9b456083af9c484ae7d2687f8e0f61c6e801c5` : [qualité 464/464](https://github.com/cosscoll/Avancement-Projet/actions/runs/39651905689), [recette Chromium](https://github.com/cosscoll/Avancement-Projet/actions/runs/39651905610), [déploiement Pages](https://github.com/cosscoll/Avancement-Projet/actions/runs/39651905258).
+- Sur le commit de code `b518c40594f22de9983b47e4ad4f9d75c36c3a40` : [qualité 466/466](https://github.com/cosscoll/Avancement-Projet/actions/runs/39652408040), [recette Chromium après publication](https://github.com/cosscoll/Avancement-Projet/actions/runs/39652479453), [déploiement Pages](https://github.com/cosscoll/Avancement-Projet/actions/runs/39652407546).
 
 ## Suite UX recommandée
 
