@@ -650,5 +650,103 @@
       "P1: avoid falsely marking CI and Pages as verified without the actual run SHA and HTTP proof."
     ],
     "next": "At the next hourly sprint, inspect CI status and Pages on commit 87bac45; verify actual Task end-report/checkpoint, then choose another independent CONTROL-ACCOUNT issue or approved dedicated backend. Never enable Cloud or claim operational without 0€ independent RLS and real A/B credentials."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-auth-mutation-race-20261021090853361",
+    "started_at": "2026-10-21T09:08:53.361Z",
+    "ended_at": "2026-10-21T09:16:40.627Z",
+    "summary": "CONTROL-ACCOUNT: reproduced client ownership race in CRUD writes (incorrect B audit for A item); fixed all five user CRUD mutation flows, prevented deletion success with zero affected rows, published 15 permanent mutation regression tests directly on main and added CI workflow coverage; existing eight auth session tests remain passing. Actual GitHub CI, Pages and RLS remain unverified.",
+    "objectives": [
+      {
+        "before": "On A->B switch during a pending A write, five CRUD actions logged A's entity under B and showed B a false confirmation/navigation; deletes could falsely claim success on zero affected rows.",
+        "after": "CRUD captures fixed owner + epoch and verifies current session before any audit, reload, navigation or success. Audit receives originating owner; deletes use .select('id').single() and require returned row. CI workflow runs the extra test file on push.",
+        "acceptance": "12/12 dynamic preflight regression checks and 15/15 committed permanent checks pass; 8/8 prior login checks still pass; no claim of full Node Actions or live BDD/browser integration."
+      }
+    ],
+    "done": [
+      "Inspected current source, sprint checkpoint and checked CONTROL-only cooperative lease.",
+      "Red reproduction: while A saveItem was pending and B signed in, audit record carried owner_id B and A's entity ID, and B saw a false success. Red reproduction also covered project save, item/project deletion and task completion.",
+      "First pass fixed identity capture + epoch guard across five mutations, pinned audit owner, prevented success when no row was returned by deletions, committed directly to main.",
+      "Second pass added Node regression suite testing 5 switched-account writes, 5 valid same-owner completions, 2 no-row deletions and 3 late audit/refresh/logout cases.",
+      "Added new suite to GitHub Cloud safety workflow trigger, syntax stage and Node test invocation.",
+      "Re-fetched actual code and tests from GitHub main, executed 8+12=20 synthetic test functions after first publication, then 15/15 after additional tests; JavaScript syntax was checked.",
+      "Confirmed config/cloud.json is still disabled and SQL migration declares owner SELECT + DELETE grant/policies; neither live migration nor backend was touched."
+    ],
+    "blockers": [
+      "GitHub Pages and Actions latest push status still unverified: site URL and GitHub public API unreachable from this environment (DNS/web fetch failures).",
+      "No independent approved zero-cost CONTROL Supabase project exists; real two-account JWT/RLS, authentication and multi-device tests cannot run.",
+      "ChatGPT automation cadence is enabled but actual completed hourly sprint with deployed delivery has not been proved by this task."
+    ],
+    "incidents": [
+      {
+        "blocker_id": "CONTROL-ONLINE-EVIDENCE-UNAVAILABLE",
+        "status": "open",
+        "consecutive_sprints": 2,
+        "next_action": "Find accessible authorized method to obtain actual GitHub Actions/Pages result for latest main code SHA; use CI run URL and HTTP evidence, never assume green from older SHA."
+      }
+    ],
+    "quality": {
+      "ci": "unverified",
+      "checks_run": [
+        "V8 isolated runner executing real source-extracted tests: 8 auth/session + 15 CRUD/mutation = 23 test functions",
+        "Compiled actual GitHub current JavaScript into JS engine syntax",
+        "Validated Cloud safety workflow contains the new test in push paths/node --check/node --test",
+        "Inspected GitHub SQL migration's owner select/delete permissions",
+        "Attempted GitHub Pages and GitHub Actions URL via web and container requests; both unavailable from current network"
+      ],
+      "checks_passed": [
+        "15/15 new async CRUD regression scenarios (12 first-pass + 3 after critique)",
+        "8/8 existing owner session regression cases from last published source",
+        "Cloud remains disabled pending owner approval",
+        "Code and regression tests written directly to main"
+      ],
+      "checks_failed": [
+        "Before patch: old B audit/cross-session false confirmations reproduced in all five CRUD flows; fixed by new patch"
+      ],
+      "limitations": [
+        "No Node.js process or GitHub Actions result available in this session; V8 tests are synthetic harness, not full CI",
+        "No HTTP or browser test on deployed Pages, no real A/B credentials or RLS deployment",
+        "No promise of 24/7 continuation outside hourly ChatGPT scheduled task"
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Five CRUD writes scoped to originating session with verified deletion outcome",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/05cda5bcc2cff617e7d8f38c60925fa5318231b2"
+      },
+      {
+        "name": "Permanent CRUD session regression suite (15 cases)",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/bfa62af5e73094cfc0aa6796fe7425277a4f49ae"
+      },
+      {
+        "name": "Dedicated GitHub Cloud safety CI invokes additional regression suite",
+        "stage": "coded",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/5d97836f4cf6078b02bce1b60981a247c655e6d9"
+      }
+    ],
+    "links": [
+      {
+        "label": "Production client mutation fix",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/05cda5bcc2cff617e7d8f38c60925fa5318231b2"
+      },
+      {
+        "label": "Latest regression file",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/bfa62af5e73094cfc0aa6796fe7425277a4f49ae"
+      },
+      {
+        "label": "CI workflow updated",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/5d97836f4cf6078b02bce1b60981a247c655e6d9"
+      }
+    ],
+    "critique": [
+      "P0: even perfect client checks are only defense-in-depth; live Supabase RLS & independent Auth were not tested or enabled.",
+      "P1: an HTTP request may already be committed on server when account switches; absence of a toast does NOT mean no write. Return to original account and reload to confirm.",
+      "P1: not all other async actions use mutationSession yet (planner/visio/AI callbacks), so continue scoped review before authorizing real multiuser Cloud.",
+      "P1: Actions and Pages are still inaccessible from tools; do not mark delivery as deployed without a matching-run SHA."
+    ],
+    "next": "At next CONTROL hourly sprint, first confirm GitHub Actions Node tests on latest commit and Pages independently; then review remaining asynchronous writes outside five CRUD actions for session contamination; real CONTROL-ACCOUNT remains blocked until owner approves a separate zero-cost Supabase instance and live RLS tests."
   }
 ]
