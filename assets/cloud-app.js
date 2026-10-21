@@ -411,7 +411,7 @@ function accountPage(){
  '<p class="muted">Identifiant : '+H(authUser?.id||'')+'</p><div class="btnrow">'+btn('Actualiser','refresh')+btn('Déconnexion','logout')+'</div>')+
  panel('Confidentialité','<p>Chaque projet est rattaché à son propriétaire via les règles d’accès RLS de la base de données.</p>'+
  '<p class="muted">Les liens vers les IA ne constituent pas une connexion API. Les droits Google ne sont pas accordés automatiquement par la connexion au compte.</p>')+
- panel('Données personnelles','<p class="muted">Sauvegarde des six collections privées. Privilégie le fichier chiffré : son mot de passe ne peut pas être récupéré.</p>'+btn('Exporter une sauvegarde chiffrée','export-encrypted')+' '+btn('Exporter en clair (attention)','export-json')+' '+btn('Importer mon ancien espace','import-legacy')+
+ panel('Données personnelles','<p class="muted">Sauvegarde des six collections privées. Privilégie le fichier chiffré : son mot de passe ne peut pas être récupéré. La restauration automatique de ces fichiers n’est pas encore disponible.</p>'+btn('Exporter une sauvegarde chiffrée','export-encrypted')+' '+btn('Exporter en clair (attention)','export-json')+' '+btn('Importer mon ancien espace','import-legacy')+
  (cloudConfig?.accountDeletionEnabled===true?'<div class="hint">Suppression définitive : le compte et ses données ne pourront pas être restaurés.</div>'+btn('Supprimer définitivement mon compte','delete-account','','danger'):'<p class="muted">La suppression complète d’un compte nécessite une procédure serveur vérifiée. Elle n’est pas encore activée.</p>'));
 }
 
@@ -550,6 +550,41 @@ async function encKey(pass,salt){
 // Exports must read the complete account; UI caches are intentionally capped.
 // Stable id ordering, owner verification and duplicate detection fail closed
 // on incomplete or inconsistent responses (including after a session switch).
+// Never ask for an export encryption secret in a plain-text browser prompt.
+function askBackupPassword(){
+ return new Promise((resolve,reject)=>{
+  const dialog=document.createElement('dialog');
+  dialog.className='cloud-backup-dialog';
+  dialog.innerHTML='<form method="dialog"><h2>Protéger la sauvegarde</h2>'+
+   '<p>Choisissez un mot de passe d’au moins 12 caractères. Sans celui-ci, le fichier ne pourra pas être déchiffré.</p>'+
+   '<label for="control-backup-secret">Mot de passe de chiffrement</label>'+
+   '<input id="control-backup-secret" name="backupPassword" type="password" autocomplete="new-password" minlength="12" required>'+
+   '<p class="muted" aria-live="polite" data-backup-error></p>'+
+   '<div class="btnrow"><button type="button" data-cancel-backup>Annuler</button><button type="submit" class="primary">Chiffrer la sauvegarde</button></div></form>';
+  const form=dialog.querySelector('form'),input=form.querySelector('input[type="password"]');
+  let finished=false;
+  const finish=value=>{
+   if(finished)return;
+   finished=true;input.value='';
+   if(dialog.open)dialog.close();
+   dialog.remove();resolve(value);
+  };
+  form.addEventListener('submit',event=>{
+   event.preventDefault();
+   const password=input.value;
+   if(password.length<12){form.querySelector('[data-backup-error]').textContent='Au moins 12 caractères sont requis.';return}
+   finish(password);
+  });
+  form.querySelector('[data-cancel-backup]').addEventListener('click',()=>finish(null));
+  dialog.addEventListener('cancel',event=>{event.preventDefault();finish(null)});
+  try{
+   if(typeof dialog.showModal!=='function')throw Error('Dialogue sécurisé non pris en charge.');
+   document.body.appendChild(dialog);dialog.showModal();input.focus();
+  }catch{
+   dialog.remove();reject(Error('Impossible d’ouvrir la saisie masquée sur ce navigateur. Réessaie sur un navigateur récent.'));
+  }
+ });
+}
 async function completeCloudExport(session){
  const pageSize=400,maxPages=125;
  async function readAll(table){
@@ -597,8 +632,9 @@ async function exportMyData(encrypted){
  if(!data)return false;
  let content=data;
  if(encrypted){
-  const password=prompt('Choisissez un mot de passe de sauvegarde (12 caractères minimum).');
-  if(password===null)return;if(password.length<12)throw Error('Mot de passe trop court.');
+  const password=await askBackupPassword();
+  if(!session.current())return false;
+  if(password===null)return false;if(password.length<12)throw Error('Mot de passe trop court.');
   const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),key=await encKey(password,salt);
   if(!session.current())return false;
   const bytes=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(JSON.stringify(data)));
