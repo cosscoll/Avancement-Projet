@@ -34,7 +34,7 @@ test('real A/B test requires two JWT accepted by Auth and no customer data',()=>
 });
 test('real test must not create permanent Auth users or mutate append-only audit',()=>{
  assert.doesNotMatch(runner,/auth\.admin\.createUser|create\('control_audit_events'/);
- assert.match(runner,/const work=\[\]/);
+ assert.match(runner,/const work=\[\],unverifiedCleanup=\[\]/);
  assert.match(runner,/finally/);
 });
 
