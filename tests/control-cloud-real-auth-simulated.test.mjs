@@ -52,7 +52,7 @@ function mockServer(mode={}){
    const forbiddenProject=table==='control_items'&&row.project_id&&
       !state.rows.control_projects.some(p=>p.id===row.project_id&&p.owner_id===owner);
    const hiddenWrite=mode.deniedButCommitted&&(forgedOwner||forbiddenProject);
-   if((row.owner_id!==owner&&!(mode.forgedInsert&&forgedOwner)&&!hiddenWrite)||
+   if((table!=='control_profiles'&&row.owner_id!==owner&&!(mode.forgedInsert&&forgedOwner)&&!hiddenWrite)||
       (table==='control_profiles'&&row.user_id!==owner)||
       (forbiddenProject&&!mode.foreignProjectInsert&&!hiddenWrite)){
     return output(403,{message:'RLS protected'});
