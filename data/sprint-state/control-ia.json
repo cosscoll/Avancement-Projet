@@ -1,50 +1,45 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-imp01-step-approval-recovery-20261021124032740",
-    "started_at": "2026-10-21T12:40:32.740Z",
-    "expires_at": "2026-10-21T13:25:32.740Z",
-    "objective": "Recover expired 11:48 IMP-01 step-approval lease; implement explicit per-step local action proposal with IMP-05 review and IMP-10 idempotent receipt, test CI/Pages and document 0€ independent CONTROL Cloud schema without enabling auth"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T11:30:46.883Z",
+    "updated_at": "2026-10-21T12:51:32.047Z",
     "main": true,
-    "stage": "imp01_local_goal_planner_imp02_scoped_search_imp03_memory_imp05_approvals_imp10_idempotence_329_green",
+    "stage": "control_cloud_independent_created_6rls_22policies_imp01_step_approval_341_node_pages_browser_verified",
     "files": [
+      "docs/CONTROL_CLOUD_BOOTSTRAP_20261021.md",
       "assets/command-center.js",
-      "tests/control-goal-planner.test.mjs",
-      "tests/control-local-search.test.mjs",
+      "tests/control-goal-step-approval.test.mjs",
       "tests/control-ia-browser-smoke.mjs",
       "data/sprints/control-ia.json",
-      "docs/CONTROL_IA_RETROSPECTIVES.md"
+      "docs/CONTROL_IA_RETROSPECTIVES.md",
+      "config/cloud.json"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39590970137",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39591100473",
-      "https://github.com/cosscoll/Avancement-Projet/commit/944be4b144223d276bbc66dc020a893d55bbc637",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592107242",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592103880",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592108116",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592172395"
+      "https://github.com/cosscoll/Avancement-Projet/commit/1eb4621fd4e9002f823a9ffe77c488b3ab14547f",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602311548",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602313933",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602485724",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602558986"
     ],
     "remaining_blockers": [
-      "No independent authorized zero-cost CONTROL Cloud backend with real A/B JWT/RLS or cross-device state; Cloud remains disabled.",
-      "IMP-01 is a deterministic device-local proposal generator, no real provider execution, step approval backend or distributed resumption.",
-      "IMP-02/03 source data remains user-declared and not externally verified; IMP-05/10 local guards not server authorization.",
-      "Physical Android and iOS acceptance still to be verified; shared monorepo may receive concurrent UCP commits."
+      "REAL CONTROL CLOUD PROJECT NOW EXISTS: Supabase project rvrmjjtdedidjnrkdery (CONTROL Cloud) in organization IAgile (only billing). Distinct from IAgile Academy daabfmdlgcwcykevvrcm. Owner agreed, get_cost returned 0€/month. 6 tables, 22 RLS policies, zero anonymous grants, and no security lints verified. Migration applied. DO NOT repeat project creation or migrations.",
+      "Database SQL A/B checks used simulated request.jwt.claim.sub within transaction ROLLBACK, NOT two actual signed-in Supabase Auth JWTs; must do full auth/REST and revoked session testing before enabled=true.",
+      "config/cloud.json enabled false and registration/login inactive; no Cloud activation without real Auth approval and secure publishable-only frontend config; do not expose secret keys.",
+      "Local IMP-01/02/03/05/10 are device-only, no external provider execution or cross-device transactions. 341/341 Node code test at 1eb4621, last verified doc-only Pages at ff4c1188.",
+      "Old expired CONTROL lease recovered and preserved in recovered_expired_lease; next automation should not treat it as active."
     ],
-    "next_action": "Continue from IMP-01: add explicit per-step local action proposals with user confirmation only using IMP-05 and IMP-10 (never auto-execute or spend); implement direct-main code with 45-min CONTROL lock, regression and same-SHA public Chromium. Coordinate separate UCP lease without modifying its work. Do not claim finished SaaS criteria."
+    "next_action": "Next CONTROL-ACCOUNT sprint: use the ACTUAL independent CONTROL Cloud backend now created (Supabase project reference rvrmjjtdedidjnrkdery); first inspect README/docs, project Auth registration, RLS and current frontend before changing anything. Arrange two real Auth test users and genuine JWT/PostgREST isolation with proper authorization and no secrets in public GitHub; do not activate Cloud until tests pass. Work under a new 45-min lease, writes direct main and same-SHA public proof. No paid plan, no need to recreate Supabase project. Continue IMP-01 local plan step receipts if safe."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-imp01-local-goal-plan-20261021112100000",
-    "started_at": "2026-10-21T11:21:00.000Z",
-    "ended_at": "2026-10-21T11:30:46.883Z",
-    "summary": "IMP-01 local project-scoped objective planner with editable sourced steps, measurable criteria, idempotent explicit plan save and storage rollback. 12 new regressions, 329/329 Node, Chromium local/Pages/public green at published SHA e2d8306. No external execution; Cloud disabled.",
-    "stage": "verified_online_local_imp01_plan_not_executor",
-    "commit_sha": "e2d8306ec0f2c761f136de88fc1bfaa067c30d5d",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39592172395"
+    "run_id": "control-ia-20261021-imp01-step-approval-recovery-20261021124032740",
+    "started_at": "2026-10-21T12:40:32.740Z",
+    "ended_at": "2026-10-21T12:51:32.047Z",
+    "summary": "IMP-01 saved plan step converts to explicitly consented local task only after project/risk/before-after review. 12 tests added; general 341/341 green, local Chromium, Pages and postdeploy Chromium pass. Independently approved CONTROL Cloud migrated 6 tables/22 RLS policies, simulated-claim A/B SQL tested with full rollback, no real Auth accounts or Cloud activation.",
+    "stage": "verified_online_imp01_local_step_approval_and_control_cloud_independent_secure_schema_not_auth",
+    "commit_sha": "1eb4621fd4e9002f823a9ffe77c488b3ab14547f",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602558986"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
