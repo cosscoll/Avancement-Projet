@@ -289,6 +289,20 @@ try{
  await js("document.querySelector('#search-project').value='ucp';document.querySelector('#search-project').dispatchEvent(new Event('change'));document.querySelector('#global-search').value='Recette Memoire Unique';document.querySelector('#global-search').dispatchEvent(new Event('input'))");
  assert.equal(await js("document.querySelectorAll('#search-hits a').length"),0,'Deleted decision must not appear in fresh search');
  log('deleted memory entry is absent from current project-scoped search');
+ // A local objective becomes a sourced, editable proposal, never an automatically completed task.
+ await js("location.hash='#/control/goals'");
+ await ready(()=>js("!!document.querySelector('#goal-request')"),9000)();
+ const actionsBeforePlan=await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').actions?.length||0");
+ await js("document.querySelector('#goal-request [name=project]').value='iagile';document.querySelector('#goal-request [name=goal]').value='Lancer un site de démonstration accessible';document.querySelector('#goal-request').requestSubmit()");
+ await ready(()=>js("!!document.querySelector('#goal-confirm')"),9000)();
+ assert.doesNotMatch(await js("document.querySelector('#goal-preview').textContent"),/Recette Navigateur Unique/,'Other project actions may not contaminate goal proposals');
+ await js("document.querySelector('#goal-request [name=project]').value='ucp';document.querySelector('#goal-request [name=goal]').value='Livrer la prochaine version contrôlée de UCP';document.querySelector('#goal-request').requestSubmit()");
+ await ready(()=>js("!!document.querySelector('#goal-confirm [name=criterion0]')"),9000)();
+ assert.match(await js("document.querySelector('#goal-preview').textContent"),/Source :/);
+ await js("document.querySelector('#goal-confirm [name=criterion0]').value='Validation documentée par le propriétaire';document.querySelector('#goal-confirm').requestSubmit()");
+ await ready(()=>js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').goalPlans?.some(p=>p.project==='ucp'&&p.goal.includes('Livrer la prochaine version')&&p.steps[0].criterion==='Validation documentée par le propriétaire')"),9000)();
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').actions?.length||0"),actionsBeforePlan,'Saving a goal plan must not execute or create actions');
+ log('scoped IMP-01 goal plan is editable, sourced and persisted as unexecuted proposal');
  await js("location.hash='#/control/localai'");
  await ready(()=>js("!!document.querySelector('[data-op-consent]')"),9000)();
  await js("document.querySelector('[data-op-consent]').click()");
