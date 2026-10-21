@@ -134,7 +134,7 @@
     },
     {
       "title": "Vitrine intégrée, recette réelle non vérifiée",
-      "description": "PR UCP #2 à #18 fusionnées sur main jusqu’au commit 13298223 : navigation mobile restaurée, état public durable, sorties build/dist contrôlées et replis DOM ajoutés pour le menu, les onglets, la checklist, la copie et le téléchargement du brief. Les CI Vitrine 39539022003 et 39539059927 sont vertes ; la seconde confirme le repli immédiat de libération d’URL si la temporisation échoue. L’incident ucp-public-site-unverified reste ouvert : aucun navigateur, lecteur d’écran, appareil réel, site public ou staging n’a été vérifié.",
+      "description": "PR UCP #2 à #19 fusionnées sur main jusqu’au commit 9a808f86 : navigation mobile restaurée, état public durable, sorties build/dist contrôlées et replis DOM ajoutés pour le menu, les onglets, la checklist, la copie et le téléchargement du brief. Les CI Vitrine 39544695670 et 39544741221 sont vertes ; la seconde confirme le repli textContent lorsque replaceChildren échoue et le bornage des erreurs appendChild. L’incident ucp-public-site-unverified reste ouvert : aucun navigateur, lecteur d’écran, appareil réel, site public ou staging n’a été vérifié.",
       "level": "warning"
     },
     {
@@ -205,6 +205,6 @@
       "state": "blocked"
     }
   ],
-  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-54 ; PR #2 à #18 fusionnées sur main jusqu’à 13298223 avec CI Vitrine verte, contrôle build/dist et replis DOM de navigation/brief. Les contrôles isolés et simulés ne valent pas recette navigateur, appareil, site public ou staging.",
+  "baseline_source": "État public initial du 16/10/2026, actualisé avec preuves GitHub distantes et audits UCP-QA-03 à UCP-QA-54 ; PR #2 à #19 fusionnées sur main jusqu’à 9a808f86 avec CI Vitrine verte, contrôle build/dist et replis DOM de navigation/brief. Les contrôles isolés et simulés ne valent pas recette navigateur, appareil, site public ou staging.",
   "baseline_date": "2026-10-21"
 }
