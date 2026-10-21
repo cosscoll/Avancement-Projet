@@ -748,5 +748,94 @@
       "P1: Actions and Pages are still inaccessible from tools; do not mark delivery as deployed without a matching-run SHA."
     ],
     "next": "At next CONTROL hourly sprint, first confirm GitHub Actions Node tests on latest commit and Pages independently; then review remaining asynchronous writes outside five CRUD actions for session contamination; real CONTROL-ACCOUNT remains blocked until owner approves a separate zero-cost Supabase instance and live RLS tests."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-main-postdeploy-gate-20261021093053974",
+    "started_at": "2026-10-21T09:30:53.974Z",
+    "ended_at": "2026-10-21T09:34:19.343Z",
+    "summary": "Working directly on existing GitHub main (no branch/PR). Split CONTROL browser tests into immediate push local test and successful github-pages deployment_status post-publication test. Confirmed initial GH test of public byte equality on 12 files and full live Chromium suite; discovered push job incorrectly cancelled by deployment status, fixed concurrency to separate event types. Both push Chromium and post-deploy Chromium successful at same exact SHA 1464cbf69b247702c94a46998f392ea9e1a90352, Pages success.",
+    "objectives": [
+      {
+        "before": "Chromium job checked public asset hashes immediately after main push while GitHub Pages was still deploying; a red test on commit 05cda5 showed public assets/cloud-app.js still stale, although local real Chromium passed. First workflow split still cancelled push tests due shared concurrency group.",
+        "after": "Push tests real local Chromium; separate deployment_status success on github-pages triggers public byte/hash comparison + Chromium; checkout main and require deployed SHA = main HEAD; event_name and status now isolate concurrency groups.",
+        "acceptance": "GitHub Actions push/browser success run 39577830659; Pages success run 39577830376; post-publication Chromium success run 39577895141 for commit 1464cbf69. Workflow in main."
+      }
+    ],
+    "done": [
+      "Confirmed main default branch and that CONTROL lease was free; acquired cooperative CONTROL-only 45-minute lease.",
+      "Read GitHub Actions run and browser logs reproducing earlier false red due stale published JS before Pages completes.",
+      "Published workflow post-deploy gate directly to main, commit 4e88d95cd0e9162cf3b9963058ca280c34c4f2ef.",
+      "Verified GitHub Actions deployment_status triggered and first real public browser test succeeded: 39577771105, SHA 4e88d95 (12 public assets matched and all browser smoke scenarios passed).",
+      "Autocritique: found different deployment_status transitions were cancelling existing push job through shared concurrency group; push run 39577719182 was cancelled.",
+      "Published second fix directly to main, commit 1464cbf69b247702c94a46998f392ea9e1a90352: group concurrency by event_name + status + ref.",
+      "Verified same-SHA Chromium push run 39577830659 success; Pages deployment 39577830376 success; post-deploy Chromium 39577895141 success."
+    ],
+    "blockers": [
+      "Full CONTROL Cloud requires independently approved zero-cost Supabase project; real two-account JWT/RLS and cross-device tests not done.",
+      "Historic CONTROL V1.2 requirements contain obsolete BACK-023..042 references; 22 tickets remain not fully verified.",
+      "Other account-sensitive async command, meeting and mission callbacks require separate security review."
+    ],
+    "quality": {
+      "ci": "success",
+      "checks_run": [
+        "GitHub Actions public Chromium after pages success for SHA 1464cbf69b247702c94a46998f392ea9e1a90352",
+        "GitHub Actions Chromium local on push at same SHA",
+        "GitHub Pages successful deploy at same SHA",
+        "Inspected deployment_status status events and cancellation race",
+        "Cloud config remains disabled"
+      ],
+      "checks_passed": [
+        "Push browser full Chromium run success 39577830659",
+        "Pages build/deploy success 39577830376",
+        "Postdeploy real Chromium run success 39577895141",
+        "No PR or separate branch created"
+      ],
+      "checks_failed": [
+        "First draft's push browser run cancelled due event group overlap; fixed in second main commit"
+      ],
+      "limitations": [
+        "No multi-account live Cloud auth (intentionally disabled)",
+        "Browser proof uses GitHub-hosted Linux Chromium and simulated mobile width, not real Android/iOS physical device",
+        "Main push initiates Pages publication; only successful Pages job and public browser test prove a particular SHA online"
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "CONTROL main postdeploy browser gate",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577771105"
+      },
+      {
+        "name": "Distinct push/deployment concurrency fix",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577895141"
+      },
+      {
+        "name": "Pages deployment exact SHA",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577830376"
+      }
+    ],
+    "links": [
+      {
+        "label": "Workflow first main commit",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/4e88d95cd0e9162cf3b9963058ca280c34c4f2ef"
+      },
+      {
+        "label": "Concurrency fix main",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/1464cbf69b247702c94a46998f392ea9e1a90352"
+      },
+      {
+        "label": "Real public Chromium green",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577895141"
+      }
+    ],
+    "critique": [
+      "P1: successful status events may generate one skip job per transient event; only successful tested run counts toward verified_online.",
+      "P1: the latest code-only/administrative commits can trigger new Pages builds and invalidate evidence for current site SHA; evidence is valid only for documented SHA.",
+      "P0: Cloud remains disabled until separate authorized backend and real A/B RLS/JWT; do not equate personal local browser tests with complete V1.2."
+    ],
+    "next": "Every future CONTROL change: write directly to main under cooperative lease, require successful CI and same-SHA Pages + postdeploy Chromium proof before presenting it as published. Next functional sprint audit account-switch protections in remaining Visio/Mission/Lab async functions while preserving Cloud off."
   }
 ]
