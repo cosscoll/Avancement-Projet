@@ -1,26 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-20261021T063235Z-v3",
-    "owner": "chatgpt-automation",
-    "started_at": "2026-10-21T06:32:35Z",
-    "expires_at": "2026-10-21T07:17:35Z",
-    "objective": "Empêcher une erreur d’initialisation matchMedia() de bloquer tout le script."
-  },
-  "checkpoint": {
-    "files": ["site-vitrine/dist/assets/app.js", "site-vitrine/tests/app-shell.test.cjs"],
-    "branch": "fix/ucp-matchmedia-init-20261021",
-    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/21",
-    "tests": ["CI première passe en attente sur 1d0aad20"],
-    "next_action": "Vérifier la CI, mener l’autocritique, tester un retour matchMedia invalide puis retester."
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261021T053016Z-v3",
-    "ended_at": "2026-10-21T05:33:24Z",
+    "run_id": "ucp-20261021T063235Z-v3",
+    "ended_at": "2026-10-21T06:35:25Z",
     "outcome": "merged",
-    "summary": "PR #20 repli sûr des listeners matchMedia fusionnée sur main b47cb9f9 après deux CI vertes ; navigateur réel non vérifié.",
+    "summary": "PR #21 initialisation sûre de matchMedia fusionnée sur main 2882da4b après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
