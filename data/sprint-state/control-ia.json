@@ -1,44 +1,39 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-main-postdeploy-gate-20261021093053974",
-    "started_at": "2026-10-21T09:30:53.974Z",
-    "expires_at": "2026-10-21T10:15:53.974Z",
-    "objective": "Appliquer exclusivement les améliorations CONTROL en direct sur main et déclencher preuve navigateur après publication Pages effective"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T09:17:31.385Z",
+    "updated_at": "2026-10-21T09:34:59.562Z",
     "main": true,
-    "stage": "auth_mutation_owner_epoch_guards_tested_local_v8_main_ci_pages_unverified",
+    "stage": "main_direct_browser_postdeploy_green_exact_sha_cloud_still_disabled",
     "files": [
-      "assets/cloud-app.js",
-      "tests/control-cloud-mutation-session.test.mjs",
-      ".github/workflows/control-cloud-config.yml",
+      ".github/workflows/control-ia-browser.yml",
       "data/sprints/control-ia.json",
       "docs/CONTROL_IA_RETROSPECTIVES.md"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/commit/05cda5bcc2cff617e7d8f38c60925fa5318231b2",
-      "https://github.com/cosscoll/Avancement-Projet/commit/bfa62af5e73094cfc0aa6796fe7425277a4f49ae",
-      "https://github.com/cosscoll/Avancement-Projet/commit/5d97836f4cf6078b02bce1b60981a247c655e6d9"
+      "https://github.com/cosscoll/Avancement-Projet/commit/4e88d95cd0e9162cf3b9963058ca280c34c4f2ef",
+      "https://github.com/cosscoll/Avancement-Projet/commit/1464cbf69b247702c94a46998f392ea9e1a90352",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577830659",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577830376",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577895141"
     ],
     "remaining_blockers": [
-      "Actions workflow status and GitHub Pages public HTTP for latest commits unverified (source queries blocked)",
-      "No authorized independent CONTROL Supabase instance; actual A/B JWT RLS, data persistence and cross-device sign-in untested",
-      "Other async planner/visio/mission flows still need an account-switch audit"
+      "CONTROL Cloud disabled; no approved 0 € independent Supabase environment with real A/B session and RLS tests",
+      "Remaining account-sensitive asynchronous callback flows not fully audited",
+      "No physical Android or iOS device test"
     ],
-    "next_action": "Read latest CI run and Pages at actual main code SHA (without reusing historical runs); review other async planner/visio/mission CRUD callbacks and add regression only for reproduced bugs. Keep Cloud disabled and never reuse IAgile."
+    "next_action": "Develop CONTROL fixes directly on main only after pre-tests, with CONTROL lease and SHA; verify per-commit push browser, Pages and post-deploy Chromium; next inspect visio/mission/lab account mutation race without enabling cloud. Do not create branches/PR."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-auth-mutation-race-20261021090853361",
-    "started_at": "2026-10-21T09:08:53.361Z",
-    "ended_at": "2026-10-21T09:17:31.385Z",
-    "summary": "Fixed cross-account stale CRUD confirmations and audit ownership; 15/15 new async mutation tests + 8/8 prior auth tests in V8; CI workflow updated; Pages/Node Actions not confirmed; no real backend.",
-    "stage": "tested_not_cloud_operational",
-    "commit_sha": "bfa62af5e73094cfc0aa6796fe7425277a4f49ae",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/commit/bfa62af5e73094cfc0aa6796fe7425277a4f49ae"
+    "run_id": "control-ia-20261021-main-postdeploy-gate-20261021093053974",
+    "started_at": "2026-10-21T09:30:53.974Z",
+    "ended_at": "2026-10-21T09:34:59.562Z",
+    "summary": "Published main-only post-deploy Chromium workflow and concurrency correction directly to main; GitHub Pages, push Chromium and post-deploy live Chromium all verified green on exact code SHA 1464cbf69b247702c94a46998f392ea9e1a90352; Cloud off.",
+    "stage": "verified_online_personal_control_not_cloud",
+    "commit_sha": "1464cbf69b247702c94a46998f392ea9e1a90352",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577895141"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
