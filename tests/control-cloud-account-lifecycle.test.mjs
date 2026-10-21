@@ -119,7 +119,7 @@ function maskedPasswordHarness(initial='secret-with-12-or-more-characters'){
  const cancel={addEventListener:(event,cb)=>{events['cancel-button:'+event]=cb}};
  const form={
   addEventListener:(event,cb)=>{formEvents[event]=cb},
-  querySelector:selector=>selector==='[data-backup-error]'?errorNode:selector==='[data-cancel-backup]'?cancel:null
+  querySelector:selector=>selector==='input[type="password"]'?input:selector==='[data-backup-error]'?errorNode:selector==='[data-cancel-backup]'?cancel:null
  };
  const dialog={
   innerHTML:'',open:false,removed:false,className:'',
