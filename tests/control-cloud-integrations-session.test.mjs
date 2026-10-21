@@ -74,7 +74,7 @@ async function complete(h,index){
  assert.ok(q,'Expected pending request '+index);
  q.resolve(q.method==='invoke'?{data:{ok:true},error:null}:q.method==='select'?
   {data:{id:'x',owner_id:'A',kind:'mission',provider:'Claude',title:'Fresh'},error:null}:
-  {data:{id:'created-A',owner_id:'A',title:'Confirmed',updated_at:'t1'},error:null});
+  {data:{id:'created-A',owner_id:'A',project_id:'pA',title:'Confirmed',updated_at:'t1'},error:null});
 }
 for(const c of cases){
  test(c.fn+' cannot mutate a new login of the same A account',async()=>{
@@ -161,4 +161,32 @@ test('stale Lab screens cannot expose B project context or provider links',()=>{
 test('stale catalog screen no longer treats B resources as saved by A',()=>{
  const h=harness();h.mount('catalog');h.otherLogin();
  assert.equal(h.mounts.catalog.isSaved({id:'tool1'},'pB'),false);
+});
+
+
+test('Lab rejects a forged receipt with another project before reporting success',async()=>{
+ const h=harness();h.mount('lab');
+ const pending=h.mounts.lab.saveMission({projectId:'pA',provider:'Claude',title:'Lab task',instruction:'Prompt unique'});
+ await untilRequest(h,1);
+ h.requests[0].resolve({data:{id:'malicious',owner_id:'A',project_id:'pB'},error:null});
+ await assert.rejects(pending,/non confirmée pour ce compte et ce projet/);
+ assert.deepEqual(h.messages,[]);
+ assert.deepEqual(h.read().items,[]);
+});
+test('Lab rejects a response without an authenticated owner receipt',async()=>{
+ const h=harness();h.mount('lab');
+ const pending=h.mounts.lab.saveMission({projectId:'pA',provider:'Claude',title:'Lab task',instruction:'Prompt unique'});
+ await untilRequest(h,1);
+ h.requests[0].resolve({data:{id:'orphan',project_id:'pA'},error:null});
+ await assert.rejects(pending,/non confirmée pour ce compte et ce projet/);
+ assert.deepEqual(h.messages,[]);
+});
+test('Catalog refuses a resource saved into a different project despite a successful HTTP response',async()=>{
+ const h=harness();h.mount('catalog');
+ const pending=h.mounts.catalog.onAdd({id:'tool',name:'Useful Tool',url:'https://example.org',summary:'Test',category:'LLM',courses:[]},'pA');
+ await untilRequest(h,1);
+ h.requests[0].resolve({data:{id:'foreign',owner_id:'A',project_id:'pB'},error:null});
+ await assert.rejects(pending,/projet\/propriétaire incohérent/);
+ assert.deepEqual(h.messages,[]);
+ assert.deepEqual(h.read().items.map(x=>x.id),['x','v']);
 });
