@@ -1,46 +1,43 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-async-integrations-20261021094755470",
-    "started_at": "2026-10-21T09:47:55.470Z",
-    "expires_at": "2026-10-21T10:32:55.470Z",
-    "objective": "CONTROL-ACCOUNT: prevent cross-session writes and UI mutations in Visio, Command Missions and AI Lab callbacks; tests and main deploy"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T09:36:59.165Z",
+    "updated_at": "2026-10-21T09:59:23.416Z",
     "main": true,
-    "stage": "main_only_pages_browser_green_report_contract_repaired_cloud_off",
+    "stage": "account_async_integrations_40_cases_ci_232_pages_live_green_saas_disabled",
     "files": [
-      ".github/workflows/control-ia-browser.yml",
+      "assets/cloud-app.js",
+      "tests/control-cloud-integrations-session.test.mjs",
+      ".github/workflows/control-cloud-config.yml",
       "data/sprints/control-ia.json",
       "docs/CONTROL_IA_RETROSPECTIVES.md"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/commit/1464cbf69b247702c94a46998f392ea9e1a90352",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577830659",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577830376",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39577895141",
-      "https://github.com/cosscoll/Avancement-Projet/commit/04847143b33b846848b1595c87d251b09846ee2f",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39578269985",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39578269932"
+      "https://github.com/cosscoll/Avancement-Projet/commit/9e217f75a982f56b77083a4b5326e0c34fe81fc5",
+      "https://github.com/cosscoll/Avancement-Projet/commit/43b5771289bed27faf376bf782055974df354d42",
+      "https://github.com/cosscoll/Avancement-Projet/commit/e280d9921c08259bf853f59b6682bdb66d8809ac",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580789879",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580789994",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580789090",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580913525"
     ],
     "remaining_blockers": [
-      "CONTROL Cloud remains intentionally off pending 0-euro distinct Supabase approval and real A/B JWT RLS testing.",
-      "Remaining async Visio/Missions/Lab race review not complete.",
-      "Any subsequent HEAD requires matching CI/Pages live test; prior exact SHA 1464cbf live evidence does not validate future changes."
+      "No approved independent 0-euro CONTROL Supabase or real A/B JWT/RLS/multi-device user testing; Cloud remains disabled.",
+      "Export/import/legacy migration and account deletion lifecycle flows not yet scrutinized for epoch/account switch.",
+      "Public browser proof applies to code SHA e280d9921c; following docs/checkpoint commits require new same-SHA proof if described as deployed."
     ],
-    "next_action": "Continue CONTROL development solely in main with lease and precommit tests. Use successful Pages deployment_status trigger and live Chromium on exact main SHA; no PR/side branches. Audit Visio/Mission/Lab owner races; keep Cloud disabled. Ensure future sprint reports include online_url, online_verified_at and online_evidence_url when using verified_online, before writing to main."
+    "next_action": "Continue CONTROL-ACCOUNT with a focused safety audit of export/import, legacy migration, delete-account and session lifecycle; reproduce and fix concrete bugs directly on main under 45-min lease, then CI/Pages/Chromium same SHA. Keep distinct Supabase activation blocked pending explicit owner approval and zero-cost proof."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-repair-sprint-contract-20261021093538253",
-    "started_at": "2026-10-21T09:35:38.253Z",
-    "ended_at": "2026-10-21T09:36:59.165Z",
-    "summary": "Repaired missing online evidence fields in a 3-deliverable CONTROL sprint report; verified Node quality and sprint contract GH Actions successful at code SHA 04847143; main-only postdeploy browser passed at 1464cbf; Cloud intentionally off.",
-    "stage": "tested_CI_green",
-    "commit_sha": "04847143b33b846848b1595c87d251b09846ee2f",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39578269932"
+    "run_id": "control-ia-20261021-async-integrations-20261021094755470",
+    "started_at": "2026-10-21T09:47:55.470Z",
+    "ended_at": "2026-10-21T09:59:23.416Z",
+    "summary": "Fixed eight async integrations across logout/re-login and stale mounted views; 40 Node regressions, Cloud CI 78/78, frontend 232/232, Pages deployed & live Chromium byte-verified at code SHA e280d992; Cloud off.",
+    "stage": "tested_ci_deployed_not_authenticated",
+    "commit_sha": "e280d9921c08259bf853f59b6682bdb66d8809ac",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580913525"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
