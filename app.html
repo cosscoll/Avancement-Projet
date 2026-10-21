@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="./assets/control-help.css">
 <link rel="stylesheet" href="./assets/ai-lab.css">
 <link rel="stylesheet" href="./assets/ux-clarity.css">
+<link rel="stylesheet" href="./assets/navigation-hub.css">
 <link rel="stylesheet" href="./assets/multi-ai-command.css">
 <link rel="stylesheet" href="./assets/visio-center.css">
 </head>
@@ -20,6 +21,7 @@
 <header class="header">
   <a class="brand" href="./app.html" aria-label="Accueil CONTROL"><span class="mark">◈</span>CONTROL <span class="soft">Cloud</span></a>
   <div class="header-actions">
+    <button id="nav-open-cloud" type="button" class="control-nav-main-trigger" data-control-nav-open aria-keyshortcuts="Control+K Meta+K" hidden>⌕ Trouver une fonction <kbd>Ctrl K</kbd></button>
     <button id="refresh" type="button" hidden>↻ Actualiser</button>
     <button id="account" type="button" hidden>Mon compte</button>
   </div>
@@ -68,6 +70,7 @@
   <button data-page="manager" aria-label="CONTROL IA"><span>◈</span>CONTROL IA</button>
   <button data-page="tools" aria-label="Tous les outils"><span>☷</span>Outils</button>
 </nav>
+<button type="button" id="nav-mobile-cloud" class="control-nav-mobile-trigger" data-control-nav-open hidden aria-label="Trouver une fonction CONTROL">⌕ Trouver</button>
 <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
 <script src="./assets/tool-catalog.js" defer></script>
 <script src="./assets/deployment-guides.js" defer></script>
@@ -75,6 +78,7 @@
 <script src="./assets/ai-lab.js" defer></script>
 <script src="./assets/multi-ai-command.js" defer></script>
 <script src="./assets/visio-center.js" defer></script>
+<script src="./assets/navigation-hub.js" defer></script>
 <script type="module" src="./assets/cloud-app.js"></script>
 </body>
 </html>
