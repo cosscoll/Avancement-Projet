@@ -18,7 +18,7 @@ async function waitFor(predicate,description){
  throw Error('Timeout waiting for '+description);
 }
 function harness(){
- const state={user:'A',delays:new Map(),calls:[],rendered:0,messages:[],screens:[],reset:0,scheduled:[]};
+ const state={user:'A',delays:new Map(),datasets:new Map(),countOverrides:new Map(),calls:[],rendered:0,messages:[],screens:[],reset:0,scheduled:[]};
  const nodes=new Map();
  const byId=id=>{if(!nodes.has(id))nodes.set(id,{innerHTML:'',disabled:false});return nodes.get(id)};
  const window={CONTROL_HELP:{reset(){state.reset++}}};
@@ -34,16 +34,22 @@ function harness(){
   from(table){
    const owner=state.user;
    let ownerFilter=null;
-   const query=()=>{
-    if(ownerFilter!==owner) return Promise.resolve({data:null,error:{message:'owner_id filter missing or incorrect'}});
-    state.calls.push({owner,table});
+   const query=(first=0,last=399)=>{
+    if(ownerFilter!==owner)return Promise.resolve({data:null,error:{message:'owner_id filter missing or incorrect'}});
+    state.calls.push({owner,table,first,last});
     const delayed=state.delays.get(owner+':'+table);
-    if(delayed)return delayed.promise;
-    if(table==='control_projects')return Promise.resolve({data:[{id:'project-'+owner,name:'Private '+owner,owner_id:owner}]});
-    if(table==='control_items')return Promise.resolve({data:[{id:'item-'+owner,title:'Private task '+owner,owner_id:owner}]});
+    if(delayed)return delayed.promise.then(result=>({
+     ...result,count:result.count??(Array.isArray(result.data)?result.data.length:null)
+    }));
+    const custom=state.datasets.get(owner+':'+table);
+    const rows=custom||(table==='control_projects'?[{id:'project-'+owner,name:'Private '+owner,owner_id:owner}]:
+     table==='control_items'?[{id:'item-'+owner,title:'Private task '+owner,owner_id:owner}]:null);
+    if(rows){
+     return Promise.resolve({data:rows.slice(first,last+1),count:state.countOverrides.get(table)??rows.length,error:null});
+    }
     return Promise.resolve({data:{owner_id:owner,settings:{}}});
    };
-   return {select(){const chain={eq(field,value){if(field==='owner_id')ownerFilter=value;return chain},order(){return chain},limit:query,maybeSingle:query};return chain}};
+   return {select(){const chain={eq(field,value){if(field==='owner_id')ownerFilter=value;return chain},order(){return chain},range:query,maybeSingle:()=>query()};return chain}};
   }
  };
  const factory=new Function('client','window','byId','render','visible','live','message','panel','btn','setTimeout',
@@ -254,4 +260,34 @@ test('overlapping account refresh must return false instead of falsely confirmin
  assert.equal(await h.app.reload(true),false);
  slow.resolve({data:[{id:'project-A',owner_id:'A',name:'Account A'}]});
  assert.equal(await pending,true);
+});
+
+
+test('workspace sync fetches items beyond the former 1000/2000-item limits without silent truncation',async()=>{
+ const h=harness(),list=Array.from({length:1205},(_,i)=>({id:'item-'+String(i).padStart(5,'0'),owner_id:'A',title:'Task '+i}));
+ h.state.datasets.set('A:control_items',list);
+ await h.app.verifiedSession();
+ assert.equal(h.app.read().items.length,1205);
+ assert.equal(h.state.calls.filter(x=>x.table==='control_items').length,4);
+ assert.equal(h.app.read().items.at(-1).id,'item-01204');
+});
+test('workspace rejects server count mismatches rather than displaying a partial successful sync',async()=>{
+ const h=harness();
+ h.state.countOverrides.set('control_items',402);
+ await h.app.verifiedSession();
+ assert.deepEqual(h.app.read().items,[]);
+ assert.equal(h.state.messages.some(x=>x.bad&&x.text.includes('Synchronisation incomplète')),true);
+});
+test('workspace refuses duplicate IDs across pages and does not render corrupted cache',async()=>{
+ const h=harness(),list=Array.from({length:405},(_,i)=>({id:'item-'+String(i).padStart(4,'0'),owner_id:'A'}));
+ list[404].id=list[3].id;h.state.datasets.set('A:control_items',list);
+ await h.app.verifiedSession();
+ assert.deepEqual(h.app.read().items,[]);
+ assert.equal(h.state.messages.some(x=>x.bad&&x.text.includes('Données incohérentes')),true);
+});
+test('workspace refuses extra large collections rather than claiming complete synchronization',async()=>{
+ const h=harness();h.state.countOverrides.set('control_items',10001);
+ await h.app.verifiedSession();
+ assert.deepEqual(h.app.read().items,[]);
+ assert.equal(h.state.messages.some(x=>x.bad&&x.text.includes('limite d’affichage')),true);
 });
