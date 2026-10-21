@@ -1303,5 +1303,104 @@
       "P0: no real browser account verification or live Supabase RLS has been performed; functional SaaS account acceptance stays unverified."
     ],
     "next": "Continue CONTROL-ACCOUNT by reviewing lifecycle failure reporting, independent authenticated QA plans and remaining permissions; do not enable Cloud until separately authorized independent zero-cost provider. Focus one feature per sprint, direct main with CI and public proof."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-imp05-local-approval-20261021104120944",
+    "started_at": "2026-10-21T10:41:20.944Z",
+    "ended_at": "2026-10-21T10:50:25.880Z",
+    "summary": "IMP-05 usable local approval UX: before/after diff, project target and risk shown for create/complete/move/delete actions; old scope/consent/project status revoked before writing; persisted audit receipt shown in UI. Found and fixed missing receipt forwarding. Added 18 tests and strengthened real Chromium; 277/277 Node, Chrome local, GitHub Pages and Chrome public green at exact SHA 8e75c73713dc3bcc0aa5b8685c20cb293d19a7d5. Local prototype only; no multi-user cloud permission assertion.",
+    "objectives": [
+      {
+        "before": "Prepared operator actions displayed generic description and confirmation, without exact proposed before-after difference or risk. Revocation could leave stale preview, and saved actions had an internal audit record but no visible receipt.",
+        "after": "Approval panel shows exact project target, previous and proposed states, risk severity, live rechecks after editing, denial when consent/scope/project/stored version changes, and persisted local audit receipt on success. No external service contacted.",
+        "acceptance": "18 new Node tests, 277/277 general tests, Chromium local verifies rendering of diff/risk/receipt and scope revocation, Pages and public Chromium success on same SHA. Scope is local only."
+      }
+    ],
+    "done": [
+      "Read latest V1.2 strategy and confirmation path, confirmed WIP=1, acquired 45-minute CONTROL-only cooperative lease on main.",
+      "Added deterministic read-only reviewAction to CONTROL operator core for create task, local appointment, complete task, reschedule and remove event with owner project scope, status/date checks, precise target/risks.",
+      "Integrated approval preview with four visible fields and immediate revalidation before any local write, including project rename, scope/consent changes and input edits.",
+      "Exposed persisted receipt via command-center and forwarded through local-ai intermediary into UI.",
+      "Published 18 new source-level regression cases for consent/scope revocation, stale event/task conditions, risk/diff and audit receipts; included automatically in general GitHub Node suite.",
+      "Strengthened real Chromium smoke to verify exact target, before, after, risk and real saved receipt plus scope revocation; first Chromium red on missing receipt forwarding, fixed root cause in local-ai adapter, kept stronger assertions.",
+      "Final code SHA 8e75c73713dc3bcc0aa5b8685c20cb293d19a7d5: GitHub general quality 277/277 success 39587241317, Chromium local pass 39587241379, Pages success 39587240349, public Chromium pass 39587349013.",
+      "No paid services, backend accounts, external execution or user private exports."
+    ],
+    "blockers": [
+      "Full IMP-05 (real cross-user permissions, server consent/revocation) requires independently approved zero-cost CONTROL Supabase, real JWT/RLS and authorized provider action tests; cannot mark accepted.",
+      "Operator receipts are device-local persisted audit IDs, not proof of running an external AI or writing to a third-party service.",
+      "Full Android/iOS physical UX acceptance remains unverified."
+    ],
+    "quality": {
+      "ci": "success",
+      "checks_run": [
+        "18 new Node approval tests reading real UI/core and local operator execution",
+        "Chromium local on 9-capability app with scope revocation and real persisted local audit receipt",
+        "GitHub quality 277 tests",
+        "GitHub Pages same-SHA deployment",
+        "GitHub public Chromium with byte-level content parity"
+      ],
+      "checks_passed": [
+        "18/18 new approval tests",
+        "277/277 GitHub general Node tests",
+        "Chromium local complete user journey successful",
+        "GitHub Pages deployment success",
+        "Public Chromium full journey and asset parity success"
+      ],
+      "checks_failed": [
+        "An earlier intermediate main SHA browser test exposed missing pass-through for persisted operator receipt, fixed in subsequent main commit 8e75c737; no test weakened."
+      ],
+      "limitations": [
+        "Local-only prototype not an accepted SaaS criterion; project permissions are local UI scope, not authoritative RBAC or RLS.",
+        "No real user account, server, provider, API connection or physical mobile device test."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "CONTROL local action permission/review and receipt UX",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/8e75c73713dc3bcc0aa5b8685c20cb293d19a7d5",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T10:49:17Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587349013"
+      },
+      {
+        "name": "18 regression cases for action review, revocation and receipts",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/7e8d31fff22c0ddd9c46adcf9e5463e286ed6e11"
+      },
+      {
+        "name": "Real browser test with before-after review and local audit proof",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587241379"
+      }
+    ],
+    "links": [
+      {
+        "label": "Node 277/277",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587241317"
+      },
+      {
+        "label": "Chromium local",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587241379"
+      },
+      {
+        "label": "Pages",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587240349"
+      },
+      {
+        "label": "Chromium public",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587349013"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "P1: initial presentation included receipt output without forwarding intermediary adapter; browser exposed it, implemented receipt pass through before final verification.",
+      "P1: approval review must not treat invalid dates, unauthorized scope, stale status/date or renamed/deleted target as a valid command; tests fail closed.",
+      "P0: a user can still modify browser storage outside CONTROL, so local operator permissions alone cannot be relied on for server account authorization.",
+      "Do not mark IMP-05 acceptance criteria fulfilled until audited server-driven permission revocation and real third-party approval tested."
+    ],
+    "next": "Next IMP-05/IMP-10 groundwork: scoped local approval checkpoints and idempotence for interrupted action confirmations, then project-specific memory IMP-03 under explicit local permission. No real Cloud activation before owner's cost-free independent Supabase decision."
   }
 ]
