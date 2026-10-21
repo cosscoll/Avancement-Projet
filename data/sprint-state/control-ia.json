@@ -1,48 +1,48 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-real-auth-readiness-20261021131208608",
-    "started_at": "2026-10-21T13:12:08.608Z",
-    "expires_at": "2026-10-21T13:57:08.608Z",
-    "objective": "CONTROL Cloud real A/B Auth readiness: independently test six-table live SQL RLS, implement genuine JWT+PostgREST e2e test runner with credential hygiene, keep production Cloud disabled until real accounts available. Direct main, CI/public Pages evidence."
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T13:05:37.529Z",
+    "updated_at": "2026-10-21T13:37:20.033Z",
     "main": true,
-    "stage": "user_visible_home_local_tools_cloud_disabled_pwa40_347_ci_chromium_public_green",
+    "stage": "control_cloud_6rls_live_sql_ok_real_jwt_e2e_ready_not_run_363_tests_public_progress",
     "files": [
+      "tests/control-cloud-real-auth-e2e.mjs",
+      "tests/control-cloud-real-auth-e2e.test.mjs",
+      "tests/control-cloud-readiness.test.mjs",
+      ".github/workflows/control-cloud-real-auth.yml",
+      ".github/workflows/control-cloud-config.yml",
+      "docs/CONTROL_CLOUD_AUTH_E2E_GUIDE.md",
+      "docs/CONTROL_CLOUD_BOOTSTRAP_20261021.md",
+      "app.html",
       "index.html",
-      "service-worker.js",
-      "tests/control-home-discovery.test.mjs",
       "tests/control-ia-browser-smoke.mjs",
-      "tests/pwa-atomic-install.test.mjs",
       "data/sprints/control-ia.json",
       "docs/CONTROL_IA_RETROSPECTIVES.md"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/commit/445868ff8b2618f743cd68d680aad16602ba2f9c",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604460675",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604460622",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604458769",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604602243"
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39608934073",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39609004604",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39609003181",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39609069781"
     ],
     "remaining_blockers": [
-      "Separate CONTROL Cloud free Supabase rvrmjjtdedidjnrkdery exists but public auth still disabled; need genuine two Auth JWTs + PostgREST isolation and invite/redirect checks before enabling.",
-      "Personal PWA local records do not sync across devices; installed PWA may need reopening or online hard refresh to activate v40.",
-      "Homepage navigation is now visible and tested but no total visual design overhaul or autonomous external agents has been delivered."
+      "Real CONTROL Cloud project rvrmjjtdedidjnrkdery exists, free organization, RLS six tables all pass SQL owner isolation and anon negative; 0 Auth real users and 0 persisted rows; cannot certify real JWT/PGRST without 2 actual test users.",
+      "Real E2E runner added and manually triggered workflow ready. Requires two dedicated fresh Auth users, publishable key and their real JWTs or passwords placed ONLY in GitHub Secrets; never ask for passwords in chat or embed in code.",
+      "config/cloud.json enabled:false and public login/sign-up hidden deliberately until successful real user Auth+JWT/RLS and mobile session tests.",
+      "Cloud project setup page now truthfully says DB ready but real accounts under verification; no actual cross-device sync or live provider agents."
     ],
-    "next_action": "CONTROL-ACCOUNT: full genuine authenticated A/B Supabase Auth + PostgREST tests against separately created CONTROL Cloud backend, then publishable-key-only integration with security gates and same-SHA Pages; no pay. Preserve visible home links and run real mobile/browser. Do not tell user Cloud is enabled before auth verified. Use own 45-min lock, direct main only."
+    "next_action": "CONTROL-ACCOUNT: with owner-provisioned two dedicated genuine Supabase Auth test users in CONTROL Cloud, use protected GitHub Actions workflow 'CONTROL Cloud — Vrais JWT A/B (déclenchement manuel)' to execute live JWT/PostgREST A/B, ensure cleanup green; investigate any 4xx/redirect issues without enabling Cloud first. Then mobile Auth session & invite-only login, only after full evidence. No other project DB, no fees; direct main under 45-minute lease and same-SHA publication."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-visible-home-20261021125535676",
-    "started_at": "2026-10-21T12:55:35.676Z",
-    "ended_at": "2026-10-21T13:05:37.529Z",
-    "summary": "Home 'Mes projets' now displays links to the three newly delivered local CONTROL features and truthful inactive Cloud status. PWA offline cache upgraded v39→v40. Six new regression tests, 347/347 Node, Pages and Chromium public/mobile/offline green same SHA 445868ff; directly on main.",
-    "stage": "verified_online_visible_home_public_chromium_347",
-    "commit_sha": "445868ff8b2618f743cd68d680aad16602ba2f9c",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604602243"
+    "run_id": "control-ia-20261021-real-auth-readiness-20261021131208608",
+    "started_at": "2026-10-21T13:12:08.608Z",
+    "ended_at": "2026-10-21T13:37:20.033Z",
+    "summary": "CONTROL Cloud real database A/B SQL protections proven on all 6 RLS tables and rollback leaves 0 users/rows. Manual real Auth/JWT/PostgREST E2E test runner + GitHub Actions secret-only workflow ready but genuine Auth accounts not available. Read-only progress page published with Cloud signup off; 16 new guard tests, Node 363/363, Pages + public Chromium same code SHA babc5a2a green.",
+    "stage": "verified_online_auth_readiness_not_real_jwt",
+    "commit_sha": "babc5a2a75981cebe80d04dfb624fd68d509eb30",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39609069781"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
