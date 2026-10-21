@@ -1212,5 +1212,96 @@
       "Need review onAuthStateChange callback itself for out-of-order SIGNED_OUT/SIGNED_IN events without violating fail-closed defaults."
     ],
     "next": "Audit auth.onAuthStateChange listener and protected event sequencing for stale SIGNED_OUT; maintain fail-closed state and never activate real Cloud before approved independent 0 € backend and A/B RLS evidence."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-auth-event-recovery-20261021103149052",
+    "started_at": "2026-10-21T10:31:49.052Z",
+    "ended_at": "2026-10-21T10:35:10.093Z",
+    "summary": "CONTROL-ACCOUNT: remedied delayed SDK SIGNED_OUT event stranding newly valid B account. Immediate logout still clears all private cache fail-closed, but scheduled verifiedSession rechecks real auth state and reloads the current owner. Added 4 event-order regressions: 12/12 session suite. Cloud CI 101/101, frontend 259/259, Pages + public postdeploy Chromium all green at SHA b4664d7be164f3b7067710d5dfcca6b858d22160.",
+    "objectives": [
+      {
+        "before": "After B signed in successfully, an obsolete SIGNED_OUT SDK event could clear B and leave UI logged out indefinitely, even when Supabase current session was B.",
+        "after": "SIGNED_OUT still immediately discards private data and shows auth, then schedules independent verifiedSession on next event turn, using existing verificationSeq/epoch to avoid old user resurrection; only confirmed current owner is reloaded.",
+        "acceptance": "Original red reproduced. Four tests of late SIGNED_OUT, true logout, event reordering, same-owner new session pass. Node CI 101 Cloud and 259 frontend pass; Pages and public Chromium pass exact SHA."
+      }
+    ],
+    "done": [
+      "Acquired CONTROL-only cooperative lease after prior sprint completion, with SHA-checked main writes.",
+      "Extracted real boot() onAuthStateChange callback and actual verifiedSession/reload functions; reproduced B stranded after late A SIGNED_OUT in test harness.",
+      "Patched signed-out callback to fail closed and schedule verifiedSession, so valid B is restored only after auth.getUser re-verifies.",
+      "Added 4 permanent regression tests to existing 8 session cases, giving 12/12 local and in GitHub Actions.",
+      "GitHub Cloud config workflow 39585459362 passed 101/101, general frontend workflow 39585459387 passed 259/259.",
+      "GitHub Pages 39585458752 and post-deploy public Chromium 39585511880 green at exact code+test SHA b4664d7.",
+      "CONTROL Cloud remains intentionally disabled; no auth providers created or paid credentials used."
+    ],
+    "blockers": [
+      "No independently authorized zero-cost CONTROL Supabase backend; genuine multi-user Auth/JWT/RLS and multi-device signout races untested.",
+      "A stale SDK event can briefly show signed-out screen before secure re-verification; client avoids leaving B stranded but does not guarantee SDK's internal account state.",
+      "Other authenticated external operations require real permissioned test accounts before operational certification."
+    ],
+    "quality": {
+      "ci": "success",
+      "checks_run": [
+        "Red actual-source event callback reproduction",
+        "12 source-level session tests (4 new)",
+        "GitHub Cloud CI 101 Node tests",
+        "GitHub frontend CI 259 Node tests",
+        "Pages deploy and postdeploy Chromium byte match"
+      ],
+      "checks_passed": [
+        "12/12 session tests",
+        "101/101 GitHub Cloud CI",
+        "259/259 GitHub frontend CI",
+        "Pages and postdeploy public browser passed"
+      ],
+      "checks_failed": [
+        "Before patch valid B left unauthenticated after obsolete SIGNED_OUT; fixed."
+      ],
+      "limitations": [
+        "No real SDK user credentials or RLS tested; simulated network and user identities.",
+        "UI may briefly show auth after late event because private cache must remain fail-closed."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Reverify valid session after SDK SIGNED_OUT while clearing old private data",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/1096eade36e363ac3e9a6a30268e231fa80746c6",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T10:34:17Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39585511880"
+      },
+      {
+        "name": "12 session tests covering auth event ordering",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/b4664d7be164f3b7067710d5dfcca6b858d22160"
+      }
+    ],
+    "links": [
+      {
+        "label": "Cloud 101 tests",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39585459362"
+      },
+      {
+        "label": "Frontend 259 tests",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39585459387"
+      },
+      {
+        "label": "Pages same SHA",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39585458752"
+      },
+      {
+        "label": "Chromium same SHA",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39585511880"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "P0: signedout listener must immediately clear privacy-sensitive A cache even if event turns out obsolete for B; this is intentionally preserved.",
+      "P1: recovery uses async session verification, not stale event payload; verificationSeq rejects displaced reads.",
+      "P0: no real browser account verification or live Supabase RLS has been performed; functional SaaS account acceptance stays unverified."
+    ],
+    "next": "Continue CONTROL-ACCOUNT by reviewing lifecycle failure reporting, independent authenticated QA plans and remaining permissions; do not enable Cloud until separately authorized independent zero-cost provider. Focus one feature per sprint, direct main with CI and public proof."
   }
 ]
