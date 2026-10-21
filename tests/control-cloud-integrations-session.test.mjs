@@ -132,3 +132,33 @@ test('dispatchMission must not apply a stale reread after A signs out during the
  assert.equal(await pending,false);
  assert.deepEqual(h.read().items,[]);
 });
+
+for(const c of cases){
+ test(c.fn+' from a mounted A screen is rejected after switching accounts before clicking',async()=>{
+  const h=harness();h.mount(c.page);
+  h.otherLogin();
+  assert.equal(await h.mounts[c.page][c.fn](...c.args),false);
+  assert.equal(h.requests.length,0,'Old A screen must not send a write or API call on B');
+  assert.deepEqual(h.messages,[]);
+  assert.deepEqual(h.read().items,[]);
+ });
+}
+test('stale Visio screens cannot expose B meetings to A mount callbacks',()=>{
+ const h=harness();h.mount('visios');h.otherLogin();
+ assert.deepEqual(h.mounts.visios.list(),[]);
+});
+test('stale mission command screens cannot expose B missions or allow dispatch',()=>{
+ const h=harness();h.mount('command');h.otherLogin();
+ assert.deepEqual(h.mounts.command.listMissions('pB'),[]);
+ assert.equal(h.mounts.command.canDispatch(),false);
+ assert.equal(h.mounts.command.providerURL('pB','Claude'),'');
+});
+test('stale Lab screens cannot expose B project context or provider links',()=>{
+ const h=harness();h.mount('lab');h.otherLogin();
+ assert.deepEqual(h.mounts.lab.getProject('pB'),{});
+ assert.equal(h.mounts.lab.providerURL('pB','Claude'),'');
+});
+test('stale catalog screen no longer treats B resources as saved by A',()=>{
+ const h=harness();h.mount('catalog');h.otherLogin();
+ assert.equal(h.mounts.catalog.isSaved({id:'tool1'},'pB'),false);
+});
