@@ -1,6 +1,6 @@
 # CONTROL IA — Suivi du cahier V1.2 (index public, contenu privé)
 
-**Date : 20 octobre 2026.** Ce fichier est uniquement un **suivi public expurgé**. Le cahier des charges fonctionnel et technique V1.2 intégral, conservant la V1.1 et ses annexes, se trouve en bibliothèque personnelle privée :
+**Mise à jour : 21 octobre 2026.** Ce fichier est uniquement un **suivi public expurgé**. Le cahier des charges fonctionnel et technique V1.2 intégral, conservant la V1.1 et ses annexes, se trouve en bibliothèque personnelle privée :
 
 `/CONTROL-IA/CONTROL_IA_Cahier_des_charges_V1_2_PRIVE.md`
 
@@ -16,6 +16,17 @@
 Les anciennes mentions « 42 tickets BACK » étaient incorrectes : il s'agit bien de **42 scénarios T**, pas de 42 tickets de développement.
 
 Le registre machine consultable [`data/control-ia-requirements.json`](../data/control-ia-requirements.json) relie chacun des 22 tickets à sa capacité principale et à ses recettes `T`, avec liens inverses vérifiés, états distincts et preuves publiques minimales. Il **ne contient pas** le texte du cahier privé.
+
+
+### Réconciliation des références historiques — 21 octobre 2026
+
+Le registre des 9 capacités comportait **19 anciennes étiquettes** `BACK-023` à `BACK-042` (numérotation non continue) qui **n'appartiennent pas** au cahier canonique de 22 tickets. Elles provoquaient une divergence entre les fiches de capacités et la liste officielle.
+
+Ces 19 étiquettes sont maintenant conservées **sans perte**, dans `legacy_unmapped_ticket_refs` de la capacité concernée. En parallèle, `source_tickets` ne contient plus que des identifiants existants `BACK-001` à `BACK-022`. Les capacités Agenda et Rappels n'ont pas de ticket canonique démontré dans leur ancien lien ; leurs historiques sont conservés, mais aucun ticket de remplacement n'a été inventé et aucune preuve de validation ajoutée.
+
+Le validateur `scripts/control-ia-requirements.mjs` contrôle désormais les références `source_tickets`, l'unicité des anciennes étiquettes, l'absence de chevauchement avec les tickets canoniques et le nombre conservé. **16 tests** de recette de la nomenclature (12 précédents + 4 nouveaux) protègent ces règles.
+
+**Inchangé :** 22 tickets officiels, 42 recettes, 9 capacités, 36 critères historiques (dont 3 validés), 10 améliorations et 30 critères supplémentaires. L'état des comptes Cloud reste non vérifié et la configuration Cloud reste désactivée.
 
 ## État constaté au lancement de V1.2
 
@@ -47,7 +58,7 @@ Après ce socle, développer successivement le mode Objectif, la supervision/bo�
 
 Même source de vérité et bail coopératif `data/sprint-state/control-ia.json` (45 minutes, contrôle SHA) ; **un chantier fonctionnel à la fois**. Une demande utilisateur peut réorienter explicitement le focus. Chaque sprint fait développement → tests → autocritique → correction dans la même session → retest → **écriture directe sur main** selon la politique du propriétaire → CI → vérification de publication → point de reprise.
 
-L'outil [`scripts/control-ia-requirements.mjs`](../scripts/control-ia-requirements.mjs) et ses 12 tests protègent la cardinalité et les liens des 22/42/10 entités, les preuves et l'absence de divulgation accidentelle de détails privés. [Workflow de validation V1.2](../.github/workflows/control-ia-requirements.yml). Une modification du registre qui forge un statut entièrement vérifié à partir d'un test fictif doit être refusée.
+L'outil [`scripts/control-ia-requirements.mjs`](../scripts/control-ia-requirements.mjs) et ses 16 tests protègent la cardinalité et les liens des 22/42/10 entités, les preuves et l'absence de divulgation accidentelle de détails privés. [Workflow de validation V1.2](../.github/workflows/control-ia-requirements.yml). Une modification du registre qui forge un statut entièrement vérifié à partir d'un test fictif doit être refusée.
 
 ## Points de décision et blocages
 
