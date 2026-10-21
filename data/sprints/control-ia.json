@@ -2714,5 +2714,121 @@
       "Approval, RLS acceptance and transactional guarantees are prerequisites for real restoration; do not claim ACCOUNT criteria as verified from mock or public Pages."
     ],
     "next": "CONTROL-ACCOUNT: secure owner approval for two empty Supabase Auth users and protected GitHub Secrets; run real JWT/RLS A/B and mobile tests, then implement a preview-confirm-transactional-rollback restore service using the local validated backup, server-side deduplication and idempotency. Cloud remains off until acceptance."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-navigation-overhaul-1805",
+    "started_at": "2026-10-21T18:05:00Z",
+    "ended_at": "2026-10-21T18:27:00Z",
+    "summary": "Navigation V2 for CONTROL personal PWA and gated Cloud: universal intent-based function finder, 4 primary destinations, task-first home, collapsible updates, per-project sections, persistent location breadcrumbs, 320px mobile overlay and v41 offline cache. Code SHA b518c405: native 466/466, Pages deploy and post-deploy Chromium success. Cloud Auth remains disabled; no real A/B account proof.",
+    "objectives": [
+      {
+        "before": "The growing number of CONTROL features was difficult to find. Tools and project submenus were fragmented, home dense and mobile navigation did not offer universal search.",
+        "after": "Cross-app feature finder finds functions by intention, relevant labels and groups; 4 primary tabs remain, 11 per-project sections discoverable, screen location visible, home focused and mobile finder reachable from a fixed button.",
+        "acceptance": "Native quality 466/466 on code commit b518c405; Pages workflow and post-deploy Chromium 320px menu→visio workflow succeed; Cloud kept off pending real Auth."
+      }
+    ],
+    "done": [
+      "Acquired a unique cooperative CONTROL sprint lease and made SHA-controlled commits directly on main.",
+      "Created shared assets/navigation-hub.js and navigation-hub.css: accessible function finder, keyboard Ctrl+K/Cmd+K, mobile entry, Escape, arrow keys, category chips, search by intent and safe HTML escaping.",
+      "Preserved four first-level destinations while restructuring the personal and Cloud home to show priorities, project control and functional search before secondary material.",
+      "Moved the noisy homepage latest-feature section to an accessible collapsible details element without deleting any links.",
+      "Added an active-project function category and direct access to eleven advanced project tabs otherwise hidden in Plus.",
+      "Added persistent 'Vous êtes ici' location breadcrumbs and return route to project listing in both personal and Cloud layouts.",
+      "Wired Cloud navigation to the authenticated client adapter only; hide unavailable pages and buttons when not logged in.",
+      "Upgraded the public service worker shell from v40 to v41 and cached navigation JS/CSS as required offline assets, without caching private Cloud HTML.",
+      "Added tests/control-navigation-hub.test.mjs for destination uniqueness, two app modes, intent matching, per-project route selection, mobile nav, and Cloud gating.",
+      "Updated the real Chromium smoke workflow with 320px navigation test: open finder, search visio, follow linked page and return without horizontal overflow; verified published navigation asset hashes.",
+      "Reconciled explicit-version PWA tests and browser checks with v41, corrected focus/case-sensitive test assumptions without disabling functional checks.",
+      "Verified native 466/466 Node suite, GitHub Pages deploy and published-site Chromium browser run for code SHA b518c405.",
+      "Recorded UX rationale and user testing backlog in docs/CONTROL_NAVIGATION_UX_V2.md and retrospective."
+    ],
+    "blockers": [
+      "Cloud login remains deliberately disabled; genuine Supabase Auth users A/B, JWT/PostgREST permissions and physical mobile account validation outstanding.",
+      "Some feature destinations prepare local content and provider links rather than execute real Claude/Gemini/Codex commands; navigation does not change feature readiness.",
+      "Usability testing with real Android taps, task completion and user feedback still required to validate discoverability outside Chromium automation.",
+      "Code SHA b518c405 was verified. Subsequent docs/report/lease commits require exact-SHA CI and Pages validation for a final-head guarantee."
+    ],
+    "quality": {
+      "ci": "success",
+      "real_browser_verified": true,
+      "checks_run": [
+        "GitHub Actions full native Node quality suite on code SHA b518c405",
+        "GitHub Pages deployment of code SHA b518c405",
+        "Post-deploy Chromium mobile 320px search and visio navigation on code SHA b518c405",
+        "Offline PWA cache v41 critical-resource install tests",
+        "Cloud unconfigured/disabled safety checks inherited from native suite"
+      ],
+      "checks_passed": [
+        "466 tests / 466 passed / 0 failed: https://github.com/cosscoll/Avancement-Projet/actions/runs/39652408040",
+        "GitHub Pages deployed: https://github.com/cosscoll/Avancement-Projet/actions/runs/39652407546",
+        "Post-deploy Chromium successful: https://github.com/cosscoll/Avancement-Projet/actions/runs/39652479453"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "Browser smoke tests public PWA, not logged-in private Cloud or physical Android device.",
+        "Feature discoverability does not mean every destination has genuine third-party API execution.",
+        "Formal real_verified criteria remain unchanged without real account/provider evidence."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Universal task-based navigation and responsive design in personal/Cloud app",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "2f18dd22766f7fc31da46615584aa3e081d334d5",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/2f18dd22766f7fc31da46615584aa3e081d334d5",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Cross-app intent search and Cloud account gating",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "b518c40594f22de9983b47e4ad4f9d75c36c3a40",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/b518c40594f22de9983b47e4ad4f9d75c36c3a40",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Navigation V2 466 native tests and verified published Chromium UX flow",
+        "kind": "evidence",
+        "stage": "verified_online",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "b518c40594f22de9983b47e4ad4f9d75c36c3a40",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39652408040",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39652479453",
+        "online_verified_at": "2026-10-21T18:25:00Z"
+      }
+    ],
+    "links": [
+      {
+        "label": "Native 466 tests",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39652408040"
+      },
+      {
+        "label": "Published-site Chromium",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39652479453"
+      },
+      {
+        "label": "Pages published",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39652407546"
+      },
+      {
+        "label": "UX design rationale",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/docs/CONTROL_NAVIGATION_UX_V2.md"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "Earlier UX clarity updates reduced visible tabs but inadvertently hid many features under Plus; universal intent search resolves discoverability without restoring a cluttered dashboard.",
+      "Explicit PWA cache v40 assertions in old tests caused predictable failures when offline shell correctly advanced to v41; tests now verify new version and required navigation assets.",
+      "Initial Chromium focus/case assumptions were not reliable user-facing success criteria; replaced with real find-and-navigate checks on 320px viewport.",
+      "Next design review should measure how users find and finish high-frequency tasks, with special attention to long Cloud project/mission forms."
+    ],
+    "next": "Collect user feedback on Android for the new main menu; improve deep screen forms, prioritization and contextual actions without adding another global tab. Preserve Cloud disabled until real Auth A/B; advance server-side safety and actual integrations independently."
   }
 ]
