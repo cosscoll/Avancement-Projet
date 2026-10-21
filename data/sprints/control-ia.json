@@ -1908,5 +1908,107 @@
       "SQL simulated JWT claim A/B on real CONTROL Cloud must not be mistaken for Auth/JWT end-to-end, so Cloud gate remains off."
     ],
     "next": "CONTROL-ACCOUNT next: prepare and verify two real AUTH identities on independent CONTROL Cloud with safe test-user authorization and end-to-end PostgREST A/B RLS, sign-out/delete and concurrency checks, then only after approval enable Cloud. Also consider next IMP-01 progress UI for local approved steps and allow edit/regeneration without double action, under main lease and production tests. Do not pay or enable Cloud prematurely."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-visible-home-20261021125535676",
+    "started_at": "2026-10-21T12:55:35.676Z",
+    "ended_at": "2026-10-21T13:04:29.983Z",
+    "summary": "Diagnosed user's 'no visible change' complaint: current main and Pages were successfully deployed, but new IMP-01/02/03 capabilities were not visible from personal dashboard and Cloud remained intentionally off. Shipped prominent 'Nouveautés disponibles' home with links to goal planner, scoped search and versioned memory; Cloud shown as inactive rather than live. Updated PWA offline cache from v39 to v40. Test harnesses followed version rotation; 6 new permanent tests, total 347/347 passing, local Chromium, Pages and postdeploy Chromium public green exact commit 445868ff, including home DOM, links, two mobile viewports and offline install.",
+    "objectives": [
+      {
+        "before": "Existing homepage 'Mes projets' had only three generic shortcuts; new local features were hidden under CONTROL IA. Although old deployed SHA had success CI/Pages and public Chromium, the user had little visible evidence anything changed; old offline v39 cache could remain installed.",
+        "after": "Homepage now visibly names and links to three shipped features, states capabilities local and CONTROL Cloud multi-account not yet activated, and PWA v40 cache is refreshed; fine on mobile and keyboard.",
+        "acceptance": "Real public Chromium must see home panel, working goals link and original existing flows; green 347 Node suite; Pages and postdeploy Chromium on exact same SHA; 390px/320px mobile and offline/PWA checks succeed."
+      }
+    ],
+    "done": [
+      "Verified current main Pages, CI and postdeploy Chromium all successful but home lacked links to new capability pages and Cloud auth was disabled by design.",
+      "Acquired project-specific CONTROL lock and published directly to main, no PRs/branches.",
+      "Added compact accessible landing section (goals, search, memory) with source-aligned explanation and honest Cloud inactive status; preserved existing home projects and shortcuts.",
+      "Updated service-worker version from v39 to v40 so an installed PWA can refresh its offline shell, retaining network-first online updates and fallback correctness.",
+      "Added 6 static regression tests for discoverability, working route handlers, disabled Cloud, responsiveness and SW version.",
+      "Added real Chromium homepage navigation assertion for three links, successful goals route, and Cloud inactive copy.",
+      "Adapted existing PWA tests that expected v39 cache names to v40, preserving original safety assertions. Early CI and postdeploy Chromium failed on old expected cache label, then fixed and retested.",
+      "Final Node 347/347 on 445868ff, local Chromium push green, GitHub Pages green, and public Chromium postdeploy successful same SHA with 12 hashed asset parity, mobile 390px/320px, offline PWA and no JS exceptions.",
+      "No real Cloud signup or account sync enabled, no paid services, and no alteration of IAgile Academy or unrelated projects."
+    ],
+    "blockers": [
+      "Cloud remains deliberately disabled because full Auth two-user genuine JWT A/B and app sync are not end-to-end verified; creating Supabase independent DB was not user-visible site activation.",
+      "If user still sees old home, browser/app installed PWA may require reopening or reloading online; verification used fresh Chromium and an isolated test profile rather than the user's device.",
+      "Detailed 3D visual redesign and true multi-user CONTROL operational product remain separate scope; this sprint fixes navigation/discoverability, not full UI redesign."
+    ],
+    "quality": {
+      "ci": "success",
+      "checks_run": [
+        "GitHub quality Node frontend 347 tests",
+        "Chromium isolated local UI tests",
+        "GitHub Pages deployment exact main SHA",
+        "Chromium public full journey with 12 asset hashes",
+        "mobile 390/320px responsive rendering",
+        "service worker v40 install and offline cache restoration"
+      ],
+      "checks_passed": [
+        "347/347 Node tests",
+        "Chromium local success",
+        "Pages deployment success",
+        "Chromium postdeploy success",
+        "visible links and routes pass in actual public browser",
+        "mobile viewport and offline SW checks pass"
+      ],
+      "checks_failed": [
+        "Intermediate Node runs failed while static/atomic PWA tests still expected v39; fixed expectations to v40 without removing cache safety assertions.",
+        "Intermediate postdeploy Chromium failed on legacy v39 cache expectation despite successful new homepage inspection; corrected to v40, final public Chromium green."
+      ],
+      "limitations": [
+        "Browser acceptance used isolated Chromium; cannot assert user's own Android/PWA cache has already been cleared.",
+        "Cloud auth remains off; no server accounts can sign up from site, by design.",
+        "The new home is functional navigation/discoverability, not a 3D graphic redesign."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "CONTROL homepage exposes local planning, search and memory with honest Cloud state",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/90867b41c2376c3f6371808c285220e8d50e19eb",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T13:04:29.983Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604602243"
+      },
+      {
+        "name": "PWA v40 offline shell and 6 home regression tests",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/445868ff8b2618f743cd68d680aad16602ba2f9c",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T13:04:29.983Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604602243"
+      }
+    ],
+    "links": [
+      {
+        "label": "Node 347/347",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604460675"
+      },
+      {
+        "label": "Chrome local",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604460622"
+      },
+      {
+        "label": "Pages",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604458769"
+      },
+      {
+        "label": "Chrome public",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39604602243"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "P1: deployments do not imply UI discoverability. New delivered capabilities need direct access on the user landing screen and content labels, not just tests.",
+      "P1: bumping a versioned SW requires updating every test hard-coded to its previous cache name, including the full browser smoke's offline check.",
+      "P1: genuine cost-zero CONTROL Cloud backend is created, but setup site cannot show live login before true Auth/RLS verification; visible home must not pretend otherwise.",
+      "P2: monitor personal PWA and browser user evidence because fresh Chromium tests cannot observe stale installed caches on their device."
+    ],
+    "next": "Next CONTROL-ACCOUNT gated sprint: genuine two-user Auth/JWT/PostgREST isolation on separately created CONTROL Cloud backend, then controlled publishable-key integration after real account safety proof and no-cost verification. Improve landing UI only with user-specified design. Use own lease, direct main, 0€, Pages and public browser before claiming visible."
   }
 ]
