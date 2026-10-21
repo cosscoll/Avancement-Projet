@@ -371,3 +371,16 @@ L'autocritique a relevé un risque non testé : le raccourci PWA sur téléphone
 
 **Autocritique et suite :** les tests des comptes restent des simulations et ne peuvent pas garantir les effets internes de `signOut` dans un SDK Supabase réel. L'événement `onAuthStateChange('SIGNED_OUT')` possède son propre chemin asynchrone : examiner les événements ordonnés dans le prochain sprint sans désactiver la suppression immédiate des données au logout. `config/cloud.json` reste `enabled:false` ; aucun projet externe supplémentaire, aucune dépense et aucune authentification A/B réelle.
 
+
+## 21 octobre 2026 — Événement SIGNED_OUT tardif : récupération d'une session valide
+
+**Défaut reproduit :** après une authentification réussie du compte B, un événement tardif `SIGNED_OUT` provenant d'une précédente session A effaçait immédiatement `authUser`, les caches et l'interface. Si aucun autre événement `SIGNED_IN` n'arrivait ensuite, B restait bloqué sur le formulaire de connexion même lorsque l'API de vérification renvoyait toujours B. Reproduction red avec la vraie fonction du callback d'authentification et les fonctions réelles `verifiedSession` / `reload` du dépôt, en simulant l'API externe.
+
+**Correctif sécurisé :** après `SIGNED_OUT`, vider **immédiatement** toutes les données locales, réinitialiser les protections d'appel, montrer l'écran de connexion, puis programmer `verifiedSession()` après l'événement pour vérifier l'identité effective auprès de l'API Auth. Si B est effectivement valide, restaurer uniquement son espace et recharger ses données filtrées par `owner_id`. Si aucune session n'existe, rester déconnecté. Le numéro de vérification `verificationSeq` empêche qu'une vérification plus ancienne ne ressuscite A. [Code `main` 1096ead](https://github.com/cosscoll/Avancement-Projet/commit/1096eade36e363ac3e9a6a30268e231fa80746c6).
+
+**Deuxième passe :** quatre nouveaux tests d'événements de session, portant la suite à 12, couvrent `SIGNED_OUT` tardif après B, déconnexion authentique, inversion des événements et nouvelle connexion au même compte A. Les tests déclenchent les callbacks extraits du code de production. [Tests b4664d7](https://github.com/cosscoll/Avancement-Projet/commit/b4664d7be164f3b7067710d5dfcca6b858d22160).
+
+**Preuves exactes SHA `b4664d7be164f3b7067710d5dfcca6b858d22160` :** [CI Cloud 101/101](https://github.com/cosscoll/Avancement-Projet/actions/runs/39585459362), [frontend 259/259](https://github.com/cosscoll/Avancement-Projet/actions/runs/39585459387), [Pages réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/39585458752), [Chromium postdéploiement réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/39585511880).
+
+**Autocritique :** l'écran de connexion peut apparaître brièvement en cas d'événement tardif, parce que la confidentialité impose de ne pas conserver l'ancien cache en attendant la vérification. Les cas de test utilisent une simulation du fournisseur Auth ; aucune garantie de comportement de son SDK interne n'est donnée sans l'instance réelle et les deux comptes A/B. Ce correctif n'autorise ni le démarrage de CONTROL Cloud ni la réutilisation de la base IAgile. Le prochain jalon reste la preuve d'un backend indépendant approuvé à coût nul, puis une recette de sessions et de règles RLS réelles.
+
