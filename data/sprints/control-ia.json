@@ -2232,5 +2232,130 @@
       "P1: online CI status for current SHA not available; report remains unverified and no criterion promoted."
     ],
     "next": "CONTROL-ACCOUNT: recover exact-SHA native CI and GitHub Pages evidence; safely prepare 2 dedicated real Supabase Auth test users with owner-approved credentials stored only as GitHub Actions secrets. Run manual 2 JWT A/B E2E with mandatory cleanup then authenticated web/mobile session checks. Keep Cloud disabled until real tests pass; no paid services."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-hardening-144508",
+    "started_at": "2026-10-21T14:45:08Z",
+    "ended_at": "2026-10-21T15:11:48Z",
+    "summary": "CONTROL-ACCOUNT improvements directly on main: prevent duplicate four-mission clicks and concurrent legacy imports in one tab, hard-pin Supabase endpoint to verified independent CONTROL Cloud, verify identity and target for create/update/delete/complete receipts, and export all six tenant tables with pagination and fail-closed ownership checks. 117/117 current account/integration V8 adapted tests, 13 Cloud config and 9 synthetic HTTP E2E tests pass; real JWT/CI/Pages unverified, Cloud disabled.",
+    "objectives": [
+      {
+        "before": "Four-mission creation and legacy import could overlap, account config could self-certify any Supabase project, mutations trusted mismatched receipts, and export silently omitted data beyond cache limits and other protected tables.",
+        "after": "In-page guards prevent overlap, client accepts only actual CONTROL Cloud project, mutation receipts verify owner and record, and account export paginates all six tables with owner/session/duplicate safety checks.",
+        "acceptance": "117/117 exact-source adapted V8 account/integration regressions pass; 13 config and 9 E2E simulations pass; no production Auth claim before real JWT test."
+      }
+    ],
+    "done": [
+      "Acquired GitHub cooperative 45-minute CONTROL-only lock and verified it before writes, using only main with per-file SHA optimistic locking.",
+      "Patched assets/cloud-app.js four-mission plan to disallow overlapping calls in a single tab and reject repeated or incomplete server IDs; added three regression tests; isolated six Node.js 22 patch tests passed.",
+      "Patched importLegacy to refuse simultaneous same-tab transfers and release its local lock after errors/account switches; added two tests.",
+      "Enforced actual, already-reviewed Supabase CONTROL project ref rvrmjjtdedidjnrkdery in safeClientConfig, rejecting a self-consistent IAgile/foreign configuration; updated config-gate tests.",
+      "Required owner-scoped and target-record scoped receipts before save, delete or mark-done success; updated mutation tests to simulate cross-user and wrong-ID responses.",
+      "Replaced truncated UI cache-based export with a paginated, stable-ID, session-checked read of all six CONTROL user-data tables, rejecting foreign owners, duplicate records, oversized or failed reads, and incomplete export attempts.",
+      "Expanded account lifecycle tests to cover >400 projects, wrong-owner projects/audit/profile, duplicate page IDs, session switches, and complete export of profile, projects, items, preferences, connections, audit.",
+      "Updated disabled Cloud config text, independent-backend testing guide, retrospective, strategic handoff; retained config/cloud.json.enabled=false and source V1.2 statuses unchanged.",
+      "Reran actual GitHub source and test harness in adapted V8: 15 session + 9 four-mission + 28 account lifecycle + 25 mutation + 40 integration = 117/117; also 13 config guard and 9 synthetic Auth/PostgREST mock cases passed.",
+      "Read-only live Supabase project status ACTIVE_HEALTHY, security advisors zero, auth users/projects/items empty; no SQL mutation, provider login, charges, credentials, or IAgile Academy database touched."
+    ],
+    "blockers": [
+      "No 2 separate real Supabase Auth test users and trusted JWT/password environment secrets; real multi-account Auth/PostgREST and mobile lifecycle are not verified.",
+      "Cannot verify latest GitHub Actions native Node full-suite conclusion or exact deployed Pages SHA from available connector's current-run listing (combined statuses empty; old successful runs do not prove new SHA).",
+      "Browser-only inFlight flags do not protect against concurrent tabs/devices: backend transactional idempotency still needed.",
+      "Exports are paginated and refuse incomplete reads but not yet a server snapshot under concurrent mutations across devices; 50,000 rows per collection cap.",
+      "Public Cloud remains deliberately disabled; no account signup, multi-device sync or real AI provider command declared working."
+    ],
+    "quality": {
+      "ci": "not_verified",
+      "real_browser_verified": false,
+      "checks_run": [
+        "Node.js 22 isolated 6-case four-mission patch suite",
+        "Actual Github source code evaluated in V8 with 117 original account/integration harness cases",
+        "13 Cloud config guard tests on actual source, with URL and Buffer stubs",
+        "9 mock Auth/PostgREST E2E runner tests without any network",
+        "Read-only Supabase project health, security advisor and empty account table counts",
+        "GitHub SHA-controlled direct-main writes"
+      ],
+      "checks_passed": [
+        "6/6 isolated Node.js 22 patch checks",
+        "117/117 V8 session, plans, lifecycle, mutation and integration tests",
+        "13/13 V8 config safety tests",
+        "9/9 V8 synthetic HTTP Auth/RLS tests",
+        "Supabase CONTROL project ACTIVE_HEALTHY, security advisor zero lints, 0 auth users/projects/items",
+        "All described files committed to main with their SHAs"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "Adapted V8 execution is not the full native GitHub CI.",
+        "No exact final-SHA Pages Chromium/Android proof.",
+        "No genuine two-user JWT API/session tests run.",
+        "No atomically consistent cross-device export and no server-side idempotency."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Safe in-page four-mission batch and verified receipts",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "dca57c3f23a5c17643a587e241161a36cd2ba527",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/dca57c3f23a5c17643a587e241161a36cd2ba527",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "CONTROL Cloud hard-pinned to verified separate Supabase ref",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "031aa869760cf652db826aa25a946c8f4c0fa59c",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/031aa869760cf652db826aa25a946c8f4c0fa59c",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Complete six-table paginated account export",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "c9f1336d257c294e567bf2572c13e9107af69e40",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/c9f1336d257c294e567bf2572c13e9107af69e40",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Account and full-export regression tests",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "1db893028443d5b59d6ac120885f196547923e68",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/1db893028443d5b59d6ac120885f196547923e68",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "links": [
+      {
+        "label": "Four-mission correction",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/dca57c3f23a5c17643a587e241161a36cd2ba527"
+      },
+      {
+        "label": "Real CONTROL project pin",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/031aa869760cf652db826aa25a946c8f4c0fa59c"
+      },
+      {
+        "label": "Full account export",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/c9f1336d257c294e567bf2572c13e9107af69e40"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "Critical: self-consistent arbitrary Supabase config was previously accepted; now strict hard pin prevents accidental use of any IAgile Academy/foreign database.",
+      "High: trusting server receipts for mutations could lead to false success; account and ID receipt checks now added and exercised.",
+      "High: an account export limited to UI caches could silently omit records and four of six tables; now fetches all six with pagination and refuses detectable inconsistencies.",
+      "Medium: replay across tabs/devices remains open until server-side idempotency with transactional constraints and a real Auth session can be tested.",
+      "Quality: unit/mocked tests are evidence of code behavior, not actual JWT/PostgREST, mobile hardware, native CI or Pages deployment; no scenario promoted to real_verified."
+    ],
+    "next": "Recover exact-sha native CI/Pages proof for ACCOUNT code. Under explicit approved two genuine empty CONTROL Auth test accounts and protected GitHub Secrets, run manual A/B real JWT/PostgREST E2E with cleanup, verify real login/logout/revocation/cross-device and full export. Only after that consider Cloud beta activation with 0€ constraints and implement server-side mission/import idempotency."
   }
 ]
