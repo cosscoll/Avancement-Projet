@@ -62,7 +62,12 @@ async function reload(silent=false){if(!authUser||!client)return;const owner=aut
  try{const [p,i,pref]=await Promise.all([client.from('control_projects').select('*').eq('owner_id',owner).order('created_at',{ascending:false}).limit(500),client.from('control_items').select('*').eq('owner_id',owner).order('created_at',{ascending:false}).limit(2000),client.from('control_preferences').select('*').eq('owner_id',owner).maybeSingle()]);
  if(token!==epoch||!authUser||authUser.id!==owner)return;
  for(const r of [p,i,pref])if(r.error)throw Error('Accès à vos données refusé : '+r.error.message);
- cache={projects:p.data||[],items:i.data||[],preferences:pref.data||null};render();
+ // Defense in depth: reject unexpected owner IDs even if a server or intermediary
+ // mistakenly returns another tenant's rows after an owner-scoped request.
+ const ownedRows=rows=>Array.isArray(rows)&&rows.every(row=>row&&row.owner_id===owner);
+ if(!ownedRows(p.data)||!ownedRows(i.data)||(pref.data&&pref.data.owner_id!==owner))
+  throw Error('Isolation du compte non confirmée : données privées non affichées.');
+ cache={projects:p.data,items:i.data,preferences:pref.data||null};render();
  if(!silent)message('Espace synchronisé avec votre compte.');
  }catch(e){if(token!==epoch||authUser?.id!==owner)return;if(!silent)message(e.message||'Impossible de synchroniser vos données.',true);if(!cache.projects.length&&!cache.items.length)byId('page').innerHTML=panel('Connexion indisponible','<p>Les données privées n’ont pas pu être chargées. Réessaie après vérification de la configuration et des règles d’accès.</p>'+btn('Réessayer','refresh'))}
  finally{if(token===epoch&&waitingOwner===owner){waiting=false;waitingOwner=null;byId('refresh').disabled=false}}}
