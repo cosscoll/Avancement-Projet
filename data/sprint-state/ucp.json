@@ -10,15 +10,19 @@
     "objective": "Empêcher un getter DOM défaillant pendant le nettoyage du champ temporaire de masquer une copie de brief réussie."
   },
   "checkpoint": {
-    "phase": "inspection_complete",
-    "branch": null,
+    "phase": "initial_patch_ready",
+    "branch": "fix/ucp-copy-remove-getters-20261021",
     "pr": null,
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.js"
     ],
+    "commits": [
+      "153c60491a4ac87b95d740f0fefa27a1fc18723a",
+      "a9810f38a5cda29cf61be2c7c5fbd9c5aa831260"
+    ],
     "tests": [],
-    "next": "Créer une branche isolée, ajouter une garde du getter remove et un test de non-régression."
+    "next": "Ouvrir la PR et attendre la première CI."
   },
   "last_completed": {
     "run_id": "ucp-20261021T132702Z-v3",
