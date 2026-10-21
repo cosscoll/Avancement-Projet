@@ -846,5 +846,106 @@
       "P0: Cloud remains disabled until separate authorized backend and real A/B RLS/JWT; do not equate personal local browser tests with complete V1.2."
     ],
     "next": "Every future CONTROL change: write directly to main under cooperative lease, require successful CI and same-SHA Pages + postdeploy Chromium proof before presenting it as published. Next functional sprint audit account-switch protections in remaining Visio/Mission/Lab async functions while preserving Cloud off."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-async-integrations-20261021094755470",
+    "started_at": "2026-10-21T09:47:55.470Z",
+    "ended_at": "2026-10-21T09:58:22.530Z",
+    "summary": "CONTROL-ACCOUNT: safeguarded eight async integration mutation flows and their mounted UI callbacks against A/B account switches and same-account re-login; 40 dedicated regression tests, actual GitHub Cloud 78/78 and full frontend 232/232, public Pages and same-SHA Chromium green. No real Cloud Auth or RLS deployment.",
+    "objectives": [
+      {
+        "before": "Eight asynchronous callbacks in Cloud Visio, AI command, Lab and tool catalog could report a stale request successful after logout/re-login of the same user; adds could corrupt current cache. Old mounted A view callbacks might execute under B.",
+        "after": "All eight callbacks capture owner and epoch, validate after awaiting; UI mounts reject writes from stale session, private read hooks fail closed; AI dispatch checks originating mission ownership before invocation and validates owner after reread.",
+        "acceptance": "40 real-code-extracted Node tests pass incl 8 session switches to same A, 8 A→B switches, 8 normal completion, 8 stale old-view blocked, 4 negative/late cases and 4 stale private read tests; actual CI 78/78 Cloud and 232/232 general; public Pages and Chromium same SHA green."
+      }
+    ],
+    "done": [
+      "Read V1.2 private-content-safe public index, CONTROL strategy/delivery, sprint V3 and GitHub cooperative lock.",
+      "Acquired CONTROL-only lease with SHA before any code change; continued on main with no PR/branch.",
+      "Reproduced 8 stale callbacks after same-owner logout/login: create/update/delete Visio, dispatch/create/update mission, Lab save, catalog addition.",
+      "Pass 1: wrapped all 8 callbacks in mutationSession epoch guard and prevented stale cache mutations; guarded dispatch by owned mission and reread; emitted error only for current session.",
+      "Pass 2: blocked callbacks belonging to stale mounted views before backend calls and prevented stale read callbacks showing a replacement user's data.",
+      "Published first code commit 9e217f7, 28-case Node regression suite 41977d0, Cloud workflow dc2fdc2, mount hardening 43b5771, 40-case test suite e280d99.",
+      "CI job 39580789879 passed 78/78 Cloud protections, including 40 new cases. General CI 39580789994 passed 232/232 Node tests.",
+      "GitHub Pages 39580789090 success at SHA e280d99; post-deploy Chromium 39580913525 success, public asset SHA-256 comparison for 12 files passed.",
+      "No separate accounts, live RLS/JWT, Supabase migrations, payments or quota-charged third-party APIs were used."
+    ],
+    "blockers": [
+      "CONTROL Cloud remains disabled; no owner-approved independent cost-zero Supabase project and no two-real-account RLS/JWT tests.",
+      "These 40 cases use mock async network and synthetic user IDs; no live PostgREST responses or mobile hardware were exercised.",
+      "Other non-Cloud custom extensions and actions still need authorization/permission review for full V1.2; operational status is not claimed."
+    ],
+    "quality": {
+      "ci": "success",
+      "checks_run": [
+        "Red bug reproduction on eight exact application callback functions",
+        "Same-owner logout/login, A→B switch, successful same-owner writes, old-view callbacks and stale read gating",
+        "CI Node native tests on GitHub Actions against exact SHA e280d9921c08259bf853f59b6682bdb66d8809ac",
+        "GitHub public Pages build/deploy success exact SHA",
+        "Post-deploy Chromium on Pages same SHA; byte-level 12-file match and PWA smoke"
+      ],
+      "checks_passed": [
+        "40/40 new Node regression tests in Cloud suite",
+        "Cloud workflow 78/78 Node tests",
+        "General frontend quality 232/232 Node tests",
+        "Pages run 39580789090 successful",
+        "Live Chromium run 39580913525 successful"
+      ],
+      "checks_failed": [
+        "Before fix eight stale callback cases produced false success/new cache changes after same-owner re-login; fixed."
+      ],
+      "limitations": [
+        "No genuine Control SaaS account or multi-device sync tested.",
+        "Public Chromium tested personal CONTROL and Cloud fail-closed state, not authenticated Cloud SaaS.",
+        "Older mounted UIs may still exist in browser memory; callbacks now refuse to read or write after a session change."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Session-owned Visio/AI mission/Lab/catalog handlers and mounted view guards",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/43b5771289bed27faf376bf782055974df354d42",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T09:57:15Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580913525"
+      },
+      {
+        "name": "40-case Node regression suite covering eight integration callbacks",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/e280d9921c08259bf853f59b6682bdb66d8809ac"
+      },
+      {
+        "name": "GitHub Cloud safety CI with integration tests",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580789879"
+      }
+    ],
+    "incidents": [],
+    "links": [
+      {
+        "label": "Cloud tests 78/78",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580789879"
+      },
+      {
+        "label": "General Node tests 232/232",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580789994"
+      },
+      {
+        "label": "Pages deployment",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580789090"
+      },
+      {
+        "label": "Post-deploy browser evidence",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39580913525"
+      }
+    ],
+    "critique": [
+      "P1: first pass guarded only callbacks initiated before logout; a mounted component could remain callable after change. Fixed in second pass with mountedSession guard.",
+      "P1: after await, ensure missing rows and wrong owner_id are not silently accepted; implemented for selects exposing owner_id.",
+      "P0: browser hardening is not a replacement for a dedicated CONTROL Supabase instance, server RLS, token revocation or real A/B tests.",
+      "P1: dispatchMission action may already have executed server-side even when the user signs out before the response, so its false return must not be presented as proof that nothing occurred."
+    ],
+    "next": "CONTROL-ACCOUNT follow-up: audit remaining lifecycle operations (export/import, legacy migration, account deletion) for same-epoch cancellation; do not enable Cloud until dedicated approved zero-cost backend and real A/B JWT RLS. Validate every commit directly on main using exact-SHA CI/Pages/Chromium."
   }
 ]
