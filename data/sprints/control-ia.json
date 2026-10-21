@@ -1037,5 +1037,89 @@
       "Device verification, server authorization and backend RLS are still missing."
     ],
     "next": "After closing lifecycle sprint, prioritize canonical V1.2 source-ticket referential consistency (19 invalid BACK references in delivery metadata) without losing historical labels or forging verification. Work only on CONTROL files directly on main."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-canonical-backlinks-20261021101757825",
+    "started_at": "2026-10-21T10:17:57.825Z",
+    "ended_at": "2026-10-21T10:24:50.587Z",
+    "summary": "CONTROL V1.2 ticket traceability repair: 19 references BACK-023..042 not part of canonical 22 tickets were separated into lossless per-capability historical annotations; canonical source_tickets now only BACK-001..022, with new validator/tests. GitHub V1.2 CI 16/16, Pages and postdeploy Chromium green at SHA 8c63aa3f2d4505055e13b9addafca09b1743a52f.",
+    "objectives": [
+      {
+        "before": "9-capability delivery register claimed 19 nonexistent canonical BACK ticket IDs across five capabilities; source_ticket associations diverged from 22-ticket official ledger.",
+        "after": "source_tickets restricted to existing BACK-001..022, 19 old labels preserved in legacy_unmapped_ticket_refs. Two formerly fully invalid ticket arrays are now empty rather than fabricated. CI validator enforces no false future references.",
+        "acceptance": "16/16 requirement tests passed. No changes to 22/42/10/30/36 counts, 3 verified legacy criteria or any capability status. Public Pages/Chromium green at exact code SHA."
+      }
+    ],
+    "done": [
+      "Acquired CONTROL-only cooperative lease on main; no PR or branch.",
+      "Identified 19 bad references in 5 capability groups; all preserved under legacy_unmapped_ticket_refs without inventing mappings.",
+      "Set strict active source_tickets to canonical only; retained previously valid cross-capability source references as historical.",
+      "Updated validator for canonical bounds, duplicates, archived label overlap and self-consistent historical count.",
+      "Added 4 regression tests for canonical mapping, exact 19 preserved labels, invalid BACK reintroduction and historical mismatches; 16/16 tests in GitHub Actions.",
+      "Updated public V1.2 documentation and workflow job description to match 16 tests.",
+      "Confirmed CI 39584035439 success, Pages 39584036998 success and public Chromium 39584287643 success on SHA 8c63aa3."
+    ],
+    "blockers": [
+      "Calendar and Reminder capabilities have no demonstrated canonical backlog link after eliminating nonexistent refs; historical labels preserved for future authorized matching to private full spec.",
+      "CONTROL SaaS account creation and A/B RLS remain blocked by absent independently approved zero-cost Supabase."
+    ],
+    "quality": {
+      "ci": "success",
+      "checks_run": [
+        "Registry source_tickets bounds validator negative cases",
+        "GitHub 16-test requirement workflow",
+        "GitHub Pages deployment and public Chromium same SHA"
+      ],
+      "checks_passed": [
+        "16/16 GitHub requirements tests",
+        "Official entity counts unchanged: 22 tickets, 42 scenarios, 10 improvements, 30 new criteria, 9 legacy capabilities, 36 historic criteria, 3 legacy verified",
+        "19 invalid old labels preserved and no invalid canonical refs",
+        "Pages and live Chromium on SHA 8c63aa3 successful"
+      ],
+      "checks_failed": [
+        "Prior to patch, validator did not catch noncanonical capability source tickets; now regression tests reject them."
+      ],
+      "limitations": [
+        "Historical labels are archived but not mapped to canonical requirements without evidence from private specification.",
+        "Not evidence of completed functional SaaS requirements."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Canonical V1.2 active source tickets and archived historical labels",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/c26a7b222fbe249a35ecea8528c096183023a488",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T10:24:11Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584287643"
+      },
+      {
+        "name": "Requirements validator and four new permanent regression cases",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/d7c2e10ead022bc7bbc5e6c8628baa524abf4301"
+      }
+    ],
+    "links": [
+      {
+        "label": "V1.2 CI 16 tests",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584035439"
+      },
+      {
+        "label": "Pages same SHA",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584036998"
+      },
+      {
+        "label": "Chromium same SHA",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584287643"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "Removing invalid active links must never erase old labels: per-capability archive preserves all 19 in order.",
+      "Canonical ticket mapping must not be invented from numbers alone; calendar and reminders remain without resolved official backlog link.",
+      "Registry test passing does not mean all business criteria are fulfilled."
+    ],
+    "next": "After releasing sprint, prioritize real bug reproduced in Cloud account signout/delete asynchronous continuation: old A signout Promise completion can wipe active B session; fix via owner/epoch guard and regression tests without enabling Cloud; publish to main and verify."
   }
 ]
