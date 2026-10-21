@@ -507,16 +507,40 @@ function saveGoalPlan(proposal){
  if(save()!==true){db.goalPlans=before;throw Error('Stockage indisponible : le plan n’est pas enregistré.')}
  return saved;
 }
+// A saved plan step may PREPARE a local task, but never run it without the
+// explicit IMP-05 risk/diff review and consent; IMP-10 deduplicates retries.
+function goalStepDraft(planId,stepIndex,title){
+ const plan=db.goalPlans.find(x=>x.id===planId);
+ if(!plan||plan.status!=='proposition'||!ctx.projects.some(p=>p.id===plan.project))throw Error('Plan ou projet indisponible.');
+ const index=Number(stepIndex);
+ if(!Number.isSafeInteger(index)||index<0||index>=plan.steps.length)throw Error('Étape de plan introuvable.');
+ const step=plan.steps[index];
+ if(!step||!String(step.source||'').trim()||!String(step.criterion||'').trim())throw Error('Source ou critère de cette étape indisponible.');
+ const value=String(title===undefined?step.title:title).trim();
+ if(!value||value.length>160)throw Error('Titre de tâche requis (160 caractères maximum).');
+ const approvalId='local-'+plan.id.replace(/[^a-z0-9_-]/gi,'')+'-step-'+index;
+ if(!/^local-[a-z0-9_-]{12,96}$/i.test(approvalId))throw Error('Référence de confirmation invalide.');
+ return {type:'create_action',projectId:plan.project,title:value,approvalId};
+}
 function goals(){
  const records=db.goalPlans.filter(x=>ctx.projects.some(p=>p.id===x.project)).slice().reverse();
- $('#main').innerHTML=view('Planifier un objectif','Créer une proposition explicable sans lancer de fournisseur IA',
- note('Plan local prévisionnel, non exécuté. Les étapes s’appuient sur les décisions et tâches déclarées dans le projet choisi.')+
+ $('#main').innerHTML=view('Planifier un objectif','Proposer un plan, puis approuver chaque éventuelle création de tâche',
+ note('Les plans et leurs étapes restent des propositions. Chaque création de tâche exige un contrôle avant/après, un consentement explicite et une confirmation. Aucune action externe ni IA payante.')+
  box('Préparer un objectif','<form id="goal-request">'+
  '<label>Projet<select name="project" class="field">'+projopts(ctx.projects[0]?.id||'',false)+'</select></label>'+
  textarea('Résultat souhaité','goal','','required minlength="8" maxlength="500" rows="3"')+
  '<button class="primary">Préparer le plan</button></form>')+
  '<div id="goal-preview" aria-live="polite"></div>'+
- box('Propositions enregistrées',records.length?records.map(x=>'<div class="chatrow"><strong>'+h(x.goal)+'</strong><small>'+h(pname(x.project))+' · '+x.steps.length+' étapes · plan non exécuté · '+date(x.at)+'</small></div>').join(''):tiny('Aucun plan sauvegardé sur cet appareil.')));
+ box('Propositions enregistrées',records.length?records.map(plan=>
+ '<article class="chatrow"><div><strong>'+h(plan.goal)+'</strong><small>'+h(pname(plan.project))+' · '+plan.steps.length+' étapes · plan non exécuté · '+date(plan.at)+'</small>'+
+ '<ol>'+plan.steps.map((step,index)=>{
+  const token='local-'+plan.id.replace(/[^a-z0-9_-]/gi,'')+'-step-'+index;
+  const old=(db.operatorAudit||[]).find(a=>a.approval_id===token&&a.outcome==='saved'&&a.project===plan.project);
+  return '<li><strong>'+h(step.title)+'</strong><p>'+h(step.criterion)+'</p><small>Source : '+h(step.source)+'</small>'+
+   (old?'<p>Une tâche locale a déjà été créée pour cette étape · reçu '+h(old.id)+'</p>':
+   '<div class="actions"><button type="button" data-goal-plan="'+h(plan.id)+'" data-goal-step="'+index+'">Préparer une tâche locale</button></div>')+'</li>';
+ }).join('')+'</ol></div></article>').join(''):tiny('Aucun plan sauvegardé sur cet appareil.'))+
+ '<div id="goal-action-preview" aria-live="polite"></div>');
  let pending=null;
  registerForm('#goal-request',form=>{
   try{
@@ -535,6 +559,46 @@ function goals(){
     }catch(error){toast(String(error?.message||error).slice(0,220))}
    });
   }catch(error){pending=null;$('#goal-preview').textContent=String(error?.message||error).slice(0,220)}
+ });
+ $('#main').querySelectorAll('[data-goal-step]').forEach(button=>button.onclick=()=>{
+  const planId=button.dataset.goalPlan,index=Number(button.dataset.goalStep);
+  const plan=db.goalPlans.find(x=>x.id===planId);
+  const target=$('#goal-action-preview');
+  try{
+   const first=goalStepDraft(planId,index);
+   const review=window.CONTROL_OPERATOR_CORE.reviewAction(first,operatorSnapshot(),'general');
+   const signature=plan.signature,projectName=review.projectName;
+   target.innerHTML='<form id="goal-action-confirm"><h3>Validation indépendante · '+h(projectName)+'</h3>'+
+    '<p>Étape : '+h(plan.steps[index].title)+'</p>'+
+    '<p><strong>Avant :</strong> '+h(review.before)+'</p><p><strong>Après :</strong> '+h(review.after)+'</p>'+
+    '<p><strong>Risque :</strong> '+h(review.risk)+'</p>'+
+    '<label>Nom de la tâche locale<input name="title" maxlength="160" required value="'+h(first.title)+'"></label>'+
+    '<label><input type="checkbox" name="consent" required> Je confirme la création de cette tâche sur cet appareil uniquement.</label>'+
+    '<div class="actions"><button class="primary" type="submit">Confirmer la création locale</button><button type="button" data-goal-cancel>Annuler</button></div>'+
+    '<p id="goal-action-error" role="alert"></p></form>';
+   target.querySelector('[data-goal-cancel]').onclick=()=>target.replaceChildren();
+   registerForm('#goal-action-confirm',(input,form)=>{
+    try{
+     if(!form.elements.namedItem('consent').checked)throw Error('Consentement requis.');
+     const current=db.goalPlans.find(x=>x.id===planId);
+     if(!current||current.signature!==signature||!ctx.projects.some(x=>x.id===current.project&&x.name===projectName))
+      throw Error('Plan ou projet modifié : nouvelle validation nécessaire.');
+     const action=goalStepDraft(planId,index,input.get('title'));
+     const live=window.CONTROL_OPERATOR_CORE.reviewAction(action,operatorSnapshot(),'general');
+     // Editing the title changes the visible AFTER state: explicit second review.
+     if(live.after!==review.after){
+      target.querySelector('#goal-action-error').textContent='Le titre a changé : annule puis prépare à nouveau pour vérifier le nouvel état après.';
+      return;
+     }
+     if((db.operatorAudit||[]).some(x=>x.approval_id===action.approvalId))
+      throw Error('Étape déjà validée : aucune seconde création autorisée.');
+     if(operatorExecute(action)!==true)throw Error('Enregistrement non confirmé.');
+     const receipt=operatorReceipt();
+     if(!receipt||receipt.project!==action.projectId||receipt.type!=='create_action')throw Error('Reçu local introuvable : vérifie la tâche.');
+     goals();toast('Tâche locale créée, non exécutée · reçu '+receipt.id);
+    }catch(error){const errorNode=target.querySelector('#goal-action-error');if(errorNode)errorNode.textContent=String(error?.message||error).slice(0,200)}
+   });
+  }catch(error){target.textContent='Proposition indisponible : '+String(error?.message||error).slice(0,180)}
  });
 }
 function searchResults(scope='',query=''){
