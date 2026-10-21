@@ -1,30 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-20261021T112618Z-v3",
-    "owner": "chatgpt-automation-ucp",
-    "started_at": "2026-10-21T11:26:18Z",
-    "heartbeat_at": "2026-10-21T11:29:15Z",
-    "expires_at": "2026-10-21T12:14:15Z",
-    "objective": "Empêcher un getter DOM défaillant sur append d’interrompre la copie ou le téléchargement du brief."
-  },
-  "checkpoint": {
-    "phase": "code_committed",
-    "branch": "fix/ucp-body-append-getters-20261021",
-    "files": [
-      "site-vitrine/dist/assets/app.js",
-      "site-vitrine/tests/app-shell.test.cjs"
-    ],
-    "tests": "CI pending",
-    "next": "Ouvrir la PR, attendre la CI, autocritiquer puis effectuer une seconde passe corrective."
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261021T103347Z-v3",
-    "ended_at": "2026-10-21T10:37:57.023Z",
+    "run_id": "ucp-20261021T112618Z-v3",
+    "ended_at": "2026-10-21T11:29:52.405Z",
     "outcome": "merged",
-    "summary": "PR #25 checklists de brief immuables fusionnée sur main f2289661 après deux CI vertes ; navigateur réel non vérifié.",
+    "summary": "PR #26 getters DOM d’insertion sûrs fusionnée sur main 680ef595 après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
