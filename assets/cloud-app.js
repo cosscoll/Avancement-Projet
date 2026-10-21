@@ -92,7 +92,7 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
        url:m.url,body:'',status:'todo',due_at:m.startsAt,details:{controlVisio:true,type:m.type,minutes:m.minutes}};
       const result=await client.from('control_items').insert(payload).select('*').single();
       if(!session.current())return false;
-      if(result.error||!result.data||result.data.owner_id!==owner)throw Error('Enregistrement refusé ou propriétaire incohérent : '+(result.error?.message||'actualise.'));
+      if(result.error||!result.data?.id||result.data.owner_id!==owner||(result.data.project_id||null)!==(payload.project_id||null))throw Error('Enregistrement refusé ou projet/propriétaire incohérent : '+(result.error?.message||'actualise.'));
       cache.items.unshift(result.data);return true;
     },
     update:async(m,fields)=>{
@@ -102,7 +102,7 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
       const q=await client.from('control_items').update({body:fields.notes,updated_at:new Date().toISOString()})
         .eq('id',row.id).eq('owner_id',owner).eq('updated_at',row.updated_at).select('*').single();
       if(!session.current())return false;
-      if(q.error||!q.data||q.data.owner_id!==owner)throw Error('Fiche modifiée ailleurs ou autorisation refusée. Actualise.');
+      if(q.error||q.data?.id!==row.id||q.data.owner_id!==owner)throw Error('Fiche modifiée ailleurs ou identité du rendez-vous non confirmée. Actualise.');
       Object.assign(row,q.data);return true;
     },
     remove:async(m)=>{
@@ -110,9 +110,9 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
       const session=mutationSession(),owner=session.owner,row=cache.items.find(i=>i.id===m.id&&i.owner_id===owner&&i.details?.controlVisio===true);
       if(!owner||!row)throw Error('Fiche non accessible.');
       const q=await client.from('control_items').delete().eq('id',row.id).eq('owner_id',owner)
-        .eq('updated_at',row.updated_at).select('id').single();
+        .eq('updated_at',row.updated_at).select('id,owner_id').single();
       if(!session.current())return false;
-      if(q.error||!q.data)throw Error('Suppression refusée ou fiche modifiée ailleurs.');
+      if(q.error||q.data?.id!==row.id||q.data.owner_id!==owner)throw Error('Suppression refusée ou identité du rendez-vous non confirmée.');
       cache.items=cache.items.filter(x=>x.id!==row.id);return true;
     }
    });return;
@@ -139,7 +139,7 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
      if(q.error||q.data?.ok!==true)throw Error(q.data?.error||q.error?.message||'Erreur de connexion au backend.');
      const fresh=await client.from('control_items').select('*').eq('id',m.id).eq('owner_id',owner).single();
      if(!session.current())return false;
-     if(fresh.error||!fresh.data||fresh.data.owner_id!==owner)throw Error('Réponse exécutée, mais relecture du résultat indisponible. Actualise le projet.');
+     if(fresh.error||fresh.data?.id!==m.id||fresh.data.owner_id!==owner)throw Error('Réponse exécutée, mais relecture du résultat indisponible. Actualise le projet.');
      const local=cache.items.find(x=>x.id===m.id&&x.owner_id===owner);if(local)Object.assign(local,fresh.data);return true;
    },
    createMission:async({projectId,provider,title,prompt})=>{
@@ -150,7 +150,7 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
      const payload={owner_id:owner,project_id:projectId,kind:'mission',provider,title:title.slice(0,200),body:prompt,status:'todo',details:{origin:'manual',source:'CONTROL: préparée non envoyée'}};
      const q=await client.from('control_items').insert(payload).select('*').single();
      if(!session.current())return false;
-     if(q.error||!q.data||q.data.owner_id!==owner)throw Error('Enregistrement refusé ou propriétaire incohérent : '+(q.error?.message||'actualise.'));
+     if(q.error||!q.data?.id||q.data.owner_id!==owner||q.data.project_id!==projectId)throw Error('Enregistrement refusé ou projet/propriétaire incohérent : '+(q.error?.message||'actualise.'));
      cache.items.unshift(q.data);return true;
    },
    updateMission:async(m,patch)=>{
@@ -163,7 +163,7 @@ function render(){if(!authUser)return;document.querySelectorAll('#bottomnav [dat
      const q=await client.from('control_items').update({status:patch.status,details,updated_at})
        .eq('id',original.id).eq('owner_id',owner).eq('updated_at',original.updated_at).select('*').single();
      if(!session.current())return false;
-     if(q.error||!q.data||q.data.owner_id!==owner)throw Error('Modification concurrente ou refusée. Actualise les données puis réessaie.');
+     if(q.error||q.data?.id!==original.id||q.data.owner_id!==owner||q.data.project_id!==original.project_id)throw Error('Modification concurrente ou identité de mission incohérente. Actualise les données puis réessaie.');
      Object.assign(original,q.data);return true;
    }
   });return;
