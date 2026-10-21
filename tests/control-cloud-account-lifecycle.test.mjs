@@ -78,7 +78,7 @@ function exporter(options={}){
  const URL={createObjectURL:()=>{downloads.push('url');return 'blob:a'},revokeObjectURL:()=>{}};
  const document={createElement:()=>({click(){downloads.push('click')},remove(){}}),body:{appendChild(){}}};
  const setTimeout=()=>{},message=x=>messages.push(x);
- const client={from(table){const q={eq(field,value){if(field!=='owner_id'||value!==authUser?.id)throw Error('Wrong owner filter');return q},order(field){if(field!=='id')throw Error('Missing stable id ordering');return q},range(first,last){pageReads.push({table,first,last});if(options.pausePage&&table==='control_projects')return new Promise(resolve=>paused.push(resolve));const rows=table==='control_projects'?cache.projects:cache.items;return Promise.resolve({data:rows.slice(first,last+1),error:null})},maybeSingle(){return Promise.resolve({data:null,error:null})}};return{select(){return q}}}};
+ const client={from(table){const q={eq(field,value){if(field!==(table==='control_profiles'?'user_id':'owner_id')||value!==authUser?.id)throw Error('Wrong owner filter');return q},order(field){if(field!=='id')throw Error('Missing stable id ordering');return q},range(first,last){pageReads.push({table,first,last});if(options.pausePage&&table==='control_projects')return new Promise(resolve=>paused.push(resolve));const rows=table==='control_projects'?cache.projects:table==='control_items'?cache.items:table==='control_connections'?[{id:'connectionA',owner_id:'A',provider:'Claude'}]:table==='control_audit_events'?[{id:'auditA',owner_id:options.foreignAudit?'B':'A',action:'test'}]:[];return Promise.resolve({data:rows.slice(first,last+1),error:null})},maybeSingle(){return Promise.resolve({data:table==='control_profiles'?{user_id:options.foreignProfile?'B':'A',display_name:'Owner A'}:null,error:null})}};return{select(){return q}}}};
  `;
  return new Function('options',code+helper+exportCode+String.raw`
  return {exportMyData,downloads,keys,messages,payloads,pageReads,paused,switchB(){authUser={id:'B'};epoch++;cache={projects:[],items:[],preferences:null}}};
@@ -114,6 +114,30 @@ test('account export rejects duplicate IDs across pagination boundaries',async()
  await assert.rejects(h.exportMyData(false),/propriétaire ou identifiant/);
  assert.deepEqual(h.downloads,[]);
 });
+
+test('full account export includes every one of the six CONTROL data tables',async()=>{
+ const h=exporter();await h.exportMyData(false);
+ const data=JSON.parse(h.payloads[0]);
+ assert.equal(data.accountId,'A');
+ assert.equal(data.profile.user_id,'A');
+ assert.equal(data.projects.length,1);
+ assert.equal(data.items.length,0);
+ assert.equal(data.preferences,null);
+ assert.equal(data.connections[0].provider,'Claude');
+ assert.equal(data.auditEvents[0].action,'test');
+ assert.deepEqual(h.pageReads.map(x=>x.table),['control_projects','control_items','control_connections','control_audit_events']);
+});
+test('full export refuses foreign-owner audit records before file generation',async()=>{
+ const h=exporter({foreignAudit:true});
+ await assert.rejects(h.exportMyData(false),/propriétaire ou identifiant/);
+ assert.deepEqual(h.downloads,[]);
+});
+test('full export refuses foreign-user profile before file generation',async()=>{
+ const h=exporter({foreignProfile:true});
+ await assert.rejects(h.exportMyData(false),/profil du compte non vérifié/);
+ assert.deepEqual(h.downloads,[]);
+});
+
 test('account switch during a pending export page creates no downloadable file',async()=>{
  const h=exporter({pausePage:true}),task=h.exportMyData(false);
  assert.equal(h.paused.length,1);
