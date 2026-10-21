@@ -3,10 +3,10 @@
   "project": "control-ia",
   "status": "running",
   "lease": {
-    "run_id": "control-ia-20261020125015408-9ufh9o",
-    "started_at": "2026-10-20T12:50:15.408Z",
-    "expires_at": "2026-10-20T13:35:15.408Z",
-    "objective": "CONTROL-ACCOUNT: corriger le chargement concurrent de sessions et le filtrage owner_id, tester, puis publier sur main si sûr"
+    "run_id": "control-ia-repair-20261021-lease-ci-automation",
+    "started_at": "2026-10-21T07:08:37.936Z",
+    "expires_at": "2026-10-21T07:53:37.936Z",
+    "objective": "Restore scheduled CONTROL work and recover expired checkpoint; repair shared CI root invalid report while honoring UCP lease; verify runs after write."
   },
   "checkpoint": {
     "updated_at": "2026-10-20T09:57:40.777Z",
@@ -42,8 +42,12 @@
     "commit_sha": "ba145f15c60ab86820c8644cdbe8632473023236"
   },
   "recovered_from": {
-    "run_id": "control-ia-20261020114954-auto11",
-    "expired_at": "2026-10-20T12:34:54.967Z"
+    "run_id": "control-ia-20261020125015408-9ufh9o",
+    "started_at": "2026-10-20T12:50:15.408Z",
+    "expired_at": "2026-10-20T13:35:15.408Z",
+    "objective": "CONTROL-ACCOUNT: corriger le chargement concurrent de sessions et le filtrage owner_id, tester, puis publier sur main si sûr",
+    "recovered_at": "2026-10-21T07:08:37.936Z",
+    "reason": "Old cooperative lease expired; preserve last verified checkpoint and audit pending work before resuming."
   },
   "prior_checkpoint": {
     "updated_at": "2026-10-20T07:23:35Z",
