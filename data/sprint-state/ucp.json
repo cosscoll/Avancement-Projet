@@ -1,13 +1,8 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-report-fix-20261021-control-shared-ci",
-    "started_at": "2026-10-21T07:08:57.921Z",
-    "expires_at": "2026-10-21T07:28:57.921Z",
-    "objective": "Fix only one legacy UCP report incident schema metadata to restore the central GitHub CI; no changes to UCP code or outcomes."
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": null,
   "last_completed": {
     "run_id": "ucp-20261021T063235Z-v3",
@@ -20,5 +15,12 @@
     "run_id": "ucp-20261020-0951-central-report-quality-repair",
     "ended_at": "2026-10-20T08:01:29Z",
     "summary": "Central public sprint schema/quality metadata only; prior project history and checkpoint preserved."
+  },
+  "report_metadata_fix": {
+    "completed_at": "2026-10-21T07:09:45.572Z",
+    "report_id": "ucp-20261020T083418Z-v3",
+    "change": "Added missing blocker_id matching original id, preserved incident status, summary and all 73 reports.",
+    "commit_sha": "3ac887f75b4ad1a5421c4caa2efac84e32c80e75",
+    "effects": "Shared CI contract corrected; unrelated UCP application untouched."
   }
 }
