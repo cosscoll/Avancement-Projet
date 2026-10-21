@@ -539,11 +539,17 @@ async function completeCloudExport(session){
  }
  const projects=await readAll('control_projects');if(projects===null)return null;
  const items=await readAll('control_items');if(items===null)return null;
+ const connections=await readAll('control_connections');if(connections===null)return null;
+ const auditEvents=await readAll('control_audit_events');if(auditEvents===null)return null;
+ const profile=await client.from('control_profiles').select('*').eq('user_id',session.owner).maybeSingle();
+ if(!session.current())return null;
+ if(profile.error||(profile.data&&profile.data.user_id!==session.owner))
+  throw Error('Export incomplet : profil du compte non vérifié.');
  const pref=await client.from('control_preferences').select('*').eq('owner_id',session.owner).maybeSingle();
  if(!session.current())return null;
  if(pref.error||(pref.data&&pref.data.owner_id!==session.owner))
   throw Error('Export incomplet : préférences du compte non vérifiées.');
- return {schema:'control-cloud-export-v1',exportedAt:new Date().toISOString(),accountId:session.owner,projects,items,preferences:pref.data||null};
+ return {schema:'control-cloud-export-v1',exportedAt:new Date().toISOString(),accountId:session.owner,profile:profile.data||null,projects,items,preferences:pref.data||null,connections,auditEvents};
 }
 async function exportMyData(encrypted){
  const session=mutationSession();
