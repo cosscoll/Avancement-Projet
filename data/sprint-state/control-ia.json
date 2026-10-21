@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "control-ia-20261021-canonical-backlinks-20261021101757825",
+    "started_at": "2026-10-21T10:17:57.825Z",
+    "expires_at": "2026-10-21T11:02:57.825Z",
+    "objective": "Correct noncanonical BACK references in CONTROL V1.2 delivery ledger, preserve historical trace, enforce validator and tests, publish directly to main and verify CI/Pages"
+  },
   "checkpoint": {
     "updated_at": "2026-10-21T10:16:53.075Z",
     "main": true,
