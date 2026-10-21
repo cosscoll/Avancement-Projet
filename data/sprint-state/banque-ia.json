@@ -1,14 +1,20 @@
 {
   "schema_version": 3,
   "project": "banque-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "banque-ia-20261021T101722Z-v3-r13",
+    "owner": "chatgpt-banque-ia-hourly",
+    "started_at": "2026-10-21T10:17:22Z",
+    "expires_at": "2026-10-21T11:02:22Z",
+    "objective": "Étendre la couverture de la recette publique aux changements des pages secondaires, indépendamment de assets/atlas.js"
+  },
   "checkpoint": {
-    "step": "code-write-refused-by-safety-check",
+    "step": "lease-acquisition",
     "branch": "fix/reduced-motion-toggle-20261019",
     "pr_url": null,
     "files": [],
-    "next_action": "Blocage P0 : obtenir une autorisation d'écriture du fichier assets/atlas.js via la voie GitHub prévue. Correctif horloge suspendable identifié mais NON enregistré. Ne pas contourner le refus ; après autorisation, appliquer puis tester Chromium pause/reprise et reduced-motion."
+    "next_action": "Corriger le déclenchement du workflow verify-live.yml sur pages secondaires, puis vérifier CI et URL publique ; ne pas modifier assets/atlas.js"
   },
   "last_completed": {
     "run_id": "banque-ia-20261020082131971-v3-r12",
