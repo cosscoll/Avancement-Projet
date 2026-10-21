@@ -6,19 +6,19 @@
     "run_id": "ucp-20261021T132702Z-v3",
     "owner": "chatgpt-automation-ucp",
     "started_at": "2026-10-21T13:27:02Z",
-    "heartbeat_at": "2026-10-21T13:27:02Z",
-    "expires_at": "2026-10-21T14:12:02Z",
+    "heartbeat_at": "2026-10-21T13:29:10Z",
+    "expires_at": "2026-10-21T14:14:10Z",
     "objective": "Stabiliser les getters Clipboard afin qu’un WebView instable ne bloque pas la copie du brief."
   },
   "checkpoint": {
-    "phase": "inspection",
-    "branch": null,
+    "phase": "code_committed",
+    "branch": "fix/ucp-clipboard-getters-20261021",
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.cjs"
     ],
-    "tests": "pending",
-    "next": "Créer une branche depuis main d33d4baf, stabiliser Clipboard et ouvrir une PR."
+    "tests": "CI pending",
+    "next": "Ouvrir la PR, attendre la CI, autocritiquer puis effectuer une seconde passe corrective."
   },
   "last_completed": {
     "run_id": "ucp-20261021T123012Z-v3",
