@@ -2121,5 +2121,116 @@
       "Do not enable Cloud based solely on green Node/browser/UI readiness runs; those are protection and UX checks, not end-to-end real multi-user acceptance."
     ],
     "next": "Next CONTROL-ACCOUNT sprint: owner creates two dedicated empty real Auth test users in independent CONTROL Cloud and stores modern publishable key plus JWTs/passwords as GitHub Actions secrets; manually run guarded control-cloud-real-auth workflow with approval. If green, test real Cloud app authentication flows, redirects, account deletion, mobile; only then consider invite-only enabled true. Keep all costs 0€ and main direct, no credentials in chat or public GitHub."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-classic-account-135047",
+    "started_at": "2026-10-21T13:50:47Z",
+    "ended_at": "2026-10-21T14:14:07Z",
+    "summary": "CONTROL-ACCOUNT: direct main hardening of real E2E negative-write cleanup and frontend cross-account isolation, including 4-mission batch receipts and session/logout safety. 46/46 adapted synthetic/static V8 tests passed. Live CONTROL Supabase is ACTIVE_HEALTHY, 6 RLS tables, 22 owner policies, 0 security alerts, 0 Auth users/records. Native CI/live Pages not yet verified for final SHA; no real JWT A/B tests, no cloud activation or charge.",
+    "objectives": [
+      {
+        "before": "E2E negative writes could be accepted but hidden, frontend trusted owner-scoped API responses, and 4 mission creation could falsely report completion after session change.",
+        "after": "E2E probes unique markers and cleans unexpected writes even on HTTP 403; frontend blocks foreign-owner/malformed records; 4-mission batches verify 4 owner/project receipts and session continuity.",
+        "acceptance": "Simulated denied insert or leaked account payload fails closed; 9+15+6+16 adapted V8 validations pass; real two-user JWT E2E remains gated."
+      }
+    ],
+    "done": [
+      "Re-read CONTROL Cloud V1.2 tracker/last checkpoint, acquired and verified 45-minute CONTROL-only lease under GitHub SHA.",
+      "Replaced E2E test runner dangerous success assumptions: verify forbidden markers despite 403, recover hidden receipts, and flag unverified cleanup.",
+      "Created 9 HTTP Auth/PostgREST simulated tests and corrected mock treatment of control_profiles.user_id; V8 adapted 9/9 passed.",
+      "Added frontend owner-id and type validation before rendering projects/items/preferences; expanded real session harness (15/15 V8 adapted).",
+      "Protected four-mission creation with mutationSession, project scoping, four returned receipts, and post-reload validation; six synthetic tests passed.",
+      "Updated dedicated Cloud CI and manual real-auth workflow to include new regression files without enabling real Auth calls.",
+      "Executed 16 additional static Cloud readiness/real-auth guards in adapted V8; all pass, total 46.",
+      "Queried actual independent Supabase CONTROL Cloud project read-only: ACTIVE_HEALTHY; 6/6 RLS tables, 22 owner policies, no security advisors, 0 auth.users and 0 rows across six CONTROL tables.",
+      "Documented new controls and security limitations in docs/CONTROL_CLOUD_AUTH_E2E_GUIDE.md and docs/CONTROL_IA_RETROSPECTIVES.md; no secrets published, Cloud stays disabled."
+    ],
+    "blockers": [
+      "Native GitHub Actions results for current code SHA could not be retrieved with available status tools; do not infer green CI or current GitHub Pages publication.",
+      "Two owner-approved real CONTROL Auth test accounts/JWTs are absent; genuine PostgREST/JWT A/B, browser authenticated login and cross-device sync remain unverified.",
+      "config/cloud.json enabled:false by design; no physical Android/iOS end-to-end recipe performed."
+    ],
+    "quality": {
+      "ci": "not_verified",
+      "real_browser_verified": false,
+      "checks_run": [
+        "9 CONTROL Auth REST mock V8 tests against actual runner code",
+        "15 Cloud session V8 tests against actual source",
+        "6 four-mission session V8 tests against actual source",
+        "16 Cloud readiness/e2e static contract V8 tests",
+        "Direct read-only Supabase project health, RLS policies, empty tables and security advisor",
+        "GitHub file readback and branch main commit SHAs"
+      ],
+      "checks_passed": [
+        "9/9 E2E mock",
+        "15/15 session isolation",
+        "6/6 four mission",
+        "16/16 static Cloud",
+        "RLS enabled on 6/6 CONTROL tables, 22 owner policies, 0 security warnings, 0 persisted users/rows",
+        "main files readable after writes"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "V8 substitutes selected Node/HTTP APIs; not native GitHub Node runner or real PostgREST requests.",
+        "No final-sha GitHub Actions/Pages success result established for this sprint.",
+        "Real JWT, actual mobile devices and production user data isolation not proven."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Fail-closed two-user Auth E2E negative-write cleanup",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "42e8ea12bb114909fe9ea79aff2c72b33cf27917",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/42e8ea12bb114909fe9ea79aff2c72b33cf27917",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Cloud account isolation and four-mission session validation",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "347177c68ce4d9104fe80345ddf8fd1a211d761f",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/347177c68ce4d9104fe80345ddf8fd1a211d761f",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "CONTROL Cloud test suites and gated workflows",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "ef110201c010c052e856c4ab59f893dbe60734ac",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/ef110201c010c052e856c4ab59f893dbe60734ac",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "links": [
+      {
+        "label": "Cloud E2E code fix",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/42e8ea12bb114909fe9ea79aff2c72b33cf27917"
+      },
+      {
+        "label": "Real browser account guard",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/4b0523c821bb569ce7350b0205ddc12edd3eb1d8"
+      },
+      {
+        "label": "Four mission guard",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/347177c68ce4d9104fe80345ddf8fd1a211d761f"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "P0: real Auth accounts/JWTs absent; no declaration of account/multi-device completeness.",
+      "P1: mock first incorrectly used owner_id for control_profiles; corrected and reran nine checks.",
+      "P1: initial test harness omitted error-page retry btn; corrected and retested fifteen session checks.",
+      "P1: before second pass a denied HTTP response was treated as no write; marker lookup now always runs before accepting negative test.",
+      "P1: online CI status for current SHA not available; report remains unverified and no criterion promoted."
+    ],
+    "next": "CONTROL-ACCOUNT: recover exact-SHA native CI and GitHub Pages evidence; safely prepare 2 dedicated real Supabase Auth test users with owner-approved credentials stored only as GitHub Actions secrets. Run manual 2 JWT A/B E2E with mandatory cleanup then authenticated web/mobile session checks. Keep Cloud disabled until real tests pass; no paid services."
   }
 ]
