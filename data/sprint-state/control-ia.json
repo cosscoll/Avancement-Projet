@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "control-ia-20261021-evidence-contract-repair-1623",
+    "started_at": "2026-10-21T16:23:00Z",
+    "expires_at": "2026-10-21T16:38:00Z",
+    "objective": "repair sprint-report deliverable stage contract and verify native CI on final main after documentation and checkpoint"
+  },
   "checkpoint": {
     "updated_at": "2026-10-21T16:22:30Z",
     "main": true,
