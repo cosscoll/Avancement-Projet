@@ -411,7 +411,11 @@ function accountPage(){
  '<p class="muted">Identifiant : '+H(authUser?.id||'')+'</p><div class="btnrow">'+btn('Actualiser','refresh')+btn('Déconnexion','logout')+'</div>')+
  panel('Confidentialité','<p>Chaque projet est rattaché à son propriétaire via les règles d’accès RLS de la base de données.</p>'+
  '<p class="muted">Les liens vers les IA ne constituent pas une connexion API. Les droits Google ne sont pas accordés automatiquement par la connexion au compte.</p>')+
- panel('Données personnelles','<p class="muted">Sauvegarde des six collections privées. Privilégie le fichier chiffré : son mot de passe ne peut pas être récupéré. La restauration automatique de ces fichiers n’est pas encore disponible.</p>'+btn('Exporter une sauvegarde chiffrée','export-encrypted')+' '+btn('Exporter en clair (attention)','export-json')+' '+btn('Importer mon ancien espace','import-legacy')+
+ panel('Données personnelles','<p class="muted">Sauvegarde des six collections privées. Privilégie le fichier chiffré : son mot de passe ne peut pas être récupéré. La restauration automatique de ces fichiers n’est pas encore disponible.</p>'+
+ '<div class="cloud-backup-inspector"><label for="control-backup-file">Vérifier un fichier de sauvegarde de ce compte, sans envoi au serveur</label>'+
+ '<input id="control-backup-file" type="file" accept=".json,application/json" aria-describedby="backup-preview">'+
+ '<p id="backup-preview" role="status" aria-live="polite" class="muted">Sélectionnez un fichier JSON CONTROL (50 Mo maximum). Aucune donnée ne sera importée.</p></div>'+
+ btn('Exporter une sauvegarde chiffrée','export-encrypted')+' '+btn('Exporter en clair (attention)','export-json')+' '+btn('Importer mon ancien espace','import-legacy')+
  (cloudConfig?.accountDeletionEnabled===true?'<div class="hint">Suppression définitive : le compte et ses données ne pourront pas être restaurés.</div>'+btn('Supprimer définitivement mon compte','delete-account','','danger'):'<p class="muted">La suppression complète d’un compte nécessite une procédure serveur vérifiée. Elle n’est pas encore activée.</p>'));
 }
 
@@ -551,16 +555,16 @@ async function encKey(pass,salt){
 // Stable id ordering, owner verification and duplicate detection fail closed
 // on incomplete or inconsistent responses (including after a session switch).
 // Never ask for an export encryption secret in a plain-text browser prompt.
-function askBackupPassword(){
+function askBackupPassword(mode='encrypt'){
  return new Promise((resolve,reject)=>{
   const dialog=document.createElement('dialog');
   dialog.className='cloud-backup-dialog';
-  dialog.innerHTML='<form method="dialog"><h2>Protéger la sauvegarde</h2>'+
-   '<p>Choisissez un mot de passe d’au moins 12 caractères. Sans celui-ci, le fichier ne pourra pas être déchiffré.</p>'+
+  dialog.innerHTML='<form method="dialog"><h2>'+(mode==='decrypt'?'Vérifier une sauvegarde chiffrée':'Protéger la sauvegarde')+'</h2>'+
+   '<p>'+(mode==='decrypt'?'Saisissez le mot de passe de la sauvegarde. Rien n’est envoyé à CONTROL.':'Choisissez un mot de passe d’au moins 12 caractères. Sans celui-ci, le fichier ne pourra pas être déchiffré.')+'</p>'+
    '<label for="control-backup-secret">Mot de passe de chiffrement</label>'+
    '<input id="control-backup-secret" name="backupPassword" type="password" autocomplete="new-password" minlength="12" required>'+
    '<p class="muted" aria-live="polite" data-backup-error></p>'+
-   '<div class="btnrow"><button type="button" data-cancel-backup>Annuler</button><button type="submit" class="primary">Chiffrer la sauvegarde</button></div></form>';
+   '<div class="btnrow"><button type="button" data-cancel-backup>Annuler</button><button type="submit" class="primary">'+(mode==='decrypt'?'Vérifier le fichier':'Chiffrer la sauvegarde')+'</button></div></form>';
   const form=dialog.querySelector('form'),input=form.querySelector('input[type="password"]');
   let finished=false;
   const finish=value=>{
@@ -657,6 +661,98 @@ async function exportMyData(encrypted){
  a.href=url;a.download='CONTROL-compte-'+new Date().toISOString().slice(0,10)+(encrypted?'-chiffre':'')+'.json';
  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
  message('Export effectué. Conservez le fichier et son mot de passe en lieu sûr.');
+}
+
+// Local recovery preflight only: never write an inspected backup into Supabase.
+// Keep the parsed rows out of the user-facing output and all application caches.
+function validateCloudBackup(data,owner){
+ if(!data||typeof data!=='object'||Array.isArray(data)||data.schema!=='control-cloud-export-v1')
+  throw Error('Format de sauvegarde CONTROL non reconnu.');
+ if(typeof owner!=='string'||!owner||data.accountId!==owner)
+  throw Error('Ce fichier n’appartient pas au compte actuellement connecté.');
+ if(typeof data.exportedAt!=='string'||!Number.isFinite(Date.parse(data.exportedAt)))
+  throw Error('Date de sauvegarde absente ou invalide.');
+ if(data.profile!==null&&(!data.profile||data.profile.user_id!==owner))
+  throw Error('Profil de sauvegarde non attribué au compte connecté.');
+ if(data.preferences!==null&&(!data.preferences||data.preferences.owner_id!==owner))
+  throw Error('Préférences de sauvegarde non attribuées au compte connecté.');
+ const collections=[['projects',50000],['items',50000],['connections',50000],['auditEvents',50000]];
+ const counts={};const projectIds=new Set();
+ for(const [name,max] of collections){
+  const rows=data[name];
+  if(!Array.isArray(rows)||rows.length>max)
+   throw Error('Collection CONTROL invalide ou trop volumineuse : '+name+'.');
+  const ids=new Set();
+  for(const row of rows){
+   if(!row||typeof row!=='object'||Array.isArray(row)||
+      row.owner_id!==owner||typeof row.id!=='string'||!row.id||ids.has(row.id))
+    throw Error('Propriétaire ou identifiant incohérent dans la sauvegarde : '+name+'.');
+   ids.add(row.id);
+  }
+  counts[name]=rows.length;
+  if(name==='projects')for(const row of rows)projectIds.add(row.id);
+ }
+ for(const row of data.items){
+  if(row.project_id!==null&&row.project_id!==undefined&&!projectIds.has(row.project_id))
+   throw Error('Élément rattaché à un projet absent de la sauvegarde.');
+ }
+ return {exportedAt:data.exportedAt,counts};
+}
+async function inspectCloudBackupPayload(envelope,owner,passwordProvider=()=>askBackupPassword('decrypt')){
+ if(!envelope||typeof envelope!=='object'||Array.isArray(envelope))
+  throw Error('Fichier de sauvegarde invalide.');
+ if(envelope.schema==='control-cloud-export-v1')
+  return validateCloudBackup(envelope,owner);
+ if(envelope.schema!=='control-cloud-encrypted-v1'||envelope.kdf!=='PBKDF2-SHA256-200000'||
+   typeof envelope.salt!=='string'||typeof envelope.iv!=='string'||typeof envelope.content!=='string')
+  throw Error('Format de sauvegarde CONTROL non reconnu.');
+ let salt,iv,cipher;
+ try{
+  if(envelope.salt.length>64||envelope.iv.length>64||envelope.content.length>70000000)throw Error();
+  salt=decB64(envelope.salt);iv=decB64(envelope.iv);cipher=decB64(envelope.content);
+  if(salt.length!==16||iv.length!==12||cipher.length<17||cipher.length>52000000)throw Error();
+ }catch{throw Error('En-tête de sauvegarde chiffrée non valide.')}
+ const password=await passwordProvider();
+ if(password===null)return null;
+ if(typeof password!=='string'||password.length<12)
+  throw Error('Mot de passe de sauvegarde invalide.');
+ let decrypted;
+ try{
+  const key=await encKey(password,salt);
+  decrypted=new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv},key,cipher));
+  const payload=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(decrypted));
+  return validateCloudBackup(payload,owner);
+ }catch{
+  throw Error('Déchiffrement impossible : mot de passe incorrect ou fichier altéré.');
+ }finally{if(decrypted)decrypted.fill(0)}
+}
+async function inspectCloudBackupFile(file){
+ if(inspectCloudBackupFile.inFlight)throw Error('Une vérification de sauvegarde est déjà en cours.');
+ const session=mutationSession(),output=byId('backup-preview');
+ if(!output||page!=='account')return false;
+ inspectCloudBackupFile.inFlight=true;
+ try{
+  output.textContent='Vérification locale de la sauvegarde…';
+  if(!file||!Number.isSafeInteger(file.size)||file.size<2||file.size>50*1024*1024)
+   throw Error('Le fichier JSON doit faire entre 2 octets et 50 Mo.');
+  const contents=await file.text();
+  if(!session.current())return false;
+  let envelope;
+  try{envelope=JSON.parse(contents)}catch{throw Error('Ce fichier ne contient pas de JSON valide.')}
+  const summary=await inspectCloudBackupPayload(envelope,session.owner);
+  if(!session.current()||page!=='account'||!output.isConnected)return false;
+  if(summary===null){output.textContent='Vérification annulée. Aucune donnée importée.';return false}
+  const counts=summary.counts;
+  output.textContent='Sauvegarde vérifiée pour ce compte ('+new Date(summary.exportedAt).toLocaleString('fr-FR')+
+   '). Projets : '+counts.projects+' · éléments : '+counts.items+
+   ' · connexions : '+counts.connections+' · événements d’audit : '+counts.auditEvents+
+   '. Aucune donnée importée. La restauration automatique reste indisponible.';
+  return true;
+ }catch(error){
+  if(session.current()&&page==='account'&&output.isConnected)
+   output.textContent='Vérification refusée : '+(error?.message||'fichier non reconnu')+' Aucune donnée importée.';
+  return false;
+ }finally{inspectCloudBackupFile.inFlight=false}
 }
 async function importLegacy(){
  // Guard against concurrent imports in the same browser tab. Cross-device
@@ -835,6 +931,15 @@ function wireEvents(){
    catch(err){message(err?.message||'Enregistrement impossible.',true)}
    finally{submit.disabled=false}return;
   }
+ });
+ document.addEventListener('change',async e=>{
+  if(e.target?.id!=='control-backup-file'||!authUser)return;
+  const input=e.target,file=input.files?.[0];
+  input.value='';
+  if(!file)return;
+  try{input.disabled=true;await inspectCloudBackupFile(file)}
+  catch(err){const out=byId('backup-preview');if(out)out.textContent='Vérification impossible : '+(err?.message||'fichier refusé')}
+  finally{if(input.isConnected)input.disabled=false}
  });
  document.addEventListener('input',e=>{
   if(e.target?.id==='project-search'){
