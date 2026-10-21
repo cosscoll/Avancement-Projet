@@ -127,3 +127,21 @@ test('repeated same-account verifiedSession while initial request is pending pre
  assert.equal(h.app.read().projects[0].owner_id,'A');
  assert.equal(h.app.read().waitingOwner,null);
 });
+
+test('stale same-owner request cannot release lock belonging to a newer login session',async()=>{
+ const h=harness(),oldDelayed=h.makeSlow('control_projects');
+ const old=h.app.verifiedSession();
+ await waitFor(()=>h.app.read().waitingOwner==='A','old A fetch starts');
+ h.state.user=null;
+ await h.app.verifiedSession();
+ h.state.user='A';
+ const freshDelayed=h.makeSlow('control_projects'),fresh=h.app.verifiedSession();
+ await waitFor(()=>h.app.read().waitingOwner==='A','new A fetch starts');
+ oldDelayed.resolve({data:[{id:'old-A',owner_id:'A',name:'Old A'}]});
+ await old;
+ assert.equal(h.app.read().waitingOwner,'A','Old A request must not release new A fetch lock');
+ freshDelayed.resolve({data:[{id:'new-A',owner_id:'A',name:'New A'}]});
+ await fresh;
+ assert.equal(h.app.read().projects[0].id,'new-A');
+ assert.equal(h.app.read().waitingOwner,null);
+});
