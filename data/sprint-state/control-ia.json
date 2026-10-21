@@ -1,55 +1,41 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-imp02-project-search-20261021111300000",
-    "started_at": "2026-10-21T11:13:00.000Z",
-    "expires_at": "2026-10-21T11:58:00.000Z",
-    "objective": "IMP-02 project-scoped local universal search: live source provenance/version/date, removed-data exclusion, exact decision navigation and regression/browser validation; direct main no Cloud costs"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T11:08:01.210Z",
+    "updated_at": "2026-10-21T11:22:11.134Z",
     "main": true,
-    "stage": "imp05_local_approval_imp10_local_idempotence_imp03_versioned_memory_305_tests_pages_browser_green",
+    "stage": "imp02_local_search_imp03_memory_imp05_approvals_imp10_idempotence_317_tests_pages_browser_green",
     "files": [
       "assets/command-center.js",
-      "assets/control-operator-core.js",
-      "assets/control-operator.js",
-      "assets/local-ai.js",
-      "tests/control-memory-decisions.test.mjs",
-      "tests/control-operator-approval.test.mjs",
-      "tests/control-operator-idempotence.test.mjs",
+      "tests/control-local-search.test.mjs",
       "tests/control-ia-browser-smoke.mjs",
-      "docs/CONTROL_IA_RETROSPECTIVES.md",
-      "data/sprints/control-ia.json"
+      "data/sprints/control-ia.json",
+      "docs/CONTROL_IA_RETROSPECTIVES.md"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587241317",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587349013",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39588124741",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39588195602",
-      "https://github.com/cosscoll/Avancement-Projet/commit/741f542b95519e626f10dc92592a6b37235aaea2",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39589297732",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39589296550",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39589355732"
+      "https://github.com/cosscoll/Avancement-Projet/commit/c7e2e0ee5ff0ad8e63e015cc482d6ed55d1f11c6",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39590970137",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39590969956",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39590968946",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39591100473"
     ],
     "remaining_blockers": [
-      "No owner-approved no-fee independent CONTROL Cloud Supabase instance, two real Auth users JWT/RLS, cross-device sync; Cloud intentionally disabled.",
-      "IMP-03 source is user-declared and conflict detection exact-title based; no real external source verification or cross-device propagation.",
-      "IMP-05 approval, IMP-10 idempotence and IMP-03 memory improvements are local only; V1.2 real_verified requires real multiuser server evidence.",
-      "Physical Android/iOS usability still not verified."
+      "No independent approved 0€ CONTROL Supabase with true Auth and RLS; Cloud disabled; all IMP-02/03/05/10 additions device-local only.",
+      "Local search source declared, recency warning heuristic; no remote reindex or cross-device deletion propagation.",
+      "No full authenticated project permission, external provider, physical Android/iOS acceptance."
     ],
-    "next_action": "Read existing CONTROL local universal search implementation for IMP-02. Add genuinely project-scoped sourced memory results (title, declared provenance, version/date), prevent deleted/stale results and preserve explicit permissions. Test Node and Chromium. Use main only, acquire CONTROL lease, no Cloud, no paid tools. Do not prematurely certify real_verified."
+    "next_action": "Next CONTROL IMP-01 sprint: inspect assistant planner and task list, implement a safely project-scoped read-only goal breakdown with provenance and editable proposals, no claims of external execution. Tests and same SHA Pages public Chromium, direct main under own lease, 0€."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-imp03-local-decisions-20261021110004711",
-    "started_at": "2026-10-21T11:00:04.711Z",
-    "ended_at": "2026-10-21T11:08:01.210Z",
-    "summary": "IMP-03 local decisions memory: source & version, stale edit and duplicate conflict guard, storage rollback, user correction and scoped project context. 15 new tests, 305/305 GitHub Node, real Chromium local and Pages public success exact SHA 741f542b95519e626f10dc92592a6b37235aaea2. Cloud disabled.",
-    "stage": "verified_online_local_imp03_not_synced",
-    "commit_sha": "741f542b95519e626f10dc92592a6b37235aaea2",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39589355732"
+    "run_id": "control-ia-20261021-imp02-project-search-20261021111300000",
+    "started_at": "2026-10-21T11:13:00.000Z",
+    "ended_at": "2026-10-21T11:22:11.134Z",
+    "summary": "IMP-02 local scoped live search with six entity categories, decision source/version/date and stale warning, project ACL filter and exact decision direct navigation; 12 added regressions, CI 317/317, Pages and public Chromium successful SHA 6a5311dd. Cloud remains disabled.",
+    "stage": "verified_online_local_imp02_not_remote",
+    "commit_sha": "6a5311dd2ad47e1f84b79ee9463cbef1894a6806",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39591100473"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
