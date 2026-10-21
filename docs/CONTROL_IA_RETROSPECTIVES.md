@@ -427,3 +427,18 @@ L'autocritique a relevé un risque non testé : le raccourci PWA sur téléphone
 
 **Suite :** inspecter la recherche locale `IMP-02` pour enrichir les résultats en source/version/date, filtrer strictement par projet, ne pas afficher de décisions supprimées ou de contexte périmé et permettre l'ouverture de l'élément concerné. Conserver les mêmes barrières de permissions, tests, main et publication.
 
+
+## 21 octobre 2026 — IMP-02 : recherche locale avec périmètre, provenance et liens exacts
+
+**Défaut initial reproduit :** `search()` créait une liste de résultats à l'ouverture de la page, puis la filtrait sur saisie sans recalculer les sources. Si une décision était corrigée ou supprimée pendant que la recherche restait affichée, son ancien contenu pouvait continuer à figurer dans les résultats. Il n'y avait ni filtre par projet, ni provenance/version/date de décision, ni lien vers la ligne exacte de mémoire.
+
+**Correction directe sur `main` :** `searchResults(scope,query)` consulte les tableaux locaux **à chaque interrogation**, limite les sources aux projets effectivement présents dans CONTROL et refuse les scopes inexistants. Les six types couverts sont projet, action, mission, événement, décision et ressource HTTPS vérifiée par le filtre d'URL existant. L'utilisateur peut sélectionner « Tous les projets » ou un projet précis. Pour les décisions locales, la recherche affiche **source déclarée**, version, date déclarée ou manquante et « à revalider » si la date est ancienne (seuil indicatif 90 jours, pas un contrôle externe). Les résultats n'affichent pas de provenance inventée.
+
+**Navigation et suppression :** un lien `#/control/memory/<id>` ouvre l'enregistrement de mémoire ciblé dans CONTROL, marqué et ramené à l'écran. Si l'ID n'existe plus ou si le projet a disparu, le panneau indique l'absence de la décision sans reproduire l'ancien contenu. Les résultats n'utilisent plus de cache d'index séparé qui survivrait à la suppression. [Implémentation](https://github.com/cosscoll/Avancement-Projet/commit/c7e2e0ee5ff0ad8e63e015cc482d6ed55d1f11c6).
+
+**Tests et preuve :** [12 tests](https://github.com/cosscoll/Avancement-Projet/commit/230da340440a48d6e6dfad88b8a28c8f3c88c833) de scope, suppression, correction de version, source manquante, état de fraîcheur, sécurité des liens et navigation. [GitHub Node 317/317](https://github.com/cosscoll/Avancement-Projet/actions/runs/39590970137), [Chromium local](https://github.com/cosscoll/Avancement-Projet/actions/runs/39590969956) avec contrôle réel des filtres et du deep link, [Pages réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/39590968946), [Chromium sur site public](https://github.com/cosscoll/Avancement-Projet/actions/runs/39591100473), tous sur le SHA `6a5311dd2ad47e1f84b79ee9463cbef1894a6806`.
+
+**Autocritique :** aucune source n'est certifiée par un fournisseur externe et un âge de 90 jours n'est qu'un avertissement heuristique. Les résultats se régénèrent lors de la recherche ou du changement de périmètre, **pas au moyen d'une indexation temps réel entre onglets et appareils**. Le filtre local ne constitue pas une autorisation Auth/RLS serveur. `IMP-02` est donc implémenté et testé **localement seulement**, sans acceptation complète V1.2, sans activation de CONTROL Cloud, sans paiement et sans divulgation de données privées de tiers.
+
+**Suite :** avancer vers `IMP-01` via un plan explicable en lecture seule, à partir de la mémoire et des tâches du projet effectivement sélectionné ; toute exécution devra réutiliser les permissions et confirmations `IMP-05`, la protection contre les rejouements `IMP-10`, puis obtenir une preuve distincte d'action effectuée.
+
