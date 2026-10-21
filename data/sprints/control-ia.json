@@ -1402,5 +1402,92 @@
       "Do not mark IMP-05 acceptance criteria fulfilled until audited server-driven permission revocation and real third-party approval tested."
     ],
     "next": "Next IMP-05/IMP-10 groundwork: scoped local approval checkpoints and idempotence for interrupted action confirmations, then project-specific memory IMP-03 under explicit local permission. No real Cloud activation before owner's cost-free independent Supabase decision."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-imp10-idempotent-local-20261021105238055",
+    "started_at": "2026-10-21T10:52:38.055Z",
+    "ended_at": "2026-10-21T10:57:11.565Z",
+    "summary": "IMP-10 local idempotence: every operator UI proposal obtains a stable local approvalId; persisted audit stores its signature and token. Retrying same accepted approval returns original receipt without a new mutation. Reusing a token for different action/project is denied, revoked project denied, failed storage rollback permits retry. 13 new tests; general frontend 290/290, Pages and live Chromium green on exact commit 36c366786df0e8502a6c2a3f75b95b2084e4703a.",
+    "objectives": [
+      {
+        "before": "The local operator had a successful-write audit receipt, but replay of the same approved create operation could append a duplicate local task or event following interruption/retry.",
+        "after": "Each UI draft carries a stable local identifier; operatorExecute checks the durable last-200-entry local audit for a same-key/same-signature record before writes. A replay returns its receipt, a conflicting replay is refused, and failed writes remove both mutation and receipt before retry.",
+        "acceptance": "13 permanent Node regression cases on actual source; full 290/290 Node quality, Page deploy success and actual Chromium postdeploy success exact SHA. Does not claim cross-tab/remote atomicity."
+      }
+    ],
+    "done": [
+      "Confirmed previous IMP-05 sprint checkpoint, acquired new CONTROL cooperative lease, direct main only.",
+      "Inspected exact local operator and audit persistence; designed bounded replay prevention keyed by proposal id + exact action signature.",
+      "Patched command-center operatorExecute: checks valid local token, project availability, existing stored receipt; detects collision; stores key+signature in same audit save; rollback restores storage on failure; returns receipt of the exact replayed action.",
+      "Assigned one UI-local idempotency key per prepared operator approval, preserved across preview title/date edits and through confirmation.",
+      "Added 13 regression tests including exact double-replay, reopen with persistent state, key collision, revoked project, failed-save-then-retry, different intentional approvals, event create/delete/update and task completion.",
+      "GitHub frontend CI 39588124741 success with 290/290 tests at SHA 36c366786df0e8502a6c2a3f75b95b2084e4703a.",
+      "Pages deploy run 39588123999 success and real public Chromium run 39588195602 success at same SHA, matching published files.",
+      "No external integration, expenditure, cloud database or cross-project code mutation."
+    ],
+    "blockers": [
+      "Idempotency check searches last 200 persisted local audit rows, not permanent ledger and not atomic across browser tabs. Backend multi-device idempotency remains unavailable.",
+      "Real CONTROL Cloud Auth/JWT/RLS and centralized action approvals need separate approved cost-zero infrastructure and are not active.",
+      "No real external executor or Android/iOS hardware certification."
+    ],
+    "quality": {
+      "ci": "success",
+      "checks_run": [
+        "13 local idempotence tests running extracted actual production functions under Node",
+        "General CI Node suite 290/290",
+        "Pages exact-SHA deployment and public Chromium with byte comparison"
+      ],
+      "checks_passed": [
+        "13/13 new IMP-10 regressions",
+        "290/290 full Node quality",
+        "Pages successful at exact main SHA",
+        "Chromium postdeploy successful at exact main SHA"
+      ],
+      "checks_failed": [
+        "Original operator had no persisted per-proposal token; duplicate creation was possible on replay before change."
+      ],
+      "limitations": [
+        "Only local device workflow and bounded local audit; not distributed transaction or guaranteed exactly-once execution.",
+        "No external actions, remotely sourced statuses, real accounts or physical mobile verified."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Idempotent local operator confirmation and durable receipt",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/8ce413757a9a62a119076edb99af50c90c6db407",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T10:56:17Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39588195602"
+      },
+      {
+        "name": "13 local replay and rollback tests",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/36c366786df0e8502a6c2a3f75b95b2084e4703a"
+      }
+    ],
+    "links": [
+      {
+        "label": "Node 290 tests",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39588124741"
+      },
+      {
+        "label": "Pages production deploy",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39588123999"
+      },
+      {
+        "label": "Public Chromium",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39588195602"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "P1: previous operator audit .at(-1) may show a different operation after replay; receipt now targets the exact saved/replayed audit entry.",
+      "P1: same confirmation ID with modified type/date/title/project must fail, not incorrectly return success; signatures validated.",
+      "P0: replay happens only within bounded local audit, and cross-tab races are not transactionally isolated; never claim general distributed exactly-once.",
+      "P0: external services and real accounts are not enabled; IMP-10 acceptance not fully real_verified."
+    ],
+    "next": "Next independent sprint: inspect project-scoped local memory/decision sources as IMP-03 without duplicating existing features; require project isolation, provenance and explicit consent. If adding data persistence, enforce deletion propagation, conflict indication and source timestamp. Remain direct main with lease, Node/Chromium/Pages proofs, no paid services."
   }
 ]
