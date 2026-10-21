@@ -1,45 +1,41 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-canonical-backlinks-20261021101757825",
-    "started_at": "2026-10-21T10:17:57.825Z",
-    "expires_at": "2026-10-21T11:02:57.825Z",
-    "objective": "Correct noncanonical BACK references in CONTROL V1.2 delivery ledger, preserve historical trace, enforce validator and tests, publish directly to main and verify CI/Pages"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T10:16:53.075Z",
+    "updated_at": "2026-10-21T10:25:38.811Z",
     "main": true,
-    "stage": "account_lifecycle_fixed_ci_89_pages_public_green_next_canonical_delivery_refs",
+    "stage": "v12_canonical_ticket_links_16_tests_pages_browser_green_new_account_signout_race",
     "files": [
-      "assets/cloud-app.js",
-      "tests/control-cloud-account-lifecycle.test.mjs",
-      ".github/workflows/control-cloud-config.yml",
-      "data/sprints/control-ia.json",
-      "docs/CONTROL_IA_RETROSPECTIVES.md"
+      "data/control-ia-delivery.json",
+      "scripts/control-ia-requirements.mjs",
+      "tests/control-ia-requirements.test.mjs",
+      ".github/workflows/control-ia-requirements.yml",
+      "docs/CONTROL_IA_CAHIER_V1_2_SUIVI.md",
+      "data/sprints/control-ia.json"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/commit/56648b7c96326daf2be6e389c1fc8c886dc61a2a",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39582822619",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39582822702",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39582888205"
+      "https://github.com/cosscoll/Avancement-Projet/commit/c26a7b222fbe249a35ecea8528c096183023a488",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584035439",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584036998",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584287643"
     ],
     "remaining_blockers": [
-      "Cloud disabled pending an explicitly approved cost-zero independent CONTROL Supabase with real A/B Auth JWT/RLS and cross-device validation.",
-      "Delivery metadata retains references to 19 nonexistent BACK-023..042 despite official list BACK-001..022.",
-      "Interrupted original account import may be partial and requires reconciliation; no real server transaction tests."
+      "Real Cloud remains intentionally disabled without authorized separate zero-cost Supabase and two true Auth/JWT/RLS accounts",
+      "Calendar and Reminders have historical labels but no evidenced canonical BACK mapping",
+      "Old session A signOut() awaited result can wipe newly signed-in session B; reproduced with a stubbed delayed Auth API, not yet fixed"
     ],
-    "next_action": "Audit and fix 19 out-of-range BACK refs in data/control-ia-delivery.json, preserve historical labels in separate traceability metadata, explicitly map only evidenced canonical ticket references, add validation tests and deploy to main. Do not claim criterion verification without real QA."
+    "next_action": "CONTROL-ACCOUNT P0: fix already reproduced stale `logout` and `delete-account` UI reset after delayed auth.signOut when account B replaces A; add tests for same-account re-login and normal successful logout, preserve SDK SIGNED_OUT listener behavior. Direct main only, 0€ and Cloud disabled."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-account-lifecycle-20261021100011959",
-    "started_at": "2026-10-21T10:00:11.959Z",
-    "ended_at": "2026-10-21T10:16:53.075Z",
-    "summary": "Reproduced and fixed A-to-B legacy migration contamination, encrypted export and delete signout session guard; 11 Node regressions, Cloud CI 89/89, Pages and public Chromium green on SHA 01c1e198. Cloud remains disabled.",
-    "stage": "tested_ci_deployed_not_authenticated",
-    "commit_sha": "01c1e198af9a9fb5123b605173ebaecfe9ebcbeb",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39582888205"
+    "run_id": "control-ia-20261021-canonical-backlinks-20261021101757825",
+    "started_at": "2026-10-21T10:17:57.825Z",
+    "ended_at": "2026-10-21T10:25:38.811Z",
+    "summary": "19 noncanonical BACK refs moved to archived per-capability metadata with zero loss; 16/16 V1.2 integrity tests, Pages and Chromium public green at 8c63aa3. No requirement statuses altered.",
+    "stage": "verified_online_traceability_not_operational",
+    "commit_sha": "8c63aa3f2d4505055e13b9addafca09b1743a52f",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39584287643"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
