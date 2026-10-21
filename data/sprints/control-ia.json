@@ -2010,5 +2010,116 @@
       "P2: monitor personal PWA and browser user evidence because fresh Chromium tests cannot observe stale installed caches on their device."
     ],
     "next": "Next CONTROL-ACCOUNT gated sprint: genuine two-user Auth/JWT/PostgREST isolation on separately created CONTROL Cloud backend, then controlled publishable-key integration after real account safety proof and no-cost verification. Improve landing UI only with user-specified design. Use own lease, direct main, 0€, Pages and public browser before claiming visible."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-real-auth-readiness-20261021131208608",
+    "started_at": "2026-10-21T13:12:08.608Z",
+    "ended_at": "2026-10-21T13:35:40.856Z",
+    "summary": "CONTROL Cloud Auth readiness sprint on the independent no-cost Supabase: live PostgreSQL A/B RLS test extended to six tenant tables, cross-owner update/delete/forged insert denied and anon SELECT grants absent; transaction rolled back, all six tables and auth.users remain 0 rows. Implemented a manually triggered genuine JWT+PostgREST test runner for two dedicated real test users with protected secret input and mandatory cleanup; NO real Auth E2E executed because two actual users/credentials are not configured. Updated public Cloud app.html to state database ready, user-auth pending, linked from home; production config remains enabled:false. 16 additional Node safety/readiness regressions, 363/363 full Node tests, GitHub Pages and postdeploy Chromium success exact code SHA babc5a2a.",
+    "objectives": [
+      {
+        "before": "The independent CONTROL Cloud database had passed SQL A/B testing on a subset of tables, but no repeatable test suite existed for actual Supabase Auth JWT/REST isolation, and public setup page still implied the independent database had yet to be created.",
+        "after": "SQL authorization checks executed against all six live CONTROL tables with anonymous privilege checks and full rollback; a reusable credential-gated, manual real Auth/REST test and runbook exist; a truthful public setup screen names the installed database and pending genuine JWT test, not exposed signup.",
+        "acceptance": "Live SQL A/B simulated identity tests across 6 tables succeed and leave 0 users/rows. Permanent automated tests validate safe E2E runner guards, manual-only workflow and homepage Cloud progress. GitHub Node 363/363, Pages + public Chromium green; genuine JWT Auth tests still pending real dedicated test users."
+      }
+    ],
+    "done": [
+      "Confirmed main CONTROL was idle, acquired 45-minute project-only cooperative lease and verified independent CONTROL Cloud project ACTIVE_HEALTHY.",
+      "Consulted current Supabase Auth/JWT/publishable key documentation and reviewed actual six-table RLS migration, Cloud front end and CI policy.",
+      "Executed live database PostgreSQL transaction with temporary A/B simulated identity rows on each of 6 CONTROL tables; tested owner-scoped reads A and B, blocked foreign updates/deletes/forged insert, and anon role zero read privileges; rollback yielded zero test accounts and rows.",
+      "Rechecked Supabase project ACTIVE_HEALTHY, zero Security Advisor issues, six user tables and auth.users zero persisted records.",
+      "Created tests/control-cloud-real-auth-e2e.mjs with genuine Auth /auth/v1/user token checks, publishable-key-only PostgREST requests, 2 distinct non-anonymous users, six-table scope isolation and cross-write negatives, fail-closed empty test account precondition and mandatory finally cleanup.",
+      "Added unit guard regressions and CI integration: Cloud config CI validates runner; standalone manual workflow .github/workflows/control-cloud-real-auth.yml only runs on confirmation with GitHub secrets, never on push; no real test users/accounts created in this session.",
+      "Patched E2E cleanup to fail on incomplete deletion and track unexpected unauthorized inserted records if a policy ever regresses; scoped cleanup ledger to individual test run.",
+      "Created safe procedural guide docs/CONTROL_CLOUD_AUTH_E2E_GUIDE.md, updated bootstrap evidence documenting six-table live SQL results and the still-unfulfilled two-real-JWT gate.",
+      "Updated app.html Cloud setup panel and home link: independent DB exists, six RLS protected tables, real JWT/PostgREST and multi-device pending; Cloud publicly disabled, no input for credentials.",
+      "GitHub Node quality 363/363 success run 39609004604, Pages run 39609003181 and public Chromium run 39609069781 all success on code SHA babc5a2a, including Cloud setup display, mobile viewports, offline PWA and no console errors.",
+      "No payment, no paid plan, no use of IAgile Academy database, no commit of JWTs, keys or email credentials; all CONTROL updates directly to main."
+    ],
+    "blockers": [
+      "Genuine authenticated A/B with two real Supabase Auth accounts and project-issued JWTs is NOT yet executed. Supabase connector has no Auth-admin account creation/login operation and tests require owner-approved dedicated test accounts / GitHub secrets; do not claim Auth/PostgREST E2E validated.",
+      "CONTROL Cloud client config/cloud.json.enabled remains false, signup and cross-device sync disabled. Must verify real Auth email links/redirects, JWT ownership and browser sessions before enabling.",
+      "GitHub Actions manual live E2E requires configured read-only publishable key and two test user JWTs (or password credentials) stored in GitHub Secrets, run manually; no secrets printed.",
+      "Simulated SQL A/B tests are not authentic JWT verification and should never upgrade real_verified in V1.2."
+    ],
+    "quality": {
+      "ci": "success",
+      "checks_run": [
+        "Live six-table RLS A/B SQL test with full rollback",
+        "Supabase Security Advisor and persisted table counters",
+        "Cloud safety configuration CI for new E2E runner",
+        "16 new Node contract/guard tests",
+        "Full Node frontend quality 363",
+        "GitHub Pages deploy exact code SHA",
+        "Chromium local and postdeploy public browser with Cloud setup and mobile/offline"
+      ],
+      "checks_passed": [
+        "SQL A/B scope isolation and anon read revocation on 6 tables",
+        "Post-rollback 0 auth.users and 0 CONTROL records, security alerts 0",
+        "Cloud config guard suite successful 39608934073",
+        "363/363 Node run 39609004604",
+        "Pages 39609003181 successful",
+        "public Chromium 39609069781 successful"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "Real Auth/PostgREST E2E not yet run, so genuine login/multiuser acceptance unproven.",
+        "Runbook setup requires owner-prepared distinct test account credentials and an explicit manual workflow run.",
+        "The published UI presents readiness, not activated Cloud login, and no physical phone tests were performed."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "CONTROL Cloud public readiness screen with source-accurate backend status",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/399b9772a410800c64e8f52eebac6b8b5df9f812",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/app.html",
+        "online_verified_at": "2026-10-21T13:35:40.856Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39609069781"
+      },
+      {
+        "name": "Cloud real JWT/PostgREST acceptance runner, guarded for 2 dedicated users",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/tests/control-cloud-real-auth-e2e.mjs"
+      },
+      {
+        "name": "GitHub manual-only Cloud Auth acceptance workflow",
+        "stage": "coded",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/.github/workflows/control-cloud-real-auth.yml"
+      },
+      {
+        "name": "Safe Auth test account and secrets setup guide",
+        "stage": "coded",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/docs/CONTROL_CLOUD_AUTH_E2E_GUIDE.md"
+      }
+    ],
+    "links": [
+      {
+        "label": "Node 363/363",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39609004604"
+      },
+      {
+        "label": "Cloud config suite",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39608934073"
+      },
+      {
+        "label": "Pages",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39609003181"
+      },
+      {
+        "label": "Public Chromium",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39609069781"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "A database test with manually set request.jwt.claim.sub cannot establish real Auth/JWT security; genuine tokens must be validated via Auth server in the manual live E2E before Cloud is turned on.",
+      "The live negative-write test must track any accidentally accepted cross-tenant write so it can attempt cleanup and fail visibly; extra safeguard implemented before closure.",
+      "No customer accounts or existing data are touched; test runner refuses non-empty accounts and cleans its own fixtures under each test user's token.",
+      "The default Supabase email OTP flow on public Cloud app is not equivalent to a password test runner; two real Auth identities may be supplied via fresh JWT credentials without changing app Auth configuration.",
+      "Do not enable Cloud based solely on green Node/browser/UI readiness runs; those are protection and UX checks, not end-to-end real multi-user acceptance."
+    ],
+    "next": "Next CONTROL-ACCOUNT sprint: owner creates two dedicated empty real Auth test users in independent CONTROL Cloud and stores modern publishable key plus JWTs/passwords as GitHub Actions secrets; manually run guarded control-cloud-real-auth workflow with approval. If green, test real Cloud app authentication flows, redirects, account deletion, mobile; only then consider invite-only enabled true. Keep all costs 0€ and main direct, no credentials in chat or public GitHub."
   }
 ]
