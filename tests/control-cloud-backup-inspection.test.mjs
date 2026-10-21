@@ -83,6 +83,24 @@ test('encrypted CONTROL AES-GCM backup can be verified with the correct password
  assert.equal(result.counts.projects,1);
  assert.equal(result.counts.auditEvents,1);
 });
+
+test('valid encrypted file from a different CONTROL account reports ownership failure',async()=>{
+ const h=harness(),foreign=blank();foreign.accountId='other-account-owner';
+ const envelope=await encrypted(h,foreign,'a-safe-test-password');
+ await assert.rejects(()=>h.inspectCloudBackupPayload(envelope,owner,async()=>'a-safe-test-password'),/n’appartient pas au compte/);
+});
+test('account change during password dialog does not expose decrypted file details',async()=>{
+ const h=harness(),envelope=await encrypted(h,blank());
+ let resolvePassword,requested=false;
+ h.setPasswordProvider(()=>{requested=true;return new Promise(r=>{resolvePassword=r})});
+ const task=h.inspectCloudBackupFile(h.file(envelope));
+ for(let i=0;i<30&&!requested;i++)await Promise.resolve();
+ assert.equal(requested,true);
+ h.switchToB();resolvePassword('a-safe-test-password');
+ assert.equal(await task,false);
+ assert.doesNotMatch(h.output.textContent,/Sauvegarde vérifiée/);
+});
+
 test('wrong password and tampered AES-GCM ciphertext are rejected',async()=>{
  const h=harness(),wrapper=await encrypted(h,blank(),'the-correct-password');
  await assert.rejects(()=>h.inspectCloudBackupPayload(wrapper,owner,async()=>'wrong-password-123'),/Déchiffrement impossible/);
