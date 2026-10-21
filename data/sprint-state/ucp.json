@@ -10,11 +10,11 @@
     "objective": "Empêcher le générateur de brief de s’interrompre lorsque les méthodes DOM modernes lèvent une exception."
   },
   "checkpoint": {
-    "files": [],
-    "branch": null,
-    "pr_url": null,
-    "tests": [],
-    "next_action": "Inspecter app.js et ajouter un correctif ciblé hors application/**."
+    "files": ["site-vitrine/dist/assets/app.js", "site-vitrine/tests/app-shell.test.cjs"],
+    "branch": "fix/ucp-brief-dom-errors-20261021",
+    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/19",
+    "tests": ["CI première passe en attente sur ef6ceef2"],
+    "next_action": "Vérifier la CI, mener l’autocritique, corriger replaceChildren si nécessaire puis retester."
   },
   "last_completed": {
     "run_id": "ucp-20261021T032948Z-v3",
