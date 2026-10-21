@@ -93,6 +93,10 @@ async function reload(silent=false){if(!authUser||!client)return false;const own
  if(projects===null||items===null)return false;
  if(pref.data&&pref.data.owner_id!==owner)
   throw Error('Isolation des préférences non confirmée : données privées non affichées.');
+ // Id-based pagination guarantees stable coverage; restore the established
+ // recent-first visual order only after all pages have been verified.
+ projects.sort((a,b)=>String(b.created_at||'').localeCompare(String(a.created_at||'')));
+ items.sort((a,b)=>String(b.created_at||'').localeCompare(String(a.created_at||'')));
  cache={projects,items,preferences:pref.data||null};render();
  if(!silent)message('Espace synchronisé avec votre compte.');
  return true;
