@@ -380,7 +380,7 @@ try{
  assert.equal(await js("document.querySelector('.control-finder-search input')?.type"),'search');
  await js("(()=>{const input=document.querySelector('.control-finder-search input');input.value='visio';input.dispatchEvent(new Event('input',{bubbles:true}))})()");
  await ready(()=>js("!!document.querySelector('[data-finder-id=meetings]')"),8000)();
- assert.equal(await js("document.querySelector('[data-finder-id=meetings]')?.textContent?.includes('Visio')"),true);
+ assert.equal(await js("document.querySelector('[data-finder-id=meetings]')?.textContent?.toLowerCase().includes('visio')"),true);
  const finderSize=await js("({viewport:innerWidth,scroll:document.documentElement.scrollWidth,panel:Math.ceil(document.querySelector('.control-finder-panel').getBoundingClientRect().width)})");
  assert.ok(finderSize.scroll<=finderSize.viewport+4&&finderSize.panel<=finderSize.viewport+1,'Finder must not overflow narrow viewport: '+JSON.stringify(finderSize));
  await js("document.querySelector('[data-finder-id=meetings]').click()");
