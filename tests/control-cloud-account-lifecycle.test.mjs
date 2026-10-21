@@ -78,7 +78,30 @@ function exporter(options={}){
  const URL={createObjectURL:()=>{downloads.push('url');return 'blob:a'},revokeObjectURL:()=>{}};
  const document={createElement:()=>({click(){downloads.push('click')},remove(){}}),body:{appendChild(){}}};
  const setTimeout=()=>{},message=x=>messages.push(x);
- const client={from(table){const q={eq(field,value){if(field!==(table==='control_profiles'?'user_id':'owner_id')||value!==authUser?.id)throw Error('Wrong owner filter');return q},order(field){if(field!=='id')throw Error('Missing stable id ordering');return q},range(first,last){pageReads.push({table,first,last});if(options.pausePage&&table==='control_projects')return new Promise(resolve=>paused.push(resolve));const rows=table==='control_projects'?cache.projects:table==='control_items'?cache.items:table==='control_connections'?[{id:'connectionA',owner_id:'A',provider:'Claude'}]:table==='control_audit_events'?[{id:'auditA',owner_id:options.foreignAudit?'B':'A',action:'test'}]:[];return Promise.resolve({data:rows.slice(first,last+1),error:null})},maybeSingle(){return Promise.resolve({data:table==='control_profiles'?{user_id:options.foreignProfile?'B':'A',display_name:'Owner A'}:null,error:null})}};return{select(){return q}}}};
+ const client={from(table){
+  let head=false;
+  const rows=()=>table==='control_projects'?cache.projects:table==='control_items'?cache.items:
+   table==='control_connections'?[{id:'connectionA',owner_id:'A',provider:'Claude'}]:
+   table==='control_audit_events'?[{id:'auditA',owner_id:options.foreignAudit?'B':'A',action:'test'}]:[];
+  const q={
+   eq(field,value){if(field!==(table==='control_profiles'?'user_id':'owner_id')||value!==authUser?.id)throw Error('Wrong owner filter');return q},
+   order(field){if(field!=='id')throw Error('Missing stable id ordering');return q},
+   range(first,last){
+    pageReads.push({table,first,last});
+    if(options.pausePage&&table==='control_projects')return new Promise(resolve=>paused.push(resolve));
+    let data=rows().slice(first,last+1);
+    if(options.shortPage&&table==='control_projects')data=data.slice(0,20);
+    return Promise.resolve({data,error:null});
+   },
+   maybeSingle(){return Promise.resolve({data:table==='control_profiles'?{user_id:options.foreignProfile?'B':'A',display_name:'Owner A'}:null,error:null})},
+   then(yes,no){
+    if(!head)throw Error('An unexpected query was awaited');
+    const count=options.noCountTable===table?null:rows().length+(options.badCountTable===table?1:0);
+    return Promise.resolve({count,error:null}).then(yes,no);
+   }
+  };
+  return {select(fields,params){head=params?.head===true;return q}};
+ }};
  `;
  return new Function('options',code+helper+exportCode+String.raw`
  return {exportMyData,downloads,keys,messages,payloads,pageReads,paused,switchB(){authUser={id:'B'};epoch++;cache={projects:[],items:[],preferences:null}}};
@@ -103,6 +126,29 @@ test('cloud export fetches every page rather than the truncated on-screen subset
  assert.equal(JSON.parse(h.payloads[0]).projects.length,405);
  assert.deepEqual(h.downloads,['url','click']);
 });
+
+test('early-ending server page must never become a downloadable incomplete export',async()=>{
+ const h=exporter({large:true,shortPage:true});
+ await assert.rejects(h.exportMyData(false),/nombre de lignes différent/);
+ assert.equal(h.downloads.length,0);
+ assert.equal(h.payloads.length,0);
+});
+test('incomplete count metadata aborts the export rather than silently trusting pagination',async()=>{
+ const h=exporter({noCountTable:'control_items'});
+ await assert.rejects(h.exportMyData(false),/nombre de lignes différent/);
+ assert.deepEqual(h.downloads,[]);
+});
+test('different server count aborts a paginated export before user confirmation',async()=>{
+ const h=exporter({badCountTable:'control_audit_events'});
+ await assert.rejects(h.exportMyData(false),/nombre de lignes différent/);
+ assert.deepEqual(h.downloads,[]);
+});
+test('the private account UI exposes encrypted export and warns about plaintext data',()=>{
+ assert.match(source,/btn\('Exporter une sauvegarde chiffrée','export-encrypted'\)/);
+ assert.match(source,/btn\('Exporter en clair \(attention\)','export-json'\)/);
+ assert.match(source,/case 'export-encrypted':await exportMyData\(true\)/);
+});
+
 test('account export refuses foreign-owner records and creates no file',async()=>{
  const h=exporter({foreign:true});
  await assert.rejects(h.exportMyData(false),/propriétaire ou identifiant/);
