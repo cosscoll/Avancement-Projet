@@ -1,43 +1,14 @@
 {
   "schema_version": 3,
   "project": "ucp",
-  "status": "running",
-  "lease": {
-    "run_id": "ucp-20261021T162615Z-v3",
-    "owner": "chatgpt-automation-ucp",
-    "acquired_at": "2026-10-21T16:26:15Z",
-    "expires_at": "2026-10-21T17:11:15Z",
-    "objective": "Empêcher les getters DOM de la checklist de bloquer la régénération du brief."
-  },
-  "checkpoint": {
-    "phase": "ci_green_ready_to_merge",
-    "branch": "fix/ucp-checklist-getters-20261021",
-    "pr": 31,
-    "files": [
-      "site-vitrine/dist/assets/app.js"
-    ],
-    "head_sha": "b8390d3ac5258f438f2fcaecd105d93aab6a8d71",
-    "tests": [
-      {
-        "type": "CI",
-        "run": 64,
-        "conclusion": "success",
-        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39634981446"
-      },
-      {
-        "type": "CI",
-        "run": 65,
-        "conclusion": "success",
-        "url": "https://github.com/cosscoll/UnCoupdePouce/actions/runs/39635020012"
-      }
-    ],
-    "next": "Fusionner la PR #31 avec contrôle du head SHA, vérifier main, synchroniser et libérer le bail."
-  },
+  "status": "idle",
+  "lease": null,
+  "checkpoint": null,
   "last_completed": {
-    "run_id": "ucp-20261021T152908Z-v3",
-    "ended_at": "2026-10-21T15:33:45Z",
+    "run_id": "ucp-20261021T162615Z-v3",
+    "ended_at": "2026-10-21T16:30:55Z",
     "outcome": "merged",
-    "summary": "PR #30 getters de nettoyage du téléchargement fusionnée sur main 46039901 après deux CI vertes ; navigateur réel non vérifié.",
+    "summary": "PR #31 getters de checklist fusionnée sur main 3da2b1ba après deux CI vertes ; navigateur réel non vérifié.",
     "report_synced": true
   },
   "maintenance_last_run": {
