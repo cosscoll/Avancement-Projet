@@ -267,10 +267,28 @@ try{
  await js("document.querySelector('#new-decision').elements.namedItem('details').value='V2 correction';document.querySelector('#new-decision').requestSubmit()");
  await ready(()=>js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').decisions?.some(d=>d.title==='Recette Memoire Unique'&&d.details==='V2 correction'&&d.version===2)"),9000)();
  log('decision correction advances version without duplicate');
+ // Search must expose the correct provenance and version within the selected project.
+ await js("location.hash='#/control/search'");
+ await ready(()=>js("!!document.querySelector('#search-project')"),9000)();
+ await js("document.querySelector('#search-project').value='iagile';document.querySelector('#search-project').dispatchEvent(new Event('change'));document.querySelector('#global-search').value='Recette Memoire Unique';document.querySelector('#global-search').dispatchEvent(new Event('input'))");
+ assert.equal(await js("document.querySelectorAll('#search-hits a').length"),0,'Other-project memory must stay outside selected project search');
+ await js("document.querySelector('#search-project').value='ucp';document.querySelector('#search-project').dispatchEvent(new Event('change'))");
+ await ready(()=>js("document.querySelectorAll('#search-hits a').length===1"),9000)();
+ assert.match(await js("document.querySelector('#search-hits').textContent"),/v2/);
+ assert.match(await js("document.querySelector('#search-hits').textContent"),/Compte rendu test/);
+ await js("document.querySelector('#search-hits a').click()");
+ await ready(()=>js("!!document.querySelector('[data-memory-id][aria-current=true]')"),9000)();
+ assert.match(await js("document.querySelector('[data-memory-id][aria-current=true]').textContent"),/Recette Memoire Unique/);
+ log('project-scoped search points to current v2 decision with declared source and exact target');
  await js("window.__memoryConfirm=window.confirm;window.confirm=()=>true;document.querySelector('[data-act^=\"decision-del:\"]').click()");
  await ready(()=>js("!JSON.parse(localStorage.getItem('control-command-v1')||'{}').decisions?.some(d=>d.title==='Recette Memoire Unique')"),9000)();
  await js("window.confirm=window.__memoryConfirm;delete window.__memoryConfirm");
  log('decision deletion propagates to persisted memory');
+ await js("location.hash='#/control/search'");
+ await ready(()=>js("!!document.querySelector('#global-search')"),9000)();
+ await js("document.querySelector('#search-project').value='ucp';document.querySelector('#search-project').dispatchEvent(new Event('change'));document.querySelector('#global-search').value='Recette Memoire Unique';document.querySelector('#global-search').dispatchEvent(new Event('input'))");
+ assert.equal(await js("document.querySelectorAll('#search-hits a').length"),0,'Deleted decision must not appear in fresh search');
+ log('deleted memory entry is absent from current project-scoped search');
  await js("location.hash='#/control/localai'");
  await ready(()=>js("!!document.querySelector('[data-op-consent]')"),9000)();
  await js("document.querySelector('[data-op-consent]').click()");
