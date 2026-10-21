@@ -47,7 +47,7 @@ const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLo
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const STOP_WORDS=new Set(['un','une','le','la','les','des','du','de','d','en','a','au','aux','mon','ma','mes','son','sa','ses','pour','je','veux','comment','faire','dans','sur','avec']);
 function findFeatures(raw,entries=catalog()){
- const parts=norm(raw).split(/\\s+/).filter(w=>w&&!STOP_WORDS.has(w));
+ const parts=norm(raw).split(/\s+/).filter(w=>w&&!STOP_WORDS.has(w));
  if(!parts.length)return entries;
  return entries.map(item=>{
   const title=norm(item.title),hint=norm(item.hint),keys=norm(item.keywords);
