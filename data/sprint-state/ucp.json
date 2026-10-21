@@ -10,21 +10,22 @@
     "objective": "Sécuriser le repli après échec du téléchargement et de la révocation URL"
   },
   "checkpoint": {
-    "phase": "coded",
+    "phase": "ready_to_merge",
     "repository": "cosscoll/UnCoupdePouce",
     "base_branch": "main",
     "base_sha": "b2778be9946056b9a32e83f5b775cf199d9e35b8",
     "branch": "fix/ucp-failed-download-cleanup-20261021",
-    "branch_sha": "291874a0e33ba1a4899533a6f396b2d297a7a350",
-    "pr_url": null,
+    "branch_sha": "c5d83442833e6a6510cf078e4efc545f63cf92c8",
+    "pr_url": "https://github.com/cosscoll/UnCoupdePouce/pull/18",
     "files": [
       "site-vitrine/dist/assets/app.js",
       "site-vitrine/tests/app-shell.test.cjs"
     ],
     "tests": [
-      "CI première passe à lancer après ouverture de PR"
+      "Vitrine CI #34 succès (première passe)",
+      "Vitrine CI #35 succès (seconde passe après autocritique)"
     ],
-    "next_action": "Ouvrir la PR, attendre la CI, puis couvrir l’échec de setTimeout et sa révocation immédiate."
+    "next_action": "Revalider PR, base main et bail, puis fusionner prudemment."
   },
   "last_completed": {
     "run_id": "ucp-20261021T023450Z-v3",
