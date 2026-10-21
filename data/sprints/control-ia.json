@@ -1795,5 +1795,118 @@
       "Use a verified published SHA even when another project commits to shared main; do not mask concurrency or claim proof at all later SHAs."
     ],
     "next": "Next IMP-01 step should allow project-scoped plan drafts to become explicit individually approved local action proposals only through existing IMP-05 reviewer, with per-step idempotency of IMP-10, preserving non-execution until confirmation. Also revisit list of plans for edit/refresh and test permissions. Do not trigger providers or cost, direct main and evidence."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-imp01-step-approval-recovery-20261021124032740",
+    "started_at": "2026-10-21T12:40:32.740Z",
+    "ended_at": "2026-10-21T12:49:54.644Z",
+    "summary": "Recovered expired IMP-01 lease with no intervening CONTROL code commits; shipped per-step explicit local task approval using existing IMP-05 before/after risk and IMP-10 idempotent receipt, editable title with consent reset, no external AI, no automatic task. 12 new regressions: 341/341 Node, real browser smoke and same-SHA GitHub Pages/Chromium green. Separately documented newly created owner-approved 0€/month independent CONTROL Cloud Supabase; actual RLS schema 6 tables, 22 policies, zero anon grants, live SQL A/B transaction rollback, zero security advisor alerts. Cloud remains disabled; no real Auth users yet.",
+    "objectives": [
+      {
+        "before": "A saved CONTROL objective plan listed local steps but could not turn a particular step into an explicitly confirmed, logged task. Risk of implying a plan itself executed, duplicated task writes on retries or cross-project leakage.",
+        "after": "Each saved step offers a separate task preparation flow, exact project and before/after risk review; user explicitly checks consent, title changes update visible 'after' and uncheck consent; only then create exactly one local task with persistent IMP-10 receipt. Reopening plan shows completed creation without retry; no external API invoked.",
+        "acceptance": "12 added tests of planning-to-task, rejection, scope, rollback and receipt. All 341/341 GitHub Node checks successful, local Chrome and exact SHA public Pages/Chromium successful; Cloud still disabled."
+      },
+      {
+        "before": "CONTROL independent backend was created and live RLS tested outside GitHub, but persistent project bootstrap facts and activation gates were not present on main.",
+        "after": "Non-secret public runbook docs/CONTROL_CLOUD_BOOTSTRAP_20261021.md records verified independent free-plan project, migration, actual DB RLS and synthetic-claim A/B test, and gate for two real Supabase Auth JWTs before activation.",
+        "acceptance": "Real Supabase inspection: six RLS-enabled tables, 22 owner policies, zero grants to anon, zero security advisor alerts, simulated A/B identity SQL checks with full rollback. No claim of real Auth/PostgREST login tests."
+      }
+    ],
+    "done": [
+      "Inspected CONTROL lease acquired 11:48Z, expired 12:33Z; confirmed no CONTROL code commit since acquisition, recovered original run_id and objective in state and acquired new independent 45-minute lease.",
+      "Added goalStepDraft producing stable per-plan-step idempotency key after verifying plan, scope, source, criterion, valid title.",
+      "Added per-step buttons on saved objectives, on-screen project/Before/After/Risk preview, explicit consent checkbox, editable task title, and IMP-05 review immediately before IMP-10 local task creation. Consent resets after title edit.",
+      "Stored receipt via existing operator audit and prevented duplicate plan-step action upon returning to saved plan; task remained local unexecuted.",
+      "Added 12 regression tests reading production planner/operator code for unauthorized project, out-of-date/missing step, duplicate/retry, malformed titles, rollback, source isolation, and confirmation UI.",
+      "Added Chromium user flow: local plan creation, step preview without mutation, changed title resets consent, one confirmed task and stored receipt; revisit plan without replay.",
+      "Fixed one brittle Node assertion that wrongly required text 'IMP-05' instead of actual consent/readable review; left behavioral tests and Chrome receipt checks intact.",
+      "CI quality passed 341/341 at 1eb4621; Pages and postdeploy Chromium green on exact later docs-only SHA ff4c1188.",
+      "Documented owner-approved zero-cost CONTROL Cloud project in separate Supabase, six RLS tables and live SQL simulated A/B rollback; no private API keys or test users exposed.",
+      "Cloud config/cloud.json remains disabled; no paid services, no external actions or migrations to IAgile Academy."
+    ],
+    "blockers": [
+      "CONTROL Cloud real Auth: no two real registered users or real issued JWT A/B via browser/PostgREST; cannot claim full server lifecycle or cross-device sync acceptance.",
+      "User-facing per-step confirmation affects only local browser task state; no actual agent/provider execution, real webhook, or third-party account permissions.",
+      "The SQL A/B test uses simulated request.jwt.claim.sub inside real PostgreSQL and full ROLLBACK. It is policy testing, not genuine end-to-end Auth session validation.",
+      "Cloud production remains enabled:false by design; free quota constraints require monitoring, zero-cost confirmed at creation only."
+    ],
+    "quality": {
+      "ci": "success",
+      "checks_run": [
+        "12 new plan-step approvals Node tests",
+        "GitHub full CONTROL Node suite 341 tests",
+        "Headless Chromium local plan-to-task consent and idempotent receipt",
+        "GitHub Pages deploy code & docs",
+        "Postdeploy Chromium public 12 asset hash parity and browser actions",
+        "Supabase real SQL migration policy inventory and synthetic JWT-claim A/B rollback"
+      ],
+      "checks_passed": [
+        "341/341 Node tests at 1eb4621",
+        "Chromium local at 1eb4621",
+        "Pages deployment success at ff4c1188",
+        "postdeploy public Chromium success at ff4c1188",
+        "6/6 RLS tables, 22 owner policies, zero anonymous grants, zero security alerts"
+      ],
+      "checks_failed": [
+        "Intermediate Node run with text-only /IMP-05/ assertion failed 1/341; corrected to actual consent/behavior; 341/341 final green"
+      ],
+      "limitations": [
+        "No physical iOS/Android acceptance; local PWA browser test only.",
+        "0€ is a quoted creation cost, not unlimited hosting/compute allowance.",
+        "No genuine real login and 2 JWTs; do not mark real_verified V1.2 criteria fully accepted."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Saved goal plan per-step explicitly approved task and idempotent audit receipt",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/696621723f2e76cf88fc82e6e17d8bc35f8dbcc7",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T12:49:54.644Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602558986"
+      },
+      {
+        "name": "CONTROL Cloud independent backend bootstrap/security record",
+        "stage": "verified_online",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/docs/CONTROL_CLOUD_BOOTSTRAP_20261021.md",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_verified_at": "2026-10-21T12:49:54.644Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602558986"
+      },
+      {
+        "name": "12 local step consent/rollback/idempotency regressions",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/c0fc5baba4738500d2fce1c4f6d0d497352cafa0"
+      }
+    ],
+    "links": [
+      {
+        "label": "341/341 Node",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602311548"
+      },
+      {
+        "label": "Chromium local",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602313933"
+      },
+      {
+        "label": "Pages final docs SHA",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602485724"
+      },
+      {
+        "label": "Public Chromium final docs SHA",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39602558986"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "A frozen after-state after editing a step title would permit approval of different text than was previewed; fixed to update preview and reset consent on every edit.",
+      "Step creation is not automatic, and the stored plan remains a proposal regardless of the saved local task.",
+      "An older expired CONTROL lease held no code changes; recovered its original identity and did not fake completion; documented and preserved previous checkpoint.",
+      "Saved plan step idempotency is bounded to local audit history; not a server transactional exactly-once guarantee.",
+      "SQL simulated JWT claim A/B on real CONTROL Cloud must not be mistaken for Auth/JWT end-to-end, so Cloud gate remains off."
+    ],
+    "next": "CONTROL-ACCOUNT next: prepare and verify two real AUTH identities on independent CONTROL Cloud with safe test-user authorization and end-to-end PostgREST A/B RLS, sign-out/delete and concurrency checks, then only after approval enable Cloud. Also consider next IMP-01 progress UI for local approved steps and allow edit/regeneration without double action, under main lease and production tests. Do not pay or enable Cloud prematurely."
   }
 ]
