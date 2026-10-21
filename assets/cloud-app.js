@@ -23,7 +23,7 @@ const btn=(title,action,ref='',style='')=>'<button type="button" data-action="'+
 const card=(title,desc,action,id)=>'<button class="card" type="button" data-action="'+H(action)+'" data-id="'+H(id)+'"><div class="badge">'+H(title.slice(0,2).toUpperCase())+'</div><strong>'+H(title)+'</strong><small>'+H(desc)+'</small></button>';
 function message(s,bad=false){const el=byId('toast');el.textContent=s;el.hidden=false;el.style.background=bad?'#873c40':'#1f3653';clearTimeout(message.timer);message.timer=setTimeout(()=>el.hidden=true,4200)}
 function live(s){const el=byId('status');el.textContent=s;el.hidden=false}
-function visible(which){for(const id of ['setup','auth','workspace'])byId(id).hidden=id!==which;byId('status').hidden=true;byId('bottomnav').hidden=which!=='workspace';byId('account').hidden=which!=='workspace';byId('refresh').hidden=which!=='workspace'}
+function visible(which){for(const id of ['setup','auth','workspace'])byId(id).hidden=id!==which;byId('status').hidden=true;byId('bottomnav').hidden=which!=='workspace';byId('account').hidden=which!=='workspace';byId('refresh').hidden=which!=='workspace';byId('nav-open-cloud').hidden=which!=='workspace';byId('nav-mobile-cloud').hidden=which!=='workspace';if(which!=='workspace')window.CONTROL_NAVIGATION?.close()}
 const panel=(title,body)=>'<section class="surface"><h2>'+H(title)+'</h2>'+body+'</section>';
 const header=(title,desc,actions='')=>'<div class="bar"><div><div class="eyebrow">ESPACE PRIVÉ CONTROL</div><h1>'+H(title)+'</h1><p class="muted">'+H(desc)+'</p></div><div class="btnrow">'+actions+'</div></div>';
 const options=(xs,current)=>xs.map(x=>'<option value="'+H(x[0])+'" '+(x[0]===current?'selected':'')+'>'+H(x[1])+'</option>').join('');
@@ -255,7 +255,7 @@ function projectsPage(){
  const recent=cache.projects.slice().sort((a,b)=>(b.updated_at||'').localeCompare(a.updated_at||''));
  const visible=cloudProjectsAll?recent:recent.slice(0,6);
  return header('Mes projets','Retrouve ton travail et tes IA.',btn('+ Nouveau projet','toggle-project-form')+' '+btn('Tous les outils','tools'))+
- '<section class="clarity-shortcuts"><button class="clarity-shortcut" data-action="inbox"><strong>À traiter</strong><span>Mes priorités →</span></button><button class="clarity-shortcut" data-action="lab"><strong>Créer avec une IA</strong><span>Préparer un brief →</span></button><button class="clarity-shortcut" data-action="tools"><strong>Tous les outils</strong><span>Explorer à mon rythme →</span></button></section>'+
+ '<section class="clarity-shortcuts"><button class="clarity-shortcut" data-action="inbox"><strong>1. Mes priorités</strong><span>Les actions à traiter →</span></button><button class="clarity-shortcut" data-action="manager"><strong>2. Piloter mes projets</strong><span>Faire le point →</span></button><button type="button" class="clarity-shortcut" data-control-nav-open><strong>3. Trouver une fonction</strong><span>Tous les outils et actions →</span></button></section>'+
  '<div class="row clarity-listhead"><h2>Projets <span class="clarity-count">'+cache.projects.length+'</span></h2></div>'+
  '<div class="row"><input class="search" id="project-search" placeholder="Rechercher un projet…" type="search" aria-label="Rechercher un projet"></div>'+
  '<section id="new-project" class="surface" hidden><h2>Créer un projet</h2>'+projectForm()+'</section>'+
@@ -270,7 +270,7 @@ function projectPage(){
  const advanced=additional.some(x=>x[0]===t);
  const relevant=items(t,p.id);return '<a class="back" href="#" data-action="projects">← Tous les projets</a>'+header(p.name,p.description||p.category||'Espace de travail privé',
  btn('+ Ajouter','toggle-item-form')+' '+btn('Modifier','edit-project',p.id))+
- '<div class="clarity-work-nav"><div class="tabbar">'+choices.map(([key,label])=>'<button type="button" data-action="project-tab" data-id="'+key+'" class="'+(key===t?'selected':'')+'">'+label+'</button>').join('')+'</div>'+ '<details class="clarity-more-tabs" '+(advanced?'open':'')+'><summary>Plus'+(advanced?' · '+H(additional.find(x=>x[0]===t)?.[1]):'')+'</summary><div class="clarity-advanced">'+additional.map(([key,label])=>'<button type="button" data-action="project-tab" data-id="'+key+'" aria-current="'+(key===t?'page':'false')+'">'+label+'</button>').join('')+'</div></details></div>'+
+ '<div class="control-wayfinding"><p><strong>Dans ce projet :</strong> choisissez une catégorie ci-dessous ou ouvrez la recherche des fonctions.</p><button type="button" data-control-nav-open>⌕ Trouver une fonction</button></div><div class="clarity-work-nav"><div class="tabbar">'+choices.map(([key,label])=>'<button type="button" data-action="project-tab" data-id="'+key+'" class="'+(key===t?'selected':'')+'">'+label+'</button>').join('')+'</div>'+ '<details class="clarity-more-tabs" '+(advanced?'open':'')+'><summary>Plus'+(advanced?' · '+H(additional.find(x=>x[0]===t)?.[1]):'')+'</summary><div class="clarity-advanced">'+additional.map(([key,label])=>'<button type="button" data-action="project-tab" data-id="'+key+'" aria-current="'+(key===t?'page':'false')+'">'+label+'</button>').join('')+'</div></details></div>'+
  '<section id="new-item" class="surface" hidden><h2>Nouvel élément · '+H(names[t])+'</h2>'+itemForm(t,p.id)+'</section>'+
  '<div class="surface"><div class="row"><h2>'+H(names[t])+'</h2>'+pill(relevant.length+' élément(s)')+'</div>'+
  (relevant.length?relevant.map(itemRow).join(''):empty('Aucun élément dans cette catégorie. Ajoute une conversation, un dossier ou une tâche pour démarrer.'))+'</div>'+
@@ -970,6 +970,18 @@ window.CONTROL_HELP?.setAdapter({
   return false;
  },
  getSummary:()=>authUser?{projects:cache.projects.length,current:page==='project'?getProject(picked)?.name:'',openActions:cache.items.filter(x=>x.kind==='task'&&x.status!=='done').length,missions:cache.items.filter(x=>x.kind==='mission').length}:null
+});
+window.CONTROL_NAVIGATION?.setAdapter({
+ mode:'cloud',
+ getActiveProject:()=>page==='project'?getProject(picked):null,
+ getProjects:()=>cache.projects,
+ isAvailable:()=>!!authUser,
+ navigate:destination=>{
+  if(!authUser)return false;
+  if(destination.startsWith('tools:')){toolTab=destination.slice(6);nav('tools');return true}
+  if(['account','projects','inbox','manager','tools','missions','automations','lab','command','catalog','deploy','visios'].includes(destination)){nav(destination);return true}
+  return false;
+ }
 });
 wireEvents();
 boot();
