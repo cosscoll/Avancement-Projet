@@ -1,17 +1,12 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-repair-20261021-lease-ci-automation",
-    "started_at": "2026-10-21T07:08:37.936Z",
-    "expires_at": "2026-10-21T07:53:37.936Z",
-    "objective": "Restore scheduled CONTROL work and recover expired checkpoint; repair shared CI root invalid report while honoring UCP lease; verify runs after write."
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-20T09:57:40.777Z",
+    "updated_at": "2026-10-21T07:16:24.819Z",
     "main": true,
-    "stage": "cloud_config_safety_tested_backend_still_blocked",
+    "stage": "scheduler_reactivated_ci_green_awaiting_first_real_hourly_run",
     "files": [
       "assets/cloud-app.js",
       "config/cloud.example.json",
@@ -21,25 +16,25 @@
       "data/control-ia-requirements.json"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403753476",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403871371",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403988250"
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39560080318",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39560080290",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39560079395"
     ],
     "remaining_blockers": [
-      "No authorized independent CONTROL Supabase instance with guaranteed zero cost.",
-      "Real JWT A/B, PostgREST and cross-device synchronization have not been tested.",
-      "Shared central CI UCP invalid incident entry unrelated to CONTROL."
+      "Next scheduled ChatGPT Task execution not yet observed; platform disabled cause unknown.",
+      "Real CONTROL-ACCOUNT Auth, JWT, RLS A/B and multi-device sync still need separately approved zero-cost dedicated Supabase project.",
+      "GitHub cooperative leases and Task notifications are not a guarantee of uninterrupted execution."
     ],
-    "next_action": "After user approval of a distinct zero-cost CONTROL Supabase project, run real test users A/B RLS and JWT/session revocation tests; never reuse IAgile, never enable Cloud prematurely."
+    "next_action": "At next XXh50 Europe/Paris: verify fresh task run and ability to acquire own lease. Reinspect aborted 2026-10-20 session objective: test and improve async account load + owner_id project/item filtering without activating Cloud; make a verified direct-main deliverable, autocritique/correct/retest, persist report and release lease."
   },
   "last_completed": {
-    "run_id": "control-ia-20261020-account-safe-config-classic",
-    "started_at": "2026-10-20T09:43:36.170Z",
-    "ended_at": "2026-10-20T09:57:40.777Z",
-    "summary": "Hardened CONTROL Cloud browser project config, only sb_publishable_ keys, rejected legacy JWT/unsafe URLs; 20 dedicated Cloud tests passed incl 5 simulated A/B session races; T-16 remains partial; Cloud disabled.",
-    "stage": "tested_not_operational",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403753476",
-    "commit_sha": "ba145f15c60ab86820c8644cdbe8632473023236"
+    "run_id": "control-ia-repair-20261021-lease-ci-automation",
+    "started_at": "2026-10-21T07:08:37.936Z",
+    "ended_at": "2026-10-21T07:16:24.819Z",
+    "summary": "Reactivated existing CONTROL Task XXh50; recovered expired lease without inventing interrupted work; normalized one UCP report under separate lease; CI 174/174 and 14/14 green, Pages success, awaiting next actual automatic execution.",
+    "stage": "tested",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39560080318",
+    "commit_sha": "4c3479819054c76e2e3555075755d41714674c51"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
@@ -47,7 +42,11 @@
     "expired_at": "2026-10-20T13:35:15.408Z",
     "objective": "CONTROL-ACCOUNT: corriger le chargement concurrent de sessions et le filtrage owner_id, tester, puis publier sur main si sûr",
     "recovered_at": "2026-10-21T07:08:37.936Z",
-    "reason": "Old cooperative lease expired; preserve last verified checkpoint and audit pending work before resuming."
+    "reason": "Old cooperative lease expired; preserve last verified checkpoint and audit pending work before resuming.",
+    "recovery_status": "interrupted_after_lease_only",
+    "recovery_evidence": "https://github.com/cosscoll/Avancement-Projet/commit/e0431fbfde96",
+    "recovery_summary": "Checked CONTROL commits in original 2026-10-20T12:40–13:55Z window: only acquisition commit, no further CONTROL code committed. Prior tested checkpoint preserved.",
+    "resolved_at": "2026-10-21T07:16:24.819Z"
   },
   "prior_checkpoint": {
     "updated_at": "2026-10-20T07:23:35Z",
@@ -115,5 +114,14 @@
       "Shared central CI UCP invalid incident entry unrelated to CONTROL."
     ],
     "next_action": "After user approval of a distinct zero-cost CONTROL Supabase project, run real test users A/B RLS and JWT/session revocation tests; never reuse IAgile, never enable Cloud prematurely."
+  },
+  "last_completed_before_repair": {
+    "run_id": "control-ia-20261020-account-safe-config-classic",
+    "started_at": "2026-10-20T09:43:36.170Z",
+    "ended_at": "2026-10-20T09:57:40.777Z",
+    "summary": "Hardened CONTROL Cloud browser project config, only sb_publishable_ keys, rejected legacy JWT/unsafe URLs; 20 dedicated Cloud tests passed incl 5 simulated A/B session races; T-16 remains partial; Cloud disabled.",
+    "stage": "tested_not_operational",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39403753476",
+    "commit_sha": "ba145f15c60ab86820c8644cdbe8632473023236"
   }
 }
