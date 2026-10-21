@@ -345,3 +345,16 @@ L'autocritique a relevé un risque non testé : le raccourci PWA sur téléphone
 
 **Autocritique :** la gestion des migrations n'est pas transactionnelle : si une requête a déjà abouti sur A avant le changement de session, sa ligne peut subsister sur A ; le client ne prétend pas avoir annulé la transaction serveur. Les tests sont synthétiques et l'application Cloud reste volontairement désactivée. Il faut toujours une instance CONTROL distincte approuvée à 0 €, deux vrais comptes Auth avec JWT et RLS, et une recette multi-appareils pour conclure `CONTROL-ACCOUNT`. Le prochain chantier est la cohérence entre le registre historique des 9 capacités et la liste canonique des 22 tickets, sans perdre la trace des anciens identifiants incohérents.
 
+
+## 21 octobre 2026 — Traçabilité BACK V1.2 : 19 références historiques hors catalogue
+
+**Défaut vérifié :** `data/control-ia-delivery.json` contenait 19 références actives `BACK-023` à `BACK-042` dans les capacités Compte, Connecteurs, Agenda, Rappels et Qualité, alors que le registre canonique `data/control-ia-requirements.json` ne contient que `BACK-001` à `BACK-022`. Le validateur V1.2 protégeait la liste de 22 tickets, mais pas les liens externes `source_tickets` des capacités.
+
+**Correction sur main, sans perte :** chaque référence absente de la nomenclature canonique a été déplacée dans `legacy_unmapped_ticket_refs` de sa capacité d'origine. Les 19 anciennes étiquettes restent conservées dans leur ordre initial pour une réconciliation future avec le cahier privé. Aucun ticket officiel, état de recette, critère, statut ni preuve n'a été inventé ou requalifié. Les capacités Agenda et Rappels n'ont pas de lien BACK canonique démontré : elles gardent un tableau `source_tickets` vide, ce qui est préférable à une correspondance fictive. [Changement  c26a7b2](https://github.com/cosscoll/Avancement-Projet/commit/c26a7b222fbe249a35ecea8528c096183023a488).
+
+**Deuxième passe :** `scripts/control-ia-requirements.mjs` vérifie les sources réelles, les doublons, le chevauchement entre étiquettes archivées et vraies références et la cohérence du compte historique. Quatre tests permanents supplémentaires portent la suite à **16 tests**. [Code validateur 9ad9824](https://github.com/cosscoll/Avancement-Projet/commit/9ad9824b36db3deee56d6c6efde685895380a124), [tests d7c2e10](https://github.com/cosscoll/Avancement-Projet/commit/d7c2e10ead022bc7bbc5e6c8628baa524abf4301).
+
+**Preuves :** [GitHub Actions V1.2 : 16/16](https://github.com/cosscoll/Avancement-Projet/actions/runs/39584035439), [Pages réussies](https://github.com/cosscoll/Avancement-Projet/actions/runs/39584036998), [Chromium public après déploiement réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/39584287643), tous sur le même SHA `8c63aa3f2d4505055e13b9addafca09b1743a52f`.
+
+**Autocritique :** la cohérence des IDs n'est pas une recette fonctionnelle. Elle ne débloque pas un compte Cloud, un rappel serveur, ni la réalisation des 42 scénarios. Toute future correspondance des anciennes étiquettes avec un ticket canonique doit être fondée sur le cahier privé exact, sans le transférer sur GitHub public et sans effacer l'historique. Prochain sprint P0 : corriger une nouvelle course démontrée dans la déconnexion asynchrone Cloud (la fin de la déconnexion de A peut réinitialiser le compte B récemment connecté).
+
