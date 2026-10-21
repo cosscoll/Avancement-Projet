@@ -38,7 +38,7 @@ jobs:
         run: node --check scripts/control-ia-requirements.mjs
       - name: Vérifier 22 tickets, 42 recettes et 10 améliorations
         run: node scripts/control-ia-requirements.mjs
-      - name: Exécuter les 12 tests V1.2
+      - name: Exécuter les 16 tests V1.2
         run: node --test tests/control-ia-requirements.test.mjs
       - name: Vérifier la cohérence des dix améliorations
         run: node scripts/control-ia-strategy.mjs
