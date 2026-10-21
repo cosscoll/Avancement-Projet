@@ -570,13 +570,22 @@ function goals(){
    const signature=plan.signature,projectName=review.projectName;
    target.innerHTML='<form id="goal-action-confirm"><h3>Validation indépendante · '+h(projectName)+'</h3>'+
     '<p>Étape : '+h(plan.steps[index].title)+'</p>'+
-    '<p><strong>Avant :</strong> '+h(review.before)+'</p><p><strong>Après :</strong> '+h(review.after)+'</p>'+
+    '<p><strong>Avant :</strong> '+h(review.before)+'</p><p><strong>Après :</strong> <span data-goal-after>'+h(review.after)+'</span></p>'+
     '<p><strong>Risque :</strong> '+h(review.risk)+'</p>'+
     '<label>Nom de la tâche locale<input name="title" maxlength="160" required value="'+h(first.title)+'"></label>'+
     '<label><input type="checkbox" name="consent" required> Je confirme la création de cette tâche sur cet appareil uniquement.</label>'+
     '<div class="actions"><button class="primary" type="submit">Confirmer la création locale</button><button type="button" data-goal-cancel>Annuler</button></div>'+
     '<p id="goal-action-error" role="alert"></p></form>';
    target.querySelector('[data-goal-cancel]').onclick=()=>target.replaceChildren();
+   const formTitle=target.querySelector('#goal-action-confirm [name=title]');
+   formTitle.addEventListener('input',()=>{
+    target.querySelector('#goal-action-confirm [name=consent]').checked=false;
+    const after=target.querySelector('[data-goal-after]'),error=target.querySelector('#goal-action-error');
+    try{const update=goalStepDraft(planId,index,formTitle.value);
+     after.textContent=window.CONTROL_OPERATOR_CORE.reviewAction(update,operatorSnapshot(),'general').after;
+     error.textContent='Relis le nouvel état après, puis coche à nouveau la confirmation.';
+    }catch(cause){after.textContent='Modification non valide';error.textContent=String(cause?.message||cause).slice(0,180)}
+   });
    registerForm('#goal-action-confirm',(input,form)=>{
     try{
      if(!form.elements.namedItem('consent').checked)throw Error('Consentement requis.');
@@ -585,11 +594,9 @@ function goals(){
       throw Error('Plan ou projet modifié : nouvelle validation nécessaire.');
      const action=goalStepDraft(planId,index,input.get('title'));
      const live=window.CONTROL_OPERATOR_CORE.reviewAction(action,operatorSnapshot(),'general');
-     // Editing the title changes the visible AFTER state: explicit second review.
-     if(live.after!==review.after){
-      target.querySelector('#goal-action-error').textContent='Le titre a changé : annule puis prépare à nouveau pour vérifier le nouvel état après.';
-      return;
-     }
+     // The "after" summary must match exactly what the user has just reviewed.
+     if(live.after!==target.querySelector('[data-goal-after]').textContent)
+      throw Error('État après devenu obsolète : nouvelle vérification nécessaire.');
      if((db.operatorAudit||[]).some(x=>x.approval_id===action.approvalId))
       throw Error('Étape déjà validée : aucune seconde création autorisée.');
      if(operatorExecute(action)!==true)throw Error('Enregistrement non confirmé.');
