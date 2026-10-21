@@ -104,12 +104,12 @@
     "Éviter de commencer des fonctionnalités indépendantes simplement pour augmenter le nombre de commits."
   ],
   "handoff": {
-    "next_sprint_goal": "CONTROL-ACCOUNT : recette Auth/JWT/PostgREST A/B réellement signée sur la base CONTROL indépendante, puis tests de session, export complet et suppression avant toute ouverture du Cloud.",
+    "next_sprint_goal": "CONTROL-ACCOUNT : recette réelle JWT/RLS A/B sur deux identités de test ; préparation d’une restauration transactionnelle après l'inspection locale chiffrée déjà livrée, sans activation publique avant tests.",
     "checkpoint_to_review": "RÉSOLU : correctif privé control-ia/pwa-atomic-v38-20261019-1754 repris et publié en PWA v39 ; vrai Chromium en ligne 39401977906 et 17 tests PWA. Conserver l'archive historique dans Library, ne plus présenter la v38 comme chantier bloqué.",
     "next_steps": [
-      "Contrôler les GitHub Actions natifs et GitHub Pages pour le SHA exact ; corriger immédiatement les régressions constatées avec preuve de CI, sans confondre simulations et recette réelle.",
-      "Avec accord du propriétaire, préparer exactement deux identités Supabase Auth de test CONTROL indépendantes et des secrets dans GitHub Actions ; lancer manuellement les tests JWT/RLS A/B avec nettoyage, sans clé privilégiée ni IAgile.",
-      "Après recette Auth réelle, tester navigateur, sessions révoquées, export des six tables et synchronisation mobile ; implémenter ensuite une idempotence serveur inter-appareils avant d'ouvrir Cloud."
+      "Valider le SHA exact du sprint dans GitHub Actions, Pages et Chromium ; préserver Cloud désactivé et ne pas confondre aperçu local de sauvegarde avec une restauration fonctionnelle.",
+      "Après accord du propriétaire, configurer deux comptes de test Supabase Auth vides et les secrets GitHub Actions protégés dans le projet CONTROL distinct ; exécuter la recette réelle JWT/RLS A/B sans clés privilégiées ni données IAgile.",
+      "Après acceptation réelle Auth/RLS, définir un plan de restauration de sauvegarde vérifiée avec prévisualisation, confirmation explicite, déduplication transactionnelle, rollback et tests multi-appareils ; développer ensuite l'idempotence des lots de missions."
     ],
     "external_decision_required": "Deux authentifications de test dédiées et secrets GitHub Actions fournis/validés par le propriétaire avant toute recette Auth réelle ; aucune activation Cloud ni dépense."
   },
