@@ -26,7 +26,7 @@ function harness(options={}){
  }
  const itemPayload=f=>({owner_id:authUser.id,kind:'task',title:String(f.get('title')||'Test'),project_id:'P'});
  const getProject=()=>null,confirm=()=>true,prompt=()=>'Project A';
- const reload=async()=>{messages.push({owner:authUser?.id,text:'RELOAD'});if(options.delayReload)await new Promise(resolve=>pendingSteps.push({type:'reload',resolve}))};
+ const reload=async()=>{if(options.failedReload)return false;messages.push({owner:authUser?.id,text:'RELOAD'});if(options.delayReload)await new Promise(resolve=>pendingSteps.push({type:'reload',resolve}))};
  const message=text=>messages.push({owner:authUser?.id,text});
  const nav=(...args)=>navCalls.push({owner:authUser?.id,args});
  `;
@@ -161,5 +161,19 @@ for(const kind of ['eraseItem','eraseProject','markDone']){
   await assert.rejects(pending,pattern);
   assert.deepEqual(h.auditCalls,[]);
   assert.deepEqual(h.messages,[]);
+ });
+}
+
+
+for(const kind of kinds){
+ test(kind+' never reports success when Cloud reread fails after confirmed HTTP write',async()=>{
+  const h=harness({failedReload:true}),pending=invoke(h,kind);
+  await Promise.resolve();
+  assert.equal(h.requests.length,1);
+  h.requests[0].resolve(receiptFor(kind));
+  await assert.rejects(pending,/synchronisation non vérifiée/);
+  assert.equal(h.auditCalls.length,1,'Write was confirmed and audited');
+  assert.deepEqual(h.messages,[],'No silent refresh or misleading success toast');
+  assert.deepEqual(h.navCalls,[],'Never navigate to unverified account content');
  });
 }
