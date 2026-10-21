@@ -191,3 +191,37 @@ test('same-owner fresh login recovers after an obsolete SIGNED_OUT notification'
  assert.equal(h.app.read().owner,'A');
  assert.equal(h.app.read().projects[0]?.owner_id,'A');
 });
+
+
+test('frontend refuses foreign project rows even if API returns them after an owner filter',async()=>{
+ const h=harness(),foreign=h.makeSlow('control_projects','A');
+ const load=h.app.verifiedSession();
+ await waitFor(()=>h.app.read().waitingOwner==='A','A project fetch');
+ foreign.resolve({data:[{id:'project-B',owner_id:'B',name:'Private B'}]});
+ await load;
+ assert.equal(h.app.read().owner,'A');
+ assert.deepEqual(h.app.read().projects,[]);
+ assert.deepEqual(h.app.read().items,[]);
+ assert.ok(h.state.messages.some(x=>x.bad&&x.text.includes('Isolation du compte non confirmée')));
+});
+
+test('frontend never renders another owner preference document',async()=>{
+ const h=harness(),foreign=h.makeSlow('control_preferences','A');
+ const load=h.app.verifiedSession();
+ await waitFor(()=>h.app.read().waitingOwner==='A','A preferences fetch');
+ foreign.resolve({data:{owner_id:'B',settings:{private:'B only'}}});
+ await load;
+ assert.equal(h.app.read().preferences,null);
+ assert.deepEqual(h.app.read().projects,[]);
+ assert.ok(h.state.messages.some(x=>x.bad&&x.text.includes('Isolation du compte non confirmée')));
+});
+
+test('frontend rejects a malformed untrusted collection instead of reporting sync success',async()=>{
+ const h=harness(),malformed=h.makeSlow('control_items','A');
+ const load=h.app.verifiedSession();
+ await waitFor(()=>h.app.read().waitingOwner==='A','A item fetch');
+ malformed.resolve({data:{owner_id:'A',title:'not an array'}});
+ await load;
+ assert.deepEqual(h.app.read().items,[]);
+ assert.ok(h.state.messages.some(x=>x.bad&&x.text.includes('Isolation du compte non confirmée')));
+});
