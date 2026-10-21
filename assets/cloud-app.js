@@ -446,9 +446,9 @@ async function eraseItem(item){
  const session=mutationSession();
  if(!confirm('Supprimer cet élément ? Cette opération est irréversible.'))return;
  if(!session.current())return;
- const q=await client.from('control_items').delete().eq('id',item.id).eq('owner_id',session.owner).select('id').single();
+ const q=await client.from('control_items').delete().eq('id',item.id).eq('owner_id',session.owner).select('id,owner_id').single();
  if(!session.current())return;
- if(q.error||!q.data)throw Error('Suppression non confirmée : actualise les données.');
+ if(q.error||q.data?.id!==item.id||q.data?.owner_id!==session.owner)throw Error('Suppression non confirmée : actualise les données.');
  await audit('item_removed','item',item.id,session.owner);
  if(!session.current())return;
  await reload(true);
@@ -458,9 +458,9 @@ async function eraseProject(p){
  const session=mutationSession();
  if(prompt('Cette opération supprime ce projet et TOUS ses éléments. Pour confirmer, écrivez le nom exact : '+p.name)!==p.name)return;
  if(!session.current())return;
- const q=await client.from('control_projects').delete().eq('id',p.id).eq('owner_id',session.owner).select('id').single();
+ const q=await client.from('control_projects').delete().eq('id',p.id).eq('owner_id',session.owner).select('id,owner_id').single();
  if(!session.current())return;
- if(q.error||!q.data)throw Error('Suppression non confirmée : actualise les données.');
+ if(q.error||q.data?.id!==p.id||q.data?.owner_id!==session.owner)throw Error('Suppression non confirmée : actualise les données.');
  await audit('project_removed','project',p.id,session.owner);
  if(!session.current())return;
  await reload(true);
@@ -468,9 +468,9 @@ async function eraseProject(p){
 }
 async function markDone(item){
  const session=mutationSession();
- const q=await client.from('control_items').update({status:'done',updated_at:new Date().toISOString()}).eq('id',item.id).eq('owner_id',session.owner).eq('updated_at',item.updated_at).select('id').single();
+ const q=await client.from('control_items').update({status:'done',updated_at:new Date().toISOString()}).eq('id',item.id).eq('owner_id',session.owner).eq('updated_at',item.updated_at).select('id,owner_id').single();
  if(!session.current())return;
- if(q.error||!q.data)throw Error('Conflit : actualise avant de modifier.');
+ if(q.error||q.data?.id!==item.id||q.data?.owner_id!==session.owner)throw Error('Conflit ou identité de tâche non confirmée : actualise avant de modifier.');
  await audit('item_done','item',item.id,session.owner);
  if(!session.current())return;
  await reload(true);
