@@ -66,3 +66,11 @@
 }
 @media(max-width:360px){.control-nav-mobile-trigger{right:10px;padding:9px 12px;font-size:12px}.control-finder-heading h2{font-size:21px}}
 @media(prefers-reduced-motion:reduce){.control-finder *, .control-finder *:before,.control-finder *:after{transition:none!important;animation:none!important}}
+
+/* Keep secondary news collapsed and discoverable instead of covering the project list. */
+.control-whats-new-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;list-style:none;font-size:13px;font-weight:750;color:#31526f;cursor:pointer;min-height:35px}
+.control-whats-new-toggle::-webkit-details-marker{display:none}
+.control-whats-new-inner{padding-top:16px}
+.control-whats-new-toggle span{font-size:16px}
+.control-whats-new[open] .control-whats-new-toggle span{transform:rotate(180deg)}
+@media(max-width:720px){#nav-open-cloud{display:none!important}}
