@@ -16,7 +16,7 @@ import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 const EXPECTED_REF='rvrmjjtdedidjnrkdery';
 const SCHEMA=['control_profiles','control_projects','control_items','control_preferences','control_connections','control_audit_events'];
-const work=[];const report=message=>process.stdout.write('CONTROL-CLOUD E2E: '+message+'\n');
+const report=message=>process.stdout.write('CONTROL-CLOUD E2E: '+message+'\n');
 function fatal(text){throw Error('E2E refusée : '+text)}
 function setup(env){
  if(env.CONTROL_TEST_PROJECT_REF!==EXPECTED_REF)fatal('référence CONTROL Cloud indépendante non confirmée');
@@ -53,6 +53,7 @@ async function authenticate(env,side,root,key){
 }
 const eq=(field,value)=>'&'+encodeURIComponent(field)+'=eq.'+encodeURIComponent(value);
 async function run(env=process.env){
+ const work=[];
  const {root,key}=setup(env),marker='CONTROL-E2E-'+randomUUID();
  const tokens=[await authenticate(env,'A',root,key),await authenticate(env,'B',root,key)];
  const users=[];
