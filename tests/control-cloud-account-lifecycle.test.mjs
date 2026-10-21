@@ -74,7 +74,7 @@ function exporter(options={}){
  let authUser={id:'A'},epoch=1,cache={projects:options.large?Array.from({length:405},(_,i)=>({id:'p'+String(i).padStart(4,'0'),owner_id:'A'})):[{id:'pA',owner_id:'A'}],items:[],preferences:null};
  if(options.foreign)cache.projects[0].owner_id='B';
  if(options.duplicate)cache.projects[400].id=cache.projects[0].id;
- const downloads=[],keys=[],messages=[],payloads=[],pageReads=[],paused=[];
+ const downloads=[],keys=[],messages=[],payloads=[],pageReads=[],paused=[],countCalls={};
  const prompt=()=> 'long-enough-password-for-export',confirm=()=>true;
  const crypto={getRandomValues:x=>x,subtle:{encrypt:async()=>new Uint8Array([1]).buffer}};
  const encKey=()=>new Promise(resolve=>keys.push(resolve)),encB64=()=> 'test';
@@ -101,7 +101,8 @@ function exporter(options={}){
    maybeSingle(){return Promise.resolve({data:table==='control_profiles'?{user_id:options.foreignProfile?'B':'A',display_name:'Owner A'}:null,error:null})},
    then(yes,no){
     if(!head)throw Error('An unexpected query was awaited');
-    const count=options.noCountTable===table?null:rows().length+(options.badCountTable===table?1:0);
+    const n=countCalls[table]=(countCalls[table]||0)+1;
+    const count=options.noCountTable===table?null:rows().length+(options.badCountTable===table?1:0)+(options.lateCountDrift===table&&n>1?1:0);
     return Promise.resolve({count,error:null}).then(yes,no);
    }
   };
@@ -214,6 +215,14 @@ test('account export rejects duplicate IDs across pagination boundaries',async()
  const h=exporter({large:true,duplicate:true});
  await assert.rejects(h.exportMyData(false),/propriétaire ou identifiant/);
  assert.deepEqual(h.downloads,[]);
+});
+
+
+test('account export refuses to download if another device changes collection size after pages were read',async()=>{
+ const h=exporter({lateCountDrift:'control_projects'});
+ await assert.rejects(h.exportMyData(false),/données modifiées pendant la sauvegarde/);
+ assert.deepEqual(h.downloads,[]);
+ assert.deepEqual(h.payloads,[]);
 });
 
 test('full account export includes every one of the six CONTROL data tables',async()=>{
