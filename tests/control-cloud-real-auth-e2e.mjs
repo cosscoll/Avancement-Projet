@@ -136,8 +136,8 @@ async function run(env=process.env){
     if(!Array.isArray(r.data)||r.data.length!==1)failed.push(row.table);
    }catch{failed.push(row.table)}
   }
-  if(failed.length)report('ATTENTION : nettoyage incomplet sur '+failed.join(', ')+' ; vérifier le compte de test.');
-  else report('nettoyage confirmé : aucun enregistrement de recette laissé dans les tables testées');
+  if(failed.length)throw Error('Nettoyage INCOMPLET sur '+[...new Set(failed)].join(', ')+' : contrôler et nettoyer les comptes de recette. Le test NE PEUT PAS être marqué vert.');
+  report('nettoyage confirmé : aucun enregistrement de recette laissé dans les tables testées');
  }
 }
 if(import.meta.url===new URL('file://'+process.argv[1]).href){
