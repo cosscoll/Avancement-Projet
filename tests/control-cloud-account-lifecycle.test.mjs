@@ -13,18 +13,18 @@ assert.ok(helper.startsWith('function mutationSession(){')&&oldImport.startsWith
 function importer(options={}){
  const code=String.raw`
  let authUser={id:'A'},epoch=1,cache={projects:[],items:[],preferences:null};
- const fetches=[],projectRequests=[],writes=[],messages=[];
+ const fetches=[],projectRequests=[],itemRequests=[],upsertRequests=[],writes=[],messages=[];
  const localStorage={getItem:()=>JSON.stringify({legacyA:{memo:'PRIVATE A'}})};
  const fetch=()=>new Promise(resolve=>fetches.push(resolve));
  const prompt=()=> 'IMPORTER',confirm=()=>true,safeURL=x=>x;
  const reload=async()=>messages.push('reload'),nav=x=>messages.push('nav:'+x),message=x=>messages.push(x);
  const client={from(table){return{
-  insert(data){writes.push({table,data});return{select(){return{single(){if(table==='control_projects'&&options.pauseProject)return new Promise(resolve=>projectRequests.push(resolve));return Promise.resolve({data:table==='control_projects'?{id:'p1',owner_id:data.owner_id,name:data.name}:{id:'i1'},error:null})}}}}},
-  upsert(data){writes.push({table,data});return Promise.resolve({error:null})}
+  insert(data){writes.push({table,data});return{select(){return{single(){if(table==='control_projects'&&options.pauseProject)return new Promise(resolve=>projectRequests.push(resolve));if(table==='control_items'&&options.pauseItem)return new Promise(resolve=>itemRequests.push(resolve));return Promise.resolve({data:table==='control_projects'?{id:'p1',owner_id:data.owner_id,name:data.name}:{id:'i1'},error:null})}}}}},
+  upsert(data){writes.push({table,data});if(options.pauseUpsert)return new Promise(resolve=>upsertRequests.push(resolve));return Promise.resolve({error:null})}
  }}};
  `;
  return new Function('options',code+helper+oldImport+String.raw`
- return {importLegacy,fetches,projectRequests,writes,messages,getCache:()=>cache,
+ return {importLegacy,fetches,projectRequests,itemRequests,upsertRequests,writes,messages,getCache:()=>cache,
   switchB(){authUser={id:'B'};epoch++;cache={projects:[],items:[],preferences:null}},
   reloginA(){epoch++;cache={projects:[],items:[],preferences:null}}};
  `)(options);
@@ -115,4 +115,26 @@ test('deletion stays disabled without explicit backend permission',async()=>{
  const h=deleter(false);
  await assert.rejects(h.action({dataset:{action:'delete-account'}}),/non activée/);
  assert.equal(h.responses.length,0);
+});
+
+test('switch to B after item insert never writes A import marker to B',async()=>{
+ const h=importer({pauseItem:true}),pending=h.importLegacy();
+ await completeCatalog(h);
+ for(let i=0;i<100&&!h.itemRequests.length;i++)await Promise.resolve();
+ assert.equal(h.itemRequests.length,1);
+ h.switchB();h.itemRequests[0]({data:{id:'item-A'},error:null});
+ assert.equal(await pending,false);
+ assert.deepEqual(h.getCache().items,[]);
+ assert.equal(h.writes.some(w=>w.table==='control_preferences'),false);
+ assert.deepEqual(h.messages,[]);
+});
+test('switch to B during preferences response cannot navigate to A project',async()=>{
+ const h=importer({pauseUpsert:true}),pending=h.importLegacy();
+ await completeCatalog(h);
+ for(let i=0;i<100&&!h.upsertRequests.length;i++)await Promise.resolve();
+ assert.equal(h.upsertRequests.length,1);
+ assert.equal(h.writes.at(-1).data.owner_id,'A');
+ h.switchB();h.upsertRequests[0]({error:null});
+ assert.equal(await pending,false);
+ assert.deepEqual(h.messages,[]);
 });
