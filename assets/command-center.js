@@ -18,7 +18,7 @@ function sourceLink(project,provider){const x=openProject(project);return provid
 function availableAgents(){const ids=new Set(agents.map(a=>a.id));for(const p of ctx.projects){const d=openProject(p.id);for(const key of Object.keys(d.spaces||{}))ids.add(key);for(const key of (d.customProviders||[]))ids.add(key)}return [...ids]}
 function providerURL(project,provider){return safe(sourceLink(project,provider))||agents.find(x=>x.id===provider)?.url||''}
 function storage(){try{const a=JSON.parse(localStorage.getItem(KEY)||'{}');return a&&typeof a==='object'&&!Array.isArray(a)?a:{}}catch{return{}}}
-function init(){db=Object.assign({version:1,actions:[],missions:[],events:[],expenses:[],decisions:[],messages:[],globalRules:'Aucune dépense, abonnement, achat de crédits ou action engageante sans autorisation explicite. Ne pas utiliser de quotas partagés interdits par les consignes du projet. Ne pas publier de données sensibles. Vérifier les résultats avant de les annoncer terminés.',notifications:false},storage());for(const key of ['actions','missions','events','meetings','expenses','income','decisions','messages'])if(!Array.isArray(db[key]))db[key]=[]}
+function init(){db=Object.assign({version:1,actions:[],missions:[],events:[],expenses:[],decisions:[],goalPlans:[],messages:[],globalRules:'Aucune dépense, abonnement, achat de crédits ou action engageante sans autorisation explicite. Ne pas utiliser de quotas partagés interdits par les consignes du projet. Ne pas publier de données sensibles. Vérifier les résultats avant de les annoncer terminés.',notifications:false},storage());for(const key of ['actions','missions','events','meetings','expenses','income','decisions','goalPlans','messages'])if(!Array.isArray(db[key]))db[key]=[]}
 function save(){try{db.lastChanged=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(db));return true}catch{toast('Stockage indisponible ou plein. Effectue une sauvegarde.');return false}}
 function toast(m){const e=$('#toast');if(e){e.textContent=m;e.classList.remove('hidden');setTimeout(()=>e.classList.add('hidden'),4200)}}
 function cap(s,n=320){s=String(s||'');return s.length>n?s.slice(0,n)+'…':s}
@@ -85,7 +85,7 @@ function manager(){
  '<section class="panel"><div class="sectionhead"><h2>Derniers sprints publics</h2>'+btn('Actualiser','refresh-sprints')+'</div><div id="sprint-overview"><p class="muted">Chargement des rapports enregistrés sur GitHub…</p></div></section>'+
  '<section class="panel"><div class="sectionhead"><h2>Chef de projet central</h2>'+tag('Sources vérifiables')+'</div><label>Périmètre<select id="c-project" class="field">'+options+'</select></label><div class="messages" id="c-messages">'+(db.messages.length?db.messages.slice(-12).map(m=>'<div class="pilot-message '+(m.role==='user'?'pilot-user':'pilot-answer')+'"><span class="muted">'+h(m.role==='user'?'Vous':'CONTROL · synthèse locale')+' · '+date(m.at)+'</span><p>'+h(m.text)+'</p></div>').join(''):'<p class="empty">Demande « Où en sont mes projets ? » ou « Quelles sont les prochaines priorités ? ».</p>')+'</div>'+
  '<form id="c-ask"><label>Question<input class="field" name="question" required maxlength="900" placeholder="Où en est UCP sur chaque IA ?"></label><div class="actions"><button class="primary">Interroger CONTROL</button>'+btn('Préparer un briefing ChatGPT','brief')+href('https://chatgpt.com/','Ouvrir ChatGPT')+'</div></form></section>'+
- box('Accès rapide', '<div class="quicktiles">'+[['localai','CONTROL IA locale'],['command','Commander Claude & Gemini'],['inbox','À traiter'],['missions','Missions multi-IA'],['activity','Activité GitHub'],['calendar','Calendrier'],['library','Bibliothèque'],['budget','Coûts et quotas'],['memory','Mémoire et décisions'],['backup','Sauvegardes'],['settings','Règles et sécurité']].map(([url,label])=>'<a href="#/control/'+url+'" class="quicktile">'+h(label)+' →</a>').join('')+'</div>');
+ box('Accès rapide', '<div class="quicktiles">'+[['localai','CONTROL IA locale'],['command','Commander Claude & Gemini'],['inbox','À traiter'],['missions','Missions multi-IA'],['activity','Activité GitHub'],['calendar','Calendrier'],['library','Bibliothèque'],['budget','Coûts et quotas'],['memory','Mémoire et décisions'],['goals','Planifier un objectif'],['backup','Sauvegardes'],['settings','Règles et sécurité']].map(([url,label])=>'<a href="#/control/'+url+'" class="quicktile">'+h(label)+' →</a>').join('')+'</div>');
  $('#main').innerHTML=view('CONTROL IA','Centre de pilotage et de synthèse de tous tes projets',content);
  registerForm('#c-ask',(f)=>{const q=String(f.get('question')||'').trim(),pid=subject();if(!q)return;db.messages.push({id:id(),role:'user',text:q,project:pid,at:new Date().toISOString()},{id:id(),role:'assistant',text:reply(q,pid),project:pid,at:new Date().toISOString()});db.messages=db.messages.slice(-80);save();manager();$('#c-project').value=pid});
  paintSprints('#sprint-overview');fetchSprints().then(()=>paintSprints('#sprint-overview')).catch(()=>{});$('#main [data-act="refresh-sprints"]')?.addEventListener('click',()=>fetchSprints(true).then(()=>paintSprints('#sprint-overview')));
@@ -421,7 +421,7 @@ function tools(){
  const groups=[
   {name:'Essentiels',subtitle:'Ce que tu utilises au quotidien',open:true,tools:[['localai','CONTROL IA locale','Discuter avec un vrai modèle gratuit'],['command','Claude & Gemini','Préparer et centraliser les missions'],['lab','Laboratoire IA','Créer des briefs et contrôler les réponses'],['library','Ressources','Tes liens et documents'],['search','Rechercher','Retrouver un projet ou un fichier']]},
   {name:'Explorer',subtitle:'Apprendre, créer et publier',open:false,tools:[['catalog','Bibliothèques IA','87 outils et 12 kits pratiques'],['deploy','Mise en ligne','Guides GitHub, IONOS et autres'],['activity','GitHub et tests','Suivi des dépôts publics']]},
-  {name:'Organiser',subtitle:'Planifier et garder le contrôle',open:false,tools:[['missions','Toutes les missions','Suivi détaillé et historique'],['meetings','Visios et rendez-vous','Équipe, clients et prospects'],['calendar','Calendrier','Échéances enregistrées'],['memory','Décisions','Historique de projet'],['budget','Budget et quotas','Suivi déclaratif des coûts'],['backup','Sauvegardes','Exporter ou importer tes données'],['settings','Paramètres','Règles et confidentialité'],['inbox','À traiter','Actions prioritaires']]}
+  {name:'Organiser',subtitle:'Planifier et garder le contrôle',open:false,tools:[['missions','Toutes les missions','Suivi détaillé et historique'],['meetings','Visios et rendez-vous','Équipe, clients et prospects'],['calendar','Calendrier','Échéances enregistrées'],['memory','Décisions','Historique de projet'],['goals','Planifier un objectif','Étapes modifiables et sources locales'],['budget','Budget et quotas','Suivi déclaratif des coûts'],['backup','Sauvegardes','Exporter ou importer tes données'],['settings','Paramètres','Règles et confidentialité'],['inbox','À traiter','Actions prioritaires']]}
  ];
  const markup=groups.map((group,index)=>'<details class="clarity-toolgroup" '+(group.open?'open':'')+'><summary><span><strong>'+h(group.name)+'</strong><small>'+h(group.subtitle)+'</small></span><span class="clarity-chevron">⌄</span></summary><div class="clarity-toolcards">'+group.tools.map(([route,title,description])=>'<a class="clarity-tool-link" href="#/control/'+h(route)+'"><strong>'+h(title)+'</strong><small>'+h(description)+'</small><span aria-hidden="true">→</span></a>').join('')+'</div></details>').join('');
  $('#main').innerHTML=view('Tous les outils','Les essentiels d’abord. Le reste est rangé par usage.',markup);
@@ -478,6 +478,65 @@ function backup(){
 }
 // Search only live, authorized device-local records. No stale cached index.
 // Provenance is user-declared until an authenticated provider is available.
+// Device-local, source-aware proposal only: does not execute actions or contact AI.
+function proposeGoal(projectId,goal){
+ const objective=String(goal||'').trim();
+ if(!ctx.projects.some(x=>x.id===projectId))throw Error('Choisis un projet existant.');
+ if(objective.length<8||objective.length>500)throw Error('Objectif invalide (8 à 500 caractères).');
+ const actions=db.actions.filter(x=>x.project===projectId&&x.status!=='done').slice(-4);
+ const decisions=db.decisions.filter(x=>x.project===projectId).slice(-2);
+ const steps=[{title:'Préciser le résultat attendu',criterion:'Résultat mesurable et condition de réussite renseignés.',source:'Objectif déclaré, non vérifié'}];
+ for(const x of decisions)steps.push({title:'Revoir la décision : '+String(x.title||'').slice(0,130),criterion:'Décision et pertinence réexaminées.',source:'Décision locale v'+decisionVersion(x)+' · '+x.id+' · '+(x.source||'Saisie manuelle')});
+ for(const x of actions)steps.push({title:'Traiter : '+String(x.title||'').slice(0,130),criterion:'Preuve du résultat de la tâche collectée.',source:'Action locale · '+x.id+' · état déclaratif '+(x.status||'inconnu')});
+ if(!actions.length)steps.push({title:'Décomposer l’objectif en tâches mesurables',criterion:'Une tâche, un responsable et un résultat définis.',source:'Suggestion locale sans exécution'});
+ steps.push({title:'Contrôler les livrables et les preuves',criterion:'Résultats vérifiés, blocages et prochaines étapes consignés.',source:'Proposition de contrôle sans exécution'});
+ return {projectId,goal:objective,steps:steps.slice(0,8),sourceAt:new Date().toISOString(),status:'proposition'};
+}
+function saveGoalPlan(proposal){
+ if(!ctx.projects.some(x=>x.id===proposal?.projectId))throw Error('Projet absent ou non autorisé.');
+ const ref=String(proposal.id||''),goal=String(proposal.goal||'').trim();
+ if(!/^[a-z0-9_-]{8,90}$/i.test(ref)||goal.length<8||goal.length>500)throw Error('Proposition invalide.');
+ if(!Array.isArray(proposal.steps)||proposal.steps.length<2||proposal.steps.length>8)throw Error('Étapes invalides.');
+ const steps=proposal.steps.map(x=>({title:String(x.title||'').trim(),criterion:String(x.criterion||'').trim(),source:String(x.source||'').trim()}));
+ if(steps.some(x=>!x.title||x.title.length>250||!x.criterion||x.criterion.length>300||!x.source||x.source.length>450))throw Error('Étape ou critère incomplet.');
+ const signature=JSON.stringify({projectId:proposal.projectId,goal,steps});
+ const older=db.goalPlans.find(x=>x.id===ref);
+ if(older){if(older.signature!==signature)throw Error('Proposition déjà utilisée pour un autre contenu.');return older;}
+ const saved={id:ref,project:proposal.projectId,goal,steps,signature,at:new Date().toISOString(),sourceAt:proposal.sourceAt,status:'proposition'};
+ const before=db.goalPlans;db.goalPlans=[...before,saved];
+ if(save()!==true){db.goalPlans=before;throw Error('Stockage indisponible : le plan n’est pas enregistré.')}
+ return saved;
+}
+function goals(){
+ const records=db.goalPlans.filter(x=>ctx.projects.some(p=>p.id===x.project)).slice().reverse();
+ $('#main').innerHTML=view('Planifier un objectif','Créer une proposition explicable sans lancer de fournisseur IA',
+ note('Plan local prévisionnel, non exécuté. Les étapes s’appuient sur les décisions et tâches déclarées dans le projet choisi.')+
+ box('Préparer un objectif','<form id="goal-request">'+
+ '<label>Projet<select name="project" class="field">'+projopts(ctx.projects[0]?.id||'',false)+'</select></label>'+
+ textarea('Résultat souhaité','goal','','required minlength="8" maxlength="500" rows="3"')+
+ '<button class="primary">Préparer le plan</button></form>')+
+ '<div id="goal-preview" aria-live="polite"></div>'+
+ box('Propositions enregistrées',records.length?records.map(x=>'<div class="chatrow"><strong>'+h(x.goal)+'</strong><small>'+h(pname(x.project))+' · '+x.steps.length+' étapes · plan non exécuté · '+date(x.at)+'</small></div>').join(''):tiny('Aucun plan sauvegardé sur cet appareil.')));
+ let pending=null;
+ registerForm('#goal-request',form=>{
+  try{
+   const draft=proposeGoal(String(form.get('project')),String(form.get('goal')));pending={...draft,id:id()};
+   $('#goal-preview').innerHTML='<form id="goal-confirm"><h2>Vérifier et modifier les étapes</h2><p>Projet : '+h(pname(draft.projectId))+' · '+h(draft.goal)+'</p>'+
+    draft.steps.map((x,i)=>'<fieldset><legend>Étape '+(i+1)+'</legend>'+
+     field('Action proposée','step'+i,x.title,'text','required maxlength="250"')+
+     textarea('Critère de réussite','criterion'+i,x.criterion,'required maxlength="300" rows="2"')+
+     '<p class="muted">Source : '+h(x.source)+'</p></fieldset>').join('')+
+    '<p class="muted">Sauvegarder le plan ne crée aucune tâche et n’exécute aucune IA.</p><button class="primary">Enregistrer la proposition</button></form>';
+   registerForm('#goal-confirm',input=>{
+    try{
+     if(!pending)throw Error('Préparation expirée.');
+     const steps=pending.steps.map((x,i)=>({...x,title:String(input.get('step'+i)||'').trim(),criterion:String(input.get('criterion'+i)||'').trim()}));
+     const record=saveGoalPlan({...pending,steps});pending=null;goals();toast('Plan local enregistré · reçu '+record.id);
+    }catch(error){toast(String(error?.message||error).slice(0,220))}
+   });
+  }catch(error){pending=null;$('#goal-preview').textContent=String(error?.message||error).slice(0,220)}
+ });
+}
 function searchResults(scope='',query=''){
  const allowed=new Map(ctx.projects.map(p=>[p.id,p]));
  if(scope&&!allowed.has(scope))return [];
@@ -554,6 +613,6 @@ function paintSprints(selector,onlyBlockers=false){const out=$(selector);if(!out
  const n=Object.keys(sprintLoaded).length;if(n<SPRINT_IDS.length)out.innerHTML+=tiny((SPRINT_IDS.length-n)+' source(s) non vérifiée(s), information potentiellement partielle.');
  out.innerHTML+=tiny('Ces données sont des journaux GitHub, pas un suivi en direct de ChatGPT. Le statut en ligne nécessite une preuve de recette réelle.');
 }
-function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,meetings,command,localai,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,budget,backup,settings,search};(pages[page]||manager)()}
+function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,meetings,command,localai,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,goals,budget,backup,settings,search};(pages[page]||manager)()}
 window.CONTROL_CENTER={render};
 })();
