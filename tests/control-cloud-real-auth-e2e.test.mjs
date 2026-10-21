@@ -51,6 +51,10 @@ test('real E2E runner checks all 6 protected tables and true Supabase Auth user 
 test('real E2E tests refuse to tamper with existing users and fail if cleanup is not complete',()=>{
  assert.match(script,/comptes de recette dédiés et vides obligatoires/);
  assert.match(script,/Nettoyage INCOMPLET/);
+ assert.match(script,/unverifiedCleanup/);
+ assert.match(script,/trackUnexpected/);
+ assert.match(script,/marker\+' FORGED'/);
+ assert.match(script,/marker\+' CROSS PROJECT'/);
  assert.match(script,/aucun enregistrement de recette laissé/);
  assert.match(script,/finally/);
 });
