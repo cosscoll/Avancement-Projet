@@ -1,46 +1,44 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "running",
-  "lease": {
-    "run_id": "control-ia-20261021-imp05-local-approval-20261021104120944",
-    "started_at": "2026-10-21T10:41:20.944Z",
-    "expires_at": "2026-10-21T11:26:20.944Z",
-    "objective": "IMP-05 local action preview: before-after, risks, exact project, revocation-safe confirmation and traceable local audit receipt; full tests, direct main and public Pages proof"
-  },
+  "status": "idle",
+  "lease": null,
   "checkpoint": {
-    "updated_at": "2026-10-21T10:35:57.185Z",
+    "updated_at": "2026-10-21T10:51:44.522Z",
     "main": true,
-    "stage": "auth_signedout_recovery_101_cloud_259_frontend_public_green",
+    "stage": "local_imp05_approval_diff_risk_receipt_277_tests_pages_browser_verified",
     "files": [
-      "assets/cloud-app.js",
-      "tests/control-cloud-session-isolation.test.mjs",
-      "data/sprints/control-ia.json",
-      "docs/CONTROL_IA_RETROSPECTIVES.md"
+      "assets/control-operator-core.js",
+      "assets/control-operator.js",
+      "assets/command-center.js",
+      "assets/local-ai.js",
+      "tests/control-operator-approval.test.mjs",
+      "tests/control-ia-browser-smoke.mjs",
+      "docs/CONTROL_IA_RETROSPECTIVES.md",
+      "data/sprints/control-ia.json"
     ],
     "evidence": [
-      "https://github.com/cosscoll/Avancement-Projet/commit/1096eade36e363ac3e9a6a30268e231fa80746c6",
-      "https://github.com/cosscoll/Avancement-Projet/commit/b4664d7be164f3b7067710d5dfcca6b858d22160",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39585459362",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39585459387",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39585458752",
-      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39585511880"
+      "https://github.com/cosscoll/Avancement-Projet/commit/8e75c73713dc3bcc0aa5b8685c20cb293d19a7d5",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587241317",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587241379",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587240349",
+      "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587349013"
     ],
     "remaining_blockers": [
-      "Cloud intentionally disabled, no independent authorized 0€ CONTROL Supabase nor real A/B authenticated RLS and cross-device sync tests.",
-      "Full SDK event behavior with genuine accounts and provider tokens still unverified.",
-      "Calendar/reminder historical BACK aliases remain archived pending exact private specification mapping, not usable as canonical tickets."
+      "The new approval/receipt feature applies only to local CONTROL state; server-side RBAC, genuine revoke-before-write semantics, two-user Auth JWT/RLS remain unverified because dedicated cost-zero CONTROL Supabase is not authorized.",
+      "Account Cloud remains disabled and no cross-device synchronization / real external executor / mobile hardware tests are claimed.",
+      "Developer must not mark IMP-05 as real_verified using browser local mock or synthetic data."
     ],
-    "next_action": "Next CONTROL-ACCOUNT sprint: check remaining authentication lifecycle and accessible account recovery UX, but do not activate real Cloud without owner's separate approved 0€ CONTROL instance; after that advance project-scoped memory/search actions and IMP-05/IMP-10 with real acceptance evidence. Continue direct main under lease, CI and same-SHA public browser."
+    "next_action": "Choose one meaningful next feature: IMP-10 local idempotent approval/recovery to avoid duplicate user actions after interruption OR IMP-03 project-scoped sourced memory, while preserving guardrails. First check current implementation and acceptance tests, acquire own 45-minute CONTROL lease, code direct on main, verify CI + same-SHA Pages/Chromium, document limitations. Never enable Cloud or pay."
   },
   "last_completed": {
-    "run_id": "control-ia-20261021-auth-event-recovery-20261021103149052",
-    "started_at": "2026-10-21T10:31:49.052Z",
-    "ended_at": "2026-10-21T10:35:57.185Z",
-    "summary": "Fail-closed auth SIGNED_OUT now schedules fresh real current-user verification; B recovers after obsolete event, true logout stays closed. 4 new tests, Cloud 101/101, frontend 259/259, Pages and public Chromium green exact SHA b4664d7. Cloud disabled.",
-    "stage": "tested_ci_deployed_not_authenticated",
-    "commit_sha": "b4664d7be164f3b7067710d5dfcca6b858d22160",
-    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39585511880"
+    "run_id": "control-ia-20261021-imp05-local-approval-20261021104120944",
+    "started_at": "2026-10-21T10:41:20.944Z",
+    "ended_at": "2026-10-21T10:51:44.522Z",
+    "summary": "IMP-05 local action review: exact project, before-after, risk, stale permission rejection and actual persisted local audit receipt. 18 new tests, Node 277/277, local Chromium, Pages and public Chromium all green at code SHA 8e75c737. Cloud disabled, no server permission claim.",
+    "stage": "verified_online_local_imp05_not_server_permissions",
+    "commit_sha": "8e75c73713dc3bcc0aa5b8685c20cb293d19a7d5",
+    "evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39587349013"
   },
   "recovered_from": {
     "run_id": "control-ia-20261020125015408-9ufh9o",
