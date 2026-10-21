@@ -9,7 +9,7 @@ on:
       - 'config/**'
       - 'supabase/**'
       - 'tests/**'
-      - 'scripts/control-ia-readiness.mjs'
+      - 'scripts/**'
       - 'docs/CONTROL_IA_GESTION_FONCTIONNELLE.md'
       - '*.html'
       - 'service-worker.js'
@@ -22,7 +22,7 @@ on:
       - 'config/**'
       - 'supabase/**'
       - 'tests/**'
-      - 'scripts/control-ia-readiness.mjs'
+      - 'scripts/**'
       - 'docs/CONTROL_IA_GESTION_FONCTIONNELLE.md'
       - '*.html'
       - 'service-worker.js'
@@ -60,6 +60,16 @@ jobs:
             node --check "$file"
           done < <(find assets -type f -name '*.js' -print0)
           node --check service-worker.js
+          while IFS= read -r -d '' file; do
+            node --check "$file"
+          done < <(find scripts tests -type f \( -name '*.js' -o -name '*.mjs' \) -print0)
+      - name: Vérifier la syntaxe de toutes les données JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            node -e 'JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8"))' "$file"
+          done < <(find data config -type f -name '*.json' -print0)
       - name: Vérifier le suivi des livraisons et leurs preuves
         run: node scripts/control-ia-readiness.mjs
       - name: Exécuter les tests Node natifs
