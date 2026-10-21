@@ -5,12 +5,12 @@ import {readFileSync} from 'node:fs';
 const source=readFileSync(new URL('../assets/cloud-app.js',import.meta.url),'utf8');
 const helper=source.slice(source.indexOf('function mutationSession(){'),source.indexOf('async function audit('));
 const oldImport=source.slice(source.indexOf('async function importLegacy(){'),source.indexOf('async function action(button){'));
-const exportCode=source.slice(source.indexOf('async function exportMyData('),source.indexOf('async function importLegacy(){'));
+const exportCode=source.slice(source.indexOf('async function completeCloudExport('),source.indexOf('async function importLegacy(){'));
 const logoutStart=source.indexOf("  case 'logout':{");
 const logoutCode=source.slice(logoutStart,source.indexOf("  case 'export-json':",logoutStart));
 const delStart=source.indexOf("  case 'delete-account':{");
 const deletion=source.slice(delStart,source.indexOf("  default:return;",delStart));
-assert.ok(helper.startsWith('function mutationSession(){')&&oldImport.startsWith('async function importLegacy(){')&&exportCode.startsWith('async function exportMyData(')&&deletion.includes('control-delete-account'));
+assert.ok(helper.startsWith('function mutationSession(){')&&oldImport.startsWith('async function importLegacy(){')&&exportCode.startsWith('async function completeCloudExport(')&&deletion.includes('control-delete-account'));
 
 function importer(options={}){
  const code=String.raw`
@@ -65,30 +65,61 @@ test('normal legacy migration writes only original owner A and records result',a
  assert.equal(h.messages.length,3);
 });
 
-function exporter(){
+function exporter(options={}){
  const code=String.raw`
- let authUser={id:'A'},epoch=1,cache={projects:[{id:'pA',owner_id:'A'}],items:[],preferences:null};
- const downloads=[],keys=[],messages=[];
+ let authUser={id:'A'},epoch=1,cache={projects:options.large?Array.from({length:405},(_,i)=>({id:'p'+String(i).padStart(4,'0'),owner_id:'A'})):[{id:'pA',owner_id:'A'}],items:[],preferences:null};
+ if(options.foreign)cache.projects[0].owner_id='B';
+ if(options.duplicate)cache.projects[400].id=cache.projects[0].id;
+ const downloads=[],keys=[],messages=[],payloads=[],pageReads=[],paused=[];
  const prompt=()=> 'long-enough-password-for-export',confirm=()=>true;
  const crypto={getRandomValues:x=>x,subtle:{encrypt:async()=>new Uint8Array([1]).buffer}};
  const encKey=()=>new Promise(resolve=>keys.push(resolve)),encB64=()=> 'test';
- const Blob=class{constructor(content){this.content=content}};
+ const Blob=class{constructor(content){this.content=content;payloads.push(String(content[0]))}};
  const URL={createObjectURL:()=>{downloads.push('url');return 'blob:a'},revokeObjectURL:()=>{}};
  const document={createElement:()=>({click(){downloads.push('click')},remove(){}}),body:{appendChild(){}}};
  const setTimeout=()=>{},message=x=>messages.push(x);
+ const client={from(table){const q={eq(field,value){if(field!=='owner_id'||value!==authUser?.id)throw Error('Wrong owner filter');return q},order(field){if(field!=='id')throw Error('Missing stable id ordering');return q},range(first,last){pageReads.push({table,first,last});if(options.pausePage&&table==='control_projects')return new Promise(resolve=>paused.push(resolve));const rows=table==='control_projects'?cache.projects:cache.items;return Promise.resolve({data:rows.slice(first,last+1),error:null})},maybeSingle(){return Promise.resolve({data:null,error:null})}};return{select(){return q}}}};
  `;
- return new Function(code+helper+exportCode+String.raw`
- return {exportMyData,downloads,keys,messages,switchB(){authUser={id:'B'};epoch++;cache={projects:[],items:[],preferences:null}}};
- `)();
+ return new Function('options',code+helper+exportCode+String.raw`
+ return {exportMyData,downloads,keys,messages,payloads,pageReads,paused,switchB(){authUser={id:'B'};epoch++;cache={projects:[],items:[],preferences:null}}};
+ `)(options);
 }
 test('encrypted export cannot download A private file after the user switches to B during encryption',async()=>{
  const h=exporter(),pending=h.exportMyData(true);
+ for(let i=0;i<30&&!h.keys.length;i++)await Promise.resolve();
  assert.equal(h.keys.length,1);h.switchB();h.keys[0]({});
  assert.equal(await pending,false);assert.deepEqual(h.downloads,[]);assert.deepEqual(h.messages,[]);
 });
 test('explicit cleartext export still creates file when A remains logged in',async()=>{
  const h=exporter();await h.exportMyData(false);
  assert.deepEqual(h.downloads,['url','click']);assert.equal(h.messages.length,1);
+});
+
+
+test('cloud export fetches every page rather than the truncated on-screen subset',async()=>{
+ const h=exporter({large:true});
+ await h.exportMyData(false);
+ assert.equal(h.pageReads.filter(x=>x.table==='control_projects').length,2);
+ assert.equal(JSON.parse(h.payloads[0]).projects.length,405);
+ assert.deepEqual(h.downloads,['url','click']);
+});
+test('account export refuses foreign-owner records and creates no file',async()=>{
+ const h=exporter({foreign:true});
+ await assert.rejects(h.exportMyData(false),/propriétaire ou identifiant/);
+ assert.deepEqual(h.downloads,[]);
+ assert.deepEqual(h.payloads,[]);
+});
+test('account export rejects duplicate IDs across pagination boundaries',async()=>{
+ const h=exporter({large:true,duplicate:true});
+ await assert.rejects(h.exportMyData(false),/propriétaire ou identifiant/);
+ assert.deepEqual(h.downloads,[]);
+});
+test('account switch during a pending export page creates no downloadable file',async()=>{
+ const h=exporter({pausePage:true}),task=h.exportMyData(false);
+ assert.equal(h.paused.length,1);
+ h.switchB();h.paused[0]({data:[{id:'pA',owner_id:'A'}],error:null});
+ assert.equal(await task,false);
+ assert.deepEqual(h.downloads,[]);
 });
 
 function deleter(enabled=true,settings={}){
