@@ -563,5 +563,92 @@
       }
     ],
     "next": "At XXh50 verify task actually fires and can reacquire CONTROL lease. Then resume CONTROL-ACCOUNT pending 2026-10-20 objective: inspect and test race-safe session reload and explicit owner_id filtration, while Cloud stays disabled and the user has not authorized separate free Supabase infrastructure."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261021-concurrent-auth-session-20261021084346464",
+    "started_at": "2026-10-21T08:43:46.464Z",
+    "ended_at": "2026-10-21T08:47:54.090Z",
+    "summary": "CONTROL-ACCOUNT: two concrete same-user concurrent verification/re-login races reproduced red and fixed directly on main; 8/8 real regression functions executed in JS sandbox after source re-read; JS syntax passes; CI, Pages and Supabase integration not yet independently confirmed.",
+    "objectives": [
+      {
+        "before": "Repeated same-owner verifiedSession invalidated an in-flight owner query and left an empty project list; stale requests after logout/login could release the new same-owner network semaphore.",
+        "after": "Separate auth verification sequence from owner data epoch; preserve same-account requests; allow old network cleanup only when epoch AND owner match; protect logout and delayed auth paths.",
+        "acceptance": "Test prior failures 6/7 and 7/8, then 8/8 tests pass after fixing two races, source re-read from main, syntax check passes; real JWT/RLS and CI remain unverified."
+      }
+    ],
+    "done": [
+      "Analyzed live GitHub source and cooperative lease, acquired a 45-minute CONTROL-only lease.",
+      "Reproduced same-account overlapping verification lost-data bug with a failing 7th test.",
+      "Published session verification sequence fix and reproducible regression test directly to main.",
+      "Reproduced stale same-account logout/login request releasing new in-flight lock with failing 8th test.",
+      "Published epoch-aware cleanup fix and regression test directly to main.",
+      "Reloaded both files from main and executed 8/8 regressions in isolated V8; cloud-app.js compiled successfully."
+    ],
+    "blockers": [
+      "Latest GitHub Actions/check-run status cannot be retrieved from the connector; GitHub workflow is configured for push but this run is not marked CI green.",
+      "Public GitHub Pages currently cannot be independently accessed from the available network tools; no live deployment claim.",
+      "CONTROL Cloud intentionally disabled pending separate approved 0-euro real Supabase project and two actual A/B Auth/JWT/RLS devices.",
+      "ChatGPT hourly Task started at 09:53 Paris but complete code-delivery sprint unproven; no unconditional background execution guarantee."
+    ],
+    "quality": {
+      "ci": "unverified",
+      "checks_run": [
+        "Red test before fix: 6/7 then 7/8 simulated session races",
+        "Post-publication dynamic execution of 8 actual Node-style test functions from current main source in V8 isolate",
+        "JavaScript syntax compilation with new Function",
+        "GitHub content SHA re-read after commits"
+      ],
+      "checks_passed": [
+        "8/8 synthetic regression scenarios passed after fixes",
+        "Current main source JavaScript syntax passes"
+      ],
+      "checks_failed": [
+        "Initial user-race reproducer: failed before fix, now passes",
+        "Initial old-lock cleanup reproducer: failed before fix, now passes"
+      ],
+      "limitations": [
+        "Not equivalent to full Node process or GitHub Actions run",
+        "No live browser or real accounts verified",
+        "No web access to compare deployed Pages to main"
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Session verification race correction",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/15401dcd7742012499e335de476f2f9c532ad248"
+      },
+      {
+        "name": "Stale owner lock cleanup correction",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/9c66ff2b4ff7c2c11d83aecac5d669f72702fc0c"
+      },
+      {
+        "name": "Eight synthetic session isolation tests",
+        "stage": "tested",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/87bac45ebdc2c03467791974ea6cf11a7aa74282"
+      }
+    ],
+    "links": [
+      {
+        "label": "First session fix",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/15401dcd7742012499e335de476f2f9c532ad248"
+      },
+      {
+        "label": "Second session fix",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/9c66ff2b4ff7c2c11d83aecac5d669f72702fc0c"
+      },
+      {
+        "label": "Latest test suite",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/87bac45ebdc2c03467791974ea6cf11a7aa74282"
+      }
+    ],
+    "critique": [
+      "P0: client unit tests alone do not prove Supabase RLS, explicit backend isolation, or mobile/device production sessions.",
+      "P1: stale request can still consume network but is invalidated by token/owner safeguards; duplicate same-account verifiedSession may return before in-flight refresh, whose completion is governed by first call.",
+      "P1: avoid falsely marking CI and Pages as verified without the actual run SHA and HTTP proof."
+    ],
+    "next": "At the next hourly sprint, inspect CI status and Pages on commit 87bac45; verify actual Task end-report/checkpoint, then choose another independent CONTROL-ACCOUNT issue or approved dedicated backend. Never enable Cloud or claim operational without 0€ independent RLS and real A/B credentials."
   }
 ]
