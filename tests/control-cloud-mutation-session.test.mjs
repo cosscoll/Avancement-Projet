@@ -44,6 +44,7 @@ function invoke(h,kind){
 }
 const kinds=['saveItem','saveProject','eraseItem','eraseProject','markDone'];
 const successResponse={data:{id:'item-A',owner_id:'A'},error:null};
+const receiptFor=kind=>({data:{id:kind==='eraseProject'?'project-A':'item-A',owner_id:'A'},error:null});
 
 for(const kind of kinds){
  test(kind+' ignores prior-account HTTP completion after switching to B',async()=>{
@@ -51,7 +52,7 @@ for(const kind of kinds){
   await Promise.resolve();
   assert.equal(h.requests.length,1,'A mutation request must actually be initiated');
   h.switchUser('B');
-  h.requests[0].resolve(successResponse);
+  h.requests[0].resolve(receiptFor(kind));
   await pending;
   assert.equal(h.auditCalls.length,0,'No audit event referencing A may be attributed to B');
   assert.deepEqual(h.navCalls,[],'No navigation into A project when B is active');
@@ -61,7 +62,7 @@ for(const kind of kinds){
   const h=harness(),pending=invoke(h,kind);
   await Promise.resolve();
   assert.equal(h.requests.length,1);
-  h.requests[0].resolve(successResponse);
+  h.requests[0].resolve(receiptFor(kind));
   await pending;
   assert.equal(h.auditCalls.length,1);
   assert.equal(h.auditCalls[0].payload.owner_id,'A');
@@ -136,6 +137,28 @@ for(const kind of ['saveItem','saveProject']){
   await Promise.resolve();
   h.requests[0].resolve({data:{id:'item-A'},error:null});
   await assert.rejects(pending,/non attribuée à votre compte/);
+  assert.deepEqual(h.auditCalls,[]);
+  assert.deepEqual(h.messages,[]);
+ });
+}
+
+
+for(const kind of ['eraseItem','eraseProject','markDone']){
+ const pattern=kind==='markDone'?/identité de tâche non confirmée/:/Suppression non confirmée/;
+ test(kind+' rejects a same-owner response carrying another record ID',async()=>{
+  const h=harness(),pending=invoke(h,kind);
+  await Promise.resolve();
+  h.requests[0].resolve({data:{id:'foreign-record',owner_id:'A'},error:null});
+  await assert.rejects(pending,pattern);
+  assert.deepEqual(h.auditCalls,[]);
+  assert.deepEqual(h.messages,[]);
+  assert.deepEqual(h.navCalls,[]);
+ });
+ test(kind+' rejects a response owned by another account before audit',async()=>{
+  const h=harness(),pending=invoke(h,kind);
+  await Promise.resolve();
+  h.requests[0].resolve({data:{id:kind==='eraseProject'?'project-A':'item-A',owner_id:'B'},error:null});
+  await assert.rejects(pending,pattern);
   assert.deepEqual(h.auditCalls,[]);
   assert.deepEqual(h.messages,[]);
  });
