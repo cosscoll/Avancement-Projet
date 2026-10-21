@@ -1,0 +1,124 @@
+/* CONTROL / Workspace shell V3. A real application layout, not another row of cards.
+   Scoped carefully to preserve all existing project and tool modules. */
+:root{--shell-ink:#192332;--shell-blue:#1f344d;--shell-paper:#f4f2ed;--shell-line:#dfddd6;--shell-muted:#718093;--shell-amber:#f1c993}
+@media (min-width:960px){
+  body.control-shell-v3{background:var(--shell-paper)!important}
+  body.control-shell-v3>.wrap{margin:0 0 0 262px;max-width:none;width:auto;padding:0 42px 76px!important;min-height:100vh}
+  body.control-shell-v3>.wrap>header{margin:0 -42px 0;padding:18px 42px;position:sticky;top:0;z-index:28;min-height:79px;background:rgba(248,247,243,.92);border-bottom:1px solid var(--shell-line);backdrop-filter:blur(18px)}
+  body.control-shell-v3>.wrap>main{max-width:1500px;margin:0 auto;padding:30px 0}
+  body.control-shell-v3 .control-location{margin:0 auto;max-width:1500px;padding:15px 0 0}
+  body.control-shell-v3 .mobilefoot,body.control-shell-v3 .control-nav-mobile-trigger{display:none!important}
+  body.control-shell-v3 .head-tools{display:none}
+  body.cloud-shell-v3.shell-cloud-ready{background:var(--shell-paper)!important}
+  body.cloud-shell-v3.shell-cloud-ready>.header{margin-left:262px;position:sticky;top:0;min-height:78px;z-index:27;background:rgba(248,247,243,.95);border-bottom:1px solid var(--shell-line);backdrop-filter:blur(18px);padding:17px 36px}
+  body.cloud-shell-v3.shell-cloud-ready>.container{margin-left:262px!important;max-width:none!important;padding:30px 42px 85px!important}
+  body.cloud-shell-v3.shell-cloud-ready .container>#workspace{max-width:1500px;margin:0 auto}
+  body.cloud-shell-v3.shell-cloud-ready>.control-location{margin-left:304px;max-width:none}
+  body.cloud-shell-v3.shell-cloud-ready>.bottomnav,body.cloud-shell-v3.shell-cloud-ready .control-nav-mobile-trigger{display:none!important}
+}
+/* A purposeful dark navigation rail: information hierarchy is independent of each page. */
+.shell-sidebar{position:fixed;z-index:31;inset:0 auto 0 0;width:262px;display:flex;flex-direction:column;background:#192331;color:#f9f7f0;border-right:1px solid #27394e;box-shadow:8px 0 35px rgba(14,26,43,.07);padding:27px 17px 18px;overflow:auto;overscroll-behavior:contain}
+.shell-brand{display:flex;align-items:center;gap:11px;margin:0 10px 40px;color:#fff;font-size:17px;font-weight:850;letter-spacing:-.5px}
+.shell-brand-mark{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:var(--shell-amber);color:#182536;font-size:19px}
+.shell-brand-sub{display:block;font-size:9px;font-weight:600;letter-spacing:2.2px;color:#aebac6;margin-top:4px}
+.shell-side-group{margin:0 0 25px}
+.shell-side-heading{margin:0 13px 9px;font-size:10px;letter-spacing:2.1px;font-weight:790;color:#93a2b4;text-transform:uppercase}
+.shell-side-link{width:100%;text-align:left;display:flex;align-items:center;gap:12px;padding:12px 13px!important;min-height:45px;border:1px solid transparent!important;border-radius:11px!important;background:transparent!important;color:#cdd6df!important;font-size:13px!important;font-weight:600;line-height:1.2;box-shadow:none!important;text-decoration:none!important;transition:background .15s,color .15s}
+.shell-side-link .shell-glyph{width:23px;flex:0 0 23px;text-align:center;color:#b0becb;font-size:16px}
+.shell-side-link:hover{background:#2a394b!important;color:#fff!important}
+.shell-side-link[aria-current="page"]{background:#354961!important;border-color:#476481!important;color:#fff!important;box-shadow:inset 3px 0 0 var(--shell-amber)!important}
+.shell-side-link[aria-current="page"] .shell-glyph{color:var(--shell-amber)}
+.shell-side-link--find{border:1px solid #415670!important;background:#26374b!important;margin-bottom:9px;color:#fff!important;min-height:48px}
+.shell-side-shortcut{margin-left:auto;font-size:10px;color:#95a7bc;border:1px solid #445c76;border-radius:5px;padding:3px 5px}
+.shell-side-projects{display:flex;flex-direction:column;gap:3px;max-height:205px;overflow-y:auto;padding-right:4px}
+.shell-side-projects a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;padding:9px 13px;color:#aabcca;font-size:12px;border-radius:8px;line-height:1.35}
+.shell-side-projects a:hover,.shell-side-projects a[aria-current="page"]{background:#2a3c51;color:#fff}
+.shell-side-projects .shell-empty{font-size:12px;line-height:1.5;color:#8095a6;padding:8px 13px}
+.shell-side-footer{margin-top:auto;padding:19px 11px 0;border-top:1px solid #334458;font-size:11px;color:#9eb0c0;line-height:1.55}
+.shell-side-footer strong{display:block;color:#e5e9ee;font-size:12px;font-weight:690;margin-bottom:5px}
+.shell-side-footer span{display:block}
+.shell-sidebar[hidden]{display:none!important}
+body.control-shell-v3 .logo{font-size:17px}
+body.control-shell-v3 .logo span{background:#192331}
+body.control-shell-v3 h1,body.cloud-shell-v3.shell-cloud-ready h1{font-weight:720;letter-spacing:-1.45px}
+body.control-shell-v3 .panel,body.control-shell-v3 .card,body.cloud-shell-v3.shell-cloud-ready .surface{border-color:#e3e1dc;box-shadow:0 2px 12px rgba(25,35,49,.035)}
+/* Desktop home: asymmetric dashboard instead of repetitive AI-template tiles. */
+.shell-dashboard{max-width:1500px;margin:0 auto}
+.shell-dashboard-top{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:0 0 21px}
+.shell-dashboard-eyebrow{font-size:10px;letter-spacing:2px;font-weight:800;color:#6f7d8b;text-transform:uppercase}
+.shell-dashboard-top h1{margin:8px 0 6px;font-size:clamp(29px,3vw,43px);letter-spacing:-1.6px;color:#192331}
+.shell-dashboard-top p{margin:0;font-size:14px;color:#677584}
+.shell-dashboard-top #add-project{white-space:nowrap;background:#1a2c40;border-color:#1a2c40;border-radius:10px;min-height:45px}
+.shell-feature-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(270px,.85fr);gap:15px;margin:24px 0 36px}
+.shell-feature-primary{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;background:#23374e;color:#fff;min-height:257px;border-radius:18px;padding:29px 31px}
+.shell-feature-primary:after{content:"";position:absolute;right:-65px;bottom:-137px;width:330px;height:330px;border:1px solid rgba(241,201,147,.24);border-radius:50%;pointer-events:none}
+.shell-feature-primary:before{content:"";position:absolute;right:33px;bottom:-90px;width:228px;height:228px;border:1px solid rgba(241,201,147,.18);border-radius:50%;pointer-events:none}
+.shell-feature-primary .shell-feature-tag{font-size:11px;font-weight:740;letter-spacing:1.4px;text-transform:uppercase;color:#edc99b}
+.shell-feature-primary h2{margin:23px 0 11px;color:#fff;font-family:Georgia,"Times New Roman",serif;font-size:clamp(27px,2.7vw,39px);font-weight:500;letter-spacing:-.7px;line-height:1.12;position:relative;z-index:1}
+.shell-feature-primary p{max-width:430px;font-size:13px;color:#c8d4df;line-height:1.6;margin:0 0 22px;position:relative;z-index:1}
+.shell-feature-primary a,.shell-feature-primary button{position:relative;z-index:1;border-radius:9px;padding:10px 14px;background:#f1c993!important;border:1px solid #f1c993!important;color:#263243!important;font-size:12px;font-weight:810;min-height:40px;display:inline-flex;align-items:center;gap:9px}
+.shell-feature-aside{display:flex;flex-direction:column;gap:9px;background:#ebe9e2;border:1px solid #e0ddd3;border-radius:18px;padding:19px}
+.shell-feature-aside h2{margin:0 0 6px;color:#2c3c4d;font-size:11px;font-weight:830;letter-spacing:1.3px;text-transform:uppercase}
+.shell-action{flex:1;display:flex;align-items:center;gap:12px;min-height:60px;padding:12px 13px;border:1px solid #d8d8d2!important;background:rgba(255,255,255,.79)!important;border-radius:10px!important;color:#263445!important;text-align:left!important;box-shadow:none!important}
+.shell-action:hover{background:#fff!important;border-color:#9cb0c2!important}
+.shell-action-glyph{font-size:17px;display:grid;place-items:center;width:32px;height:32px;flex:0 0 32px;border-radius:8px;background:#e8edf0;color:#4a6075}
+.shell-action strong{display:block;font-size:12px;font-weight:780;line-height:1.4}
+.shell-action small{display:block;font-size:11px;font-weight:470;color:#768493;line-height:1.4;margin-top:2px}
+.shell-dashboard-section{margin:0 0 30px}
+.shell-dashboard-section .clarity-listhead h2{font-size:22px!important;letter-spacing:-.5px}
+.shell-dashboard-section .shell-project-toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0 18px}
+.shell-dashboard-section .shell-project-toolbar input{margin:0;width:100%;max-width:350px;border-color:#d5d5d0;background:#fff}
+.shell-projects-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:0!important}
+.shell-projects-list .card{min-height:94px!important;padding:15px 16px!important;border-radius:12px!important;display:grid!important;grid-template-columns:42px 1fr 18px;grid-template-rows:1fr;gap:13px;align-items:center;transition:border-color .12s,background .12s!important}
+.shell-projects-list .card .badge{width:42px!important;height:42px!important;min-width:42px;border-radius:9px!important;margin:0!important;background:#eae9e4!important;color:#465366!important}
+.shell-projects-list .card strong{font-size:14px!important;line-height:1.35;margin:0!important}
+.shell-projects-list .card small{font-size:11px;display:block;margin-top:6px}
+.shell-projects-list .card .shell-project-arrow{grid-column:3;color:#9b9e9c;font-size:17px;grid-row:1}
+.shell-projects-list .card:hover{border-color:#8c9ca9!important;background:#fcfaf5!important}
+.shell-dashboard .control-whats-new{padding:15px 20px!important;margin-top:35px!important;background:transparent!important;border:1px solid #d8d7d0!important;box-shadow:none!important}
+.shell-dashboard .clarity-helpnote{margin-top:16px}
+/* Keep dense legacy tool forms within a readable measure; never discard them. */
+body.control-shell-v3 .control-wayfinding{background:#e8e9e4;border-color:#d9dcd9}
+body.control-shell-v3 .clarity-work-nav{margin-top:18px}
+body.control-shell-v3 .control-location,body.cloud-shell-v3 .control-location{font-size:11px}
+body.control-shell-v3 #main> .panel,body.cloud-shell-v3 #page> .surface{max-width:1200px}
+body.cloud-shell-v3.shell-cloud-ready #page>.clarity-shortcuts{max-width:1100px}
+@media(max-width:1250px) and (min-width:960px){
+  body.control-shell-v3>.wrap{padding:0 27px 70px!important}
+  body.control-shell-v3>.wrap>header{margin:0 -27px;padding:16px 27px}
+  body.cloud-shell-v3.shell-cloud-ready>.container{padding:24px 27px 80px!important}
+  .shell-feature-grid{grid-template-columns:1.2fr 1fr}
+  .shell-feature-primary{padding:23px}
+}
+@media(max-width:959px){
+  .shell-sidebar{display:none!important}
+  body.control-shell-v3>.wrap{background:var(--shell-paper);width:100%;max-width:none}
+  body.control-shell-v3{background:var(--shell-paper)}
+  body.control-shell-v3 .control-nav-mobile-trigger{display:inline-flex}
+  body.cloud-shell-v3.shell-cloud-ready{background:var(--shell-paper)}
+  .shell-feature-grid{grid-template-columns:1fr 1fr}
+  .shell-feature-primary{padding:21px;min-height:228px}
+}
+@media(max-width:700px){
+  .shell-dashboard-top{align-items:flex-start}
+  .shell-dashboard-top h1{font-size:31px}
+  .shell-dashboard-top #add-project{font-size:12px;padding:10px 12px;min-height:40px}
+  .shell-feature-grid{grid-template-columns:1fr;gap:10px;margin-top:21px;margin-bottom:25px}
+  .shell-feature-primary{min-height:218px;padding:22px}
+  .shell-feature-primary h2{font-size:29px;margin:14px 0 10px}
+  .shell-feature-aside{padding:12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .shell-feature-aside h2{grid-column:1/-1;padding:4px 3px;margin:0}
+  .shell-action{min-height:66px;padding:10px;gap:8px}
+  .shell-action:nth-last-child(1){grid-column:1/-1}
+  .shell-action small{display:none}
+  .shell-projects-list{grid-template-columns:1fr!important}
+  .shell-dashboard-section .shell-project-toolbar input{max-width:none}
+}
+@media(max-width:440px){
+  .shell-dashboard-top h1{font-size:29px}
+  .shell-dashboard-top .shell-dashboard-eyebrow{font-size:9px}
+  .shell-feature-aside{grid-template-columns:1fr}
+  .shell-action:nth-last-child(1){grid-column:auto}
+  .shell-feature-primary{min-height:204px}
+}
+@media(prefers-reduced-motion:reduce){.shell-sidebar *, .shell-dashboard *{transition:none!important;animation:none!important}}
