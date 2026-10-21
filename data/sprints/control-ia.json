@@ -2446,12 +2446,13 @@
       {
         "name": "423 green native tests and Chromium published-site validation",
         "kind": "evidence",
-        "stage": "verified",
+        "stage": "verified_online",
         "repository": "cosscoll/Avancement-Projet",
         "ref": "d4e9a45e63d56aa59c5b5b47947b61ddc2731519",
         "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633670993",
         "online_url": "https://cosscoll.github.io/Avancement-Projet/",
-        "online_verified_at": "2026-10-21T16:19:40Z"
+        "online_verified_at": "2026-10-21T16:19:40Z",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39633745069"
       }
     ],
     "links": [
