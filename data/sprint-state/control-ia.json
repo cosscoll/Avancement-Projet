@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "control-ia-20261021-auth-mutation-race-20261021090853361",
+    "started_at": "2026-10-21T09:08:53.361Z",
+    "expires_at": "2026-10-21T09:53:53.361Z",
+    "objective": "Empêcher les journaux/mensonges de réussite entre comptes lors de sauvegardes asynchrones; reproduire tester publier main"
+  },
   "checkpoint": {
     "updated_at": "2026-10-21T08:48:40.927Z",
     "main": true,
