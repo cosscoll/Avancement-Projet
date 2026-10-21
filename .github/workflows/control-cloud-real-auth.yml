@@ -35,7 +35,8 @@ jobs:
       - name: Vérifier la syntaxe et les règles de sécurité de la recette
         run: |
           node --check tests/control-cloud-real-auth-e2e.mjs
-          node --test tests/control-cloud-real-auth-e2e.test.mjs
+          node --check tests/control-cloud-real-auth-simulated.test.mjs
+          node --test tests/control-cloud-real-auth-e2e.test.mjs tests/control-cloud-real-auth-simulated.test.mjs
       - name: Authentifier deux vrais comptes et tester l'isolation serveur puis nettoyer
         # Secrets must be configured by the owner for the dedicated test environment.
         # Password OR direct access JWT supported for each side, never service_role.
