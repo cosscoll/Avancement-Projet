@@ -9,7 +9,7 @@ const start=cloud.indexOf('function safeClientConfig(v){');
 const end=cloud.indexOf('async function boot(){',start);
 assert.ok(start>0&&end>start,'Exact production safeClientConfig function must be extractable');
 const safeClientConfig=new Function(cloud.slice(start,end)+'\nreturn safeClientConfig;')();
-const ref='control-private-only-123';
+const ref='rvrmjjtdedidjnrkdery';
 const base={enabled:true,independentProjectConfirmed:true,controlProjectRef:ref,
  supabaseUrl:'https://'+ref+'.supabase.co/',supabasePublishableKey:'sb_publishable_controlSafePublic_12345678'};
 const accept=x=>safeClientConfig({...base,...x});
@@ -22,8 +22,13 @@ test('deployed Cloud is disabled and example is not authorized',()=>{
  assert.equal(safeClientConfig(actual),false);
  assert.equal(safeClientConfig(example),false);
 });
-test('a clean independently reviewed project and public-only key pass the schema check',()=>{
+test('the independently confirmed CONTROL project and public-only key pass the schema check',()=>{
  assert.equal(safeClientConfig(base),true);
+});
+test('self-consistent external Supabase project configuration is refused, including IAgile',()=>{
+ for(const different of ['daabfmdlgcwcykevvrcm','unrelated-project-reference']){
+  assert.equal(accept({controlProjectRef:different,supabaseUrl:'https://'+different+'.supabase.co/'}),false,different);
+ }
 });
 test('enabling Cloud alone is never enough to request sign-in',()=>{
  assert.equal(accept({independentProjectConfirmed:false}),false);
