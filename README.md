@@ -1,5 +1,12 @@
 # CONTROL — Centre de pilotage des projets
 
+## Accueil simplifié et recherche directe (22 octobre 2026)
+
+La PWA personnelle propose dès l'accueil un champ **« Rechercher une fonction ou un projet »** : saisir « budget », « créer un site » ou le nom d'un projet ouvre le moteur local avec les résultats correspondants, sans créer d'action. Le moteur propose également des raccourcis vers les dernières fonctions utilisées pendant la session. Aucun compte Cloud n'est ouvert et aucune automatisation réelle n'est activée.
+
+La version de cache **V59** est déclarée dans le service worker ; une régression Node dédiée détecte maintenant les assertions de tests encore figées sur d'anciens caches. Les contrôles isolés du code sont distincts de la **validation CI complète et du parcours Chromium public, non encore confirmés pour le dernier SHA**. [Parcours UX et limites de recette](docs/CONTROL_UX_V3_PARCOURS.md).
+
+
 ## CONTROL IA locale — vrai modèle génératif dans le navigateur (17 octobre 2026)
 
 Une première IA **générative réelle** est intégrée au CONTROL personnel, dans **Outils → CONTROL IA locale**, accessible aussi depuis chaque projet et directement à `#/control/localai`. Elle exécute **SmolLM2-135M-Instruct-ONNX-MHA** via **Transformers.js / WebAssembly** dans un Web Worker ; elle ne renvoie pas des réponses FAQ pré-écrites. **Le modèle n'est téléchargé qu'après un clic** (environ 180 Mo de poids plus bibliothèque). Discussions mémorisées localement, séparées par projet, avec contexte du projet uniquement sur autorisation explicite, et possibilité d'arrêter/effacer. Aucune clé API, aucun achat, aucun serveur d'inférence ajouté. **Limites :** petit modèle expérimental, moins bon que les modèles commerciaux, performances Android non vérifiées, aucun accès GitHub ou action autonome. Les tests JavaScript avec worker simulé passent dans GitHub Actions, mais **un vrai chargement/génération sur navigateur Android reste à valider**. [Architecture, confidentialité et recette Android](docs/IA_LOCALE_GENERATIVE.md).
