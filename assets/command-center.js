@@ -113,6 +113,11 @@ function intake(){const now=new Date().toISOString().slice(0,10),actions=db.acti
  box('Alertes des références publiques','<p class="muted">Ces informations proviennent de relevés précédents, pas d’une surveillance en temps réel.</p>'+ctx.projects.filter(p=>p.alerts?.length).slice(0,6).map(p=>'<details><summary>'+h(p.name)+' · '+p.alerts.length+' point(s) de vigilance</summary><p>'+p.alerts.map(a=>h(a.title)).join('<br>')+'</p><a href="#/project/'+encodeURIComponent(p.id)+'/pilot" class="button">Ouvrir le projet</a></details>').join(''));
  $('#main').innerHTML=view('À traiter','Actions, validations et échéances centralisées',content);
  registerForm('#new-action',(f)=>{const title=String(f.get('title')||'').trim();if(!title)return;const url=String(f.get('url')||'').trim();if(url&&!safe(url))return toast('Lien HTTPS requis.');if(!commitLocal(()=>db.actions.push({id:id(),project:String(f.get('project')||''),title,priority:String(f.get('priority')||'Normale'),status:'todo',due:String(f.get('due')||''),url,at:new Date().toISOString()})))return;intake();toast('Action enregistrée localement.')});
+ if(route().page==='inbox'&&route().param==='new'){
+  const titleField=$('#new-action input[name="title"]');
+  titleField?.scrollIntoView?.({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?'instant':'smooth',block:'center'});
+  titleField?.focus?.({preventScroll:true});
+ }
  paintSprints('#inbox-sprint-status',true);fetchSprints().then(()=>paintSprints('#inbox-sprint-status',true)).catch(()=>{});
  $('#main').querySelectorAll('[data-act^="done:"]').forEach(b=>b.onclick=()=>{const a=db.actions.find(x=>x.id===b.dataset.act.slice(5));if(a){if(commitLocal(()=>{a.status='done';a.closedAt=new Date().toISOString()}))intake()}});
 }
