@@ -26,17 +26,18 @@ La mention **INTERFACE V3** dans l'en-tête permet de repérer visuellement une 
 
 - `tests/control-ux-project-discovery.test.mjs` : quatre rubriques principales et onze rubriques personnelles, douze rubriques Cloud conditionnelles, panneau mobile repliable, boutons/formulaires et état Cloud non activé.
 - `tests/control-ux-task-first.test.mjs` : filtrage d'outils, restauration des catégories, création de mission à la demande, conservation des routes et de la sécurité Cloud.
-- `tests/control-ia-browser-smoke.mjs` : vrai Chromium sur le site publié : volet desktop à 1440 px, ouvrir et fermer le formulaire de création, ouvrir les sept rubriques avancées du projet, recherche contextuelle jusqu'au Laboratoire, filtre visio dans « Tous les outils », ouverture du formulaire Missions, navigation projet sur 320 px sans débordement.
-- `tests/pwa-atomic-install.test.mjs` : cache critique/offline après la rotation V44.
+- `tests/control-ia-browser-smoke.mjs` : vrai Chromium sur le site publié : volet desktop à 1440 px, ouvrir et fermer le formulaire de création, ouvrir les sept rubriques avancées du projet, recherche contextuelle jusqu'au Laboratoire, ouverture d’un projet par son nom, filtre visio dans « Tous les outils », ouverture du formulaire Missions, navigation projet sur 320 px sans débordement.
+- `tests/pwa-atomic-install.test.mjs` : cache critique/offline après la rotation V56.
 
 **État de recette :** les tests natifs, Chromium et le déploiement doivent être associés au SHA exact de la version finale. Toute documentation ou clôture ultérieure déclenche un nouveau SHA, à vérifier séparément.
 
 ## Amélioration incrémentale : recherche des fonctions (22 octobre 2026)
 
 - **Trouver une fonction** accepte mieux les requêtes françaises naturelles : accents, singulier/pluriel, synonymes contrôlés et expressions telles que « créer un nouveau projet », « organiser une réunion », « consulter les échéances », « modifier les paramètres » ou « sauvegarder mes données ».
-- **Accessibilité :** les résultats sont des boutons natifs dans un groupe nommé, sans rôle `listbox` simulé ; une pression sur Flèche haut depuis le champ renvoie au dernier résultat.
+- **Accès direct aux projets :** les projets disponibles dans la session sont retrouvables par nom, avec une entrée « Mes projets ». Avant authentification Cloud, aucune liste de projets privés n’est exposée par ce moteur ; le routeur Cloud vérifie également que le projet cible figure dans les projets chargés pour l’utilisateur.
+- **Accessibilité :** les résultats sont des boutons natifs dans un groupe nommé, sans rôle `listbox` simulé ; une pression sur Flèche haut depuis le champ renvoie au dernier résultat. Seul le compteur de résultats est annoncé en direct aux lecteurs d’écran.
 - **Sécurité :** le moteur ne lit que le catalogue local des routes autorisées déjà existantes. Il ne transmet aucune requête à une IA externe, n'active aucun compte Cloud et ne prétend pas chercher dans tous les documents privés.
-- **Vérifications :** les nouveaux cas sont ajoutés à `tests/control-navigation-natural-search.test.mjs` ; contrôle JavaScript isolé effectué sur le code récupéré depuis `main`. Validation GitHub Actions et recette navigateur public du SHA final à confirmer séparément.
+- **Vérifications :** les nouveaux cas sont ajoutés à `tests/control-navigation-natural-search.test.mjs` et le parcours de projet par son nom à `tests/control-ia-browser-smoke.mjs`. Contrôles isolés du JavaScript de `main` effectués, mais **l’exécution des nouveaux tests GitHub Actions et du Chromium public sur le SHA final reste à confirmer**.
 - **Portée :** amélioration UX incrémentale, **aucun critère Auth/JWT/RLS ou recette utilisateur physique nouvellement marqué vérifié**.
 
 ## Reste à approfondir
