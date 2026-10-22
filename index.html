@@ -94,7 +94,8 @@ function notify(msg){const n=$('#toast');n.textContent=msg;n.classList.remove('h
 function scoped(id){const d=state[id];if(!d||typeof d!=='object'||Array.isArray(d))state[id]={chats:[],links:[],memo:'',projectUrl:'',agents:[]};return state[id]}
 function external(url,label,cls='link'){const safe=link(url);return safe?'<a class="'+cls+'" href="'+attr(safe)+'" target="_blank" rel="noopener noreferrer">'+esc(label)+' <span aria-hidden="true">↗</span></a>':''}
 function go(id,t='ai'){tab=t;location.hash='#/project/'+encodeURIComponent(id)+'/'+t;render()}
-function route(){const s=decodeURIComponent(location.hash.slice(1));const m=s.match(/^\/project\/([^/]+)(?:\/([^/]+))?/);return m?{id:m[1],tab:m[2]||'ai'}:{id:null,tab:s==='/settings'?'settings':'home'}}
+function routePart(value){try{return decodeURIComponent(value)}catch{return null}}
+function route(){const s=location.hash.slice(1);const m=s.match(/^\/project\/([^/]+)(?:\/([^/?#]+))?/);return m?{id:routePart(m[1]),tab:m[2]||'ai'}:{id:null,tab:s==='/settings'?'settings':'home'}}
 function home(){
  active=null;
  const search='<input id="search" class="field search" type="search" aria-label="Rechercher un projet" placeholder="Rechercher un projet…" autocomplete="off">';
@@ -301,7 +302,7 @@ function render(){
   let label='Mes projets',trail='';
   const match=current.match(/^#\/project\/([^/]+)(?:\/([^/?#]+))?/);
   if(match){
-   const p=projects.find(v=>v.id===decodeURIComponent(match[1]));
+   const p=projects.find(v=>v.id===routePart(match[1]));
    const section=[['ai','Espaces IA'],['discussions','Conversations'],['pilot','Gestion'],['resources','Ressources'],['localai','CONTROL IA'],['meetings','Visios'],['command','Commander mes IA'],['library','Outils IA'],['deploy','Publication'],['lab','Laboratoire'],['connect','Connexions']].find(x=>x[0]===match[2]);
    label=(p?nameOf(p):'Projet')+(section?' / '+section[1]:'');
    trail='<a href="#/">← Mes projets</a>';
