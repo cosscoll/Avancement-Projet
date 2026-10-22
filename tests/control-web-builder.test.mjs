@@ -263,3 +263,12 @@ test('builder brief appears as a progressive disclosure, with no automatic cost 
  assert.match(ui,/redraw\(true\)/);
  assert.match(ui,/aucune IA ni publication lancée/);
 });
+
+test('a generated brief cannot falsely certify uncustomized sample copy',()=>{
+ const brief=site.fromBrief('Notre startup conçoit une plateforme numérique pour simplifier la logistique des équipes.');
+ const report=site.audit(brief);
+ for(const id of ['brand','title','services']){
+  assert.equal(report.checks.find(c=>c.id===id)?.ok,false,'generated copy is not proof of personalization for '+id);
+ }
+ assert.ok(report.checks.find(c=>c.id==='description')?.ok,'substantive user-authored description may qualify');
+});

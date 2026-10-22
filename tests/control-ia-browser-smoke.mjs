@@ -486,6 +486,15 @@ try{
   const currentVersion=await js("JSON.parse(localStorage.getItem('control-command-v1')).websites.find(x=>x.brand==='STUDIO CONTROL RECETTE').revisions.map(v=>v.version)");
   assert.deepEqual(currentVersion,[1,2],'Rolling back must preserve both earlier versions');
   log('builder warns on template content and restores history as a new version without data loss');
+  const priorDrafts=await js("JSON.parse(localStorage.getItem('control-command-v1')).websites.length");
+  await js("document.querySelector('#builder-new').click()");
+  await js("(()=>{document.querySelector('.web-builder-brief summary').click();document.querySelector('#builder-brief-text').value='Je suis artisan menuisier à Toulouse et je réalise du mobilier sur mesure pour les particuliers et les entreprises.';document.querySelector('#builder-brief-apply').click()})()");
+  assert.equal(await js("document.querySelector('#builder-form [name=theme]').value"),'atelier');
+  assert.equal(await js("document.querySelector('#builder-form [name=brand]').value"),'VOTRE MARQUE');
+  assert.equal(await js("JSON.parse(localStorage.getItem('control-command-v1')).websites.length"),priorDrafts,'Brief preview must not secretly save a draft');
+  await js("document.querySelector('#builder-form').requestSubmit()");
+  await ready(()=>js("JSON.parse(localStorage.getItem('control-command-v1')).websites.length==="+String(priorDrafts+1)),9000)();
+  log('a local guided brief creates a customizable preview and stores nothing before explicit save');
   log('site builder: sandbox preview, local save, ZIP files, responsive mode and reload persistence');
 
  // The mission list must not be pushed below a lengthy creation form.

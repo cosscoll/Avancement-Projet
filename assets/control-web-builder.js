@@ -91,15 +91,16 @@ function files(input){
  return {'index.html':markup(t,false),'styles.css':styles(t),'standalone.html':markup(t,true),'README.md':'# '+t.brand+'\n\nKit statique généré localement par CONTROL.\n\n- index.html + styles.css : version éditable.\n- standalone.html : version autonome, sans installation.\n\nAucun JavaScript, accès serveur ou publication automatique. Ouvrez index.html ou standalone.html dans un navigateur.\n'};
 }
 
-function fromBrief(brief,previous={}){
- const raw=clip(brief,1200);
- if(raw.length<24)return {error:'Décrivez votre activité, votre public et votre objectif en au moins 24 caractères.'};
- const reduced=raw.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
- const sections=[
+const BRIEF_RECIPES=[
   {theme:'atelier',keywords:['artisan','atelier','menuisier','artisanal','bois','bijou','restauration','cuisine','restaurant','plombier','boulanger','renovation','coiffure','boutique'],title:'Le savoir-faire prend tout son sens.',services:['Création et conseil sur mesure','Réalisation soignée','Accompagnement personnalisé'],cta:'Découvrir nos réalisations'},
   {theme:'produit',keywords:['application','logiciel','plateforme','saas','startup','automatiser','productivite','outil numerique','dashboard','service en ligne','technologie','mobile'],title:'Votre quotidien mérite mieux.',services:['Simplifier vos opérations','Suivre vos projets','Collaborer plus efficacement'],cta:'Découvrir la solution'},
   {theme:'studio',keywords:['portfolio','photographe','designer','studio','agence','architecte','graphiste','creatif','creation de site','communication','freelance','identite visuelle'],title:'Des idées singulières, des projets concrets.',services:['Stratégie et conseil','Création sur mesure','Expériences digitales'],cta:'Découvrir notre univers'}
  ];
+function fromBrief(brief,previous={}){
+ const raw=clip(brief,1200);
+ if(raw.length<24)return {error:'Décrivez votre activité, votre public et votre objectif en au moins 24 caractères.'};
+ const reduced=raw.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+ const sections=BRIEF_RECIPES;
  const best=sections.map((s,i)=>({...s,score:s.keywords.reduce((n,k)=>n+(reduced.includes(k)?1:0),0),rank:i}))
   .sort((a,b)=>b.score-a.score||a.rank-b.rank)[0];
  const theme=best.score>0?best.theme:'studio';
@@ -132,10 +133,10 @@ function versionDraft(previous,input,reference,now){
 function audit(input){
  const t=normalize(input),defaults=normalize({theme:t.theme}),html=markup(t,true),css=styles(t);
  const results=[
-  {id:'brand',field:'brand',label:'Nom de marque personnalisé',ok:t.brand.length>=3&&t.brand!=='MON STUDIO',advice:'Choisissez le nom réel du projet plutôt que le nom générique.'},
-  {id:'title',field:'title',label:'Titre lisible et concis',ok:t.title.length>=18&&t.title.length<=95&&t.title!==defaults.title,advice:'Remplacez le titre d’exemple par une proposition propre à votre activité (18 à 95 caractères).'},
+  {id:'brand',field:'brand',label:'Nom de marque personnalisé',ok:t.brand.length>=3&&!['MON STUDIO','VOTRE MARQUE'].includes(t.brand.toUpperCase()),advice:'Choisissez le nom réel du projet plutôt que le nom générique.'},
+  {id:'title',field:'title',label:'Titre lisible et concis',ok:t.title.length>=18&&t.title.length<=95&&t.title!==defaults.title&&!BRIEF_RECIPES.some(x=>x.title===t.title),advice:'Remplacez le titre d’exemple par une proposition propre à votre activité (18 à 95 caractères).'},
   {id:'description',field:'description',label:'Description adaptée au référencement',ok:t.description.length>=55&&t.description.length<=160&&t.description!==defaults.description,advice:'Remplacez la description d’exemple par un texte précis et original de 55 à 160 caractères.'},
-  {id:'services',field:'services',label:'Prestations distinctes',ok:t.services.every((s,i)=>s.length>=4&&s!==defaults.services[i])&&new Set(t.services.map(x=>x.toLowerCase())).size===3,advice:'Remplacez chacune des trois prestations d’exemple par votre offre réelle.'},
+  {id:'services',field:'services',label:'Prestations distinctes',ok:t.services.every((s,i)=>s.length>=4&&s!==defaults.services[i]&&!BRIEF_RECIPES.some(x=>x.services.includes(s)))&&new Set(t.services.map(x=>x.toLowerCase())).size===3,advice:'Remplacez chacune des trois prestations d’exemple par votre offre réelle.'},
   {id:'email',field:'email',label:'Contact réellement joignable',ok:!!t.email,advice:'Ajoutez une adresse e-mail de contact : sans elle, le bouton mène seulement à la section Contact.'},
   {id:'structure',field:'title',label:'Structure et métadonnées HTML',ok:/<html lang="fr">/.test(html)&&/<meta name="viewport"/.test(html)&&/<meta name="description"/.test(html)&&/<main>/.test(html)&&/<h1>/.test(html),advice:'Une structure HTML essentielle est absente.'},
   {id:'mobile',field:'theme',label:'Mise en page mobile prévue',ok:/@media\(max-width:760px\)/.test(css),advice:'Le modèle ne contient pas de règles mobiles.'},
