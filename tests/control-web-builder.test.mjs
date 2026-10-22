@@ -272,3 +272,42 @@ test('a generated brief cannot falsely certify uncustomized sample copy',()=>{
  }
  assert.ok(report.checks.find(c=>c.id==='description')?.ok,'substantive user-authored description may qualify');
 });
+
+test('multi-page export contains working HTML links and CSS with a standalone fallback',()=>{
+ const draft=site.normalize({theme:'atelier',siteStructure:'multipage',brand:'Maison Érable',email:'bonjour@example.org',services:['Objets','Conseil','Travaux']});
+ assert.equal(draft.siteStructure,'multipage');
+ const output=site.files(draft);
+ assert.deepEqual(Object.keys(output),['index.html','styles.css','services.html','contact.html','standalone.html','README.md']);
+ assert.match(output['index.html'],/href=".\/services.html"/);
+ assert.match(output['index.html'],/href=".\/contact.html"/);
+ assert.match(output['services.html'],/<h1>Ce que nous faisons\.<\/h1>/);
+ assert.match(output['services.html'],/aria-current="page">Prestations<\/a>/);
+ assert.match(output['contact.html'],/aria-current="page">Contact<\/a>/);
+ assert.match(output['contact.html'],/href="mailto:bonjour@example\.org"/);
+ assert.match(output['contact.html'],/<main class="subpage">/);
+ assert.match(output['standalone.html'],/href="#contact"/);
+ assert.doesNotMatch(output['standalone.html'],/href=".\/services.html"/);
+ const extracted=unzipStored(site.zip(output));
+ assert.deepEqual(extracted,output);
+ for(const [name,html] of Object.entries(output).filter(([name])=>name.endsWith('.html')))
+  assert.ok(html.startsWith('<!doctype html>'),name+' must be independently valid HTML document');
+});
+test('multi-page output never contains executable scripts, unsafe text or outside links',()=>{
+ const draft=site.normalize({siteStructure:'multipage',title:'"><script>bad()</script>',brand:'<b>unsafe</b>',email:'javascript:hello'});
+ const output=site.files(draft);
+ for(const html of ['index.html','services.html','contact.html','standalone.html']){
+  assert.doesNotMatch(output[html],/<script\b|<b>unsafe<\/b>|javascript:/i);
+  assert.match(output[html],/meta name="viewport"/);
+ }
+ assert.match(output['contact.html'],/Coordonnées à compléter/);
+ assert.equal(site.normalize({siteStructure:'../../escape'}).siteStructure,'onepage');
+ assert.throws(()=>site.pageMarkup(draft,'../../../file'),/Page invalide/);
+});
+test('webbuilder exposes multipage selector and preview tabs in the editor',()=>{
+ const ui=readFileSync(new URL('../assets/control-web-builder-ui.js',import.meta.url),'utf8');
+ assert.match(ui,/name="siteStructure"/);
+ assert.match(ui,/data-builder-page="services"/);
+ assert.match(ui,/data-builder-page="contact"/);
+ assert.match(ui,/engine\.pageMarkup\(working,page,true\)/);
+ assert.match(ui,/frame\.srcdoc=previewContent/);
+});

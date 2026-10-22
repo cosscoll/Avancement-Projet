@@ -5,7 +5,7 @@ const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>'
 function mount(target,api){
  const engine=core();
  if(!engine){target.textContent='Le constructeur est indisponible. Actualise CONTROL.';return}
- let selectedId='',working=engine.normalize({theme:'studio'}),view='desktop',unsaved=false;
+ let selectedId='',working=engine.normalize({theme:'studio'}),view='desktop',page='home',unsaved=false;
  const persist=()=>api.list().filter(x=>x&&typeof x==='object').slice(-40).reverse();
  function entries(){return persist().map(x=>'<button type="button" class="web-builder-draft" data-open-draft="'+escape(x.id)+'"><strong>'+escape(x.brand||'Sans nom')+'</strong><small>'+escape(x.theme||'studio')+' · '+escape(api.projectName(x.project)||'Projet libre')+'</small></button>').join('')||'<p class="muted">Aucun brouillon enregistré sur cet appareil.</p>'}
  const field=(label,name,val,limit=100)=>'<label>'+escape(label)+'<input class="field" name="'+name+'" maxlength="'+limit+'" value="'+escape(val)+'"></label>';
@@ -15,6 +15,7 @@ function mount(target,api){
   const palettes=Object.entries(engine.PALETTES[working.theme]).map(([id,p])=>'<option value="'+id+'" '+(working.palette===id?'selected':'')+'>'+escape(p.label)+'</option>').join('');
   const fonts=Object.entries(engine.TYPOGRAPHIES).map(([id,t])=>'<option value="'+id+'" '+(working.typography===id?'selected':'')+'>'+escape(t.label)+'</option>').join('');
   return '<form id="builder-form"><label>Direction créative<select class="field" name="theme">'+themes+'</select></label>'+
+   '<label>Structure du site<select class="field" name="siteStructure"><option value="onepage" '+(working.siteStructure!=='multipage'?'selected':'')+'>Une page avec sections</option><option value="multipage" '+(working.siteStructure==='multipage'?'selected':'')+'>Trois pages : Accueil, Prestations, Contact</option></select></label>'+
    '<div class="web-builder-style-options"><label>Palette<select class="field" name="palette">'+palettes+'</select></label><label>Typographie<select class="field" name="typography">'+fonts+'</select></label></div>'+
    field('Nom de marque','brand',working.brand,64)+
    field('Signature','tag',working.tag,90)+
@@ -33,10 +34,11 @@ function mount(target,api){
   '<div id="builder-fields">'+form()+'</div><div class="web-builder-saves"><div class="row"><h3>Mes brouillons</h3><button type="button" id="builder-new">Nouveau</button></div><div id="builder-drafts">'+entries()+'</div><button type="button" id="builder-delete" hidden>Supprimer ce brouillon</button></div>'+
    '<section class="web-builder-history" id="builder-history" aria-label="Versions de ce brouillon"><h3>Historique des versions</h3><div id="builder-revisions"></div><small>Une version précédente restaurée devient une nouvelle version. Les 8 dernières versions antérieures sont conservées sur cet appareil.</small></section></div>'+
   '<div class="web-builder-work"><div class="web-builder-toolbar"><strong>Aperçu sécurisé</strong><div class="web-builder-modes"><button type="button" data-builder-viewport="desktop" aria-pressed="true">Ordinateur</button><button type="button" data-builder-viewport="mobile" aria-pressed="false">Mobile</button></div></div>'+
+  '<div class="web-builder-pages" id="builder-pages" role="group" aria-label="Choisir une page à prévisualiser"><button type="button" data-builder-page="home" aria-pressed="true">Accueil</button><button type="button" data-builder-page="services" aria-pressed="false">Prestations</button><button type="button" data-builder-page="contact" aria-pressed="false">Contact</button></div>'+
   '<div class="web-builder-canvas"><iframe id="builder-preview" title="Aperçu isolé du site généré" sandbox="" referrerpolicy="no-referrer"></iframe></div>'+
   '<section class="web-builder-audit" aria-labelledby="builder-audit-title"><div class="web-builder-audit-top"><h3 id="builder-audit-title">Contrôles avant export</h3><strong id="builder-audit-score" aria-live="polite"></strong></div><ul id="builder-audit-list"></ul><p class="muted">Contrôles statiques indicatifs : ils ne remplacent pas une recette SEO, WCAG ou Lighthouse, ni les essais sur appareils réels.</p></section>'+
   '<details class="web-builder-code"><summary>Voir le code HTML généré</summary><p class="muted">Code en lecture seule : modifiez les champs à gauche, puis exportez les fichiers.</p><textarea id="builder-code" readonly spellcheck="false" aria-label="Code HTML généré" rows="12"></textarea></details>'+
-  '<p class="web-builder-limits">Aperçu isolé : les scripts, formulaires et contenus externes sont désactivés. L’export fournit index.html, styles.css, standalone.html et README.md. Aucune connexion ni hébergement externe.</p><p class="web-builder-limits"><a href="#/control/deploy">Consulter les étapes pour publier manuellement ce site →</a></p></div></div></div>';
+  '<p class="web-builder-limits">Aperçu isolé : les scripts, formulaires et contenus externes sont désactivés. L’export fournit HTML/CSS/README ; en mode multipages, les fichiers Prestations et Contact sont ajoutés. Aucune connexion ni hébergement externe.</p><p class="web-builder-limits"><a href="#/control/deploy">Consulter les étapes pour publier manuellement ce site →</a></p></div></div></div>';
  const $=s=>target.querySelector(s),query=s=>[...target.querySelectorAll(s)];
  const history=()=>{
   const panel=$('#builder-history'),box=$('#builder-revisions');
@@ -63,8 +65,12 @@ function mount(target,api){
  function preview(){
   working=values();
   const frame=$('#builder-preview');
-  frame.srcdoc=engine.markup(working,true);
-  $('#builder-code').value=engine.markup(working,true);
+  if(working.siteStructure!=='multipage')page='home';
+  const previewContent=page==='home'?engine.markup(working,true):engine.pageMarkup(working,page,true);
+  frame.srcdoc=previewContent;
+  $('#builder-code').value=previewContent;
+  $('#builder-pages').hidden=working.siteStructure!=='multipage';
+  query('[data-builder-page]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.builderPage===page)));
   frame.setAttribute('data-theme',working.theme);
   updateAudit();
   status(unsaved?'Aperçu modifié : pensez à enregistrer votre brouillon.':'Aperçu prêt. Aucun fichier publié.');
@@ -152,6 +158,8 @@ function mount(target,api){
   }
   const fix=event.target.closest('[data-audit-field]');
   if(fix){const el=$('#builder-form [name="'+fix.dataset.auditField+'"]');if(el){el.focus({preventScroll:true});el.scrollIntoView({block:'center',behavior:'auto'})}return}
+  const tab=event.target.closest('[data-builder-page]');
+  if(tab){page=tab.dataset.builderPage;preview();return}
   const viewport=event.target.closest('[data-builder-viewport]');
   if(viewport){view=viewport.dataset.builderViewport;updateViewport();return}
   const opened=event.target.closest('[data-open-draft]');

@@ -47,7 +47,7 @@ function normalize(value={}){
  return {theme,palette,typography,brand:clip(p.brand,64)||'MON STUDIO',tag:clip(p.tag,90)||defaults.tag,
   title:clip(p.title,130)||defaults.title,
   description:clip(p.description,280)||defaults.description,cta:clip(p.cta,64)||defaults.cta,
-  services,email};
+  services,email,siteStructure:p.siteStructure==='multipage'?'multipage':'onepage'};
 }
 function styles(t){
  const theme=Object.hasOwn(THEMES,t?.theme)?t.theme:'studio';
@@ -59,6 +59,8 @@ function styles(t){
  'a{color:inherit}a:focus-visible{outline:3px solid var(--accent);outline-offset:4px}button{font:inherit}section{scroll-margin-top:90px}',
  '.wrap{max-width:1280px;margin:auto;padding:0 clamp(22px,5vw,76px)}',
  '.nav{display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid currentColor;padding:26px 0}.brand{font-weight:850;letter-spacing:-.045em;font-size:20px}.nav a{text-decoration:none;font-size:13px;font-weight:700}',
+ '.nav-pages{display:flex;align-items:center;gap:clamp(9px,2vw,24px);flex-wrap:wrap}.nav-pages a{font-size:12px;opacity:.72;transition:opacity .2s}.nav-pages a:hover,.nav-pages a[aria-current="page"]{opacity:1;text-decoration:underline;text-underline-offset:5px}',
+ '.subpage{min-height:70vh}.subpage-intro{padding:clamp(70px,10vw,145px) 0 65px}.subpage-intro h1{font-size:clamp(52px,9vw,108px);letter-spacing:-.07em;line-height:1.04;max-width:950px}.subpage-intro .lede{font-size:clamp(17px,2vw,25px);max-width:700px}.contact-warning{font-weight:700;border-left:3px solid var(--accent);padding:10px 18px}',
  '.hero{padding:clamp(75px,12vw,155px) 0 clamp(70px,10vw,130px)}.eyebrow{text-transform:uppercase;letter-spacing:.18em;font-weight:750;font-size:11px;opacity:.8}.hero h1{font-size:clamp(48px,8.7vw,124px);max-width:1100px;letter-spacing:-.075em;line-height:.98;font-weight:740;margin:30px 0}.hero .lede{font-size:clamp(17px,2vw,24px);max-width:650px;opacity:.78}',
  '.cta{display:inline-flex;align-items:center;gap:28px;border:1px solid var(--ink);border-radius:999px;padding:16px 25px;margin-top:23px;text-decoration:none;font-weight:700;font-size:14px;transition:transform .3s,border-color .3s,background .3s,color .3s}.cta:hover{transform:translateY(-4px);background:var(--ink);color:var(--paper)}.cta span{font-size:18px}',
  '.feature{padding:34px 0 65px;border-top:1px solid currentColor}.section-top{display:flex;justify-content:space-between;gap:30px;align-items:end;margin-bottom:30px}.section-top h2{font-size:clamp(30px,4vw,53px);letter-spacing:-.055em;line-height:1.1;margin:10px 0}.section-top p{max-width:350px;font-size:14px;opacity:.72}',
@@ -77,6 +79,15 @@ function styles(t){
  '@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}'
  ].join('\n');
 }
+function navigation(t,active='home'){
+ const home=t.siteStructure==='multipage'?'./index.html':'#';
+ const links=t.siteStructure==='multipage'?
+  '<nav class="nav-pages" aria-label="Navigation principale">'+
+   [['home','Accueil','./index.html'],['services','Prestations','./services.html'],['contact','Contact','./contact.html']].map(([id,label,url])=>
+    '<a href="'+url+'"'+(id===active?' aria-current="page"':'')+'>'+label+'</a>').join('')+'</nav>':
+  '<a href="#contact">Contact ↗</a>';
+ return '<header class="nav"><a class="brand" href="'+home+'" aria-label="Accueil">'+escape(t.brand)+'</a>'+links+'</header>';
+}
 function markup(t,inline=false){
  const x=THEMES[t.theme],contact=t.email?'mailto:'+escape(t.email):'#contact';
  const visual=t.theme==='produit'?'<div class="visual"><div class="product-ui"><strong>'+escape(t.brand)+'</strong><div class="flow-row"><span>01 · Organiser</span><span>02 · Collaborer</span><span>03 · Avancer</span></div><p>Un parcours lisible, une action à la fois.</p></div></div>':'<div class="visual" role="img" aria-label="Illustration abstraite de l’univers graphique"></div>';
@@ -84,11 +95,34 @@ function markup(t,inline=false){
  '<div class="hero"><p class="eyebrow">'+escape(t.tag)+'</p><h1>'+escape(t.title)+'</h1><p class="lede">'+escape(t.description)+'</p><a class="cta" href="'+contact+'">'+escape(t.cta)+' <span aria-hidden="true">↗</span></a></div>'+visual;
  const cards=t.services.map((value,i)=>'<article class="card"><span class="number">0'+(i+1)+' / 03</span><h3>'+escape(value)+'</h3><span class="arrow" aria-hidden="true">↗</span></article>').join('');
  const css=inline?'<style>'+styles(t)+'</style>':'<link rel="stylesheet" href="./styles.css">';
- return '<!doctype html>\n<html lang="fr">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<meta name="description" content="'+escape(t.description)+'">\n<title>'+escape(t.brand)+' — '+escape(t.title)+'</title>\n'+css+'\n</head>\n<body class="'+x.layout+'"><div class="wrap"><header class="nav"><a class="brand" href="#" aria-label="Accueil">'+escape(t.brand)+'</a><a href="#contact">Contact ↗</a></header>\n<main>'+hero+'<section class="feature" id="services"><div class="section-top"><div><p class="eyebrow">CE QUE NOUS CRÉONS</p><h2>Notre expertise.</h2></div><p>Trois façons de donner vie à une idée et de la transformer en expérience.</p></div><div class="cards">'+cards+'</div></section><section class="contact" id="contact"><p class="eyebrow">LA SUITE COMMENCE ICI</p><h2>Construisons quelque chose ensemble.</h2><a class="cta" href="'+contact+'">'+escape(t.cta)+' <span aria-hidden="true">↗</span></a></section></main><footer class="footer"><span>'+escape(t.brand)+' · Créé avec CONTROL</span><span>Design responsive · HTML & CSS</span></footer></div>\n</body>\n</html>';
+ return '<!doctype html>\n<html lang="fr">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<meta name="description" content="'+escape(t.description)+'">\n<title>'+escape(t.brand)+' — '+escape(t.title)+'</title>\n'+css+'\n</head>\n<body class="'+x.layout+'"><div class="wrap">'+navigation(t,'home')+'\n<main>'+hero+'<section class="feature" id="services"><div class="section-top"><div><p class="eyebrow">CE QUE NOUS CRÉONS</p><h2>Notre expertise.</h2></div><p>Trois façons de donner vie à une idée et de la transformer en expérience.</p></div><div class="cards">'+cards+'</div></section><section class="contact" id="contact"><p class="eyebrow">LA SUITE COMMENCE ICI</p><h2>Construisons quelque chose ensemble.</h2><a class="cta" href="'+contact+'">'+escape(t.cta)+' <span aria-hidden="true">↗</span></a></section></main><footer class="footer"><span>'+escape(t.brand)+' · Créé avec CONTROL</span><span>Design responsive · HTML & CSS</span></footer></div>\n</body>\n</html>';
+}
+function pageMarkup(input,page,inline=false){
+ const t=normalize({...input,siteStructure:'multipage'});
+ if(!['services','contact'].includes(page))throw Error('Page invalide');
+ const x=THEMES[t.theme];
+ const title=page==='services'?'Nos prestations':'Contacter '+t.brand;
+ const css=inline?'<style>'+styles(t)+'</style>':'<link rel="stylesheet" href="./styles.css">';
+ const cards=t.services.map((value,i)=>'<article class="card"><span class="number">0'+(i+1)+' / 03</span><h2>'+escape(value)+'</h2><span class="arrow" aria-hidden="true">↗</span></article>').join('');
+ const contact=t.email?'mailto:'+escape(t.email):'#contact';
+ const body=page==='services'?
+  '<section class="subpage-intro"><p class="eyebrow">NOTRE SAVOIR-FAIRE</p><h1>Ce que nous faisons.</h1><p class="lede">'+escape(t.description)+'</p></section>'+
+  '<section class="feature"><div class="cards">'+cards+'</div><p><a class="cta" href="./contact.html">Parlons de votre projet <span aria-hidden="true">↗</span></a></p></section>':
+  '<section class="subpage-intro" id="contact"><p class="eyebrow">PRENONS CONTACT</p><h1>Une idée à concrétiser ?</h1><p class="lede">'+escape(t.description)+'</p>'+
+  (t.email?'<a class="cta" href="'+contact+'">Écrire à '+escape(t.brand)+' <span aria-hidden="true">↗</span></a>':
+  '<p class="contact-warning">Coordonnées à compléter : aucune demande n’est envoyée depuis cette page.</p>')+'</section>';
+ return '<!doctype html>\n<html lang="fr">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<meta name="description" content="'+escape(t.description)+'">\n<title>'+escape(title)+' — '+escape(t.brand)+'</title>\n'+css+'\n</head>\n<body class="'+x.layout+'"><div class="wrap">'+navigation(t,page)+'\n<main class="subpage">'+body+'</main><footer class="footer"><span>'+escape(t.brand)+' · Créé avec CONTROL</span><span><a href="./index.html">Accueil</a> · <a href="./services.html">Prestations</a> · <a href="./contact.html">Contact</a></span></footer></div>\n</body>\n</html>';
 }
 function files(input){
  const t=normalize(input);
- return {'index.html':markup(t,false),'styles.css':styles(t),'standalone.html':markup(t,true),'README.md':'# '+t.brand+'\n\nKit statique généré localement par CONTROL.\n\n- index.html + styles.css : version éditable.\n- standalone.html : version autonome, sans installation.\n\nAucun JavaScript, accès serveur ou publication automatique. Ouvrez index.html ou standalone.html dans un navigateur.\n'};
+ const bundle={'index.html':markup(t,false),'styles.css':styles(t)};
+ if(t.siteStructure==='multipage'){
+  bundle['services.html']=pageMarkup(t,'services');
+  bundle['contact.html']=pageMarkup(t,'contact');
+ }
+ bundle['standalone.html']=markup({...t,siteStructure:'onepage'},true);
+ bundle['README.md']='# '+t.brand+'\n\nKit statique généré localement par CONTROL.\n\n'+(t.siteStructure==='multipage'?'Trois pages : index.html, services.html, contact.html. Ouvrez index.html et vérifiez toutes les navigations.\n':'Une page : index.html et styles.css.\n')+'- styles.css : styles communs.\n- standalone.html : version autonome sur une page sans installation.\n\nAucun JavaScript, accès serveur ou publication automatique. Importez tous les fichiers dans un même dossier et ouvrez index.html dans un navigateur.\n';
+ return bundle;
 }
 
 const BRIEF_RECIPES=[
@@ -166,5 +200,5 @@ function zip(input){
  for(const p of [...parts,...central,new Uint8Array(end.buffer)]){out.set(p,cursor);cursor+=p.length}
  return out;
 }
-window.CONTROL_WEB_BUILDER_CORE=Object.freeze({THEMES,PALETTES,TYPOGRAPHIES,normalize,markup,styles,files,zip,audit,versionDraft,fromBrief});
+window.CONTROL_WEB_BUILDER_CORE=Object.freeze({THEMES,PALETTES,TYPOGRAPHIES,normalize,markup,pageMarkup,styles,files,zip,audit,versionDraft,fromBrief});
 })();

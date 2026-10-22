@@ -73,3 +73,9 @@
 .web-builder-brief textarea{min-height:105px}
 .web-builder-brief button{min-height:41px;width:100%;font-size:12px;border-radius:8px;margin-top:10px}
 .web-builder-brief #builder-brief-feedback{color:#335b52;min-height:0;font-weight:650}
+
+.web-builder-pages{display:flex;gap:4px;align-items:center;padding:11px 18px;background:#f7f9fa;border-bottom:1px solid #dfe5eb}
+.web-builder-pages[hidden]{display:none!important}
+.web-builder-pages button{font-size:11px;font-weight:710;border:1px solid transparent;border-radius:8px;padding:9px 12px;min-height:37px}
+.web-builder-pages button[aria-pressed="true"]{background:#e5eeec;border-color:#9fbab3;color:#244f46}
+@media(max-width:420px){.web-builder-pages{padding:10px;gap:2px}.web-builder-pages button{padding:8px;font-size:10px}}
