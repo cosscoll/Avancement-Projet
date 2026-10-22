@@ -91,8 +91,8 @@
       "priority": "P0",
       "stage": "deployed",
       "depends_on": [],
-      "summary": "Écritures locales confirmées ou annulées : création/édition d'actions et projets, liens outils/hébergement, bilans et historiques ; les trois magasins détectent une corruption et bloquent les exports trompeurs. Cloud et synchronisation réelle non prouvés.",
-      "next": "Tester les parcours de récupération sur téléphones physiques et poursuivre Auth JWT A/B, isolation et synchronisation CONTROL Cloud après consentement explicite.",
+      "summary": "Actions et projets locaux sauvegardés ; restauration en deux étapes avec visualisation des quantités, alertes sur les pertes, refus si changement entre prévisualisation et application, retour arrière des trois magasins. Aucun compte multi-appareils.",
+      "next": "Recette navigateur post-déploiement et tests sur appareils physiques, puis vraie identité Cloud et RLS JWT A/B après accord infrastructure.",
       "blockers": [
         "Persistance limitée au navigateur; aucune isolation de deux comptes réelle.",
         "Aucune recette Android physique documentée."

@@ -37,3 +37,15 @@ header.control-head{flex-wrap:wrap;gap:10px}
 .mobilefoot button[aria-current="page"]{color:#254c82;font-weight:800}
 @media(max-width:640px){.formgrid{grid-template-columns:1fr}.inbox-item{display:block}.inbox-item .actions{margin-top:12px}.dash-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.stat{padding:12px 9px;min-height:95px}.stat strong{font-size:20px}.stat span{font-size:11px}.control-head .head-actions{gap:6px}.control-head .head-actions a{font-size:11px}.toolcard{min-height:112px}.quicktiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:370px){.dash-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.control-head .head-actions{width:100%}}
+
+/* Backup restoration — review before destructive writes */
+.backup-restore-preview{margin:17px 0 0;padding:18px;border:1px solid #d5e1e9;background:#f9fbfd;border-radius:14px}
+.backup-restore-preview[hidden]{display:none!important}
+.backup-restore-preview h3{font-size:16px;margin:0 0 10px;color:#25425e}
+.backup-restore-preview p{font-size:13px;line-height:1.55}
+.backup-diff-table{width:100%;border-collapse:collapse;text-align:left;min-width:0}
+.backup-diff-table th,.backup-diff-table td{padding:10px 12px;border-bottom:1px solid #dce6ef;font-size:12px;overflow-wrap:anywhere}
+.backup-diff-table th{font-weight:700}.backup-diff-table thead{background:#edf3f8}
+.backup-restore-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:15px}
+.backup-restore-actions button{font-size:13px;min-height:43px}
+@media(max-width:500px){.backup-restore-preview{padding:13px}.backup-diff-table th,.backup-diff-table td{padding:9px 5px;font-size:11px}.backup-restore-actions button{width:100%}}

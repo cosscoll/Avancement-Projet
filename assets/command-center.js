@@ -628,12 +628,13 @@ function backup(){
    if(!validateBackupData(data))throw Error('Invalid backup format');
    // A valid backup is only inspected; no storage writes during this phase.
    const original=restore.snapshot(localStorage);
-   const existing={
-    command:readBackupStore(KEY),hub:readBackupStore(HUB),automations:readBackupStore(AUTOS)
-   };
+   const corrupt=backupStorageIssues();
+   const current=key=>{try{return readBackupStore(key)}catch{return{}}};
+   const existing={command:current(KEY),hub:current(HUB),automations:current(AUTOS)};
    const report=restore.compare(data,existing);
    pending={data,original};
    renderReview(report);
+   if(corrupt.length)comparison.insertAdjacentHTML('afterbegin','<p role="alert" class="notice"><strong>Attention :</strong> '+corrupt.length+' espace(s) locaux sont illisibles. Leurs éléments actuels ne peuvent pas être dénombrés ; conserve leur copie brute avant la restauration.</p>');
    message.textContent='Sauvegarde déchiffrée et vérifiée. Examine les différences avant de confirmer.';
   }catch(error){
    resetPreview();
@@ -645,6 +646,7 @@ function backup(){
   if(!staged){message.textContent='Examine d’abord le fichier de sauvegarde.';return}
   if(!restore.unchanged(localStorage,staged.original)){resetPreview();message.textContent='Des données locales ont changé depuis la vérification : relance la comparaison avant toute restauration.';return}
   if(!confirm('Remplacer maintenant les trois espaces de données CONTROL par le contenu du fichier vérifié ? Cette action écrasera les données actuelles.'))return;
+  if(!restore.unchanged(localStorage,staged.original)){resetPreview();message.textContent='Les données ont changé pendant la confirmation. Recommence la vérification.';return}
   let rollbackUncertain=false;
   const old=restore.storeKeys.map((key,i)=>[key,staged.original[i]]);
   try{

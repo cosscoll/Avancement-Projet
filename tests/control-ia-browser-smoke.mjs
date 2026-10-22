@@ -27,7 +27,7 @@ const swCaches=['CACHE_SHELL','CACHE_PUBLIC'].map(key=>{
  assert.ok(match,'Missing service worker cache version: '+key);
  return match[1];
 });
-const PUBLIC_ASSETS=['service-worker.js','index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/control-web-builder.js','assets/control-web-builder-ui.js','assets/control-web-builder.css','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','assets/navigation-hub.js','assets/navigation-hub.css','data/control-ia-delivery.json','data/control-ia-requirements.json'];
+const PUBLIC_ASSETS=['service-worker.js','index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/control-backup-review.js','assets/control-web-builder.js','assets/control-web-builder-ui.js','assets/control-web-builder.css','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','assets/navigation-hub.js','assets/navigation-hub.css','data/control-ia-delivery.json','data/control-ia-requirements.json'];
 const hash=data=>createHash('sha256').update(data).digest('hex');
 async function verifyPublishedFiles(){
  const expected=new Map(PUBLIC_ASSETS.map(path=>[path,hash(readFileSync(resolve(root,path)))]));
