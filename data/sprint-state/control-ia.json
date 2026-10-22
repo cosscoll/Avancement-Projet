@@ -165,48 +165,45 @@
   "pending_verification": {
     "date": "2026-10-22",
     "source": "conversation",
-    "code_commit_sha": "5a1ae1c8f24a8b3ca96e924f0e9f917bacbe3fea",
     "branch": "main",
-    "scope": "CONTROL UX V59: direct homepage intent search into local navigation, project-name discovery, session-only resume shortcuts, authentic unknown statuses for historical automations, PWA cache assertions repaired and cross-test version guard.",
+    "code_commit_sha": "1a31d9421cf1885e57bf56fc9b06f5ebfabea9f5",
+    "scope": "V62: direct personal forms for explicit new project or new task, list-first routing for consultation requests, fail-closed Cloud navigation, compatibility fixes to stale tests, PWA v62.",
     "changed_files": [
-      "index.html",
-      "assets/workspace-shell.css",
       "assets/navigation-hub.js",
-      "assets/navigation-hub.css",
-      "assets/automations-hub.js",
+      "index.html",
       "assets/command-center.js",
-      "assets/app.js",
-      "service-worker.js",
-      "tests/control-home-direct-intent.test.mjs",
-      "tests/control-home-discovery.test.mjs",
-      "tests/control-backup-review.test.mjs",
-      "tests/control-pwa-cache-contract.test.mjs",
+      "tests/control-navigation-hub.test.mjs",
       "tests/control-navigation-natural-search.test.mjs",
+      "tests/control-new-project-intent.test.mjs",
+      "tests/control-new-task-intent.test.mjs",
       "tests/control-ia-browser-smoke.mjs",
+      "service-worker.js",
       "tests/pwa-atomic-install.test.mjs",
       "tests/control-workspace-shell.test.mjs",
       "tests/control-ux-project-discovery.test.mjs",
-      "README.md",
+      "tests/control-home-discovery.test.mjs",
+      "tests/control-backup-review.test.mjs",
       "docs/CONTROL_UX_V3_PARCOURS.md",
-      "docs/CONTROL_IA_CAHIER_V1_2_SUIVI.md"
+      "docs/CONTROL_IA_CAHIER_V1_2_SUIVI.md",
+      "README.md"
     ],
     "checks_completed": [
-      "Revue de références de cache sur 44 fichiers test modifiés depuis le 18 octobre; ancien cache V55 corrigé dans deux tests.",
-      "2/2 tests ciblés du nouveau formulaire d'accueil exécutés dans un moteur JavaScript isolé, y compris événement submit et transmission de requête sans mutation.",
-      "6/6 tests de contrat du shell CONTROL exécutés isolément sur les sources courantes après inclusion de leur fixture.",
-      "Syntaxe JavaScript du script HTML et du scénario navigateur vérifiée; tests Node natifs complets non exécutés."
+      "29 navigation and form assertions executed successfully in isolated V8 on GitHub main sources: 26 prior navigation/project assertions plus 3 task tests.",
+      "4 direct-project route and cancellation tests: passing within navigation/form test group.",
+      "Regressed Cloud finder assertion updated to require no data before authorized session.",
+      "Cache version source and selected tests reference V62; JS script syntax checked."
     ],
     "checks_not_yet_verified": [
-      "GitHub Actions node --test tests/*.test.mjs sur HEAD final",
-      "Chromium public sur GitHub Pages pour le SHA final, recherche directe depuis l'accueil sur desktop/mobile",
-      "Test tactile et lecteur d'écran sur Android/iOS physique",
-      "CONTROL Cloud deux comptes authentifiés vrais et tests JWT/PostgREST RLS A/B et synchronisation"
+      "Native Node node --test tests/*.test.mjs on final SHA via GitHub Actions",
+      "Real Chromium desktop/mobile smoke execution on live GitHub Pages for final SHA",
+      "Physical mobile touch and screen reader QA",
+      "Real CONTROL Cloud Auth A/B, JWT/RLS and cross-device sync"
     ],
     "ci": "unverified",
     "live_pages": "unverified",
     "operational_claim_allowed": false,
     "cloud_enabled": false,
     "automations_changed": false,
-    "next_action": "Vérifier la CI Node complète et le navigateur public pour le SHA final. Corriger tout échec en priorité. Puis poursuivre une réduction des clics mesurée; conserver Cloud fermé et automatisations désactivées, aucune dépense ni Work/Codex."
+    "next_action": "Run native GitHub CI on latest main SHA and verify deployed public Pages in Chromium; fix any failures before calling UX operational. Keep Cloud and all automations disabled. No spending, no Work/Codex quota use."
   }
 }
