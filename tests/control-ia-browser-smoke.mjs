@@ -451,6 +451,16 @@ try{
  assert.ok(desktop.heroBackground!=='rgb(255, 255, 255)'&&desktop.projectsY<desktop.newsY,'Projects must appear above the announcements in a non-white editorial dashboard: '+JSON.stringify(desktop));
  assert.ok(desktop.links>=7&&desktop.overflow<=desktop.width+4,'Desktop navigation or page overflows: '+JSON.stringify(desktop));
  log('1440px desktop has persistent dark navigation, separate content canvas and project-first layout');
+ // Project discovery should tolerate accents and reordered terms while retaining the right route.
+ await js("(()=>{const field=document.querySelector('#search');field.value='ifsi revisions';field.dispatchEvent(new Event('input',{bubbles:true}))})()");
+ await ready(()=>js("document.querySelectorAll('#cards a.card').length===1"),8000)();
+ assert.equal(await js("document.querySelector('#cards a.card strong')?.textContent"),'Révisions IFSI');
+ assert.equal(await js("document.querySelector('#project-search-status')?.textContent"),'1 projet trouvé');
+ await js("document.querySelector('#cards a.card').click()");
+ await ready(()=>js("location.hash==='#/project/ifsi/ai'"),8000)();
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('#shell-quick-query')"),8000)();
+ log('desktop project search filters accent-free reversed words and opens the correct project');
  // Direct homepage intent must open the matching function without forcing a menu-first journey.
  await js("(()=>{const field=document.querySelector('#shell-quick-query');field.value='budget';field.form.requestSubmit()})()");
  await ready(()=>js("document.querySelector('.control-finder')?.hidden===false"),8000)();
