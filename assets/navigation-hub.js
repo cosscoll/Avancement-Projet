@@ -2,7 +2,7 @@
    Navigation only: no accounts, providers, secrets, telemetry or network calls. */
 (()=>{'use strict';
 const CAT=[
- ['start','Essentiels'],['manage','Organiser'],['ai','IA & création'],
+ ['start','Essentiels'],['projects','Mes projets'],['manage','Organiser'],['ai','IA & création'],
  ['publish','Ressources & publication'],['account','Compte & sécurité'],['project','Dans ce projet']
 ];
 const FEATURES=[
@@ -84,7 +84,14 @@ function findFeatures(raw,entries=catalog()){
 
 const catalog=()=>{
  const mode=adapter.mode==='cloud'?'cloud':'personal';
- const ordinary=FEATURES.filter(x=>x[mode]!==null).map(x=>({...x,target:x[mode]}));
+ if(mode==='cloud'&&!adapter.isAvailable?.())return [];
+ const ownProjects=Array.isArray(adapter.getProjects?.())?adapter.getProjects():[];
+ const projectEntries=ownProjects.filter(p=>p&&typeof p.id==='string'&&p.id&&typeof p.name==='string'&&p.name.trim()).slice(0,5000).map(p=>({
+  id:'open-project:'+p.id,title:p.name.trim(),hint:'Ouvrir ce projet',
+  category:'projects',keywords:'projet espace '+String(p.category||''),
+  target:mode==='cloud'?'project-open:'+p.id:'#/project/'+encodeURIComponent(p.id)+'/ai'
+ }));
+ const ordinary=FEATURES.filter(x=>x[mode]!==null).map(x=>({...x,target:x[mode]})).concat(projectEntries);
  const p=adapter.getActiveProject?.();
  if(mode==='cloud'){
   if(!p?.id)return ordinary;
@@ -142,7 +149,7 @@ function ensure(){
 function render(){
  const mode=adapter.mode==='cloud'?'cloud':'personal';
  const all=catalog();const search=norm(query.value);
- const categories=CAT.filter(([id])=>id!=='project'||all.some(item=>item.category==='project'));
+ const categories=CAT.filter(([id])=>!['project','projects'].includes(id)||all.some(item=>item.category===id));
  dialog.querySelector('.control-finder-categories').innerHTML=categories.map(([id,label])=>
  '<button type="button" data-finder-cat="'+id+'" aria-pressed="'+(search?'false':String(category===id))+'" class="'+(!search&&category===id?'is-active':'')+'">'+label+'</button>').join('')+
  '<button type="button" data-finder-cat="all" aria-pressed="'+(!search&&category==='all')+'" class="'+(!search&&category==='all'?'is-active':'')+'">Tout voir</button>';
@@ -156,7 +163,7 @@ function render(){
 function select(item){
  if(adapter.mode==='cloud'){
   if(!adapter.isAvailable?.())return;
-  adapter.navigate?.(item.target);
+  if(adapter.navigate?.(item.target)===false)return;
  }else{
   const target=item.target;
   if(target&&location.hash!==target)location.hash=target;
