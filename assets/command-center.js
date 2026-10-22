@@ -130,18 +130,84 @@ function missions(){const cards=db.missions.slice().reverse(),counts=['todo','do
  $('#main').querySelectorAll('[data-act^="edit:"]').forEach(b=>b.onclick=()=>{const m=db.missions.find(x=>x.id===b.dataset.act.slice(5));if(!m)return;$('#mission-editor').classList.remove('hidden');const f=$('#edit-mission');f.elements.id.value=m.id;f.elements.status.value=m.status;f.elements.result.value=m.result||'';$('#mission-editor').scrollIntoView({block:'nearest'})});
  registerForm('#edit-mission',f=>{const m=db.missions.find(x=>x.id===String(f.get('id')));if(!m)return;const status=String(f.get('status')),result=String(f.get('result')||'').trim();if(!['todo','doing','review','done'].includes(status))return toast('Statut de mission invalide.');if(status==='done'&&!result)return toast('Ajoute un compte rendu avant de marquer la mission terminée.');if(commitLocal(()=>{m.status=status;m.result=result;m.updated=new Date().toISOString()}))missions()});
 }
-function calendar(){const now=new Date().toISOString().slice(0,10),future=db.events.slice().sort((a,b)=>a.date.localeCompare(b.date));
- const content='<div class="two">'+box('Agenda des projets',future.length?future.map(e=>'<div class="inbox-item"><div><strong>'+h(e.title)+'</strong><small>'+h(pname(e.project))+' · '+h(e.date)+(e.details?' · '+h(cap(e.details,90)):'')+'</small></div>'+btn('Supprimer','delete-event:'+e.id)+'</div>').join(''):'<p class="empty">Aucun événement enregistré.</p>')+
- box('Ajouter un événement','<form id="new-event">'+field('Intitulé','title','','text','required maxlength="160"')+selectProject('')+field('Date et heure','date',now+'T09:00','datetime-local','required')+textarea('Détails','details','','rows="3"')+'<button class="primary">Ajouter à CONTROL</button></form>')+'</div>'+
- box('Visios et rendez-vous','<p class="muted">Réunions internes et rendez-vous clients : lien, invitation à partager, calendrier et compte rendu. Les visioconférences utilisent le fournisseur choisi.</p>'+db.meetings.filter(m=>m.startsAt&&Date.parse(m.startsAt)+Number(m.minutes||30)*60000>=Date.now()).sort((a,b)=>Date.parse(a.startsAt)-Date.parse(b.startsAt)).slice(0,5).map(m=>'<div class="inbox-item"><div><strong>'+h(m.title)+'</strong><small>'+h(dt(m.startsAt))+' · '+h(m.provider)+'</small></div>'+(safe(m.url)?href(m.url,'Rejoindre'):'')+'</div>').join('')+'<a class="button primary" href="#/control/meetings">Ouvrir les visios →</a>')+
- box('Calendriers externes','<p class="muted">Google Agenda et les calendriers des IA restent gérés dans leurs services respectifs. CONTROL n’affiche pas leurs rendez-vous privés sans authentification dédiée.</p><div class="actions">'+href('https://calendar.google.com/calendar/u/0/r/','Google Agenda')+href('https://chatgpt.com/scheduled','Tâches ChatGPT')+href('https://claude.ai/','Claude')+'</div>')+
- box('Automatisations connues','<div id="c-auto-preview"><p class="muted">Accéder à la programmation des tâches depuis le catalogue daté.</p><a class="button" href="#/automations">Ouvrir les automatisations →</a></div>');
- $('#main').innerHTML=view('Calendrier','Échéances, événements et automatisations',content);
+function calendar(){
+ const core=window.CONTROL_CALENDAR_CORE;
+ if(!core){$('#main').innerHTML=view('Calendrier','Agenda local',note('Les outils du calendrier ne sont pas chargés. Actualise CONTROL.'));return}
+ const events=db.events.slice().sort((a,b)=>(core.eventRange(a)?.start??Infinity)-(core.eventRange(b)?.start??Infinity));
+ const durationOptions=selected=>core.DURATIONS.map(value=>'<option value="'+value+'" '+(value===selected?'selected':'')+'>'+value+' minutes</option>').join('');
+ const conflictInput='<label class="calendar-override"><input type="checkbox" name="override" value="yes"> Enregistrer malgré un chevauchement signalé (agenda local uniquement)</label>';
+ const agenda=events.length?events.slice(0,120).map(e=>{
+  const range=core.eventRange(e);
+  const collisions=range?core.conflicts({date:core.localValue(range.start),durationMinutes:core.validDuration(e.durationMinutes)||30},db.events,db.meetings,e.id).matches.length:0;
+  return '<div class="inbox-item"><div><strong>'+h(e.title||'Sans titre')+'</strong><small>'+h(pname(e.project))+' · '+(range?h(dt(range.start))+' · '+(core.validDuration(e.durationMinutes)||30)+' min':'Date invalide')+(e.details?' · '+h(cap(e.details,90)):'')+'</small>'+(collisions?'<small role="status">⚠ '+collisions+' chevauchement(s) avec votre agenda local</small>':'')+'</div><div class="actions">'+btn('Exporter .ics','export-event:'+e.id)+btn('Modifier','edit-event:'+e.id)+btn('Supprimer','delete-event:'+e.id)+'</div></div>';
+ }).join(''):'<p class="empty">Aucun événement enregistré sur cet appareil.</p>';
+ const newForm='<form id="new-event">'+field('Intitulé','title','','text','required maxlength="160"')+selectProject('')+
+  '<div class="formgrid">'+field('Date et heure locale','date',core.defaultValue(),'datetime-local','required')+
+  '<label>Durée<select class="field" name="durationMinutes">'+durationOptions(30)+'</select></label></div>'+
+  textarea('Détails (facultatifs)','details','','rows="3" maxlength="1500"')+
+  '<p class="muted">CONTROL vérifie les chevauchements avec les événements et rendez-vous enregistrés sur cet appareil. Aucun calendrier externe n’est synchronisé.</p>'+
+  conflictInput+'<p id="calendar-feedback" role="alert" aria-live="polite"></p><button class="primary">Ajouter à CONTROL</button></form>';
+ const editForm='<section class="panel hidden" id="calendar-editor"><h2>Modifier un événement local</h2><form id="edit-event"><input type="hidden" name="id">'+
+  field('Intitulé','title','','text','required maxlength="160"')+selectProject('')+
+  '<div class="formgrid">'+field('Date et heure locale','date','','datetime-local','required')+
+  '<label>Durée<select class="field" name="durationMinutes">'+durationOptions(30)+'</select></label></div>'+
+  textarea('Détails (facultatifs)','details','','rows="3" maxlength="1500"')+
+  conflictInput+'<p id="edit-calendar-feedback" role="alert" aria-live="polite"></p><button class="primary">Enregistrer les modifications</button> '+btn('Annuler','cancel-calendar-edit')+'</form></section>';
+ const upcoming=db.meetings.filter(m=>m.startsAt&&Date.parse(m.startsAt)+Number(m.minutes||30)*60000>=Date.now()).sort((a,b)=>Date.parse(a.startsAt)-Date.parse(b.startsAt)).slice(0,5);
+ const content='<div class="two">'+box('Agenda des projets',agenda+(events.length>120?tiny('120 événements affichés. Les autres restent enregistrés.'):'')+tiny('Les exports .ics sont des fichiers à importer manuellement : aucun événement n’est envoyé automatiquement.'))+
+  box('Ajouter un événement',newForm)+'</div>'+editForm+
+  box('Visios et rendez-vous','<p class="muted">Réunions et appels ajoutés localement. Les créneaux de cette section entrent dans la détection de chevauchements.</p>'+upcoming.map(m=>'<div class="inbox-item"><div><strong>'+h(m.title)+'</strong><small>'+h(dt(m.startsAt))+' · '+h(m.provider)+'</small></div>'+(safe(m.url)?href(m.url,'Rejoindre'):'')+'</div>').join('')+'<a class="button primary" href="#/control/meetings">Ouvrir les visios →</a>')+
+  box('Calendriers externes','<p class="muted">Google Agenda et les calendriers des IA restent gérés dans leurs services respectifs. Les disponibilités externes sont inconnues de CONTROL.</p><div class="actions">'+href('https://calendar.google.com/calendar/u/0/r/','Google Agenda')+href('https://chatgpt.com/scheduled','Tâches ChatGPT')+href('https://claude.ai/','Claude')+'</div>')+
+  box('Automatisations connues','<div id="c-auto-preview"><p class="muted">Les informations affichées sont des relevés datés, pas un service de planification actif.</p><a class="button" href="#/automations">Ouvrir les automatisations →</a></div>');
+ $('#main').innerHTML=view('Calendrier','Événements, disponibilités et exports locaux',content);
  fetch('./data/automations.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{const box=$('#c-auto-preview');if(!box||!d?.tasks)return;box.innerHTML='<p class="muted">Relevé du '+h(dt(d.verified_at))+' — horaires déclaratifs, non synchronisés en direct.</p>'+d.tasks.filter(t=>t.active_at_last_check).map(t=>'<div class="chatrow"><div><strong>'+h(t.title)+'</strong><small>'+h(t.schedule)+'</small></div></div>').join('')+'<a class="button" href="#/automations">Voir les fiches →</a>'}).catch(()=>{});
- registerForm('#new-event',f=>{if(commitLocal(()=>db.events.push({id:id(),project:String(f.get('project')||''),title:String(f.get('title')||''),date:String(f.get('date')||''),details:String(f.get('details')||'')})))calendar()});
- $('#main').querySelectorAll('[data-act^="delete-event:"]').forEach(b=>b.onclick=()=>{if(commitLocal(()=>{db.events=db.events.filter(x=>x.id!==b.dataset.act.slice(13))}))calendar()});
+ function submitEvent(form,editId=''){
+  const f=new FormData(form),dateValue=String(f.get('date')||''),durationMinutes=Number(f.get('durationMinutes'));
+  const title=String(f.get('title')||'').trim(),project=String(f.get('project')||''),details=String(f.get('details')||'').trim();
+  const feedback=form.querySelector('[role="alert"]');
+  const show=message=>{if(feedback){feedback.textContent=message;feedback.scrollIntoView({block:'nearest'})}};
+  if(!title||title.length>160||details.length>1500)return show('Renseigne un intitulé valide (160 caractères maximum).');
+  if(project&&!ctx.projects.some(p=>p.id===project))return show('Projet inconnu : sélectionne un projet de CONTROL.');
+  const check=core.conflicts({date:dateValue,durationMinutes},db.events,db.meetings,editId);
+  if(check.error)return show(check.error);
+  if(check.matches.length&&!form.elements.namedItem('override')?.checked){
+   return show('Conflit détecté : '+check.matches.slice(0,3).map(x=>x.kind+' « '+x.title.slice(0,80)+' »').join(' ; ')+(check.matches.length>3?' et '+(check.matches.length-3)+' autre(s)':'')+'. Modifie l’horaire ou coche la confirmation explicite.');
+  }
+  if(editId&&!db.events.some(e=>e.id===editId))return show('Événement introuvable : recharge le calendrier.');
+  if(!commitLocal(()=>{if(editId){const row=db.events.find(e=>e.id===editId);Object.assign(row,{title,project,date:dateValue,durationMinutes,details})}else db.events.push({id:id(),project,title,date:dateValue,durationMinutes,details})}))return;
+  calendar();toast(editId?'Événement local mis à jour.':'Événement local enregistré.');
+ }
+ registerForm('#new-event',(f,form)=>submitEvent(form));
+ registerForm('#edit-event',(f,form)=>submitEvent(form,String(f.get('id'))));
+ $('#main').querySelectorAll('[data-act^="edit-event:"]').forEach(button=>button.onclick=()=>{
+  const e=db.events.find(row=>row.id===button.dataset.act.slice('edit-event:'.length));if(!e)return;
+  const editor=$('#calendar-editor'),form=$('#edit-event');editor.classList.remove('hidden');
+  form.elements.namedItem('id').value=e.id;form.elements.namedItem('title').value=e.title||'';
+  form.elements.namedItem('project').value=e.project||'';
+  const range=core.eventRange(e);
+  form.elements.namedItem('date').value=range?core.localValue(range.start):'';
+  form.elements.namedItem('durationMinutes').value=core.validDuration(e.durationMinutes)||30;
+  form.elements.namedItem('details').value=e.details||'';
+  form.elements.namedItem('override').checked=false;
+  $('#edit-calendar-feedback').textContent='';
+  editor.scrollIntoView({block:'nearest'});
+ });
+ $('#main [data-act="cancel-calendar-edit"]')?.addEventListener('click',()=>$('#calendar-editor').classList.add('hidden'));
+ $('#main').querySelectorAll('[data-act^="export-event:"]').forEach(button=>button.onclick=()=>{
+  const e=db.events.find(row=>row.id===button.dataset.act.slice('export-event:'.length));if(!e)return toast('Événement introuvable.');
+  try{
+   const content=core.icalEvent(e),url=URL.createObjectURL(new Blob([content],{type:'text/calendar;charset=utf-8'})),a=document.createElement('a');
+   a.href=url;a.download='control-evenement-'+String(e.id||'local').replace(/[^a-z0-9_-]/gi,'').slice(0,50)+'.ics';
+   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
+   toast('Fichier .ics téléchargé. Importe-le dans ton calendrier si souhaité.');
+  }catch{toast('Export impossible : date de cet événement invalide.')}
+ });
+ $('#main').querySelectorAll('[data-act^="delete-event:"]').forEach(button=>button.onclick=()=>{
+  const eventId=button.dataset.act.slice('delete-event:'.length);
+  if(!confirm('Supprimer cet événement de CONTROL ? Les calendriers externes ne seront pas modifiés.'))return;
+  if(commitLocal(()=>{db.events=db.events.filter(e=>e.id!==eventId)}))calendar();
+ });
 }
-
 async function githubRead(repo){const url='https://api.github.com/repos/'+OWNER+'/'+encodeURIComponent(repo),ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),12000);try{const res=await Promise.allSettled(['commits?per_page=8','pulls?state=open&per_page=8','actions/runs?per_page=5'].map(x=>fetch(url+'/'+x,{headers:{Accept:'application/vnd.github+json'},signal:ctrl.signal}).then(r=>r.ok?r.json():null)));const a=res.map(x=>x.status==='fulfilled'?x.value:null);if(!Array.isArray(a[0])&&!Array.isArray(a[1])&&!Array.isArray(a[2]?.workflow_runs))throw Error('Unavailable');const data={commits:Array.isArray(a[0])?a[0]:[],prs:Array.isArray(a[1])?a[1]:[],runs:Array.isArray(a[2]?.workflow_runs)?a[2].workflow_runs:[],partial:!Array.isArray(a[0])||!Array.isArray(a[1])||!Array.isArray(a[2]?.workflow_runs),checkedAt:new Date().toISOString()};live[repo]=data;return data}finally{clearTimeout(timer)}}
 function activity(){const repos=ctx.projects.filter(p=>p.repo);
  $('#main').innerHTML=view('Activité et développement','GitHub, tests et publications',box('Vérifier le dépôt public','<label>Projet<select class="field" id="git-project">'+repos.map(p=>'<option value="'+h(p.id)+'">'+h(p.name)+'</option>').join('')+'</select></label><div class="actions">'+btn('Vérifier GitHub','github-fetch','primary')+'<span id="git-stamp" class="muted"></span></div><div id="github-result"><p class="muted">Lecture publique à la demande : commits, PR et workflows récents.</p></div>')+
