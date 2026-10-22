@@ -418,13 +418,13 @@
       "id": "CONTROL-WEBBUILDER",
       "name": "Création et publication de sites depuis un prompt",
       "priority": "P2",
-      "stage": "not_started",
+      "stage": "in_code",
       "depends_on": [
         "CONTROL-ASSISTANT",
         "CONTROL-AGENTS"
       ],
-      "summary": "Ressources et guides existants; pas d'agent capable de construire et tester un site complet depuis le chat CONTROL.",
-      "next": "Définir un prototype sandboxé de génération multi-fichiers avec aperçus et tests, sans publication automatique.",
+      "summary": "Premier atelier de sites statiques : trois modèles personnalisables, aperçu responsive dans iframe isolée sans exécution de scripts, enregistrement de brouillons locaux et export ZIP autonome HTML/CSS/README. Génération réellement pilotée par une IA, construction multi-fichiers libre, revue de code et publication depuis le chat non disponibles.",
+      "next": "Recetter le moteur et l'aperçu sur appareils réels ; construire ensuite un environnement d'édition multi-fichiers contrôlé, un moteur de prompts et une publication explicitement approuvée (pas d'exécution ou de déploiement automatique sans accord).",
       "blockers": [
         "Orchestrateur d'outils exécutable et sandbox sécurisée non disponibles."
       ],
@@ -460,7 +460,7 @@
         }
       ],
       "evidence": {
-        "code_url": null,
+        "code_url": "https://github.com/cosscoll/Avancement-Projet/blob/main/assets/control-web-builder.js",
         "ci_url": null,
         "deployment_url": null,
         "journey_url": null

@@ -21,7 +21,7 @@ const deadline=(fn,max=18000,step=180)=>async()=>{
 // Detect stale GitHub Pages before claiming that a browser tested this commit.
 // The fresh public HTML/data/JS must match the checked-out source bytes.
 const PUBLIC_ORIGIN='https://cosscoll.github.io/Avancement-Projet/';
-const PUBLIC_ASSETS=['service-worker.js','index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','assets/navigation-hub.js','assets/navigation-hub.css','data/control-ia-delivery.json','data/control-ia-requirements.json'];
+const PUBLIC_ASSETS=['service-worker.js','index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/control-web-builder.js','assets/control-web-builder-ui.js','assets/control-web-builder.css','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','assets/navigation-hub.js','assets/navigation-hub.css','data/control-ia-delivery.json','data/control-ia-requirements.json'];
 const hash=data=>createHash('sha256').update(data).digest('hex');
 async function verifyPublishedFiles(){
  const expected=new Map(PUBLIC_ASSETS.map(path=>[path,hash(readFileSync(resolve(root,path)))]));
@@ -589,7 +589,7 @@ try{
   await ready(()=>js("Boolean(navigator.serviceWorker.controller)"),14000)();
   const cacheNames=await js("(async()=>await caches.keys())()");
   assert.ok(Array.isArray(cacheNames)&&cacheNames.some(name=>name.startsWith('control-shell-')),'Public PWA must cache the application shell');
-  assert.ok(cacheNames.includes('control-shell-v48')&&cacheNames.includes('control-public-data-v48'),'PWA must have installed the verified v48 caches');
+  assert.ok(cacheNames.includes('control-shell-v49')&&cacheNames.includes('control-public-data-v49'),'PWA must have installed the verified v49 caches');
   log('public PWA service worker activated and offline shell cache created');
   await command('Network.enable');
   try{
@@ -606,6 +606,9 @@ try{
     await js("location.hash='#/control/calendar'");
     await ready(()=>js("!!document.querySelector('#new-event')&&typeof window.CONTROL_CALENDAR_CORE?.icalEvent==='function'"),10000)();
     log('offline CONTROL calendar remains functional without remote services');
+    await js("location.hash='#/control/webbuilder'");
+    await ready(()=>js("!!document.querySelector('#builder-form')&&!!document.querySelector('#builder-preview')&&!!document.querySelector('#builder-preview').srcdoc.includes('Notre expertise.')"),14000)();
+    log('offline site builder renders usable sandbox preview');
   }finally{
    await command('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:0,uploadThroughput:0});
   }
