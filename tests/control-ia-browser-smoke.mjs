@@ -433,6 +433,11 @@ try{
  await js("document.querySelector('[data-finder-id=meetings]').click()");
  await ready(()=>js("location.hash==='#/control/meetings'"),8000)();
  assert.equal(await js("document.querySelector('.control-finder').hidden"),true);
+ await js("document.querySelector('.control-nav-mobile-trigger[data-control-nav-open]').click()");
+ await ready(()=>js("document.querySelector('.control-finder')?.hidden===false"),8000)();
+ assert.equal(await js("!!document.querySelector('.control-finder-recents [data-finder-id=meetings]')"),true,
+  'Recently opened visio must be available without searching again');
+ await js("document.querySelector('.control-finder-close').click()");
  await js("location.hash="+JSON.stringify(beforeFinderHash));
  await ready(()=>js("!!document.querySelector('.control-delivery-focus')"),8000)();
  log('320px finder finds visio by intent and opens its destination without mobile overflow');
