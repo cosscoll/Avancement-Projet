@@ -423,8 +423,8 @@
         "CONTROL-ASSISTANT",
         "CONTROL-AGENTS"
       ],
-      "summary": "Prototype statique sur PWA : trois modèles distincts, éditeur de contenu, aperçu isolé et mobile, téléchargement ZIP HTML/CSS, huit contrôles locaux indicatifs (les textes de démonstration ne comptent plus comme contenus personnalisés), huit versions antérieures restaurables sans perte de l'actuelle. Ni moteur de création libre par IA ni publication automatisée validés.",
-      "next": "Développer l'itération à partir d'un vrai brief et un environnement d'édition multi-fichiers isolé, compléter les tests WCAG/Lighthouse, puis une étape de publication explicitement approuvée. Vérifier également sur téléphones physiques.",
+      "summary": "Prototype statique local PWA V51 : brief libre interprété par règles (sans IA), 3 univers, 9 palettes à fort contraste et 3 typographies, édition de contenu, aperçu sécurisé mobile/desktop, contrôle qualité indicatif, huit versions récupérables et ZIP HTML/CSS. Génération autonome libre et publication autorisée depuis le chat non opérationnelles.",
+      "next": "Créer un éditeur multi-fichiers contrôlé, mesurer la qualité réelle par Lighthouse et tests sur mobiles physiques ; développer le flux de revue/publication après autorisation explicite. Auth et Cloud demeurent bloqués jusqu'à recette A/B réelle.",
       "blockers": [
         "Orchestrateur d'outils exécutable et sandbox sécurisée non disponibles."
       ],
