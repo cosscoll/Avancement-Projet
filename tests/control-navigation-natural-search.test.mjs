@@ -112,3 +112,36 @@ test('Enter on a natural-language query opens the first matching project without
  assert.equal(prevented,1,'Blank search must not open a random feature');
  assert.equal(location.hash,'#/project/ucp-123/ai');
 });
+
+test('recent functions are one-click shortcuts on personal mode, without leaking to Cloud',()=>{
+ const store=new Map(),handlers={};
+ const sessionStorage={getItem:key=>store.get(key)||null,setItem:(key,value)=>store.set(key,value)};
+ const input={value:'',focus(){},select(){},addEventListener(){}};
+ const categories={innerHTML:''};
+ const results={innerHTML:'',querySelector(selector){
+  if(selector!=='[data-finder-id]')return null;
+  const match=this.innerHTML.match(/data-finder-id="([^"]+)"/);
+  return match?{dataset:{finderId:match[1]}}:null;
+ }};
+ const dialog={hidden:true,innerHTML:'',addEventListener(type,fn){handlers[type]=fn},
+  querySelector(selector){return selector==='input[type="search"]'?input:selector==='.control-finder-results'?results:selector==='.control-finder-categories'?categories:null}};
+ const location={hash:'#/'};
+ const document={activeElement:{isConnected:true,focus(){}},createElement(){return dialog},
+  body:{appendChild(){},classList:{add(){},remove(){}}},addEventListener(){}};
+ const ownWindow={};
+ runInNewContext(source,{window:ownWindow,document,location,sessionStorage});
+ const navigation=ownWindow.CONTROL_NAVIGATION;
+ navigation.setAdapter({mode:'personal',getProjects:()=>[]});
+ navigation.open({query:'organiser une visio'});
+ assert.match(results.innerHTML,/data-finder-id="meetings"/);
+ handlers.keydown({key:'Enter',target:input,preventDefault(){}});
+ assert.equal(location.hash,'#/control/meetings');
+ assert.equal(store.get('control-finder-recent-personal'),'["meetings"]');
+ navigation.open();
+ assert.match(results.innerHTML,/control-finder-recents/);
+ assert.match(results.innerHTML,/data-finder-id="meetings"/);
+ navigation.setAdapter({mode:'cloud',isAvailable:()=>true});
+ navigation.open();
+ assert.doesNotMatch(results.innerHTML,/control-finder-recents/);
+ assert.equal(store.has('control-finder-recent-cloud'),false);
+});
