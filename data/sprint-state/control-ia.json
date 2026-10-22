@@ -166,16 +166,13 @@
     "date": "2026-10-22",
     "source": "conversation",
     "branch": "main",
-    "code_commit_sha": "1a31d9421cf1885e57bf56fc9b06f5ebfabea9f5",
-    "scope": "V62: direct personal forms for explicit new project or new task, list-first routing for consultation requests, fail-closed Cloud navigation, compatibility fixes to stale tests, PWA v62.",
+    "code_commit_sha": "a50ea93a0290d7a23d7c96fdd1cdd326c5df7b48",
+    "scope": "V63 CONTROL UX: percent-safe project route and breadcrumbs, accent-insensitive project filter with term-order tolerance, accessible result counter, direct create/read intents preserved, Cloud auth gate kept fail-closed.",
     "changed_files": [
-      "assets/navigation-hub.js",
       "index.html",
-      "assets/command-center.js",
-      "tests/control-navigation-hub.test.mjs",
-      "tests/control-navigation-natural-search.test.mjs",
-      "tests/control-new-project-intent.test.mjs",
-      "tests/control-new-task-intent.test.mjs",
+      "assets/workspace-shell.css",
+      "tests/control-project-route-decoding.test.mjs",
+      "tests/control-project-list-search.test.mjs",
       "tests/control-ia-browser-smoke.mjs",
       "service-worker.js",
       "tests/pwa-atomic-install.test.mjs",
@@ -188,22 +185,22 @@
       "README.md"
     ],
     "checks_completed": [
-      "29 navigation and form assertions executed successfully in isolated V8 on GitHub main sources: 26 prior navigation/project assertions plus 3 task tests.",
-      "4 direct-project route and cancellation tests: passing within navigation/form test group.",
-      "Regressed Cloud finder assertion updated to require no data before authorized session.",
-      "Cache version source and selected tests reference V62; JS script syntax checked."
+      "44 targeted V8 assertions passed from current GitHub main files: 28 navigation/list/route and 16 task/form/home coverage.",
+      "Index inline JS parse and smoke-test JS parse passed.",
+      "Selected offline test contracts and service worker reference control-shell-v63 and control-public-data-v63.",
+      "Public Chromium smoke script enhanced for Révisions IFSI via accent-free inverted query."
     ],
     "checks_not_yet_verified": [
-      "Native Node node --test tests/*.test.mjs on final SHA via GitHub Actions",
-      "Real Chromium desktop/mobile smoke execution on live GitHub Pages for final SHA",
-      "Physical mobile touch and screen reader QA",
-      "Real CONTROL Cloud Auth A/B, JWT/RLS and cross-device sync"
+      "Native complete GitHub Actions quality.yml node --test tests/*.test.mjs on current main",
+      "Live browser Chromium desktop and mobile on public GitHub Pages",
+      "Physical mobile and assistive-technology tests",
+      "Real Auth A/B JWT, RLS and multi-device synchronization"
     ],
     "ci": "unverified",
     "live_pages": "unverified",
     "operational_claim_allowed": false,
     "cloud_enabled": false,
     "automations_changed": false,
-    "next_action": "Run native GitHub CI on latest main SHA and verify deployed public Pages in Chromium; fix any failures before calling UX operational. Keep Cloud and all automations disabled. No spending, no Work/Codex quota use."
+    "next_action": "Confirm the latest push's GitHub Actions status and rerun full native Node tests; verify Pages desktop/mobile browser with named-project and special-route journeys. Resolve any new failure first. Keep Cloud and automations disabled; no spending or limited Work/Codex tools."
   }
 }
