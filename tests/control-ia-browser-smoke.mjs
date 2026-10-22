@@ -596,6 +596,26 @@ try{
  await ready(()=>js("location.hash.endsWith('/meetings')"),8000)();
  log('320px project navigation exposes advanced sections on demand without overflow');
 
+ // The user should never need horizontal scrolling to find controls at 320px.
+ // Cover the most action-heavy routes, not just the landing page.
+ for(const [route,selector] of [
+  ['#/control/tools','#tools-filter'],
+  ['#/control/backup','#import-data'],
+  ['#/control/webbuilder','#builder-form'],
+  ['#/control/calendar','#new-event'],
+  ['#/control/missions','#mission-create'],
+  ['#/control/settings','#global-rules'],
+  ['#/control/localai','[data-control-operator]']
+ ]){
+  await js("location.hash="+JSON.stringify(route));
+  await ready(()=>js("!!document.querySelector("+JSON.stringify(selector)+")"),11000)();
+  const size=await js("({width:innerWidth,scroll:document.documentElement.scrollWidth,body:document.body.scrollWidth})");
+  assert.ok(size.scroll<=size.width+4&&size.body<=size.width+4,
+   route+' must remain usable without sideways scrolling at 320px: '+JSON.stringify(size));
+ }
+ log('seven dense CONTROL routes remain within a 320px mobile viewport');
+
+
  // The personal project store must never be overwritten after a corrupted read.
  await js("(()=>{const raw=localStorage.getItem('control-hub-v2');sessionStorage.setItem('control-smoke-hub-before',raw===null?'__ABSENT__':raw);localStorage.setItem('control-hub-v2','{invalid-hub');location.hash='#/'})()");
  await command('Page.reload',{ignoreCache:false});
