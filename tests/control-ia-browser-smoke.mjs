@@ -473,6 +473,21 @@ try{
  await ready(()=>js("!!document.querySelector('#mission-create')&&!document.querySelector('#main [role=alert]')"),8000)();
  log('corrupt local state remains untouched until recovery');
 
+  // Independent local spaces must never disappear silently in a downloaded backup.
+  await js("(()=>{window.__controlHubRaw=localStorage.getItem('control-hub-v2');window.__controlAutosRaw=localStorage.getItem('control-automations-v1');localStorage.setItem('control-hub-v2','{incomplete');localStorage.setItem('control-automations-v1','null');location.hash='#/control/backup'})()");
+  await ready(()=>js("document.querySelectorAll('[data-act^=download-raw]').length===2"),8000)();
+  const multiStore=await js("({hub:localStorage.getItem('control-hub-v2'),automations:localStorage.getItem('control-automations-v1'),warnings:[...document.querySelectorAll('#main [role=alert]')].map(n=>n.textContent)})");
+  assert.equal(multiStore.hub,'{incomplete');
+  assert.equal(multiStore.automations,'null');
+  assert.ok(multiStore.warnings.some(x=>x.includes('Espaces et projets')),'Project data risk must be visible');
+  assert.ok(multiStore.warnings.some(x=>x.includes('Automatisations')),'Automation data risk must be visible');
+  await js("document.querySelector('#export-data').requestSubmit()");
+  assert.match(await js("document.querySelector('#toast')?.textContent||''"),/Export bloqué : un espace local est illisible/);
+  await js("(()=>{for(const [key,value] of [['control-hub-v2',window.__controlHubRaw],['control-automations-v1',window.__controlAutosRaw]]){if(value===null)localStorage.removeItem(key);else localStorage.setItem(key,value)}delete window.__controlHubRaw;delete window.__controlAutosRaw;location.hash='#/control/missions'})()");
+  await ready(()=>js("!!document.querySelector('#mission-create')"),8000)();
+  log('corrupted project or automation storage cannot produce a falsely complete backup');
+
+
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('.shell-dashboard')"),8000)();
  await command('Emulation.setDeviceMetricsOverride',{width:320,height:700,deviceScaleFactor:2,mobile:true});
