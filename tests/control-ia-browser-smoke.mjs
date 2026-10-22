@@ -667,6 +667,20 @@ try{
  await js("delete window.__backupQuotaBefore");
  log('backup restore rolls back on a denied storage write and repairs unreadable local records with explicit consent');
 
+ // Same item counts must not conceal changed content during restore preview.
+ await js("(()=>{const command=JSON.parse(localStorage.getItem('control-command-v1'));if(!command.actions?.length)throw Error('Missing synthetic action');command.actions[0].title='PRIVATE CONTENT MUST NOT LEAK TO REVIEW';const payload={format:'control-v2-plain',created:'2026-10-22T12:00:00Z',data:{command,hub:JSON.parse(localStorage.getItem('control-hub-v2')||'{}'),automations:JSON.parse(localStorage.getItem('control-automations-v1')||'{}')}};const transfer=new DataTransfer();transfer.items.add(new File([JSON.stringify(payload)],'safe-preview.json',{type:'application/json'}));const form=document.querySelector('#import-data');form.elements.file.files=transfer.files;form.requestSubmit()})()");
+ await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
+ const detail=await js("({text:document.querySelector('#import-comparison').textContent,table:document.querySelector('.backup-diff-table')?.textContent,cols:document.querySelectorAll('.backup-diff-table thead th').length})");
+ assert.equal(detail.cols,6);
+ assert.match(detail.text,/Modifications identifiées : 1/);
+ assert.match(detail.table,/Ajouts/);
+ assert.match(detail.table,/Modifiés/);
+ assert.doesNotMatch(detail.text,/PRIVATE CONTENT MUST NOT LEAK/,'A comparison must never reveal private values');
+ await js("document.querySelector('#import-cancel').click()");
+ assert.equal(await js("document.querySelector('#import-preview').hidden"),true);
+ log('backup detects same-count content edits and shows only redacted change counts');
+
+
 
  await js("location.hash="+JSON.stringify(beforeFinderHash));
  await ready(()=>js("!!document.querySelector('.control-delivery-focus')"),8000)();
