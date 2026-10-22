@@ -20,6 +20,7 @@ const FEATURES=[
  {id:'command',title:'Commander Claude et Gemini',hint:'Préparer des missions multi-IA',category:'ai',keywords:'multi ia pilote agent anthropic google prompt',personal:'#/control/command',cloud:'command'},
  {id:'lab',title:'Laboratoire IA',hint:'Préparer, comparer et vérifier des résultats',category:'ai',keywords:'test brief audit json html création',personal:'#/control/lab',cloud:'lab'},
  {id:'localai',title:'Discuter avec CONTROL IA',hint:'Assistant local et réponses',category:'ai',keywords:'chat discussion modèle conversation générative',personal:'#/control/localai',cloud:null},
+ {id:'webbuilder',title:'Créer un site web',hint:'Éditer un modèle, voir l’aperçu et exporter un site',category:'ai',keywords:'site web creer construire design generer template html css portfolio artisan landing constructeur',personal:'#/control/webbuilder',cloud:null},
  {id:'catalog',title:'Bibliothèque d’outils IA',hint:'Découvrir les outils et kits pratiques',category:'ai',keywords:'catalogue annuaire moteur 3d IA kits formation',personal:'#/control/catalog',cloud:'catalog'},
  {id:'library',title:'Ressources et documents',hint:'Liens, fichiers et références',category:'publish',keywords:'drive dossier bibliothèque liens ressources',personal:'#/control/library',cloud:'tools:library'},
  {id:'deploy',title:'Mettre un site en ligne',hint:'Guides de publication et déploiement',category:'publish',keywords:'publier deployer mettre en ligne projet heberger site web github pages vercel netlify',personal:'#/control/deploy',cloud:'deploy'},
