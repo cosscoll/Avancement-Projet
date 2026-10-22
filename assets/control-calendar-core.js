@@ -29,6 +29,8 @@
  function eventStart(row){
    const local=localDateTime(row?.date);
    if(local)return local;
+   // JavaScript Date.parse normalizes invalid local dates such as February 30.
+   if(typeof row?.date==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(row.date))return null;
    const parsed=Date.parse(row?.date||'');
    return Number.isFinite(parsed)?new Date(parsed):null;
  }
