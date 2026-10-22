@@ -474,8 +474,8 @@ try{
   assert.match(initialQuality.grade,/\/ 8 contrôles/);
   await js("(()=>{const f=document.querySelector('#builder-form');f.elements.title.value='Une seconde version à comparer visuellement';f.elements.title.dispatchEvent(new Event('input',{bubbles:true}));f.requestSubmit()})()");
   await ready(()=>js("JSON.parse(localStorage.getItem('control-command-v1')).websites.find(x=>x.brand==='STUDIO CONTROL RECETTE')?.version===2"),9000)();
-  assert.ok(await js("!!document.querySelector('[data-restore-version="1"]')"));
-  await js("(()=>{const original=window.confirm;window.confirm=()=>true;try{document.querySelector('[data-restore-version="1"]').click()}finally{window.confirm=original}})()");
+  assert.ok(await js("!!document.querySelector('[data-restore-version]')"));
+  await js("(()=>{const original=window.confirm;window.confirm=()=>true;try{document.querySelector('[data-restore-version]').click()}finally{window.confirm=original}})()");
   await ready(()=>js("JSON.parse(localStorage.getItem('control-command-v1')).websites.find(x=>x.brand==='STUDIO CONTROL RECETTE')?.version===3"),9000)();
   assert.equal(await js("document.querySelector('#builder-form [name=title]').value"),starterTitle);
   const currentVersion=await js("JSON.parse(localStorage.getItem('control-command-v1')).websites.find(x=>x.brand==='STUDIO CONTROL RECETTE').revisions.map(v=>v.version)");
