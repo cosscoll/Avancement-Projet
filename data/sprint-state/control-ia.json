@@ -1,8 +1,13 @@
 {
   "schema_version": 3,
   "project": "control-ia",
-  "status": "idle",
-  "lease": null,
+  "status": "running",
+  "lease": {
+    "run_id": "control-ia-20261022-screen-ux-0914",
+    "started_at": "2026-10-22T07:14:00Z",
+    "expires_at": "2026-10-22T08:14:00Z",
+    "objective": "Improve V3 visual UX navigation discoverability, in-project actions and forms; test real Chromium 320/1440, native CI and Pages; no expenses."
+  },
   "checkpoint": {
     "updated_at": "2026-10-21T20:54:00Z",
     "main": true,
