@@ -148,3 +148,32 @@ body.cloud-shell-v3 .shell-side-footer>button{margin-top:10px}
 .shell-ui-version{display:inline-block!important;width:auto!important;height:auto!important;min-height:0!important;margin:0 0 0 7px!important;padding:4px 7px!important;vertical-align:middle!important;border-radius:5px!important;background:#e5e3d9!important;color:#435062!important;font-size:9px!important;letter-spacing:1px!important;font-weight:800!important;white-space:nowrap}
 .shell-feature-primary::before,.shell-feature-primary::after{display:none}
 @media(max-width:430px){.shell-ui-version{font-size:8px!important;padding:3px 5px!important}}
+
+
+/* Project interior: all sections are visually organized instead of hidden in “Plus”. */
+.shell-project-navigation{display:block!important;margin:17px 0 23px;padding:19px 20px 16px;border:1px solid #deded8;border-radius:16px;background:#fff;box-shadow:0 2px 15px rgba(21,31,43,.035)}
+.shell-project-label{font-size:10px;text-transform:uppercase;font-weight:850;letter-spacing:1.6px;color:#748295;margin:0 0 11px}
+.shell-project-navigation .tabs,.shell-project-navigation .tabbar{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;overflow:visible!important;border-bottom:0!important;padding:0 0 13px!important;width:100%}
+.shell-project-navigation .tabs button,.shell-project-navigation .tabbar button{min-width:0!important;min-height:43px!important;font-size:12px!important;line-height:1.35!important;white-space:normal!important;border-radius:9px!important;padding:10px 8px!important;font-weight:700!important;background:#f4f5f3;border:1px solid #e0e4e3;color:#42556b}
+.shell-project-navigation .tabs button[aria-selected="true"],.shell-project-navigation .tabbar button.selected{color:#fff!important;background:#24374e!important;border-color:#24374e!important}
+.shell-project-more{border-top:1px solid #e6e6e0;padding:11px 0 0!important;margin:0!important;width:100%!important;background:transparent!important}
+.shell-project-more>summary{display:flex!important;align-items:center;justify-content:space-between;gap:10px;font-size:12px;color:#364d64;font-weight:760;cursor:pointer;min-height:36px;list-style:none}
+.shell-project-more>summary::-webkit-details-marker{display:none}
+.shell-project-more .shell-nav-count{margin-left:auto;font-size:10px;color:#557089;background:#edf0f1;border-radius:8px;padding:5px 8px;font-variant-numeric:tabular-nums}
+.shell-project-more .clarity-advanced{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:7px!important;padding:8px 0 3px!important;width:100%!important;min-width:0!important;background:transparent!important;box-shadow:none!important;position:static!important;border:0!important}
+.shell-project-more .clarity-advanced button{min-width:0!important;min-height:39px!important;font-size:12px!important;padding:9px 8px!important;text-align:center;white-space:normal!important;line-height:1.25;border-radius:9px;background:#faf9f7;border:1px solid #e4e3dc;color:#4b5d71;font-weight:620}
+.shell-project-more .clarity-advanced button[aria-current="page"]{background:#dce6ec!important;color:#1f405f!important;border-color:#95b3c4!important;font-weight:850}
+.shell-project-more .clarity-advanced button:hover{background:#e9eef1!important}
+.shell-create-form,#new-project,#new-item{scroll-margin-top:115px}
+.shell-create-form{max-width:780px!important;margin:18px 0!important;padding:23px!important;background:#fdfcf8!important;border-color:#d9d9d2!important}
+.shell-create-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.shell-create-header h2{margin:5px 0 4px}
+.shell-create-header p{margin:0}
+.shell-create-header button{border:none;background:transparent;min-height:37px;min-width:37px;padding:7px;color:#63748a}
+@media(max-width:760px){
+ .shell-project-navigation{padding:13px 12px 11px;margin:15px 0}
+ .shell-project-navigation .tabs,.shell-project-navigation .tabbar{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
+ .shell-project-navigation .tabs button,.shell-project-navigation .tabbar button{min-height:44px!important;font-size:12px!important}
+ .shell-project-more .clarity-advanced{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .shell-create-form{padding:16px!important}
+}
