@@ -21,7 +21,7 @@ function catalog(mode='personal',project=null){
  return window.CONTROL_NAVIGATION.getItems();
 }
 test('personal project shows all four main and seven secondary destinations without removing existing routes',()=>{
- assert.match(local,/const tabs=\[\['ai','Espaces IA'\]/);
+ assert.match(local,/,tabs=\[\['ai','Espaces IA'\]/);
  assert.match(local,/const advanced=moreTabs\.some/);
  assert.match(local,/const showAdvanced=advanced\|\|!/);
  assert.match(local,/shell-project-navigation/);
