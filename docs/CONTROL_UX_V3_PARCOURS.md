@@ -25,6 +25,15 @@ Le bloc « Qu’allez-vous faire aujourd’hui ? » contient désormais un vrai 
 - `tests/control-pwa-cache-contract.test.mjs` : contrôle transversal des versions de cache PWA référencées dans les tests Node ; détecte les anciennes assertions, tout en autorisant explicitement le scénario de survie du cache V37.
 - Cette recherche ne remplace pas la recherche documentaire sourcée IMP-02 et ne prouve pas l’activation de CONTROL Cloud.
 
+## Création de projet sans détour (V60)
+
+Lorsque l'utilisateur recherche « créer un nouveau projet », le moteur présente désormais **Créer un nouveau projet** en premier. La sélection ouvre `#/new-project`, qui affiche directement le vrai formulaire de la PWA personnelle, déroule jusqu'à lui et focalise le nom du projet. Annuler referme le formulaire et retourne à l'accueil sans enregistrer de projet. La route est volontairement absente du catalogue Cloud avant les recettes Auth réelles.
+
+- `tests/control-new-project-intent.test.mjs` : 4 tests isolés — destination, ouverture/focus, annulation sans mutation et accueil normal inchangé.
+- `tests/control-navigation-hub.test.mjs` : contrat Cloud mis en accord avec la protection **fail-closed** (zéro entrée avant authentification, fonctions autorisées ensuite).
+- `tests/control-ia-browser-smoke.mjs` : étape Chromium de création/annulation ajoutée ; pas encore exécutée sur le dernier SHA de production.
+- Le nouveau parcours est un raccourci UI : aucun compte Cloud, aucun fournisseur externe, aucune automatisation ne sont activés.
+
 ## Hygiène de publication
 
 Après les correctifs de navigation du 22 octobre, la PWA utilise les caches **`control-shell-v60`** et **`control-public-data-v60`**. Les ressources publiques sont servies en priorité depuis le réseau et conservées localement pour le mode hors connexion ; cette rotation renouvelle également le précache lors de l'installation du nouveau service worker. `assets/workspace-shell.css` est une ressource critique mise en cache ; la page Cloud privée n'est pas précachée.
