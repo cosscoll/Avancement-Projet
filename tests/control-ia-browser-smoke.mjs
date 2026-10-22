@@ -439,6 +439,40 @@ try{
  assert.equal(await js("document.querySelector('#mission-create').open"),true);
  assert.equal(await js("!!document.querySelector('#new-mission')"),true);
  log('mission creation expands on demand without concealing the existing mission overview');
+
+ // A denied browser write must never claim that an action was saved.
+ await js("location.hash='#/control/inbox'");
+ await ready(()=>js("!!document.querySelector('#new-action')"),8000)();
+ await js(`(()=>{
+   window.__controlBeforeWrite=localStorage.getItem('control-command-v1');
+   window.__controlNativeSetItem=Storage.prototype.setItem;
+   Storage.prototype.setItem=function(key,value){
+     if(key==='control-command-v1')throw new DOMException('quota','QuotaExceededError');
+     return window.__controlNativeSetItem.call(this,key,value);
+   };
+   const form=document.querySelector('#new-action');
+   form.elements.title.value='RECETTE-SAUVEGARDE-REFUSEE';
+   form.requestSubmit();
+ })()`);
+ const rejectedSave=await js("({same:localStorage.getItem('control-command-v1')===window.__controlBeforeWrite,form:!!document.querySelector('#new-action'),warning:document.querySelector('#toast')?.textContent||'',visible:!!document.querySelector('#main .inbox-item')?.textContent?.includes('RECETTE-SAUVEGARDE-REFUSEE')})");
+ assert.equal(rejectedSave.same,true,'A failed write must preserve stored data');
+ assert.equal(rejectedSave.form,true,'A failed write must preserve the form');
+ assert.match(rejectedSave.warning,/Stockage indisponible ou plein/);
+ assert.equal(rejectedSave.visible,false,'Unsaved item must not appear in the action list');
+ await js("Storage.prototype.setItem=window.__controlNativeSetItem;delete window.__controlNativeSetItem;delete window.__controlBeforeWrite;");
+ log('quota-denied action preserves the form and cannot appear as saved');
+
+ // A corrupt JSON record remains intact and offers its owner a raw download.
+ await js("(()=>{window.__controlOriginalRaw=localStorage.getItem('control-command-v1');localStorage.setItem('control-command-v1','{corrupt');location.hash='#/control/backup'})()");
+ await ready(()=>js("!!document.querySelector('[data-act=download-corrupt]')"),8000)();
+ const corruptState=await js("({raw:localStorage.getItem('control-command-v1'),alert:document.querySelector('#main [role=alert]')?.textContent,button:!!document.querySelector('[data-act=download-corrupt]')})");
+ assert.equal(corruptState.raw,'{corrupt');
+ assert.match(corruptState.alert||'',/Stockage local illisible/);
+ assert.equal(corruptState.button,true,'Raw recovery control must appear');
+ await js("(()=>{const value=window.__controlOriginalRaw;if(value===null)localStorage.removeItem('control-command-v1');else localStorage.setItem('control-command-v1',value);delete window.__controlOriginalRaw;location.hash='#/control/missions'})()");
+ await ready(()=>js("!!document.querySelector('#mission-create')&&!document.querySelector('#main [role=alert]')"),8000)();
+ log('corrupt local state remains untouched until recovery');
+
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('.shell-dashboard')"),8000)();
  await command('Emulation.setDeviceMetricsOverride',{width:320,height:700,deviceScaleFactor:2,mobile:true});
