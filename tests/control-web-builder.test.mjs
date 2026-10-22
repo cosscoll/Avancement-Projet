@@ -118,16 +118,17 @@ test('builder quality checks produce reproducible, actionable results',()=>{
  assert.ok(incomplete.passed<incomplete.total);
  assert.ok(incomplete.checks.some(x=>x.id==='email'&&!x.ok&&x.field==='email'));
  assert.ok(incomplete.checks.some(x=>x.id==='description'&&!x.ok&&x.field==='description'));
- const complete=site.audit({
+ const valid={
   theme:'produit',brand:'Studio Qualité',title:'Créons ensemble des parcours numériques plus simples',
   description:'Notre équipe accompagne les professionnels pour créer des interfaces durables, accessibles et réellement adaptées à leurs besoins.',
   services:['Sites web sur mesure','Audit de parcours','Conseil et stratégie'],
   email:'bonjour@example.fr'
- });
+ };
+ const complete=site.audit(valid);
  assert.equal(complete.passed,8);
  assert.equal(complete.total,8);
  assert.equal(complete.checks.filter(x=>!x.ok).length,0);
- assert.equal(site.audit(complete).passed,8);
+ assert.equal(site.audit(valid).passed,8);
 });
 test('static quality panel remains advisory and never runs tests on untrusted HTML',()=>{
  const ui=readFileSync(new URL('../assets/control-web-builder-ui.js',import.meta.url),'utf8');
