@@ -64,6 +64,20 @@ function files(input){
  const t=normalize(input);
  return {'index.html':markup(t,false),'styles.css':styles(t),'standalone.html':markup(t,true),'README.md':'# '+t.brand+'\n\nKit statique généré localement par CONTROL.\n\n- index.html + styles.css : version éditable.\n- standalone.html : version autonome, sans installation.\n\nAucun JavaScript, accès serveur ou publication automatique. Ouvrez index.html ou standalone.html dans un navigateur.\n'};
 }
+function audit(input){
+ const t=normalize(input),html=markup(t,true),css=styles(t);
+ const results=[
+  {id:'brand',field:'brand',label:'Nom de marque personnalisé',ok:t.brand.length>=3&&t.brand!=='MON STUDIO',advice:'Choisissez le nom réel du projet plutôt que le nom générique.'},
+  {id:'title',field:'title',label:'Titre lisible et concis',ok:t.title.length>=18&&t.title.length<=95,advice:'Visez un titre clair de 18 à 95 caractères.'},
+  {id:'description',field:'description',label:'Description adaptée au référencement',ok:t.description.length>=55&&t.description.length<=160,advice:'Rédigez une description précise de 55 à 160 caractères.'},
+  {id:'services',field:'services',label:'Prestations distinctes',ok:t.services.every(s=>s.length>=4)&&new Set(t.services.map(x=>x.toLowerCase())).size===3,advice:'Précisez trois offres différentes, chacune de quatre caractères minimum.'},
+  {id:'email',field:'email',label:'Contact réellement joignable',ok:!!t.email,advice:'Ajoutez une adresse e-mail de contact : sans elle, le bouton mène seulement à la section Contact.'},
+  {id:'structure',field:'title',label:'Structure et métadonnées HTML',ok:/<html lang="fr">/.test(html)&&/<meta name="viewport"/.test(html)&&/<meta name="description"/.test(html)&&/<main>/.test(html)&&/<h1>/.test(html),advice:'Une structure HTML essentielle est absente.'},
+  {id:'mobile',field:'theme',label:'Mise en page mobile prévue',ok:/@media\(max-width:760px\)/.test(css),advice:'Le modèle ne contient pas de règles mobiles.'},
+  {id:'offline',field:'theme',label:'Sans scripts ni dépendances externes',ok:!/<script\b|https?:\/\//i.test(html)&&!/@import|url\(/i.test(css),advice:'Retirez les dépendances externes avant diffusion.'}
+ ];
+ return {passed:results.filter(x=>x.ok).length,total:results.length,checks:results};
+}
 function crc32(bytes){let crc=0xffffffff;for(const b of bytes){crc^=b;for(let j=0;j<8;j++)crc=(crc>>>1)^((crc&1)?0xedb88320:0)}return (crc^0xffffffff)>>>0}
 function zip(input){
  const encoder=new TextEncoder(),filesIn=Object.entries(input||{});
@@ -86,5 +100,5 @@ function zip(input){
  for(const p of [...parts,...central,new Uint8Array(end.buffer)]){out.set(p,cursor);cursor+=p.length}
  return out;
 }
-window.CONTROL_WEB_BUILDER_CORE=Object.freeze({THEMES,normalize,markup,styles,files,zip});
+window.CONTROL_WEB_BUILDER_CORE=Object.freeze({THEMES,normalize,markup,styles,files,zip,audit});
 })();
