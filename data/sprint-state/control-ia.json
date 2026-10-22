@@ -165,35 +165,43 @@
   "pending_verification": {
     "date": "2026-10-22",
     "source": "conversation",
-    "code_commit_sha": "907db5c947e011e735ae165b6321ba51fd79c340",
+    "code_commit_sha": "93d3ddaf5c75a00d585c5e7427289a9a9a6a9e08",
     "branch": "main",
-    "scope": "Navigation V3: requêtes françaises naturelles, recherche directe des projets, clavier/accessibilité et non-divulgation Cloud avant connexion; caches PWA v56.",
+    "scope": "UX V3 V58: recherche clavier Entrée, requêtes naturelles, gestion des requêtes vides, projets par nom, accès Reprendre sur navigateur personnel, affiche archives d'automatisations à statut non vérifié dans les trois écrans, cache PWA V58.",
     "changed_files": [
       "assets/navigation-hub.js",
+      "assets/navigation-hub.css",
       "assets/cloud-app.js",
+      "assets/automations-hub.js",
+      "assets/command-center.js",
+      "assets/app.js",
       "tests/control-navigation-natural-search.test.mjs",
+      "tests/control-automations-archive.test.mjs",
+      "tests/control-automation-status-consistency.test.mjs",
       "tests/control-ia-browser-smoke.mjs",
       "service-worker.js",
       "tests/pwa-atomic-install.test.mjs",
       "tests/control-workspace-shell.test.mjs",
-      "docs/CONTROL_UX_V3_PARCOURS.md"
+      "tests/control-ux-project-discovery.test.mjs",
+      "docs/CONTROL_UX_V3_PARCOURS.md",
+      "docs/CONTROL_IA_CAHIER_V1_2_SUIVI.md"
     ],
     "checks_completed": [
-      "25 assertions isolées exécutées directement sur les fichiers main récupérés par GitHub",
-      "4 vérifications de rendu/échappement/navigation clavier sur DOM simulé",
-      "Syntaxe JavaScript du navigateur et du module Cloud vérifiée dans un moteur V8"
+      "32 assertions de tests ciblés exécutées avec succès dans un moteur JavaScript isolé, lecture du code main: 9 moteur, 18 UX, 5 automatisations.",
+      "Javascript syntax check of modified application files passed.",
+      "Historical automation preview read-only verified in synthetic DOM; no provider modification or activation."
     ],
     "checks_not_yet_verified": [
-      "Suite Node complète sur le dernier SHA GitHub Actions",
-      "Recette Chromium du projet réel sur GitHub Pages après déploiement",
-      "Parcours tactile sur vrai Android/iOS",
-      "Auth JWT/PostgREST RLS A/B et synchronisation multi-appareils"
+      "GitHub Actions native Node full test suite for final head",
+      "Chromium desktop and 320px mobile execution on deployed GitHub Pages for final head",
+      "Actual Android/iOS usability and voice-over check",
+      "Two genuine CONTROL account A/B Supabase Auth JWT PostgREST RLS, cross-device session and sync"
     ],
     "ci": "unverified",
     "live_pages": "unverified",
     "operational_claim_allowed": false,
     "cloud_enabled": false,
     "automations_changed": false,
-    "next_action": "Confirmer CI sur le SHA final puis navigateur Pages, corriger toute régression avant nouvelle fonctionnalité; conserver Cloud fermé sans vraie Auth A/B, ne réactiver aucune automatisation."
+    "next_action": "Verify latest code SHA in GitHub Actions and public Chromium; fix any failing tests. Then continue UX workflow acceptance. Leave cloud disabled and all automations untouched; do not use Work/Codex quotas or pay."
   }
 }
