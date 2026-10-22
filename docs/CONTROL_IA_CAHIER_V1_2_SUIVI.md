@@ -49,7 +49,7 @@ Preuves techniques déjà identifiées : [recette navigateur locale](https://git
 - Recherche de fonctions : ouverture du premier résultat avec **Entrée**, raccourcis **Reprendre** pour les quatre dernières fonctions de la session personnelle, aucun historique récemment ouvert en Cloud.
 - Requêtes inutilisables (« je veux », uniquement des mots de liaison) : elles n'affichent plus artificiellement toutes les fonctions.
 - Automatisations : le relevé daté du 17 octobre est marqué « archive, statut actuel inconnu » dans **les trois surfaces concernées** : registre, calendrier et ancienne interface ; aucune programmation réelle n'est modifiée.
-- Service worker : rotation du précache en **V58** ; anciens contrats de tests mis à niveau ; **32 tests ciblés réussis dans un moteur JavaScript isolé**, mais pas encore la CI native complète ni Chromium publié.
+- Service worker : rotation du précache en **V59** ; anciens contrats de tests mis à niveau ; **32 tests ciblés réussis dans un moteur JavaScript isolé**, mais pas encore la CI native complète ni Chromium publié.
 - **Aucune nouvelle recette V1.2 ni aucun IMP réputé validé** sur la seule base de ces tests partiels.
 
 ## Complément V3 — navigation et découverte, 22 octobre 2026
