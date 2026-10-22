@@ -72,7 +72,7 @@ const ALIASES={
 const searchableWord=w=>ALIASES[w]||w.replace(/(ements|ations|euses|eurs|es|s)$/,'');
 function findFeatures(raw,entries=catalog()){
  const parts=norm(raw).split(/[^a-z0-9]+/).filter(w=>w.length>1&&!STOP_WORDS.has(w)).map(searchableWord);
- if(!parts.length)return entries;
+ if(!parts.length)return norm(raw)?[]:entries;
  return entries.map(item=>{
   const title=norm(item.title),hint=norm(item.hint),keys=norm(item.keywords);
   const fields=[title,hint,keys].map(t=>t.split(/[^a-z0-9]+/).filter(Boolean).map(searchableWord));
@@ -115,7 +115,7 @@ function ensure(){
  '<h2>Trouver une fonction</h2><p>Indiquez ce que vous voulez faire, ou choisissez une rubrique.</p></div>'+
  '<button type="button" class="control-finder-close" data-nav-dismiss aria-label="Fermer la recherche">✕</button></div>'+
  '<label class="control-finder-search"><span aria-hidden="true">⌕</span>'+
- '<input type="search" autocomplete="off" spellcheck="false" aria-label="Rechercher une fonction" placeholder="Ex. créer une visio, retrouver une décision…">'+
+ '<input type="search" autocomplete="off" spellcheck="false" maxlength="180" aria-label="Rechercher une fonction" placeholder="Ex. créer une visio, retrouver une décision…">'+
  '<kbd>Ctrl K</kbd></label>'+
  '<nav class="control-finder-categories" aria-label="Catégories de fonctions"></nav>'+
  '<div class="control-finder-results" id="control-finder-results" role="group" aria-label="Fonctions accessibles"></div>'+
