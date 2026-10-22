@@ -107,7 +107,7 @@ function home(){
  '</nav><div class="control-whats-new-status"><span aria-hidden="true">●</span><strong>CONTROL Cloud :</strong> infrastructure créée, connexion multi-utilisateurs pas encore activée. Le travail reste enregistré localement sur cet appareil. <a href="app.html" style="color:#284a80;text-decoration:underline;text-underline-offset:3px;font-weight:700">Voir l’état de CONTROL Cloud →</a></div></div></details>'+
  '<section class="clarity-projects shell-dashboard-section"><div class="toprow clarity-listhead"><div><span class="shell-dashboard-eyebrow">VOS ESPACES</span><h2>Projets <span class="clarity-count">'+projects.length+'</span></h2></div></div><div class="shell-project-toolbar">'+search+'</div><div id="cards" class="grid clarity-cards shell-projects-list"></div><div class="clarity-more"><button type="button" id="more-projects" hidden>Afficher tous les projets</button></div></section>'+
  '<details class="clarity-helpnote"><summary>Comment retrouver les conversations de mes IA ?</summary><p>CONTROL ouvre les projets ChatGPT et Claude depuis leurs liens officiels. Les conversations privées ne sont pas importées automatiquement dans ce site.</p></details>'+
- '<section id="add-box" class="panel hidden"><h2>Nouveau projet</h2><form id="new-project"><label>Nom du projet<input class="field" name="name" required maxlength="90" placeholder="Ex. Mon nouveau projet"></label><label>Lien du projet ChatGPT (facultatif)<input name="url" class="field" type="url" placeholder="https://chatgpt.com/g/g-p-…"></label><button class="primary">Créer l’espace</button></form></section></div>';
+ '<section id="add-box" class="panel shell-create-form hidden"><div class="shell-create-header"><div><span class="shell-dashboard-eyebrow">NOUVEL ESPACE</span><h2>Créer un projet</h2><p class="muted">Donnez-lui un nom. Vous pourrez ajouter vos IA et vos ressources ensuite.</p></div><button type="button" id="cancel-add-project" aria-label="Fermer le formulaire">✕</button></div><form id="new-project"><label>Nom du projet<input class="field" name="name" required maxlength="90" placeholder="Ex. Mon nouveau projet"></label><label>Lien du projet ChatGPT (facultatif)<input name="url" class="field" type="url" placeholder="https://chatgpt.com/g/g-p-…"></label><button class="primary">Créer l’espace</button></form></section></div>';
  const draw=()=>{
   const q=($('#search').value||'').toLowerCase().trim();
   const recentIds=Array.isArray(state.uxRecent)?state.uxRecent:[];
@@ -119,7 +119,20 @@ function home(){
  };
  draw();$('#search').oninput=draw;
  $('#more-projects').onclick=()=>{showAllProjects=!showAllProjects;draw()};
- $('#add-project').onclick=()=>{$('#add-box').classList.toggle('hidden');if(!$('#add-box').classList.contains('hidden'))$('#add-box input[name="name"]').focus()};
+ const addButton=$('#add-project'),addBox=$('#add-box');
+ addButton.setAttribute('aria-controls','add-box');
+ addButton.setAttribute('aria-expanded','false');
+ addButton.onclick=()=>{
+  const opening=addBox.classList.contains('hidden');
+  addBox.classList.toggle('hidden',!opening);
+  addButton.setAttribute('aria-expanded',String(opening));
+  addButton.textContent=opening?'× Fermer le formulaire':'+ Nouveau projet';
+  if(opening){
+   addBox.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
+   addBox.querySelector('input[name="name"]')?.focus({preventScroll:true});
+  }else addButton.focus();
+ };
+ $('#cancel-add-project').onclick=()=>{if(!addBox.classList.contains('hidden'))addButton.click()};
  $('#new-project').onsubmit=e=>{e.preventDefault();const fd=new FormData(e.target),name=String(fd.get('name')).trim(),url=String(fd.get('url')).trim();if(!name)return;if(url&&!chatHost(url)){notify('Utilise un lien ChatGPT valide.');return}const id='custom-'+(globalThis.crypto?.randomUUID?.()||Date.now());const p={id,name,symbol:name.slice(0,2).toUpperCase(),category:'Projet personnalisé'};const previous=Array.isArray(state.custom)?state.custom.slice():[];state.custom=[...previous,p];scoped(id).projectUrl=url;if(!persist()){state.custom=previous;delete state[id];notify('Projet non créé : impossible d’enregistrer sur cet appareil. Libère de l’espace ou vérifie les paramètres du navigateur.');return}projects.push(p);go(id)};
 }
 function workspace(p,t){
