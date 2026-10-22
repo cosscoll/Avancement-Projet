@@ -32,3 +32,9 @@ test('finder prioritizes exact feature title over description matches',()=>{
 test('finder does not silently match an unrelated term',()=>{
  assert.deepEqual(find('inexistantxyz'),[]);
 });
+
+test('finder uses accessible native buttons and handles ArrowUp from search field',()=>{
+ assert.match(source,/role="group" aria-label="Fonctions accessibles"/);
+ assert.doesNotMatch(source,/role="listbox"|role="option"/);
+ assert.ok(source.includes("buttons[i===-1?(e.key==='ArrowDown'?0:buttons.length-1)"));
+});
