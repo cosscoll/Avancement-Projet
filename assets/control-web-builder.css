@@ -1,0 +1,40 @@
+/* CONTROL Site Atelier — calm application panels, not a marketing landing page. */
+.web-builder{color:#223047;max-width:1480px;margin:auto}
+.web-builder-intro{display:flex;align-items:end;justify-content:space-between;gap:24px;margin:15px 0 28px}
+.web-builder-intro h1{font-size:clamp(31px,4vw,52px);line-height:1.02;letter-spacing:-.055em;max-width:720px;margin:10px 0 12px}
+.web-builder-intro p:not(.quiet){max-width:760px;color:#64758a;font-size:14px}
+.web-builder-intro .chip{white-space:nowrap}
+.web-builder-layout{display:grid;grid-template-columns:minmax(265px,370px) minmax(0,1fr);align-items:start;gap:20px}
+.web-builder-panel,.web-builder-work{min-width:0;background:#fff;border:1px solid #dfe5eb;border-radius:17px;box-shadow:0 5px 25px #1a304608}
+.web-builder-panel{padding:24px}
+.web-builder-panel h2{font-size:20px;letter-spacing:-.025em;margin:0 0 18px}
+.web-builder-panel label{display:block;font-size:12px;font-weight:710;color:#33435a;margin:14px 0 5px}
+.web-builder-panel input,.web-builder-panel textarea,.web-builder-panel select{width:100%;font-size:13px;margin-top:7px;resize:vertical;border-radius:9px}
+.web-builder-panel textarea{min-height:66px}
+.web-builder-actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:17px}
+.web-builder-actions button{padding:13px 15px;border-radius:10px;font-size:13px;min-height:44px}
+.web-builder #builder-status{color:#405e59;font-size:12px;min-height:21px;margin:9px 0 0}
+.web-builder-saves{border-top:1px solid #e4e9ee;padding-top:20px;margin-top:22px}
+.web-builder-saves h3{font-size:14px;margin:0}
+.web-builder-saves .row{justify-content:space-between;align-items:center;margin-bottom:10px}
+.web-builder-saves #builder-new,.web-builder-saves #builder-delete{font-size:12px}
+.web-builder-draft{width:100%;display:flex;flex-direction:column;text-align:left;background:#f7f9fb;border:1px solid #e0e6ef;border-radius:10px;padding:12px;margin:8px 0;gap:4px}
+.web-builder-draft:hover{background:#edf4f5;border-color:#81ada3}
+.web-builder-draft small{font-size:11px;color:#708196}
+.web-builder-work{overflow:hidden}
+.web-builder-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 18px;border-bottom:1px solid #e3e8ec}
+.web-builder-toolbar strong{font-size:13px}
+.web-builder-modes{display:flex;gap:3px;background:#f0f2f5;border-radius:9px;padding:3px}
+.web-builder-modes button{border:0;background:transparent;border-radius:6px;padding:7px 11px;font-size:11px;font-weight:700}
+.web-builder-modes button[aria-pressed="true"]{background:#fff;box-shadow:0 1px 4px #0002;color:#1b4a48}
+.web-builder-canvas{background:repeating-linear-gradient(45deg,#e9eef2,#e9eef2 12px,#e5eaee 12px,#e5eaee 24px);padding:20px;display:flex;justify-content:center;align-items:start;min-height:640px}
+.web-builder-canvas iframe{background:white;border:1px solid #b7c5ce;border-radius:8px;box-shadow:0 16px 45px #14304622;width:100%;height:680px;transition:width .3s ease}
+.web-builder-canvas iframe.is-mobile{width:min(100%,390px)}
+.web-builder-code{border-top:1px solid #e5e9ed;padding:15px 20px}
+.web-builder-code summary{font-size:13px;font-weight:700;cursor:pointer}
+.web-builder-code textarea{display:block;width:100%;background:#142234;color:#e5eff9;border:0;border-radius:10px;font:11px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;padding:15px;resize:vertical}
+.web-builder-code p{font-size:12px}
+.web-builder-limits{font-size:11px;color:#6c7c8f;padding:0 20px 20px;max-width:760px}
+@media(max-width:1150px){.web-builder-layout{grid-template-columns:minmax(0,1fr)}.web-builder-panel{padding:18px}.web-builder-canvas{min-height:500px}.web-builder-canvas iframe{height:580px}.web-builder-intro{align-items:start;flex-direction:column}}
+@media(max-width:680px){.web-builder-toolbar{flex-wrap:wrap}.web-builder-canvas{padding:10px;min-height:460px}.web-builder-canvas iframe{height:520px}.web-builder-intro h1{font-size:34px}.web-builder-panel{padding:14px}}
+@media(prefers-reduced-motion:reduce){.web-builder-canvas iframe{transition:none}}
