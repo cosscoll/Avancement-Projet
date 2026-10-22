@@ -165,43 +165,48 @@
   "pending_verification": {
     "date": "2026-10-22",
     "source": "conversation",
-    "code_commit_sha": "93d3ddaf5c75a00d585c5e7427289a9a9a6a9e08",
+    "code_commit_sha": "5a1ae1c8f24a8b3ca96e924f0e9f917bacbe3fea",
     "branch": "main",
-    "scope": "UX V3 V58: recherche clavier Entrée, requêtes naturelles, gestion des requêtes vides, projets par nom, accès Reprendre sur navigateur personnel, affiche archives d'automatisations à statut non vérifié dans les trois écrans, cache PWA V58.",
+    "scope": "CONTROL UX V59: direct homepage intent search into local navigation, project-name discovery, session-only resume shortcuts, authentic unknown statuses for historical automations, PWA cache assertions repaired and cross-test version guard.",
     "changed_files": [
+      "index.html",
+      "assets/workspace-shell.css",
       "assets/navigation-hub.js",
       "assets/navigation-hub.css",
-      "assets/cloud-app.js",
       "assets/automations-hub.js",
       "assets/command-center.js",
       "assets/app.js",
-      "tests/control-navigation-natural-search.test.mjs",
-      "tests/control-automations-archive.test.mjs",
-      "tests/control-automation-status-consistency.test.mjs",
-      "tests/control-ia-browser-smoke.mjs",
       "service-worker.js",
+      "tests/control-home-direct-intent.test.mjs",
+      "tests/control-home-discovery.test.mjs",
+      "tests/control-backup-review.test.mjs",
+      "tests/control-pwa-cache-contract.test.mjs",
+      "tests/control-navigation-natural-search.test.mjs",
+      "tests/control-ia-browser-smoke.mjs",
       "tests/pwa-atomic-install.test.mjs",
       "tests/control-workspace-shell.test.mjs",
       "tests/control-ux-project-discovery.test.mjs",
+      "README.md",
       "docs/CONTROL_UX_V3_PARCOURS.md",
       "docs/CONTROL_IA_CAHIER_V1_2_SUIVI.md"
     ],
     "checks_completed": [
-      "32 assertions de tests ciblés exécutées avec succès dans un moteur JavaScript isolé, lecture du code main: 9 moteur, 18 UX, 5 automatisations.",
-      "Javascript syntax check of modified application files passed.",
-      "Historical automation preview read-only verified in synthetic DOM; no provider modification or activation."
+      "Revue de références de cache sur 44 fichiers test modifiés depuis le 18 octobre; ancien cache V55 corrigé dans deux tests.",
+      "2/2 tests ciblés du nouveau formulaire d'accueil exécutés dans un moteur JavaScript isolé, y compris événement submit et transmission de requête sans mutation.",
+      "6/6 tests de contrat du shell CONTROL exécutés isolément sur les sources courantes après inclusion de leur fixture.",
+      "Syntaxe JavaScript du script HTML et du scénario navigateur vérifiée; tests Node natifs complets non exécutés."
     ],
     "checks_not_yet_verified": [
-      "GitHub Actions native Node full test suite for final head",
-      "Chromium desktop and 320px mobile execution on deployed GitHub Pages for final head",
-      "Actual Android/iOS usability and voice-over check",
-      "Two genuine CONTROL account A/B Supabase Auth JWT PostgREST RLS, cross-device session and sync"
+      "GitHub Actions node --test tests/*.test.mjs sur HEAD final",
+      "Chromium public sur GitHub Pages pour le SHA final, recherche directe depuis l'accueil sur desktop/mobile",
+      "Test tactile et lecteur d'écran sur Android/iOS physique",
+      "CONTROL Cloud deux comptes authentifiés vrais et tests JWT/PostgREST RLS A/B et synchronisation"
     ],
     "ci": "unverified",
     "live_pages": "unverified",
     "operational_claim_allowed": false,
     "cloud_enabled": false,
     "automations_changed": false,
-    "next_action": "Verify latest code SHA in GitHub Actions and public Chromium; fix any failing tests. Then continue UX workflow acceptance. Leave cloud disabled and all automations untouched; do not use Work/Codex quotas or pay."
+    "next_action": "Vérifier la CI Node complète et le navigateur public pour le SHA final. Corriger tout échec en priorité. Puis poursuivre une réduction des clics mesurée; conserver Cloud fermé et automatisations désactivées, aucune dépense ni Work/Codex."
   }
 }
