@@ -656,6 +656,9 @@ try{
     await js("location.hash='#/control/webbuilder'");
     await ready(()=>js("!!document.querySelector('#builder-form')&&!!document.querySelector('#builder-preview')&&!!document.querySelector('#builder-preview').srcdoc.includes('Notre expertise.')"),14000)();
     log('offline site builder renders usable sandbox preview');
+    await js("(()=>{const f=document.querySelector('#builder-form');f.elements.siteStructure.value='multipage';f.elements.siteStructure.dispatchEvent(new Event('change',{bubbles:true}));document.querySelector('[data-builder-page=contact]').click()})()");
+    assert.match(await js("document.querySelector('#builder-preview').srcdoc"),/PRENONS CONTACT/);
+    log('offline multi-page preview also works without the network');
   }finally{
    await command('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:0,uploadThroughput:0});
   }
