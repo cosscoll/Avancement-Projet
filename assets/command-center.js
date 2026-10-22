@@ -257,9 +257,9 @@ function catalog(){
  window.CONTROL_TOOL_CATALOG.mount(el,{mode:'personal',projectId:pid,projects:ctx.projects,
  onOpenDeploy:(project)=>{location.hash='#/control/deploy'+(project?'?project='+encodeURIComponent(project):'')},
  isSaved:(tool,project)=>Array.isArray(ctx.state?.[project]?.links)&&ctx.state[project].links.some(x=>x.catalogToolId===tool.id||x.url===tool.url),
- onAdd:async(tool,project)=>{if(!ctx.projects.some(x=>x.id===project))throw Error('Projet introuvable.');if(!ctx.state)throw Error('Stockage indisponible.');const d=ctx.state[project]??={chats:[],links:[],memo:'',agents:[]};d.links??=[];if(d.links.some(x=>x.catalogToolId===tool.id||x.url===tool.url))return false;
- d.links.push({label:'Outil IA · '+tool.name,url:tool.url,catalogToolId:tool.id,category:tool.category});
- try{localStorage.setItem('control-hub-v2',JSON.stringify(ctx.state))}catch(e){d.links.pop();throw Error('Impossible d’enregistrer sur cet appareil.')}return true;}
+ onAdd:async(tool,project)=>{if(!ctx.projects.some(x=>x.id===project))throw Error('Projet introuvable.');if(!ctx.state)throw Error('Stockage indisponible.');const d=ctx.state[project];if(Array.isArray(d?.links)&&d.links.some(x=>x.catalogToolId===tool.id||x.url===tool.url))return false;
+ const writer=window.CONTROL_HUB_STORAGE;if(typeof writer?.commit!=='function')throw Error('Sauvegarde des projets indisponible.');
+ if(!writer.commit(()=>{const row=ctx.state[project]??={chats:[],links:[],memo:'',agents:[]};row.links??=[];row.links.push({label:'Outil IA · '+tool.name,url:tool.url,catalogToolId:tool.id,category:tool.category})}))throw Error('Stockage des projets non disponible : outil non ajouté.');return true;}
  });
 }
 function deploy(){
@@ -269,11 +269,9 @@ function deploy(){
  onOpenStatus:(project)=>{location.hash='#/control/activity'+(project?'?project='+encodeURIComponent(project):'')},
  isSaved:(guide,project)=>Array.isArray(ctx.state?.[project]?.links)&&ctx.state[project].links.some(x=>x.catalogToolId===guide.id||x.url===guide.url),
  onAdd:async(guide,project)=>{if(!ctx.projects.some(x=>x.id===project))throw Error('Projet inconnu.');
- const d=ctx.state[project]??={chats:[],links:[],memo:'',agents:[]};d.links??=[];
- if(d.links.some(x=>x.catalogToolId===guide.id||x.url===guide.url))return false;
- d.links.push({label:guide.name,url:guide.url,catalogToolId:guide.id,category:'hebergement'});
- try{localStorage.setItem('control-hub-v2',JSON.stringify(ctx.state))}catch(e){d.links.pop();throw Error('Stockage local indisponible.')}
- return true;}
+ const d=ctx.state?.[project];if(Array.isArray(d?.links)&&d.links.some(x=>x.catalogToolId===guide.id||x.url===guide.url))return false;
+ const writer=window.CONTROL_HUB_STORAGE;if(typeof writer?.commit!=='function'||!ctx.state)throw Error('Sauvegarde des projets indisponible.');
+ if(!writer.commit(()=>{const row=ctx.state[project]??={chats:[],links:[],memo:'',agents:[]};row.links??=[];row.links.push({label:guide.name,url:guide.url,catalogToolId:guide.id,category:'hebergement'})}))throw Error('Stockage des projets indisponible : guide non ajouté.');return true;}
  });
 }
 function operatorSnapshot(){
