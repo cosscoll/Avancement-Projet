@@ -659,7 +659,7 @@ function backup(){
   }catch{
    for(const [key,raw] of old){try{if(raw===null)localStorage.removeItem(key);else localStorage.setItem(key,raw)}catch{rollbackUncertain=true}}
    resetPreview();
-   message.textContent=rollbackUncertain?'Le retour arrière a échoué : certaines données ont pu être modifiées. Conserve le fichier de sauvegarde.':'Restauration refusée par le stockage. Les anciennes données ont été rétablies.';
+   message.textContent=rollbackUncertain?'Le retour arrière a échoué : Certaines données locales ont pu changer. Conserve le fichier de sauvegarde.':'Restauration refusée par le stockage. Les anciennes données ont été rétablies.';
   }
  };
 

@@ -22,7 +22,7 @@ test('the review shows counts only and warns when imported items would be lost',
  assert.equal(result.changes.find(x=>x.key==='websites').after,2);
  assert.deepEqual(result.losses.map(x=>x.key),['actions','websites']);
  assert.ok(result.totalBefore>result.totalAfter);
- assert.match(result.note,/Même nombre/);
+ assert.match(result.note,/Un nombre identique/);
  assert.equal(JSON.stringify(result).includes('a0'),false,'comparison must not expose private records');
 });
 test('untrusted backup is never executed and lacks account permissions',()=>{
