@@ -28,6 +28,7 @@ function mount(target,api){
   '<div class="web-builder-layout"><div class="web-builder-panel"><h2>Personnaliser</h2><div id="builder-fields">'+form()+'</div><div class="web-builder-saves"><div class="row"><h3>Mes brouillons</h3><button type="button" id="builder-new">Nouveau</button></div><div id="builder-drafts">'+entries()+'</div><button type="button" id="builder-delete" hidden>Supprimer ce brouillon</button></div></div>'+
   '<div class="web-builder-work"><div class="web-builder-toolbar"><strong>Aperçu sécurisé</strong><div class="web-builder-modes"><button type="button" data-builder-viewport="desktop" aria-pressed="true">Ordinateur</button><button type="button" data-builder-viewport="mobile" aria-pressed="false">Mobile</button></div></div>'+
   '<div class="web-builder-canvas"><iframe id="builder-preview" title="Aperçu isolé du site généré" sandbox="" referrerpolicy="no-referrer"></iframe></div>'+
+  '<section class="web-builder-audit" aria-labelledby="builder-audit-title"><div class="web-builder-audit-top"><h3 id="builder-audit-title">Contrôles avant export</h3><strong id="builder-audit-score" aria-live="polite"></strong></div><ul id="builder-audit-list"></ul><p class="muted">Contrôles statiques indicatifs : ils ne remplacent pas une recette SEO, WCAG ou Lighthouse, ni les essais sur appareils réels.</p></section>'+
   '<details class="web-builder-code"><summary>Voir le code HTML généré</summary><p class="muted">Code en lecture seule : modifiez les champs à gauche, puis exportez les fichiers.</p><textarea id="builder-code" readonly spellcheck="false" aria-label="Code HTML généré" rows="12"></textarea></details>'+
   '<p class="web-builder-limits">Aperçu isolé : les scripts, formulaires et contenus externes sont désactivés. L’export fournit index.html, styles.css, standalone.html et README.md. Aucune connexion ni hébergement externe.</p></div></div></div>';
  const $=s=>target.querySelector(s),query=s=>[...target.querySelectorAll(s)];
@@ -37,12 +38,18 @@ function mount(target,api){
   for(const [k,v] of f)out[k]=String(v);
   return {...engine.normalize(out),project:api.projects.some(p=>p.id===out.project)?out.project:'',id:selectedId};
  }
+ function updateAudit(){
+  const a=engine.audit(working);
+  $('#builder-audit-score').textContent=a.passed+' / '+a.total+' contrôles';
+  $('#builder-audit-list').innerHTML=a.checks.map(c=>'<li class="'+(c.ok?'is-passed':'is-advice')+'"><span aria-hidden="true">'+(c.ok?'✓':'!')+'</span><span><strong>'+escape(c.label)+'</strong>'+(c.ok?'':'<small>'+escape(c.advice)+'</small>')+'</span>'+(c.ok?'':'<button type="button" data-audit-field="'+escape(c.field)+'">Corriger</button>')+'</li>').join('');
+ }
  function preview(){
   working=values();
   const frame=$('#builder-preview');
   frame.srcdoc=engine.markup(working,true);
   $('#builder-code').value=engine.markup(working,true);
   frame.setAttribute('data-theme',working.theme);
+  updateAudit();
   status(unsaved?'Aperçu modifié : pensez à enregistrer votre brouillon.':'Aperçu prêt. Aucun fichier publié.');
  }
  function updateViewport(){
@@ -84,6 +91,8 @@ function mount(target,api){
   selectedId='';working=engine.normalize({theme:'studio'});redraw();status('Brouillon supprimé sur cet appareil.');
  };
  target.querySelector('.web-builder').addEventListener('click',event=>{
+  const fix=event.target.closest('[data-audit-field]');
+  if(fix){const el=$('#builder-form [name="'+fix.dataset.auditField+'"]');if(el){el.focus({preventScroll:true});el.scrollIntoView({block:'center',behavior:'auto'})}return}
   const viewport=event.target.closest('[data-builder-viewport]');
   if(viewport){view=viewport.dataset.builderViewport;updateViewport();return}
   const opened=event.target.closest('[data-open-draft]');
