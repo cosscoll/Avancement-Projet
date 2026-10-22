@@ -41,6 +41,20 @@ const PROJECT_SECTIONS=[
  ['lab','Laboratoire du projet','Tester les résultats et briefs','audit'],
  ['connect','Connexions du projet','Vérifier les liens des fournisseurs','oauth']
 ];
+const CLOUD_PROJECT_SECTIONS=[
+ ['ai_space','Espaces IA','Lier les espaces et les fournisseurs','agents liens chatgpt claude'],
+ ['conversation','Conversations','Retrouver les échanges liés','chats discussions'],
+ ['task','Actions','Organiser et terminer les tâches','actions suivi à faire'],
+ ['resource','Ressources','Documents et liens utiles','fichiers drive'],
+ ['mission','Missions du projet','Suivre les missions','ia mission'],
+ ['automation','Automatisations du projet','Consulter les programmations','planification'],
+ ['report','Bilans','Consulter les comptes rendus','rapport'],
+ ['decision','Décisions','Retrouver les choix','mémoire'],
+ ['note','Notes','Consulter les notes','mémo'],
+ ['event','Calendrier','Voir les échéances','rdv'],
+ ['expense','Budget du projet','Consulter les dépenses','coûts'],
+ ['income','Revenus','Consulter les revenus','finances']
+];
 let adapter={mode:'personal',getActiveProject:()=>null,getProjects:()=>[],navigate:null,isAvailable:()=>true};
 let dialog=null,query=null,results=null,category='start',lastFocus=null;
 const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
@@ -60,8 +74,13 @@ function findFeatures(raw,entries=catalog()){
 const catalog=()=>{
  const mode=adapter.mode==='cloud'?'cloud':'personal';
  const ordinary=FEATURES.filter(x=>x[mode]!==null).map(x=>({...x,target:x[mode]}));
- if(mode!=='personal')return ordinary;
  const p=adapter.getActiveProject?.();
+ if(mode==='cloud'){
+  if(!p?.id)return ordinary;
+  return ordinary.concat(CLOUD_PROJECT_SECTIONS.map(([id,title,hint,keywords])=>({
+   id:'project:'+id,title,hint,keywords,category:'project',target:'project-tab:'+id
+  })));
+ }
  if(!p?.id)return ordinary;
  return ordinary.concat(PROJECT_SECTIONS.map(([id,title,hint,keywords])=>({
   id:'project:'+id,title,hint,keywords,category:'project',
