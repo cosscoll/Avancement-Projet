@@ -101,7 +101,7 @@ function home(){
  $('#main').innerHTML=hubWarning()+'<div class="shell-dashboard">'+
  '<div class="shell-dashboard-top"><div><span class="shell-dashboard-eyebrow">VOTRE TABLEAU DE BORD</span><h1>Votre espace de travail.</h1><p>Retrouvez vos projets et vos actions sans chercher dans les menus.</p></div><button id="add-project" class="primary">+ Nouveau projet</button></div>'+
  '<section class="shell-feature-grid" aria-label="Actions principales">'+
- '<article class="shell-feature-primary"><div><span class="shell-feature-tag">POUR COMMENCER</span><h2>Qu’allez-vous faire<br>aujourd’hui ?</h2><p>Une priorité, une mission, un projet à retrouver : partez de votre besoin et accédez au bon espace.</p></div><button type="button" data-control-nav-open>Explorer les fonctions <span aria-hidden="true">↗</span></button></article>'+
+ '<article class="shell-feature-primary"><div><span class="shell-feature-tag">POUR COMMENCER</span><h2>Qu’allez-vous faire<br>aujourd’hui ?</h2><p>Écrivez votre besoin ou un nom de projet : CONTROL vous dirige vers la bonne page.</p></div><form id="shell-quick-find" class="shell-quick-find" role="search"><label for="shell-quick-query">Rechercher une fonction ou un projet</label><div class="shell-quick-row"><input id="shell-quick-query" type="search" maxlength="180" autocomplete="off" placeholder="Ex. créer un site, budget, mon projet…" aria-label="Votre besoin dans CONTROL"><button type="submit">Trouver <span aria-hidden="true">→</span></button></div><small>La recherche reste sur cet appareil. Aucune action lancée sans votre choix.</small></form></article>'+
  '<div class="clarity-shortcuts shell-feature-aside"><h2>Accès directs</h2>'+
  '<a class="shell-action" href="#/control/inbox"><span class="shell-action-glyph">✓</span><span><strong>Mes actions à traiter</strong><small>Ce qui demande votre attention</small></span></a>'+
  '<a class="shell-action" href="#/control/manager"><span class="shell-action-glyph">◈</span><span><strong>Centre de pilotage</strong><small>Faire le point sur vos projets</small></span></a>'+
@@ -129,6 +129,11 @@ function home(){
  };
  draw();$('#search').oninput=draw;
  $('#more-projects').onclick=()=>{showAllProjects=!showAllProjects;draw()};
+ const quickFind=$('#shell-quick-find');
+ quickFind.onsubmit=e=>{
+  e.preventDefault();
+  window.CONTROL_NAVIGATION?.open({query:$('#shell-quick-query').value.trim()});
+ };
  const addButton=$('#add-project'),addBox=$('#add-box');
  addButton.setAttribute('aria-controls','add-box');
  addButton.setAttribute('aria-expanded','false');
