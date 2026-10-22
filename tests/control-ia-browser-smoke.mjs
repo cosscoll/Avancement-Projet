@@ -469,6 +469,17 @@ try{
  await js("document.querySelector('#cancel-add-project').click()");
  await ready(()=>js("location.hash==='#/'&&!!document.querySelector('#add-box')?.classList.contains('hidden')"),8000)();
  log('desktop direct creation request opens focused form, cancels without project mutation');
+ // New task intent must open the existing action editor without saving anything automatically.
+ const beforeTaskStore=await js("localStorage.getItem('control-command-v1')");
+ await js("(()=>{const field=document.querySelector('#shell-quick-query');field.value='créer une tâche';field.form.requestSubmit()})()");
+ await ready(()=>js("!!document.querySelector('.control-finder [data-finder-id=new-action]')"),8000)();
+ await js("document.querySelector('.control-finder [data-finder-id=new-action]').click()");
+ await ready(()=>js("location.hash==='#/control/inbox/new'&&!!document.querySelector('#new-action input[name=\"title\"]')"),8000)();
+ assert.equal(await js("document.activeElement?.getAttribute('name')"),'title');
+ assert.equal(await js("localStorage.getItem('control-command-v1')"),beforeTaskStore,'Opening task creation must not write a task');
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('#shell-quick-query')"),8000)();
+ log('desktop direct task request opens action editor and saves no data until confirmation');
  // UX regression: new project opens close to its action, with an explicit
  // cancel path, and advanced project sections are visible on desktop.
  await js("document.querySelector('#add-project').click()");
