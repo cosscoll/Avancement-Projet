@@ -468,6 +468,19 @@ try{
   await ready(()=>js("!!document.querySelector('#builder-form')&&!!document.querySelector('[data-open-draft]')"),12000)();
   await js("document.querySelector('[data-open-draft]').click()");
   assert.equal(await js("document.querySelector('#builder-form [name=brand]').value"),'STUDIO CONTROL RECETTE');
+  const starterTitle=await js("document.querySelector('#builder-form [name=title]').value");
+  const initialQuality=await js("({warnings:document.querySelectorAll('#builder-audit-list .is-advice').length,grade:document.querySelector('#builder-audit-score')?.textContent})");
+  assert.ok(initialQuality.warnings>0,'Sample copy must not pass a full quality check');
+  assert.match(initialQuality.grade,/\/ 8 contrôles/);
+  await js("(()=>{const f=document.querySelector('#builder-form');f.elements.title.value='Une seconde version à comparer visuellement';f.elements.title.dispatchEvent(new Event('input',{bubbles:true}));f.requestSubmit()})()");
+  await ready(()=>js("JSON.parse(localStorage.getItem('control-command-v1')).websites.find(x=>x.brand==='STUDIO CONTROL RECETTE')?.version===2"),9000)();
+  assert.ok(await js("!!document.querySelector('[data-restore-version="1"]')"));
+  await js("(()=>{const original=window.confirm;window.confirm=()=>true;try{document.querySelector('[data-restore-version="1"]').click()}finally{window.confirm=original}})()");
+  await ready(()=>js("JSON.parse(localStorage.getItem('control-command-v1')).websites.find(x=>x.brand==='STUDIO CONTROL RECETTE')?.version===3"),9000)();
+  assert.equal(await js("document.querySelector('#builder-form [name=title]').value"),starterTitle);
+  const currentVersion=await js("JSON.parse(localStorage.getItem('control-command-v1')).websites.find(x=>x.brand==='STUDIO CONTROL RECETTE').revisions.map(v=>v.version)");
+  assert.deepEqual(currentVersion,[1,2],'Rolling back must preserve both earlier versions');
+  log('builder warns on template content and restores history as a new version without data loss');
   log('site builder: sandbox preview, local save, ZIP files, responsive mode and reload persistence');
 
  // The mission list must not be pushed below a lengthy creation form.

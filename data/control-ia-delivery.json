@@ -423,8 +423,8 @@
         "CONTROL-ASSISTANT",
         "CONTROL-AGENTS"
       ],
-      "summary": "Premier atelier de sites statiques : trois modèles personnalisables, aperçu responsive dans iframe isolée sans exécution de scripts, enregistrement de brouillons locaux et export ZIP autonome HTML/CSS/README. Génération réellement pilotée par une IA, construction multi-fichiers libre, revue de code et publication depuis le chat non disponibles.",
-      "next": "Recetter le moteur et l'aperçu sur appareils réels ; construire ensuite un environnement d'édition multi-fichiers contrôlé, un moteur de prompts et une publication explicitement approuvée (pas d'exécution ou de déploiement automatique sans accord).",
+      "summary": "Prototype statique sur PWA : trois modèles distincts, éditeur de contenu, aperçu isolé et mobile, téléchargement ZIP HTML/CSS, huit contrôles locaux indicatifs (les textes de démonstration ne comptent plus comme contenus personnalisés), huit versions antérieures restaurables sans perte de l'actuelle. Ni moteur de création libre par IA ni publication automatisée validés.",
+      "next": "Développer l'itération à partir d'un vrai brief et un environnement d'édition multi-fichiers isolé, compléter les tests WCAG/Lighthouse, puis une étape de publication explicitement approuvée. Vérifier également sur téléphones physiques.",
       "blockers": [
         "Orchestrateur d'outils exécutable et sandbox sécurisée non disponibles."
       ],

@@ -36,8 +36,14 @@ test('new homepage links are mobile responsive and keyboard reachable',()=>{
  assert.match(home,/\.control-whats-new-links a:focus-visible/);
 });
 test('new PWA version invalidates stale offline home cache',()=>{
- assert.match(offline,/CACHE_SHELL='control-shell-v49'/);
- assert.match(offline,/CACHE_PUBLIC='control-public-data-v49'/);
+ assert.match(offline,/CACHE_SHELL='control-shell-v50'/);
+ assert.match(offline,/CACHE_PUBLIC='control-public-data-v50'/);
  assert.match(offline,/fetch\(request,\{cache:'no-cache'\}\)/);
  assert.match(offline,/await self\.clients\.claim\(\)/);
+});
+
+test('site builder is accessible from collapsed homepage discovery without adding dashboard clutter',()=>{
+ assert.match(panel,/href="#\/control\/webbuilder"/);
+ assert.match(panel,/Personnaliser un modèle, vérifier son contenu/);
+ assert.match(home,/\.control-whats-new-links\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
 });
