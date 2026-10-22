@@ -16,7 +16,7 @@ Après l'ajout de nombreuses capacités, l'utilisateur n'arrivait plus à retrou
 - **Tous les outils :** champ de recherche dédié, regroupements automatiquement ouverts si une fonction correspond à la recherche, compteur de résultats accessible et restauration des catégories initialement ouvertes lorsque le champ est effacé. Le filtrage accepte les accents et ne change ni les liens ni les données.
 - **Missions IA :** le suivi et les indicateurs restent accessibles immédiatement. Le formulaire de création est désormais rangé dans un panneau `details` à ouverture volontaire. Les fonctionnalités « Préparer la mission » et « Préparer un plan avec plusieurs IA » restent présentes et inchangées.
 
-## Accès direct depuis l’accueil (V59)
+## Accès direct depuis l’accueil (V60)
 
 Le bloc « Qu’allez-vous faire aujourd’hui ? » contient désormais un vrai champ de recherche, utilisable à la souris, au toucher ou avec Entrée. L’utilisateur peut saisir un besoin (« créer un site », « budget », « organiser une visio ») ou le nom d’un projet. Le formulaire ouvre le moteur local avec la requête préremplie, **sans créer de donnée ni lancer automatiquement une action** ; l’utilisateur choisit explicitement un résultat. Le champ et son bouton se redimensionnent à 320 px.
 
@@ -27,7 +27,7 @@ Le bloc « Qu’allez-vous faire aujourd’hui ? » contient désormais un vrai 
 
 ## Hygiène de publication
 
-Après les correctifs de navigation du 22 octobre, la PWA utilise les caches **`control-shell-v59`** et **`control-public-data-v59`**. Les ressources publiques sont servies en priorité depuis le réseau et conservées localement pour le mode hors connexion ; cette rotation renouvelle également le précache lors de l'installation du nouveau service worker. `assets/workspace-shell.css` est une ressource critique mise en cache ; la page Cloud privée n'est pas précachée.
+Après les correctifs de navigation du 22 octobre, la PWA utilise les caches **`control-shell-v60`** et **`control-public-data-v60`**. Les ressources publiques sont servies en priorité depuis le réseau et conservées localement pour le mode hors connexion ; cette rotation renouvelle également le précache lors de l'installation du nouveau service worker. `assets/workspace-shell.css` est une ressource critique mise en cache ; la page Cloud privée n'est pas précachée.
 
 La mention **INTERFACE V3** dans l'en-tête permet de repérer visuellement une ancienne page en cache. Les navigateurs peuvent nécessiter un rechargement lorsque le service worker vient de se mettre à jour.
 
