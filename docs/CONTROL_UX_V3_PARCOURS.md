@@ -42,6 +42,13 @@ La recherche « créer une tâche » affiche désormais la destination personnel
 - `tests/control-ia-browser-smoke.mjs` : étape prévue sous Chromium pour vérifier le formulaire, son focus et l'absence de modification de `control-command-v1` jusqu'à la validation ; test navigateur public non encore exécuté.
 - Le raccourci n'est pas proposé dans Cloud, dont l'authentification réelle demeure soumise à ses propres contrôles A/B.
 
+## Parcours projets robustes et recherche lisible (V63)
+
+- **Identifiants encodés :** le routeur personnel décode désormais uniquement le segment de l'identifiant, après avoir séparé les segments de l'URL. Un projet dont l'identifiant contient un `/`, des accents, `%`, `?` ou `#` ne doit plus retourner à l'accueil par erreur. Les échappements URI invalides sont rejetés sans crash. L'indication « Vous êtes ici » utilise le même décodage prudent.
+- **Retrouver un projet :** dans le tableau de bord, le filtre ignore les accents et accepte plusieurs mots dans n'importe quel ordre, tout en préservant le tri par projets récents. Un compteur « N projets trouvés » / « Aucun projet trouvé » est affiché et annoncé via `role=status`.
+- **Tests réels disponibles :** `tests/control-project-route-decoding.test.mjs` (3 tests) et `tests/control-project-list-search.test.mjs` (3 tests) couvrent les URLs spéciales, les requêtes inversées et l'échappement des titres non fiables. Les assertions isolées ont été exécutées sur les sources GitHub.
+- **Recette publique encore attendue :** `tests/control-ia-browser-smoke.mjs` inclut le parcours « ifsi revisions » → « Révisions IFSI » → projet IFSI, mais le scénario complet **n'a pas été exécuté dans Chromium** pour le SHA final. Aucun critère fonctionnel Cloud/JWT/RLS n'est marqué comme validé.
+
 ## Hygiène de publication
 
 Après les correctifs de navigation du 22 octobre, la PWA utilise les caches **`control-shell-v63`** et **`control-public-data-v63`**. Les ressources publiques sont servies en priorité depuis le réseau et conservées localement pour le mode hors connexion ; cette rotation renouvelle également le précache lors de l'installation du nouveau service worker. `assets/workspace-shell.css` est une ressource critique mise en cache ; la page Cloud privée n'est pas précachée.
