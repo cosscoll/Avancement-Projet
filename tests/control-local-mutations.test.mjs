@@ -114,3 +114,34 @@ test('recovery surface offers raw download, blocks normal export and keeps Cloud
  const cloud=JSON.parse(readFileSync(new URL('../config/cloud.json',import.meta.url),'utf8'));
  assert.equal(cloud.enabled,false);
 });
+
+test('backup rejects corrupt project and automation stores instead of exporting empty objects',()=>{
+ const readFn=source.match(/function readBackupStore\(key\)\{[^\n]+/)?.[0];
+ const issuesFn=source.match(/function backupStorageIssues\(\)\{[^\n]+/)?.[0];
+ assert.ok(readFn&&issuesFn,'Backup verification functions must exist');
+ const values=new Map([
+  ['control-command-v1','{"actions":[],"missions":[]}'],
+  ['control-hub-v2','{broken-project-json'],
+  ['control-automations-v1','[]']
+ ]);
+ const check=new Function('localStorage',
+  'const KEY="control-command-v1",HUB="control-hub-v2",AUTOS="control-automations-v1";'+readFn+'\n'+issuesFn+'\nreturn {readBackupStore,backupStorageIssues};'
+ )({getItem:key=>values.get(key)??null});
+ assert.deepEqual(check.readBackupStore('control-command-v1'),{actions:[],missions:[]});
+ assert.deepEqual(check.backupStorageIssues().map(x=>x.key),['control-hub-v2','control-automations-v1']);
+ assert.throws(()=>check.readBackupStore('control-hub-v2'),SyntaxError);
+ assert.throws(()=>check.readBackupStore('control-automations-v1'),/Invalid backup source/);
+ values.set('control-hub-v2','{"projects":{"abc":{}}}');
+ values.set('control-automations-v1','{"drafts":[]}');
+ assert.deepEqual(check.backupStorageIssues(),[]);
+ values.delete('control-hub-v2');
+ assert.deepEqual(check.readBackupStore('control-hub-v2'),{});
+});
+test('backup interface exposes only local recovery and refuses incomplete exports before encryption',()=>{
+ assert.match(source,/const recovery=brokenStores\.filter\(x=>x\.key!==KEY\)/);
+ assert.match(source,/download-raw:\x27\+\(x\.key===HUB\?/);
+ assert.match(source,/if\(backupStorageIssues\(\)\.length\)return toast\('Export bloqué/);
+ assert.match(source,/function downloadRawStorage\(key,label\)/);
+ assert.match(source,/data-act="download-raw:\x27\+name/);
+ assert.doesNotMatch(source.slice(source.indexOf('function downloadRawStorage('),source.indexOf('function backup(){')),/fetch\(|XMLHttpRequest/);
+});
