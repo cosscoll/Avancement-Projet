@@ -44,6 +44,13 @@ Le validateur `scripts/control-ia-requirements.mjs` contrôle désormais les ré
 
 Preuves techniques déjà identifiées : [recette navigateur locale](https://github.com/cosscoll/Avancement-Projet/actions/runs/39230180420), [RLS PostgreSQL A/B fictif](https://github.com/cosscoll/Avancement-Projet/actions/runs/39233284788). Les tests partiels portent sur les identifiants `T-05`, `T-14`, `T-15`, `T-16`, `T-25`. Ils gardent le statut `partial_mock`, pas `real_verified`.
 
+## Vérifications complémentaires V63 — recherche et parcours projets (22 octobre 2026)
+
+- **Routes personnelles :** décodage du seul segment d'identifiant pour conserver les caractères spéciaux (notamment `/` encodé) ; les échappements URI malformés sont rejetés sans bloquer toute l'interface.
+- **Recherche des projets :** ignore les accents, accepte les mots dans un ordre différent et annonce le nombre de résultats. Le compteur n'expose aucune information externe.
+- **Tests ciblés :** 44 vérifications réussies dans un exécuteur JavaScript isolé sur les fichiers de `main`. La recette Chromium prévoit aussi « ifsi revisions » → « Révisions IFSI » ; elle n'est **pas encore exécutée** sur le site publié.
+- **Limitations :** cela ne prouve ni l'exécution du `node --test` natif sur le dernier commit ni la réussite GitHub Actions ni la synchronisation Cloud. Aucun critère V1.2 de plus n'est promu vérifié.
+
 ## Complément V63 — création directe et navigation fiable (22 octobre 2026)
 
 - Depuis « Trouver une fonction » et la recherche de l’accueil, une demande explicite **« créer un nouveau projet »** ouvre le formulaire du projet (`#/new-project`) avec focus sur le champ Nom ; Annuler referme sans modifier les projets.
