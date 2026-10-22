@@ -420,6 +420,25 @@ try{
  await js("document.querySelector('[data-finder-id=\"project:lab\"]').click()");
  await ready(()=>js("location.hash.endsWith('/lab')"),8000)();
  log('desktop project workflow exposes all advanced sections, creates/cancels safely and finds project tools');
+ // All tools must be filterable directly instead of hidden in collapsed
+ // categories. Clearing restores category preferences.
+ await js("location.hash='#/control/tools'");
+ await ready(()=>js("!!document.querySelector('#tools-filter')"),8000)();
+ await js("(()=>{const x=document.querySelector('#tools-filter');x.value='visio';x.dispatchEvent(new Event('input',{bubbles:true}))})()");
+ const toolResults=await js("({hits:[...document.querySelectorAll('.clarity-tool-link')].filter(x=>!x.hidden).map(x=>x.textContent.trim()),status:document.querySelector('#tools-filter-status')?.textContent,opened:document.querySelectorAll('.clarity-toolgroup[open]').length})");
+ assert.ok(toolResults.hits.some(x=>x.toLowerCase().includes('visio'))&&toolResults.hits.length<=3,'Tool filtering should find visios directly: '+JSON.stringify(toolResults));
+ assert.ok(toolResults.status?.includes('fonction(s)'),'Tool filtering must report results');
+ await js("(()=>{const x=document.querySelector('#tools-filter');x.value='';x.dispatchEvent(new Event('input',{bubbles:true}))})()");
+ assert.equal(await js("document.querySelectorAll('.clarity-toolgroup[open]').length"),1);
+ log('desktop tool search finds hidden visio feature and restores categories');
+ // The mission list must not be pushed below a lengthy creation form.
+ await js("location.hash='#/control/missions'");
+ await ready(()=>js("!!document.querySelector('#mission-create')"),8000)();
+ assert.equal(await js("document.querySelector('#mission-create').open"),false);
+ await js("document.querySelector('#mission-create>summary').click()");
+ assert.equal(await js("document.querySelector('#mission-create').open"),true);
+ assert.equal(await js("!!document.querySelector('#new-mission')"),true);
+ log('mission creation expands on demand without concealing the existing mission overview');
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('.shell-dashboard')"),8000)();
  await command('Emulation.setDeviceMetricsOverride',{width:320,height:700,deviceScaleFactor:2,mobile:true});
