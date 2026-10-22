@@ -117,6 +117,9 @@ function interpret(input,snapshot={},scope='general'){
  if(negated||instructional||simulated)return {kind:'help',text:'Cette demande ne sera pas traitée comme une autorisation d’agir. Décris séparément une action souhaitée et confirme-la explicitement.'};
  if(/(?:connecte|synchronise|envoie|delegue|lance|demarre)/.test(q)&&/(claude|chatgpt|gemini|codex|compte|gmail)/.test(q))
   return {kind:'help',text:'Les comptes IA externes ne sont pas pilotables depuis cette fonction locale. Aucun fournisseur n’a été déclenché.'};
+ // Never downgrade a bulk deletion request into a harmless read-only summary.
+ if(/\b(?:efface|supprime|supprimer|detruis|reinitialise|vide|purge)\b/.test(q)&&/\b(?:toutes?|tous|entieres?|integralement|en masse)\b/.test(q))
+  return {kind:'help',text:'Suppression en masse interdite depuis cet assistant. Aucune donnée locale ou externe ne sera supprimée.'};
  const createTask=/(?:cree|creer|ajoute|ajouter|note|planifie)\b/.test(q)&&/\b(?:tache|action)\b/.test(q);
  const createEvent=/(?:cree|creer|ajoute|ajouter|programme|programmer|planifie|planifier)\b/.test(q)&&/\b(?:rdv|rendez[- ]vous|reunion|evenement)\b/.test(q);
  if(createTask&&createEvent)return {kind:'help',text:'Deux créations différentes ont été demandées. Sépare la tâche et le rendez-vous en demandes distinctes.'};
