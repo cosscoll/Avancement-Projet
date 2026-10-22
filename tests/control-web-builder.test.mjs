@@ -111,3 +111,30 @@ test('user interface is in a sandbox with no scripts or remote publishing',()=>{
  assert.match(app,/decisions','websites','messages/);
  assert.equal(JSON.parse(readFileSync(new URL('../config/cloud.json',import.meta.url),'utf8')).enabled,false);
 });
+
+test('builder quality checks produce reproducible, actionable results',()=>{
+ const incomplete=site.audit({theme:'studio',brand:'MON STUDIO',description:'Court',email:''});
+ assert.equal(incomplete.total,8);
+ assert.ok(incomplete.passed<incomplete.total);
+ assert.ok(incomplete.checks.some(x=>x.id==='email'&&!x.ok&&x.field==='email'));
+ assert.ok(incomplete.checks.some(x=>x.id==='description'&&!x.ok&&x.field==='description'));
+ const complete=site.audit({
+  theme:'produit',brand:'Studio Qualité',title:'Créons ensemble des parcours numériques plus simples',
+  description:'Notre équipe accompagne les professionnels pour créer des interfaces durables, accessibles et réellement adaptées à leurs besoins.',
+  services:['Sites web sur mesure','Audit de parcours','Conseil et stratégie'],
+  email:'bonjour@example.fr'
+ });
+ assert.equal(complete.passed,8);
+ assert.equal(complete.total,8);
+ assert.equal(complete.checks.filter(x=>!x.ok).length,0);
+ assert.equal(site.audit(complete).passed,8);
+});
+test('static quality panel remains advisory and never runs tests on untrusted HTML',()=>{
+ const ui=readFileSync(new URL('../assets/control-web-builder-ui.js',import.meta.url),'utf8');
+ assert.match(ui,/engine\.audit\(working\)/);
+ assert.match(ui,/id="builder-audit-score"/);
+ assert.match(ui,/id="builder-audit-list"/);
+ assert.match(ui,/data-audit-field/);
+ assert.match(ui,/ne remplacent pas une recette SEO/);
+ assert.match(ui,/iframe id="builder-preview"[^>]+sandbox=""/);
+});
