@@ -44,6 +44,13 @@ Le validateur `scripts/control-ia-requirements.mjs` contrôle désormais les ré
 
 Preuves techniques déjà identifiées : [recette navigateur locale](https://github.com/cosscoll/Avancement-Projet/actions/runs/39230180420), [RLS PostgreSQL A/B fictif](https://github.com/cosscoll/Avancement-Projet/actions/runs/39233284788). Les tests partiels portent sur les identifiants `T-05`, `T-14`, `T-15`, `T-16`, `T-25`. Ils gardent le statut `partial_mock`, pas `real_verified`.
 
+## Itération V59 — réduction des clics et contrôle des régressions (22 octobre 2026)
+
+- Accueil : un formulaire visible ouvre directement le moteur de recherche local avec une intention ou un nom de projet. Aucun résultat n'est exécuté automatiquement ; les utilisateurs confirment la page à ouvrir.
+- Qualité : anciennes assertions PWA V55 encore présentes dans deux tests réparées ; test transverse `tests/control-pwa-cache-contract.test.mjs` ajouté pour signaler toute nouvelle désynchronisation.
+- `tests/control-home-direct-intent.test.mjs` vérifie la saisie, la transmission de la requête et l'absence de mutation ; `tests/control-ia-browser-smoke.mjs` prépare le parcours « budget » à réaliser sur site public.
+- Cache installé : **V59**. **Contrôles de syntaxe et tests ciblés réalisés**, **CI complète et recette Chromium publique non vérifiées pour cette révision**. Aucun critère BACK/T/IMP clos par déduction.
+
 ## Correctifs additionnels du 22 octobre 2026 — expérience utilisateur
 
 - Recherche de fonctions : ouverture du premier résultat avec **Entrée**, raccourcis **Reprendre** pour les quatre dernières fonctions de la session personnelle, aucun historique récemment ouvert en Cloud.
