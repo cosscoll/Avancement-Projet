@@ -57,3 +57,29 @@ test('Cloud finder never reveals project names while unauthenticated',()=>{
  assert.equal(navigation.getItems().find(x=>x.id==='open-project:secret1')?.target,'project-open:secret1');
  navigation.setAdapter({mode:'personal',getProjects:()=>[]});
 });
+
+test('finder renders untrusted project names safely and provides correct keyboard movement',()=>{
+ const listeners={};
+ const elements=[{focus(){doc.activeElement=this}},{focus(){doc.activeElement=this}}];
+ const input={value:'',focus(){doc.activeElement=this},select(){},addEventListener(){}};
+ const results={innerHTML:'',querySelectorAll(){return elements}};
+ const categories={innerHTML:''};
+ const dialog={hidden:true,innerHTML:'',addEventListener(type,handler){listeners[type]=handler},
+  querySelector(selector){return selector==='input[type="search"]'?input:selector==='.control-finder-results'?results:selector==='.control-finder-categories'?categories:null}};
+ const doc={activeElement:{isConnected:true,focus(){}},createElement(){return dialog},
+  body:{appendChild(){},classList:{add(){},remove(){}}},addEventListener(){}};
+ const localWindow={};
+ runInNewContext(source,{window:localWindow,document:doc,location:{hash:'#/'},sessionStorage:{setItem(){}}});
+ const navigation=localWindow.CONTROL_NAVIGATION;
+ navigation.setAdapter({mode:'personal',getProjects:()=>[{id:'unsafe',name:'<img src=x onerror=alert(1)>',category:'Test'}]});
+ assert.equal(navigation.open({category:'projects'}),true);
+ assert.ok(results.innerHTML.includes('&lt;img'));
+ assert.ok(!results.innerHTML.includes('<img'));
+ assert.ok(results.innerHTML.includes('role="status" aria-live="polite"'));
+ let prevented=0;
+ listeners.keydown({key:'ArrowUp',preventDefault(){prevented++}});
+ assert.equal(doc.activeElement,elements[1],'ArrowUp from search should select last item');
+ listeners.keydown({key:'ArrowDown',preventDefault(){prevented++}});
+ assert.equal(doc.activeElement,elements[0],'ArrowDown from last should wrap to first');
+ assert.equal(prevented,2);
+});
