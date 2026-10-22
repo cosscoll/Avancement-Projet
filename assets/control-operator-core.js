@@ -108,10 +108,18 @@ function interpret(input,snapshot={},scope='general'){
  if(scope!=='general'&&mentioned.some(p=>p.id!==scope))return {kind:'help',text:'Projet différent du projet sélectionné : changer de projet.'};
  const v=visible(snapshot,scope),project=findProject(raw,v.projects,scope);
  if(!q)return {kind:'help',text:'Décris un projet, une tâche, une mission ou un événement à retrouver.'};
+ // Refuse requests that explicitly negate an action, ask how to do it, or merely
+ // ask for a simulation. Pattern matching must never turn "ne crée pas" into a proposal.
+ const actionWords='(?:cree|creer|ajoute|ajouter|programme|programmer|planifie|planifier|supprime|supprimer|annule|annuler|efface|decale|decaler|deplace|deplacer|modifie|modifier|termine|terminer|acheve|marque)';
+ const negated=new RegExp('\\b(?:ne|n)\\s+(?:(?:me|nous)\\s+)?'+actionWords+'\\b[^.!?]{0,45}\\bpas\\b').test(q);
+ const instructional=new RegExp('\\b(?:comment|expliquer comment)\\s+'+actionWords+'\\b').test(q);
+ const simulated=new RegExp('\\b(?:sans rien|sans vraiment|sans effectivement)\\s+'+actionWords+'\\b').test(q);
+ if(negated||instructional||simulated)return {kind:'help',text:'Cette demande ne sera pas traitée comme une autorisation d’agir. Décris séparément une action souhaitée et confirme-la explicitement.'};
  if(/(?:connecte|synchronise|envoie|delegue|lance|demarre)/.test(q)&&/(claude|chatgpt|gemini|codex|compte|gmail)/.test(q))
   return {kind:'help',text:'Les comptes IA externes ne sont pas pilotables depuis cette fonction locale. Aucun fournisseur n’a été déclenché.'};
  const createTask=/(?:cree|creer|ajoute|ajouter|note|planifie)\b/.test(q)&&/\b(?:tache|action)\b/.test(q);
  const createEvent=/(?:cree|creer|ajoute|ajouter|programme|programmer|planifie|planifier)\b/.test(q)&&/\b(?:rdv|rendez[- ]vous|reunion|evenement)\b/.test(q);
+ if(createTask&&createEvent)return {kind:'help',text:'Deux créations différentes ont été demandées. Sépare la tâche et le rendez-vous en demandes distinctes.'};
  if(createTask||createEvent){
   if(!project)return {kind:'help',text:'Choisis un projet ou indique son nom avant toute création.'};
   const type=createTask?'create_action':'create_event';
@@ -122,6 +130,7 @@ function interpret(input,snapshot={},scope='general'){
  const eventWord=/\b(?:rdv|rendez[- ]vous|reunion|evenement)\b/.test(q);
  const removeEvent=eventWord&&/\b(?:supprime|supprimer|annule|annuler|efface)\b/.test(q);
  const moveEvent=eventWord&&/\b(?:decale|decaler|deplace|deplacer|reprogramme|reprogrammer|modifie|modifier)\b/.test(q);
+ if(removeEvent&&moveEvent)return {kind:'help',text:'Suppression et déplacement demandés ensemble. Choisis une seule action sur cet événement.'};
  if(removeEvent||moveEvent){
   const matches=v.events.filter(e=>(!project||e.project===project.id)&&fold(e.title).length>2&&fold(raw).includes(fold(e.title)));
   if(matches.length!==1)return {kind:'help',text:'Indique le titre exact de l’événement local et son projet. Événements disponibles : '+v.events.slice(0,6).map(e=>trim(e.title,80)).join(' · ')+'. Les visios externes ne sont pas supprimées.'};
