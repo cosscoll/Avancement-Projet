@@ -466,7 +466,14 @@ try{
  assert.equal(await js("document.querySelectorAll('.control-finder-results [data-finder-id^=\"project:\"]').length"),11);
  await js("document.querySelector('[data-finder-id=\"project:lab\"]').click()");
  await ready(()=>js("location.hash.endsWith('/lab')"),8000)();
- log('desktop project workflow exposes all advanced sections, creates/cancels safely and finds project tools');
+ // The project finder must expose a real project by name, without losing current context.
+ await js("document.querySelector('[data-control-nav-category=project]').click()");
+ await ready(()=>js("document.querySelector('.control-finder')?.hidden===false"),8000)();
+ await js("(()=>{const p=window.CONTROL_NAVIGATION.getItems().find(x=>x.category==='projects');if(!p)throw Error('No searchable project');const input=document.querySelector('.control-finder-search input');input.value=p.title;input.dispatchEvent(new Event('input',{bubbles:true}))})()");
+ await ready(()=>js("!!document.querySelector('.control-finder-results [data-finder-id^=\"open-project:\"]')"),8000)();
+ await js("document.querySelector('.control-finder-results [data-finder-id^=\"open-project:\"]').click()");
+ await ready(()=>js("location.hash.endsWith('/ai')"),8000)();
+ log('desktop project workflow exposes all advanced sections and finds named projects');
  // All tools must be filterable directly instead of hidden in collapsed
  // categories. Clearing restores category preferences.
  await js("location.hash='#/control/tools'");
