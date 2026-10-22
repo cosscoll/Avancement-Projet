@@ -399,6 +399,29 @@ try{
  assert.ok(desktop.heroBackground!=='rgb(255, 255, 255)'&&desktop.projectsY<desktop.newsY,'Projects must appear above the announcements in a non-white editorial dashboard: '+JSON.stringify(desktop));
  assert.ok(desktop.links>=7&&desktop.overflow<=desktop.width+4,'Desktop navigation or page overflows: '+JSON.stringify(desktop));
  log('1440px desktop has persistent dark navigation, separate content canvas and project-first layout');
+ // UX regression: new project opens close to its action, with an explicit
+ // cancel path, and advanced project sections are visible on desktop.
+ await js("document.querySelector('#add-project').click()");
+ await ready(()=>js("!document.querySelector('#add-box').classList.contains('hidden')"),8000)();
+ assert.equal(await js("document.querySelector('#add-project').getAttribute('aria-expanded')"),'true');
+ await js("document.querySelector('#cancel-add-project').click()");
+ assert.equal(await js("document.querySelector('#add-box').classList.contains('hidden')"),true);
+ await js("document.querySelector('.shell-projects-list a.card').click()");
+ await ready(()=>js("document.querySelector('.shell-project-navigation')!==null"),8000)();
+ const projectNav=await js("({advanced:document.querySelectorAll('.shell-project-more .clarity-advanced [data-tab]').length,open:document.querySelector('.shell-project-more')?.open,computed:getComputedStyle(document.querySelector('.shell-project-more .clarity-advanced')).display})");
+ assert.equal(projectNav.advanced,7,'Personal project still has 7 advanced sections');
+ assert.ok(projectNav.open&&projectNav.computed!=='none','Desktop advanced project sections must be visible');
+ await js("document.querySelector('.shell-project-navigation [data-tab=meetings]').click()");
+ await ready(()=>js("location.hash.endsWith('/meetings')"),8000)();
+ await js("document.querySelector('[data-control-nav-category=project]').click()");
+ await ready(()=>js("document.querySelector('.control-finder')?.hidden===false"),8000)();
+ assert.equal(await js("document.querySelector('[data-finder-cat=project]')?.getAttribute('aria-pressed')"),'true');
+ assert.equal(await js("document.querySelectorAll('.control-finder-results [data-finder-id^=\"project:\"]').length"),11);
+ await js("document.querySelector('[data-finder-id=\"project:lab\"]').click()");
+ await ready(()=>js("location.hash.endsWith('/lab')"),8000)();
+ log('desktop project workflow exposes all advanced sections, creates/cancels safely and finds project tools');
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('.shell-dashboard')"),8000)();
  await command('Emulation.setDeviceMetricsOverride',{width:320,height:700,deviceScaleFactor:2,mobile:true});
  await js("location.hash="+JSON.stringify(beforeFinderHash));
  await ready(()=>js("!!document.querySelector('.control-delivery-focus')"),8000)();
