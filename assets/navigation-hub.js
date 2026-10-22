@@ -73,9 +73,11 @@ const ALIASES={
 };
 const searchableWord=w=>ALIASES[w]||w.replace(/(ements|ations|euses|eurs|es|s)$/,'');
 function findFeatures(raw,entries=catalog()){
- const parts=norm(raw).split(/[^a-z0-9]+/).filter(w=>w.length>1&&!STOP_WORDS.has(w)).map(searchableWord);
+ const words=norm(raw).split(/[^a-z0-9]+/).filter(Boolean);
+ const parts=words.filter(w=>w.length>1&&!STOP_WORDS.has(w)).map(searchableWord);
  if(!parts.length)return norm(raw)?[]:entries;
- return entries.map(item=>{
+ const wantsCreation=words.some(w=>['creer','cree','creation','nouveau','nouvelle','nouvel','ajouter','ajoute','ajout','rajouter'].includes(w));
+ return entries.filter(item=>wantsCreation||!['new-action','new-project'].includes(item.id)).map(item=>{
   const title=norm(item.title),hint=norm(item.hint),keys=norm(item.keywords);
   const fields=[title,hint,keys].map(t=>t.split(/[^a-z0-9]+/).filter(Boolean).map(searchableWord));
   const matched=parts.every(word=>fields.some(tokens=>tokens.some(token=>token===word||(word.length>=4&&token.startsWith(word))||(token.length>=4&&word.startsWith(token)))));
