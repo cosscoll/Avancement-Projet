@@ -206,3 +206,24 @@ test('site builder editor exposes validated palette and typography controls',()=
  assert.match(ui,/engine\.PALETTES\[theme\]/);
  assert.match(ui,/picker\.innerHTML=Object\.entries/);
 });
+
+test('curated palette foreground/background contrast remains readable',()=>{
+ const luminosity=hex=>{
+  const rgb=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255)
+   .map(v=>v<=0.04045?v/12.92:Math.pow((v+0.055)/1.055,2.4));
+  return rgb[0]*0.2126+rgb[1]*0.7152+rgb[2]*0.0722;
+ };
+ for(const [theme,group] of Object.entries(site.PALETTES)){
+  for(const [id,palette] of Object.entries(group)){
+   const values=[luminosity(palette.paper),luminosity(palette.ink)].sort((a,b)=>b-a);
+   assert.ok((values[0]+0.05)/(values[1]+0.05)>=7,theme+'/'+id+' should offer high contrast text on its background');
+  }
+ }
+});
+test('switching template preserves manually rewritten content while replacing only sample copy',()=>{
+ const ui=readFileSync(new URL('../assets/control-web-builder-ui.js',import.meta.url),'utf8');
+ assert.match(ui,/if\(previousTheme!==theme\)/);
+ assert.match(ui,/if\(control&&control\.value===before\[name\]\)control\.value=after\[name\]/);
+ assert.match(ui,/if\(offers&&offers\.value===before\.services\.join/);
+ assert.match(ui,/href="#\/control\/deploy"/);
+});

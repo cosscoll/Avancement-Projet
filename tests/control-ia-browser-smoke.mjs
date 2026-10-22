@@ -456,7 +456,12 @@ try{
   assert.equal(builderState.sandbox,'','Preview must not be allowed to run scripts or same-origin access');
   assert.ok(builderState.source.includes('<style>')&&builderState.source.includes('Notre expertise.'),'Generator should render a complete preview');
   assert.equal(builderState.modes,2);
-  await js("(()=>{const form=document.querySelector('#builder-form');form.elements.brand.value='STUDIO CONTROL RECETTE';form.elements.brand.dispatchEvent(new Event('input',{bubbles:true}));form.elements.theme.value='produit';form.elements.theme.dispatchEvent(new Event('change',{bubbles:true}));form.requestSubmit()})()");
+  await js("(()=>{const form=document.querySelector('#builder-form');form.elements.brand.value='STUDIO CONTROL RECETTE';form.elements.brand.dispatchEvent(new Event('input',{bubbles:true}));form.elements.theme.value='produit';form.elements.theme.dispatchEvent(new Event('change',{bubbles:true}));form.elements.palette.value='violet';form.elements.palette.dispatchEvent(new Event('input',{bubbles:true}));form.elements.typography.value='editorial';form.elements.typography.dispatchEvent(new Event('input',{bubbles:true}));form.requestSubmit()})()");
+  const visual=await js("({palette:document.querySelector('#builder-form [name=palette]').value,font:document.querySelector('#builder-form [name=typography]').value,css:document.querySelector('#builder-preview').srcdoc})");
+  assert.equal(visual.palette,'violet');
+  assert.equal(visual.font,'editorial');
+  assert.match(visual.css,/--paper:#161325/);
+  assert.match(visual.css,/font-family:Georgia/);
   await ready(()=>js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').websites?.some(s=>s.brand==='STUDIO CONTROL RECETTE')"),9000)();
   assert.equal(await js("document.querySelector('#builder-preview').srcdoc.includes('STUDIO CONTROL RECETTE')"),true);
   assert.ok(await js("document.querySelector('[data-builder-viewport=mobile]')?.click();document.querySelector('#builder-preview')?.classList.contains('is-mobile')"));

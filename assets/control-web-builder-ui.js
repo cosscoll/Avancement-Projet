@@ -34,7 +34,7 @@ function mount(target,api){
   '<div class="web-builder-canvas"><iframe id="builder-preview" title="Aperçu isolé du site généré" sandbox="" referrerpolicy="no-referrer"></iframe></div>'+
   '<section class="web-builder-audit" aria-labelledby="builder-audit-title"><div class="web-builder-audit-top"><h3 id="builder-audit-title">Contrôles avant export</h3><strong id="builder-audit-score" aria-live="polite"></strong></div><ul id="builder-audit-list"></ul><p class="muted">Contrôles statiques indicatifs : ils ne remplacent pas une recette SEO, WCAG ou Lighthouse, ni les essais sur appareils réels.</p></section>'+
   '<details class="web-builder-code"><summary>Voir le code HTML généré</summary><p class="muted">Code en lecture seule : modifiez les champs à gauche, puis exportez les fichiers.</p><textarea id="builder-code" readonly spellcheck="false" aria-label="Code HTML généré" rows="12"></textarea></details>'+
-  '<p class="web-builder-limits">Aperçu isolé : les scripts, formulaires et contenus externes sont désactivés. L’export fournit index.html, styles.css, standalone.html et README.md. Aucune connexion ni hébergement externe.</p></div></div></div>';
+  '<p class="web-builder-limits">Aperçu isolé : les scripts, formulaires et contenus externes sont désactivés. L’export fournit index.html, styles.css, standalone.html et README.md. Aucune connexion ni hébergement externe.</p><p class="web-builder-limits"><a href="#/control/deploy">Consulter les étapes pour publier manuellement ce site →</a></p></div></div></div>';
  const $=s=>target.querySelector(s),query=s=>[...target.querySelectorAll(s)];
  const history=()=>{
   const panel=$('#builder-history'),box=$('#builder-revisions');
@@ -78,9 +78,21 @@ function mount(target,api){
   $('#builder-drafts').innerHTML=entries();
   history();
   const editor=$('#builder-form');
+  let previousTheme=working.theme;
   function refreshPalette(){
    const theme=editor.elements.namedItem('theme').value,picker=editor.elements.namedItem('palette');
    if(!engine.PALETTES[theme])return;
+   // Switch sample copy only if it has not been customized; never discard user edits.
+   if(previousTheme!==theme){
+    const before=engine.normalize({theme:previousTheme}),after=engine.normalize({theme});
+    for(const name of ['title','description','tag','cta']){
+     const control=editor.elements.namedItem(name);
+     if(control&&control.value===before[name])control.value=after[name];
+    }
+    const offers=editor.elements.namedItem('services');
+    if(offers&&offers.value===before.services.join('\n'))offers.value=after.services.join('\n');
+    previousTheme=theme;
+   }
    picker.innerHTML=Object.entries(engine.PALETTES[theme]).map(([id,p])=>'<option value="'+id+'">'+escape(p.label)+'</option>').join('');
    picker.value=Object.keys(engine.PALETTES[theme])[0];
   }
