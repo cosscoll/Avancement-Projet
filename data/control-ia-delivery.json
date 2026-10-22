@@ -254,8 +254,8 @@
       "priority": "P1",
       "stage": "deployed",
       "depends_on": [],
-      "summary": "Fonctionnalités locales accessibles; connexion aux calendriers réels, invitations et visios créées automatiquement non vérifiées.",
-      "next": "Conserver la recette CRUD locale verte ; ajouter disponibilités, gestion de conflits, invitations et synchronisation OAuth seulement après comptes autorisés.",
+      "summary": "Agenda local avec création, modification, suppression, durée explicite, collisions vérifiées entre événements et visios de cet appareil, confirmation pour passer outre, export manuel .ics. La synchronisation OAuth des calendriers externes n'est pas validée.",
+      "next": "Tester l’agenda et les fuseaux horaires sur vrais appareils Android/iOS, puis contrôler les disponibilités Google/Microsoft après identité CONTROL et autorisation OAuth.",
       "blockers": [
         "Aucune intégration Google/Microsoft authentifiée.",
         "Gestion d'horaires inter-fuseaux, récurrences et anti-conflits non validée."

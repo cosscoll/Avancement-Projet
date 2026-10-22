@@ -567,7 +567,7 @@ try{
   await ready(()=>js("Boolean(navigator.serviceWorker.controller)"),14000)();
   const cacheNames=await js("(async()=>await caches.keys())()");
   assert.ok(Array.isArray(cacheNames)&&cacheNames.some(name=>name.startsWith('control-shell-')),'Public PWA must cache the application shell');
-  assert.ok(cacheNames.includes('control-shell-v47')&&cacheNames.includes('control-public-data-v47'),'PWA must have installed the verified v47 caches');
+  assert.ok(cacheNames.includes('control-shell-v48')&&cacheNames.includes('control-public-data-v48'),'PWA must have installed the verified v48 caches');
   log('public PWA service worker activated and offline shell cache created');
   await command('Network.enable');
   try{
@@ -581,6 +581,9 @@ try{
    assert.deepEqual(offlineRegistry,{ok:true,tickets:22,scenarios:42},'Published V1.2 register must remain available offline: '+JSON.stringify(offlineRegistry));
    log('offline CONTROL also renders V1.2 and reads 22-ticket/42-scenario registry from verified cache');
    log('public PWA reloads the assistant and cached tracker when completely offline');
+    await js("location.hash='#/control/calendar'");
+    await ready(()=>js("!!document.querySelector('#new-event')&&typeof window.CONTROL_CALENDAR_CORE?.icalEvent==='function'"),10000)();
+    log('offline CONTROL calendar remains functional without remote services');
   }finally{
    await command('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:0,uploadThroughput:0});
   }
