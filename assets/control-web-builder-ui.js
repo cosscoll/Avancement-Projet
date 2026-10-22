@@ -28,7 +28,9 @@ function mount(target,api){
    '<p role="status" id="builder-status" aria-live="polite"></p></form>';
  };
  target.innerHTML='<div class="web-builder"><div class="web-builder-intro"><div><p class="quiet">CRÉATION WEB / ATELIER LOCAL</p><h1>Un site qui prend forme sous vos yeux.</h1><p>Choisissez une direction, personnalisez votre contenu et récupérez un site HTML/CSS utilisable. Aucune IA appelée, aucune publication automatique.</p></div><span class="chip">Prototype local · 3 modèles</span></div>'+
-  '<div class="web-builder-layout"><div class="web-builder-panel"><h2>Personnaliser</h2><div id="builder-fields">'+form()+'</div><div class="web-builder-saves"><div class="row"><h3>Mes brouillons</h3><button type="button" id="builder-new">Nouveau</button></div><div id="builder-drafts">'+entries()+'</div><button type="button" id="builder-delete" hidden>Supprimer ce brouillon</button></div>'+
+  '<div class="web-builder-layout"><div class="web-builder-panel"><h2>Personnaliser</h2>'+
+  '<details class="web-builder-brief"><summary>Préparer le site depuis un brief</summary><p class="muted">Décrivez l’activité, le public et les services. CONTROL utilise des règles locales : ce n’est pas une génération libre par IA.</p><label for="builder-brief-text">Description du projet</label><textarea id="builder-brief-text" class="field" rows="4" maxlength="1200" placeholder="Ex. Je suis artisan menuisier à Toulouse. Je propose des meubles sur mesure…"></textarea><button type="button" id="builder-brief-apply">Préparer une proposition</button><p id="builder-brief-feedback" role="status" aria-live="polite"></p></details>'+
+  '<div id="builder-fields">'+form()+'</div><div class="web-builder-saves"><div class="row"><h3>Mes brouillons</h3><button type="button" id="builder-new">Nouveau</button></div><div id="builder-drafts">'+entries()+'</div><button type="button" id="builder-delete" hidden>Supprimer ce brouillon</button></div>'+
    '<section class="web-builder-history" id="builder-history" aria-label="Versions de ce brouillon"><h3>Historique des versions</h3><div id="builder-revisions"></div><small>Une version précédente restaurée devient une nouvelle version. Les 8 dernières versions antérieures sont conservées sur cet appareil.</small></section></div>'+
   '<div class="web-builder-work"><div class="web-builder-toolbar"><strong>Aperçu sécurisé</strong><div class="web-builder-modes"><button type="button" data-builder-viewport="desktop" aria-pressed="true">Ordinateur</button><button type="button" data-builder-viewport="mobile" aria-pressed="false">Mobile</button></div></div>'+
   '<div class="web-builder-canvas"><iframe id="builder-preview" title="Aperçu isolé du site généré" sandbox="" referrerpolicy="no-referrer"></iframe></div>'+
@@ -126,6 +128,17 @@ function mount(target,api){
  };
  target.querySelector('.web-builder').addEventListener('click',event=>{
 
+  const prepare=event.target.closest('#builder-brief-apply');
+  if(prepare){
+   const proposal=engine.fromBrief($('#builder-brief-text').value,values());
+   if(proposal.error){$('#builder-brief-feedback').textContent=proposal.error;return}
+   if(selectedId&&!confirm('Remplacer les champs du brouillon actuel par une nouvelle proposition non enregistrée ?'))return;
+   working={...proposal,project:working.project||'',id:selectedId};
+   unsaved=true;redraw(true);
+   $('#builder-brief-feedback').textContent='Proposition locale appliquée. Relisez et personnalisez chaque champ avant d’enregistrer.';
+   status('Proposition préparée à partir du brief : aucune IA ni publication lancée.');
+   return;
+  }
   const restore=event.target.closest('[data-restore-version]');
   if(restore){
    const row=api.list().find(x=>x.id===selectedId),version=Number(restore.dataset.restoreVersion);

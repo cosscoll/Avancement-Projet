@@ -227,3 +227,39 @@ test('switching template preserves manually rewritten content while replacing on
  assert.match(ui,/if\(offers&&offers\.value===before\.services\.join/);
  assert.match(ui,/href="#\/control\/deploy"/);
 });
+
+test('guided brief creates a first local website from user descriptions, never a remote AI request',()=>{
+ const cases=[
+  ['Je suis artisan menuisier à Toulouse. Je conçois des meubles en bois avec un atelier sur mesure.', 'atelier'],
+  ['Notre startup construit une plateforme SaaS mobile pour automatiser la gestion des interventions.', 'produit'],
+  ['Je suis designer graphiste freelance, et je veux un portfolio pour présenter mes créations.', 'studio']
+ ];
+ for(const [brief,theme] of cases){
+  const result=site.fromBrief(brief);
+  assert.equal(result.theme,theme,brief);
+  assert.ok(result.description.includes(brief.slice(0,25)));
+  assert.equal(result.services.length,3);
+  assert.ok(site.markup(result,true).includes('<main>'));
+ }
+ assert.match(site.fromBrief('bonjour').error,/24 caractères/);
+});
+test('guided brief extracts explicitly provided copy and rejects content injection',()=>{
+ const generated=site.fromBrief('Je suis artisan menuisier à Toulouse, avec un atelier sur mesure pour les entreprises.\nMarque: Atelier Envol\nTitre: Une menuiserie contemporaine et sur mesure\nPrestations: Escaliers personnalisés, Meubles en bois, Portes sur commande',{email:'hello@example.com'});
+ assert.equal(generated.theme,'atelier');
+ assert.equal(generated.brand,'Atelier Envol');
+ assert.equal(generated.title,'Une menuiserie contemporaine et sur mesure');
+ assert.deepEqual(generated.services,['Escaliers personnalisés','Meubles en bois','Portes sur commande']);
+ assert.equal(generated.email,'hello@example.com');
+ const injected=site.fromBrief('Je suis designer et je crée des sites web pour des clients. <img src=x onerror=alert(1)>');
+ assert.doesNotMatch(site.markup(injected,true),/<img\b|<script\b/i);
+ assert.ok(site.files(injected)['standalone.html'].includes('&lt;img'));
+});
+test('builder brief appears as a progressive disclosure, with no automatic cost or data sharing',()=>{
+ const ui=readFileSync(new URL('../assets/control-web-builder-ui.js',import.meta.url),'utf8');
+ assert.match(ui,/<details class="web-builder-brief">/);
+ assert.match(ui,/engine\.fromBrief\(/);
+ assert.match(ui,/proposal\.error/);
+ assert.match(ui,/selectedId&&!confirm\(/);
+ assert.match(ui,/redraw\(true\)/);
+ assert.match(ui,/aucune IA ni publication lancée/);
+});

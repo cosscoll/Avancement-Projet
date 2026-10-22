@@ -66,3 +66,10 @@
 .web-builder-style-options label{min-width:0}
 .web-builder-style-options select{max-width:100%}
 @media(max-width:410px){.web-builder-style-options{grid-template-columns:1fr}}
+
+.web-builder-brief{border:1px solid #dce5e6;border-radius:11px;background:#f7f9f7;padding:13px 15px;margin:0 0 17px}
+.web-builder-brief summary{cursor:pointer;font-size:13px;font-weight:740;color:#2f5552;list-style-position:outside}
+.web-builder-brief p{font-size:11px;line-height:1.55;color:#66766f}
+.web-builder-brief textarea{min-height:105px}
+.web-builder-brief button{min-height:41px;width:100%;font-size:12px;border-radius:8px;margin-top:10px}
+.web-builder-brief #builder-brief-feedback{color:#335b52;min-height:0;font-weight:650}

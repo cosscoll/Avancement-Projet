@@ -91,6 +91,30 @@ function files(input){
  return {'index.html':markup(t,false),'styles.css':styles(t),'standalone.html':markup(t,true),'README.md':'# '+t.brand+'\n\nKit statique généré localement par CONTROL.\n\n- index.html + styles.css : version éditable.\n- standalone.html : version autonome, sans installation.\n\nAucun JavaScript, accès serveur ou publication automatique. Ouvrez index.html ou standalone.html dans un navigateur.\n'};
 }
 
+function fromBrief(brief,previous={}){
+ const raw=clip(brief,1200);
+ if(raw.length<24)return {error:'Décrivez votre activité, votre public et votre objectif en au moins 24 caractères.'};
+ const reduced=raw.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+ const sections=[
+  {theme:'atelier',keywords:['artisan','atelier','menuisier','artisanal','bois','bijou','restauration','cuisine','restaurant','plombier','boulanger','renovation','coiffure','boutique'],title:'Le savoir-faire prend tout son sens.',services:['Création et conseil sur mesure','Réalisation soignée','Accompagnement personnalisé'],cta:'Découvrir nos réalisations'},
+  {theme:'produit',keywords:['application','logiciel','plateforme','saas','startup','automatiser','productivite','outil numerique','dashboard','service en ligne','technologie','mobile'],title:'Votre quotidien mérite mieux.',services:['Simplifier vos opérations','Suivre vos projets','Collaborer plus efficacement'],cta:'Découvrir la solution'},
+  {theme:'studio',keywords:['portfolio','photographe','designer','studio','agence','architecte','graphiste','creatif','creation de site','communication','freelance','identite visuelle'],title:'Des idées singulières, des projets concrets.',services:['Stratégie et conseil','Création sur mesure','Expériences digitales'],cta:'Découvrir notre univers'}
+ ];
+ const best=sections.map((s,i)=>({...s,score:s.keywords.reduce((n,k)=>n+(reduced.includes(k)?1:0),0),rank:i}))
+  .sort((a,b)=>b.score-a.score||a.rank-b.rank)[0];
+ const theme=best.score>0?best.theme:'studio';
+ const chosen=best.score>0?best:sections[2];
+ const baseline=normalize(previous);
+ const match=(pattern)=>raw.match(pattern)?.[1]?.trim()||'';
+ const brand=match(/(?:nom du projet|nom de marque|marque)\s*:\s*([^\n,.;]{2,64})/i);
+ const title=match(/(?:titre|accroche)\s*:\s*([^\n.;]{12,130})/i);
+ const serviceLine=match(/(?:prestations|services|offres)\s*:\s*([^\n.!?]{8,280})/i);
+ const services=serviceLine?serviceLine.split(/[,;|]/).map(s=>s.trim()).filter(Boolean).slice(0,3):chosen.services;
+ const clean=raw.split(/\r?\n/).filter(line=>!/^\s*(nom du projet|nom de marque|marque|titre|accroche|prestations|services|offres)\s*:/i.test(line)).join(' ').replace(/\s+/g,' ').trim();
+ const desc=(clean||raw.replace(/\s+/g,' ')).slice(0,160).trim();
+ return normalize({theme,brand:brand|| (baseline.brand!=='MON STUDIO'?baseline.brand:'VOTRE MARQUE'),
+  title:title||chosen.title,description:desc,services,cta:chosen.cta,email:baseline.email,typography:baseline.typography});
+}
 function versionDraft(previous,input,reference,now){
  const data=normalize(input),project=String(input?.project||'').slice(0,96),id=String(reference||'');
  if(!/^[a-z0-9_-]{6,90}$/i.test(id))throw Error('Invalid local draft ID');
@@ -141,5 +165,5 @@ function zip(input){
  for(const p of [...parts,...central,new Uint8Array(end.buffer)]){out.set(p,cursor);cursor+=p.length}
  return out;
 }
-window.CONTROL_WEB_BUILDER_CORE=Object.freeze({THEMES,PALETTES,TYPOGRAPHIES,normalize,markup,styles,files,zip,audit,versionDraft});
+window.CONTROL_WEB_BUILDER_CORE=Object.freeze({THEMES,PALETTES,TYPOGRAPHIES,normalize,markup,styles,files,zip,audit,versionDraft,fromBrief});
 })();
