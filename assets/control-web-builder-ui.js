@@ -83,7 +83,7 @@ function mount(target,api){
   if(!api.remove(selectedId)){status('Suppression non enregistrée : aucune donnée effacée.');return}
   selectedId='';working=engine.normalize({theme:'studio'});redraw();status('Brouillon supprimé sur cet appareil.');
  };
- target.addEventListener('click',event=>{
+ target.querySelector('.web-builder').addEventListener('click',event=>{
   const viewport=event.target.closest('[data-builder-viewport]');
   if(viewport){view=viewport.dataset.builderViewport;updateViewport();return}
   const opened=event.target.closest('[data-open-draft]');
