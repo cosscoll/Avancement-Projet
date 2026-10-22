@@ -16,9 +16,10 @@ const https=v=>{try{let u=new URL(String(v||''));return u.protocol==='https:'&&!
 const l=(u,label,cls='button')=>https(u)?'<a class="'+cls+'" target="_blank" rel="noopener noreferrer" href="'+h(https(u))+'">'+h(label)+' ↗</a>':'';
 const enc=encodeURIComponent;
 const localKey='control-automations-v1';
-function getLocal(){try{const v=JSON.parse(localStorage.getItem(localKey)||'{}');return v&&typeof v==='object'&&!Array.isArray(v)?v:{}}catch{return{}}}
+let localCorrupt=false;function getLocal(){try{const raw=localStorage.getItem(localKey);if(raw===null){localCorrupt=false;return{}}const v=JSON.parse(raw);if(!v||typeof v!=='object'||Array.isArray(v))throw Error('Invalid local automations');localCorrupt=false;return v}catch{localCorrupt=true;return{}}}
 let local=getLocal();
-function save(){try{localStorage.setItem(localKey,JSON.stringify(local));return true}catch{alert('Stockage local indisponible.');return false}}
+function save(){if(localCorrupt){toast('Registre local illisible : sauvegarde bloquée pour préserver les données. Ouvre Sauvegardes.');return false}try{localStorage.setItem(localKey,JSON.stringify(local));return true}catch{toast('Stockage local indisponible : aucun brouillon enregistré.');return false}}
+function commitDraft(change){if(localCorrupt){save();return false}let before;try{before=JSON.stringify(local)}catch{toast('Registre illisible : modification refusée.');return false}try{change()}catch{try{local=JSON.parse(before)}catch{}toast('Modification annulée.');return false}if(save())return true;try{local=JSON.parse(before)}catch{}return false}
 function all(ctx){return [...seeded,...(Array.isArray(local.extra)?local.extra:[])];}
 function activeProviders(ctx){
  const custom=(ctx.projects||[]).flatMap(p=>ctx.state?.[p.id]?.customProviders||[]);
@@ -29,7 +30,7 @@ function activeProviders(ctx){
 function listFor(ctx,id){return all(ctx).filter(t=>t.provider===id);}
 function meta(t){return {...t,...(local.edits?.[t.uid]||{})};}
 function toast(msg){const e=get('#auto-message');if(e){e.textContent=msg;e.hidden=false;return}alert(msg)}
-function localOnlyTag(){return '<p class="notice"><strong>Registre CONTROL, pas une synchronisation.</strong> Les informations ci-dessous ne sont pas importées en temps réel des comptes IA. Les changements saisis ici restent des brouillons locaux et ne modifient aucune automatisation réelle.</p>'}
+function localOnlyTag(){return (localCorrupt?'<p role="alert" class="notice"><strong>Le registre local des automatisations est illisible.</strong> Aucun brouillon ne sera enregistré avant récupération. <a href="#/control/backup">Récupérer les données brutes</a>.</p>':'')+'<p class="notice"><strong>Registre CONTROL, pas une synchronisation.</strong> Les informations ci-dessous ne sont pas importées en temps réel des comptes IA. Les changements saisis ici restent des brouillons locaux et ne modifient aucune automatisation réelle.</p>'}
 function cardProvider(ctx,p){const ts=listFor(ctx,p.id),count=ts.length;
 return '<a class="card auto-provider-card" href="#/automations/'+enc(p.id)+'"><div class="badge">'+h(p.id.slice(0,2))+'</div><strong>'+h(p.name)+'</strong><small>'+count+' automatisation(s) enregistrée(s) · '+(p.id==='ChatGPT'?'Dernier relevé daté':'Ajout manuel')+'</small></a>';
 }
@@ -56,10 +57,8 @@ get('#auto-create').onsubmit=e=>{e.preventDefault();const f=new FormData(e.targe
   conversation=String(f.get('conversation')||'').trim();
  if(conversation&&!https(conversation)){toast('Lien HTTPS valide nécessaire.');return}
  if(!title)return;
- local.extra??=[];
  const uid='manual-'+Date.now()+'-'+Math.floor(Math.random()*1e5);
- local.extra.push({uid,provider:id,title,project,projectName:ctx.projects.find(p=>p.id===project)?.name||'',objective:'',rules:'',constraints:'',schedule:'Non renseignée',model:'Non vérifié',usage:'Non vérifié',conversation,snapshotStatus:'unknown',source:'Fiche manuelle'});
- if(save())location.hash='#/automations/'+enc(id)+'/'+enc(uid);
+ if(commitDraft(()=>{local.extra??=[];local.extra.push({uid,provider:id,title,project,projectName:ctx.projects.find(p=>p.id===project)?.name||'',objective:'',rules:'',constraints:'',schedule:'Non renseignée',model:'Non vérifié',usage:'Non vérifié',conversation,snapshotStatus:'unknown',source:'Fiche manuelle'})}))location.hash='#/automations/'+enc(id)+'/'+enc(uid);
  };
 }
 const field=(label,name,value,extra='')=>'<label>'+h(label)+'<input class="field" name="'+h(name)+'" maxlength="2000" value="'+h(value||'')+'" '+extra+'></label>';
@@ -96,7 +95,7 @@ root.innerHTML=header(m.title,'Fiche '+id+' · '+(task.source||'Saisie manuelle'
  l(p?.url,'Ouvrir '+id)+'</div></section><p id="auto-message" role="status" hidden></p>';
 const form=get('#auto-edit');
 function values(){const f=new FormData(form);const out={};for(const [k,v] of f.entries())out[k]=String(v).trim();return out}
-form.onsubmit=e=>{e.preventDefault();const v=values();for(const k of ['conversation','manageUrl'])if(v[k]&&!https(v[k]))return toast('Lien HTTPS invalide pour '+k);local.edits??={};local.edits[uid]=v; if(save())toast('Brouillon enregistré ici, PAS dans '+id+'.')};
+form.onsubmit=e=>{e.preventDefault();const v=values();for(const k of ['conversation','manageUrl'])if(v[k]&&!https(v[k]))return toast('Lien HTTPS invalide pour '+k);if(commitDraft(()=>{local.edits??={};local.edits[uid]=v}))toast('Brouillon enregistré ici, PAS dans '+id+'.')};
 get('#auto-copy').onclick=async()=>{const v=values();const draft='DEMANDE DE MODIFICATION — '+id+'\nAutomatisation : '+(v.title||task.title)+'\nFréquence : '+v.schedule+'\nProjet : '+(project?.name||'Non associé')+'\nModèle souhaité/indiqué : '+v.model+'\nType d’utilisation : '+v.usage+'\nObjectif :\n'+v.objective+'\nRègles :\n'+v.rules+'\nContraintes :\n'+v.constraints+'\n\nIMPORTANT : vérifier l’automatisation existante et ses limites, ne pas créer de doublon. Appliquer uniquement après mon approbation explicite et ne jamais engager de dépense.';try{await navigator.clipboard.writeText(draft);toast('Demande copiée. Ouvre ensuite '+id+' pour modifier réellement la tâche.')}catch{toast('Impossible de copier automatiquement : vérifie les permissions du navigateur.')}};
 }
 async function ensure(){if(fetched)return;if(!fetching)fetching=fetch('./data/automations.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('missing');return r.json()}).then(d=>{if(Array.isArray(d.tasks))seeded=d.tasks.filter(x=>x.active_at_last_check===true).map(t=>({...t,uid:'chatgpt-'+t.id,provider:'ChatGPT',project:t.id,projectName:t.projectName||t.title,snapshotStatus:'active',verified_at:d.verified_at,source:'Relevé daté'}));fetched=true}).catch(()=>{seeded=[];fetched=true}).finally(()=>{fetching=null});await fetching;}
