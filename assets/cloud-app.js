@@ -1020,6 +1020,11 @@ window.CONTROL_NAVIGATION?.setAdapter({
  isAvailable:()=>!!authUser,
  navigate:destination=>{
   if(!authUser)return false;
+  if(destination.startsWith('project-open:')){
+   const id=destination.slice('project-open:'.length);
+   if(!id||!getProject(id))return false;
+   nav('project',id,'ai_space');return true;
+  }
   if(destination.startsWith('project-tab:')){
    const section=destination.slice('project-tab:'.length);
    if(page!=='project'||!getProject(picked)||
