@@ -70,8 +70,8 @@ test('project finder opens the requested category instead of defaulting to Essen
 });
 test('updated shell cache is renewed for already installed PWA clients',()=>{
  const sw=file('service-worker.js');
- assert.match(sw,/CACHE_SHELL='control-shell-v59'/);
- assert.match(sw,/CACHE_PUBLIC='control-public-data-v59'/);
+ assert.match(sw,/CACHE_SHELL='control-shell-v60'/);
+ assert.match(sw,/CACHE_PUBLIC='control-public-data-v60'/);
  assert.match(sw,/assets\/workspace-shell\.css/);
  new Function(local);
  new Function(cloudCode);
