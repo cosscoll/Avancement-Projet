@@ -6,6 +6,28 @@ const THEMES={
  atelier:{label:'Atelier / artisan',accent:'#93562f',paper:'#faf2e5',ink:'#332b20',contrast:'#edd6bb',layout:'craft'},
  produit:{label:'Produit / application',accent:'#8de1cc',paper:'#111a29',ink:'#eef4fc',contrast:'#1f3142',layout:'product'}
 };
+const PALETTES={
+ studio:{
+  natural:{label:'Sauge & ivoire',accent:'#345a5d',paper:'#f3eee5',ink:'#202c2d',contrast:'#dbe3db',dark:false},
+  cobalt:{label:'Cobalt & porcelaine',accent:'#2755c8',paper:'#faf8f3',ink:'#263954',contrast:'#e0e8f6',dark:false},
+  charcoal:{label:'Charbon & argent',accent:'#d8e2df',paper:'#182328',ink:'#f1f4f1',contrast:'#304349',dark:true}
+ },
+ atelier:{
+  terre:{label:'Terre & sable',accent:'#93562f',paper:'#faf2e5',ink:'#332b20',contrast:'#edd6bb',dark:false},
+  olive:{label:'Olive & lin',accent:'#68714a',paper:'#f4f2e6',ink:'#333d2e',contrast:'#d9dfc5',dark:false},
+  ardoise:{label:'Ardoise & cuivre',accent:'#daa27c',paper:'#222a2d',ink:'#f6efe5',contrast:'#374043',dark:true}
+ },
+ produit:{
+  mint:{label:'Menthe & nuit',accent:'#8de1cc',paper:'#111a29',ink:'#eef4fc',contrast:'#1f3142',dark:true},
+  violet:{label:'Violet & nuit',accent:'#c6b5ff',paper:'#161325',ink:'#f2eefb',contrast:'#2b2846',dark:true},
+  azure:{label:'Azure & graphite',accent:'#72c9fc',paper:'#121c26',ink:'#f4f8fc',contrast:'#1f3b52',dark:true}
+ }
+};
+const TYPOGRAPHIES={
+ modern:{label:'Contemporaine',font:'Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif'},
+ editorial:{label:'Éditoriale',font:'Georgia,Cambria,"Times New Roman",serif'},
+ technical:{label:'Technique',font:'ui-monospace,SFMono-Regular,Consolas,monospace'}
+};
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function clip(v,limit){return String(v??'').replace(/\u0000/g,'').trim().slice(0,limit)}
 function normalize(value={}){
@@ -20,16 +42,20 @@ function normalize(value={}){
  while(services.length<3)services.push(defaults.services[services.length]);
  let email=clip(p.email,140).toLowerCase();
  if(!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email))email='';
- return {theme,brand:clip(p.brand,64)||'MON STUDIO',tag:clip(p.tag,90)||defaults.tag,
+ const palette=Object.hasOwn(PALETTES[theme],p.palette)?p.palette:Object.keys(PALETTES[theme])[0];
+ const typography=Object.hasOwn(TYPOGRAPHIES,p.typography)?p.typography:'modern';
+ return {theme,palette,typography,brand:clip(p.brand,64)||'MON STUDIO',tag:clip(p.tag,90)||defaults.tag,
   title:clip(p.title,130)||defaults.title,
   description:clip(p.description,280)||defaults.description,cta:clip(p.cta,64)||defaults.cta,
   services,email};
 }
 function styles(t){
- const x=THEMES[t.theme];
+ const theme=Object.hasOwn(THEMES,t?.theme)?t.theme:'studio';
+ const palettes=PALETTES[theme],x=Object.hasOwn(palettes,t?.palette)?palettes[t.palette]:palettes[Object.keys(palettes)[0]];
+ const font=TYPOGRAPHIES[t?.typography]?.font||TYPOGRAPHIES.modern.font;
  return [
- ':root{--paper:'+x.paper+';--ink:'+x.ink+';--accent:'+x.accent+';--contrast:'+x.contrast+';color-scheme:'+ (t.theme==='produit'?'dark':'light') +';}',
- '*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}',
+ ':root{--paper:'+x.paper+';--ink:'+x.ink+';--accent:'+x.accent+';--contrast:'+x.contrast+';color-scheme:'+ (x.dark?'dark':'light') +';}',
+ '*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:'+font+';line-height:1.5}',
  'a{color:inherit}a:focus-visible{outline:3px solid var(--accent);outline-offset:4px}button{font:inherit}section{scroll-margin-top:90px}',
  '.wrap{max-width:1280px;margin:auto;padding:0 clamp(22px,5vw,76px)}',
  '.nav{display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid currentColor;padding:26px 0}.brand{font-weight:850;letter-spacing:-.045em;font-size:20px}.nav a{text-decoration:none;font-size:13px;font-weight:700}',
@@ -115,5 +141,5 @@ function zip(input){
  for(const p of [...parts,...central,new Uint8Array(end.buffer)]){out.set(p,cursor);cursor+=p.length}
  return out;
 }
-window.CONTROL_WEB_BUILDER_CORE=Object.freeze({THEMES,normalize,markup,styles,files,zip,audit,versionDraft});
+window.CONTROL_WEB_BUILDER_CORE=Object.freeze({THEMES,PALETTES,TYPOGRAPHIES,normalize,markup,styles,files,zip,audit,versionDraft});
 })();

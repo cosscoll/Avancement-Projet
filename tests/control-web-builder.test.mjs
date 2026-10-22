@@ -177,3 +177,32 @@ test('history restoration is never a hidden third-party action',()=>{
  assert.match(app,/engine\.versionDraft\(/);
  assert.doesNotMatch(ui,/fetch\(|XMLHttpRequest|WebSocket|sendBeacon/);
 });
+
+test('style palettes and typography are finite allowlists with no CSS injection',()=>{
+ assert.equal(Object.keys(site.PALETTES).length,3);
+ for(const theme of Object.keys(site.THEMES)){
+  assert.equal(Object.keys(site.PALETTES[theme]).length,3);
+  const variants=Object.keys(site.PALETTES[theme]).map(palette=>site.styles(site.normalize({theme,palette})));
+  assert.equal(new Set(variants).size,3,theme+' palettes must affect generated CSS');
+  assert.ok(variants.every(css=>css.includes('--paper:')&&css.includes('--accent:')));
+ }
+ const invalid=site.normalize({theme:'studio',palette:'red;url(javascript:alert(1))',typography:'";color:red;'});
+ assert.equal(invalid.palette,'natural');
+ assert.equal(invalid.typography,'modern');
+ const styles=site.styles(invalid);
+ assert.doesNotMatch(styles,/javascript:|url\(|color:red/);
+ const editorial=site.styles(site.normalize({theme:'studio',typography:'editorial'}));
+ const technical=site.styles(site.normalize({theme:'studio',typography:'technical'}));
+ assert.match(editorial,/font-family:Georgia/);
+ assert.match(technical,/font-family:ui-monospace/);
+ const restored=site.versionDraft(null,{theme:'studio',palette:'charcoal',typography:'editorial'},'custom-web-palette','2026-10-22T10:00:00Z');
+ assert.equal(restored.palette,'charcoal');
+ assert.equal(restored.typography,'editorial');
+});
+test('site builder editor exposes validated palette and typography controls',()=>{
+ const ui=readFileSync(new URL('../assets/control-web-builder-ui.js',import.meta.url),'utf8');
+ assert.match(ui,/name="palette"/);
+ assert.match(ui,/name="typography"/);
+ assert.match(ui,/engine\.PALETTES\[theme\]/);
+ assert.match(ui,/picker\.innerHTML=Object\.entries/);
+});

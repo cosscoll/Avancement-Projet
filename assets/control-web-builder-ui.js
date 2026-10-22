@@ -12,7 +12,10 @@ function mount(target,api){
  const form=()=>{
   const themes=Object.entries(engine.THEMES).map(([id,t])=>'<option value="'+id+'" '+(working.theme===id?'selected':'')+'>'+escape(t.label)+'</option>').join('');
   const projects='<option value="">Projet libre</option>'+api.projects.map(p=>'<option value="'+escape(p.id)+'" '+(working.project===p.id?'selected':'')+'>'+escape(p.name||p.id)+'</option>').join('');
+  const palettes=Object.entries(engine.PALETTES[working.theme]).map(([id,p])=>'<option value="'+id+'" '+(working.palette===id?'selected':'')+'>'+escape(p.label)+'</option>').join('');
+  const fonts=Object.entries(engine.TYPOGRAPHIES).map(([id,t])=>'<option value="'+id+'" '+(working.typography===id?'selected':'')+'>'+escape(t.label)+'</option>').join('');
   return '<form id="builder-form"><label>Direction créative<select class="field" name="theme">'+themes+'</select></label>'+
+   '<div class="web-builder-style-options"><label>Palette<select class="field" name="palette">'+palettes+'</select></label><label>Typographie<select class="field" name="typography">'+fonts+'</select></label></div>'+
    field('Nom de marque','brand',working.brand,64)+
    field('Signature','tag',working.tag,90)+
    '<label>Titre principal<textarea class="field" name="title" rows="3" maxlength="130">'+escape(working.title)+'</textarea></label>'+
@@ -75,8 +78,14 @@ function mount(target,api){
   $('#builder-drafts').innerHTML=entries();
   history();
   const editor=$('#builder-form');
-  editor.addEventListener('input',()=>{unsaved=true;preview()});
-  editor.addEventListener('change',()=>{unsaved=true;preview()});
+  function refreshPalette(){
+   const theme=editor.elements.namedItem('theme').value,picker=editor.elements.namedItem('palette');
+   if(!engine.PALETTES[theme])return;
+   picker.innerHTML=Object.entries(engine.PALETTES[theme]).map(([id,p])=>'<option value="'+id+'">'+escape(p.label)+'</option>').join('');
+   picker.value=Object.keys(engine.PALETTES[theme])[0];
+  }
+  editor.addEventListener('input',e=>{if(e.target.name==='theme')refreshPalette();unsaved=true;preview()});
+  editor.addEventListener('change',e=>{if(e.target.name==='theme'&&engine.normalize({theme:e.target.value,palette:editor.elements.namedItem('palette').value}).palette!==editor.elements.namedItem('palette').value)refreshPalette();unsaved=true;preview()});
   editor.addEventListener('submit',event=>{
    event.preventDefault();const item=values();
    item.id=selectedId||api.id();
