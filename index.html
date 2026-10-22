@@ -119,11 +119,13 @@ function home(){
  '<section class="clarity-projects shell-dashboard-section"><div class="toprow clarity-listhead"><div><span class="shell-dashboard-eyebrow">VOS ESPACES</span><h2>Projets <span class="clarity-count">'+projects.length+'</span></h2></div></div><div class="shell-project-toolbar">'+search+'</div><div id="cards" class="grid clarity-cards shell-projects-list"></div><div class="clarity-more"><button type="button" id="more-projects" hidden>Afficher tous les projets</button></div></section>'+
  '<details class="clarity-helpnote"><summary>Comment retrouver les conversations de mes IA ?</summary><p>CONTROL ouvre les projets ChatGPT et Claude depuis leurs liens officiels. Les conversations privées ne sont pas importées automatiquement dans ce site.</p></details>'+
  '<section id="add-box" class="panel shell-create-form hidden"><div class="shell-create-header"><div><span class="shell-dashboard-eyebrow">NOUVEL ESPACE</span><h2>Créer un projet</h2><p class="muted">Donnez-lui un nom. Vous pourrez ajouter vos IA et vos ressources ensuite.</p></div><button type="button" id="cancel-add-project" aria-label="Fermer le formulaire">✕</button></div><form id="new-project"><label>Nom du projet<input class="field" name="name" required maxlength="90" placeholder="Ex. Mon nouveau projet"></label><label>Lien du projet ChatGPT (facultatif)<input name="url" class="field" type="url" placeholder="https://chatgpt.com/g/g-p-…"></label><button class="primary">Créer l’espace</button></form></section></div>';
+ const projectSearchKey=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
  const draw=()=>{
-  const q=($('#search').value||'').toLowerCase().trim();
+  const q=projectSearchKey($('#search').value).trim();
+  const words=q.split(/\s+/).filter(Boolean);
   const recentIds=Array.isArray(state.uxRecent)?state.uxRecent:[];
   const byRecent=new Map(recentIds.map((v,i)=>[v,i]));
-  const visible=projects.filter(p=>nameOf(p).toLowerCase().includes(q)).sort((a,b)=>(byRecent.get(a.id)??999)-(byRecent.get(b.id)??999));
+  const visible=projects.filter(p=>words.every(word=>projectSearchKey(nameOf(p)).includes(word))).sort((a,b)=>(byRecent.get(a.id)??999)-(byRecent.get(b.id)??999));
   const limit=q||showAllProjects?visible.length:6;
   $('#cards').innerHTML=visible.slice(0,limit).map(p=>'<a class="card" href="#/project/'+encodeURIComponent(p.id)+'/ai"><div class="badge">'+esc(p.symbol||nameOf(p).slice(0,2).toUpperCase())+'</div><span><strong>'+esc(nameOf(p))+'</strong><small>'+esc(p.category||'Espace projet')+'</small></span><span class="shell-project-arrow" aria-hidden="true">↗</span></a>').join('')||'<p class="empty">Aucun projet trouvé.</p>';
   const more=$('#more-projects');more.hidden=Boolean(q)||visible.length<=6;more.textContent=showAllProjects?'Afficher moins de projets':'Afficher tous les projets ('+visible.length+')';
