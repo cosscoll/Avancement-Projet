@@ -35,10 +35,17 @@ La mention **INTERFACE V3** dans l'en-tête permet de repérer visuellement une 
 
 - **Trouver une fonction** accepte mieux les requêtes françaises naturelles : accents, singulier/pluriel, synonymes contrôlés et expressions telles que « créer un nouveau projet », « organiser une réunion », « consulter les échéances », « modifier les paramètres » ou « sauvegarder mes données ».
 - **Accès direct aux projets :** les projets disponibles dans la session sont retrouvables par nom, avec une entrée « Mes projets ». Avant authentification Cloud, aucune liste de projets privés n’est exposée par ce moteur ; le routeur Cloud vérifie également que le projet cible figure dans les projets chargés pour l’utilisateur.
+- **Reprendre une fonction :** l'onglet « Essentiels » du moteur propose jusqu'à quatre fonctions récemment ouvertes, hors fonctions déjà visibles dans les essentiels. Seuls leurs identifiants sont conservés dans le `sessionStorage` de l'application personnelle ; aucune requête ni nom de projet n'est sauvegardé par ce mécanisme et aucun historique ne s'affiche dans Cloud.
+- **Accès clavier :** quand une recherche contient des résultats, la touche Entrée ouvre directement le premier. La navigation Flèche haut / Flèche bas conserve son comportement, sans ajouter de menu supplémentaire.
 - **Accessibilité :** les résultats sont des boutons natifs dans un groupe nommé, sans rôle `listbox` simulé ; une pression sur Flèche haut depuis le champ renvoie au dernier résultat. Seul le compteur de résultats est annoncé en direct aux lecteurs d’écran.
 - **Sécurité :** le moteur ne lit que le catalogue local des routes autorisées déjà existantes. Il ne transmet aucune requête à une IA externe, n'active aucun compte Cloud et ne prétend pas chercher dans tous les documents privés.
-- **Vérifications :** les nouveaux cas sont ajoutés à `tests/control-navigation-natural-search.test.mjs` et le parcours de projet par son nom à `tests/control-ia-browser-smoke.mjs`. Contrôles isolés du JavaScript de `main` effectués, mais **l’exécution des nouveaux tests GitHub Actions et du Chromium public sur le SHA final reste à confirmer**.
+- **Vérifications :** 29 tests ciblés réussis dans un exécuteur JavaScript isolé à partir des fichiers du dépôt : 9 sur la recherche et l'accès clavier, 18 sur la structure et les parcours d'interface, 2 sur le registre d'automatisations archivé. Les assertions des tests natifs ont été exécutées sans le vrai processus `node --test`, faute d'accès réseau au clone local ; il s'agit donc de **contrôles partiels**. Le scénario `tests/control-ia-browser-smoke.mjs` a été étendu, **mais non exécuté dans Chromium** pour ce SHA. La CI GitHub Actions et le rendu de GitHub Pages restent non confirmés.
 - **Portée :** amélioration UX incrémentale, **aucun critère Auth/JWT/RLS ou recette utilisateur physique nouvellement marqué vérifié**.
+
+
+## Historique des automatisations : statut exact
+
+Le registre CONTROL conserve l'instantané daté du **17 octobre 2026** sans aucune connexion temps réel aux tâches ChatGPT. Après correction, les fiches archivées portent « Archive · statut actuel inconnu », y compris celles déclarées actives au moment de l'ancien relevé. Le registre ne réactive, ne modifie et ne synchronise aucune tâche réelle. Le test `tests/control-automations-archive.test.mjs` vérifie cette distinction et l'absence d'écriture locale lors de la consultation.
 
 ## Reste à approfondir
 
