@@ -44,6 +44,14 @@ Le validateur `scripts/control-ia-requirements.mjs` contrôle désormais les ré
 
 Preuves techniques déjà identifiées : [recette navigateur locale](https://github.com/cosscoll/Avancement-Projet/actions/runs/39230180420), [RLS PostgreSQL A/B fictif](https://github.com/cosscoll/Avancement-Projet/actions/runs/39233284788). Les tests partiels portent sur les identifiants `T-05`, `T-14`, `T-15`, `T-16`, `T-25`. Ils gardent le statut `partial_mock`, pas `real_verified`.
 
+## Complément V3 — navigation et découverte, 22 octobre 2026
+
+La navigation CONTROL V3 a été améliorée directement sur `main` : formulations françaises naturelles, recherche des écrans et **accès direct aux projets par leur nom**. Les noms des projets Cloud ne sont pas fournis par le moteur lorsque l'utilisateur n'est pas authentifié. Tests de non-régression et scénario Chromium ajoutés ; la PWA publique utilise le cache V56.
+
+**Frontière d'acceptation :** ceci est un moteur de navigation, **pas** la recherche universelle sourcée IMP-02 : il ne recherche ni dans Gmail, ni dans Drive privé, ni dans les conversations des fournisseurs. Aucun critère historique Auth/Cloud ni aucun critère IMP n'est considéré comme validé par cette amélioration. La CI complète, le navigateur de production sur le SHA final et les appareils physiques restent à vérifier. Le registre et le nombre de critères validés demeurent inchangés.
+
+Détails : [parcours UX V3](CONTROL_UX_V3_PARCOURS.md) et [état de reprise prudent](../data/sprint-state/control-ia.json).
+
 ## MVP : cinq jalons successifs
 
 1. **Identité indépendante** : vrai projet CONTROL distinct de toutes les autres bases ; création uniquement après approbation explicite et attestation coût 0 €, contrôle RLS par deux vrais utilisateurs, sessions révoquées, export/suppression. La configuration Cloud reste `enabled:false` jusqu'à la recette.
