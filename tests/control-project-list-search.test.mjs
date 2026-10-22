@@ -10,7 +10,7 @@ const end=script.indexOf(" draw();$('#search').oninput=draw;",start);
 const code=script.slice(start,end);
 
 function search(input,projects){
- const nodes={'#search':{value:input},'#cards':{innerHTML:''},'#more-projects':{hidden:false,textContent:''}};
+ const nodes={'#search':{value:input},'#cards':{innerHTML:''},'#project-search-status':{textContent:''},'#more-projects':{hidden:false,textContent:''}};
  const context={
   $:selector=>nodes[selector], projects, state:{uxRecent:[]},showAllProjects:false,
   nameOf:p=>p.name,
@@ -30,6 +30,7 @@ test('project search matches accents and multiple words in any order',()=>{
  let state=search('alpha equipe',projects);
  assert.match(state['#cards'].innerHTML,/Équipe Alpha/);
  assert.doesNotMatch(state['#cards'].innerHTML,/Equipe Beta/);
+ assert.equal(state['#project-search-status'].textContent,'1 projet trouvé');
  state=search('EQUIPE ALPHA',projects);
  assert.match(state['#cards'].innerHTML,/Équipe Alpha/);
  state=search('Coup Pouce',projects);
@@ -42,6 +43,7 @@ test('project filtering is local and does not change the stored list or reveal u
  const before=JSON.stringify(projects);
  const state=search('img',projects);
  assert.match(state['#cards'].innerHTML,/&lt;img/);
+ assert.equal(state['#project-search-status'].textContent,'1 projet trouvé');
  assert.doesNotMatch(state['#cards'].innerHTML,/<img/);
  assert.equal(JSON.stringify(projects),before);
  assert.doesNotMatch(code,/fetch\(|localStorage|sessionStorage|\.push\(|\.splice\(/);
@@ -53,4 +55,5 @@ test('empty query still shows six projects with an explicit show-all button',()=
  assert.equal((state['#cards'].innerHTML.match(/class="card"/g)||[]).length,6);
  assert.equal(state['#more-projects'].hidden,false);
  assert.match(state['#more-projects'].textContent,/Afficher tous les projets/);
+ assert.equal(state['#project-search-status'].textContent,'8 projets disponibles');
 });
