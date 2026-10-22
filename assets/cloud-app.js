@@ -866,8 +866,18 @@ async function action(button){
   case 'tool-tab':toolTab=id;searchFilter='';render();return;
   case 'open-project':if(id&&!getProject(id))throw Error('Projet introuvable.');nav('project',id,'ai_space');return;
   case 'project-tab':tab=id;render();return;
-  case 'toggle-project-form':{const el=byId('new-project');if(el)el.hidden=!el.hidden;return}
-  case 'toggle-item-form':{const el=byId('new-item');if(el)el.hidden=!el.hidden;return}
+  case 'toggle-project-form':{
+   const el=byId('new-project');if(!el)return;
+   el.hidden=!el.hidden;button.setAttribute('aria-expanded',String(!el.hidden));
+   if(!el.hidden){el.scrollIntoView?.({behavior:'smooth',block:'start'});el.querySelector('input[name="name"]')?.focus({preventScroll:true})}
+   return;
+  }
+  case 'toggle-item-form':{
+   const el=byId('new-item');if(!el)return;
+   el.hidden=!el.hidden;button.setAttribute('aria-expanded',String(!el.hidden));
+   if(!el.hidden){el.scrollIntoView?.({behavior:'smooth',block:'start'});el.querySelector('input[name="title"]')?.focus({preventScroll:true})}
+   return;
+  }
   case 'edit-project':{
    const p=getProject(id);if(!p)throw Error('Projet introuvable.');
    const el=byId('project-editor');el.hidden=false;
@@ -1010,6 +1020,12 @@ window.CONTROL_NAVIGATION?.setAdapter({
  isAvailable:()=>!!authUser,
  navigate:destination=>{
   if(!authUser)return false;
+  if(destination.startsWith('project-tab:')){
+   const section=destination.slice('project-tab:'.length);
+   if(page!=='project'||!getProject(picked)||
+    !['ai_space','conversation','task','resource','mission','automation','report','decision','note','event','expense','income'].includes(section))return false;
+   tab=section;render();return true;
+  }
   if(destination.startsWith('tools:')){toolTab=destination.slice(6);nav('tools');return true}
   if(['account','projects','inbox','manager','tools','missions','automations','lab','command','catalog','deploy','visios'].includes(destination)){nav(destination);return true}
   return false;
