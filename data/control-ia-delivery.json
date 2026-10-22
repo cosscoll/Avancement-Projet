@@ -91,8 +91,8 @@
       "priority": "P0",
       "stage": "deployed",
       "depends_on": [],
-      "summary": "Interface et actions locales publiées : écritures désormais confirmées uniquement après sauvegarde réussie, avec retour arrière si stockage refusé et récupération des données locales illisibles. Aucun état authentifié multi-appareils.",
-      "next": "Tester les parcours locaux avec stockage plein/corrompu dans un vrai navigateur ; poursuivre l’identité CONTROL et la persistance authentifiée multi-appareils avant toute recette opérationnelle.",
+      "summary": "Fonctionnalités locales publiées : actions et édition de projets avec confirmation de l'écriture, retour arrière des modifications refusées, sauvegardes multi-espaces bloquées si corrompues, récupération de fichiers bruts. Synchronisation réelle non prouvée.",
+      "next": "Conserver les tests réels Chromium et vérifier sur téléphone le stockage plein et la restauration ; poursuivre les vrais comptes CONTROL Cloud puis la synchronisation et l'isolation multi-utilisateurs.",
       "blockers": [
         "Persistance limitée au navigateur; aucune isolation de deux comptes réelle.",
         "Aucune recette Android physique documentée."
