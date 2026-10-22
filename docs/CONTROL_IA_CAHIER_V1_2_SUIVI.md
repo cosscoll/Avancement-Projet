@@ -44,6 +44,14 @@ Le validateur `scripts/control-ia-requirements.mjs` contrôle désormais les ré
 
 Preuves techniques déjà identifiées : [recette navigateur locale](https://github.com/cosscoll/Avancement-Projet/actions/runs/39230180420), [RLS PostgreSQL A/B fictif](https://github.com/cosscoll/Avancement-Projet/actions/runs/39233284788). Les tests partiels portent sur les identifiants `T-05`, `T-14`, `T-15`, `T-16`, `T-25`. Ils gardent le statut `partial_mock`, pas `real_verified`.
 
+## Correctifs additionnels du 22 octobre 2026 — expérience utilisateur
+
+- Recherche de fonctions : ouverture du premier résultat avec **Entrée**, raccourcis **Reprendre** pour les quatre dernières fonctions de la session personnelle, aucun historique récemment ouvert en Cloud.
+- Requêtes inutilisables (« je veux », uniquement des mots de liaison) : elles n'affichent plus artificiellement toutes les fonctions.
+- Automatisations : le relevé daté du 17 octobre est marqué « archive, statut actuel inconnu » dans **les trois surfaces concernées** : registre, calendrier et ancienne interface ; aucune programmation réelle n'est modifiée.
+- Service worker : rotation du précache en **V58** ; anciens contrats de tests mis à niveau ; **32 tests ciblés réussis dans un moteur JavaScript isolé**, mais pas encore la CI native complète ni Chromium publié.
+- **Aucune nouvelle recette V1.2 ni aucun IMP réputé validé** sur la seule base de ces tests partiels.
+
 ## Complément V3 — navigation et découverte, 22 octobre 2026
 
 La navigation CONTROL V3 a été améliorée directement sur `main` : formulations françaises naturelles, recherche des écrans et **accès direct aux projets par leur nom**. Les noms des projets Cloud ne sont pas fournis par le moteur lorsque l'utilisateur n'est pas authentifié. Tests de non-régression et scénario Chromium ajoutés ; la PWA publique utilise le cache V56.
