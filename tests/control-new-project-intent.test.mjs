@@ -10,7 +10,7 @@ const homeSource=script.slice(script.indexOf('function home(){'),script.indexOf(
 
 function journey(hash){
  const elements=new Map();
- const simple=()=>({value:'',hidden:false,innerHTML:'',textContent:'',setAttribute(){},focus(){}});
+ const simple=()=>({value:'',hidden:false,innerHTML:'',textContent:'',attrs:{},setAttribute(k,v){this.attrs[k]=v},getAttribute(k){return this.attrs[k]},focus(){}});
  const query=selector=>{
   if(!elements.has(selector))elements.set(selector,simple());
   return elements.get(selector);
@@ -55,7 +55,7 @@ test('intent to create a project resolves to a real personal route, never unsupp
 test('new-project route displays the creation form and puts focus in its name field',()=>{
  const flow=journey('#/new-project');
  assert.equal(flow.form.classList.contains('hidden'),false);
- assert.equal(flow.add.getAttribute?.('aria-expanded'),undefined);
+ assert.equal(flow.add.getAttribute('aria-expanded'),'true');
  assert.equal(flow.focused(),true);
  assert.equal(flow.scrolls(),1);
  assert.equal(flow.mutations(),0);
@@ -66,6 +66,7 @@ test('canceling an unsubmitted project returns to home without saving anything',
  const flow=journey('#/new-project');
  flow.cancel.onclick();
  assert.equal(flow.form.classList.contains('hidden'),true);
+ assert.equal(flow.add.getAttribute('aria-expanded'),'false');
  assert.equal(flow.location.hash,'#/');
  assert.equal(flow.mutations(),0);
  assert.equal(flow.projects.length,1);
