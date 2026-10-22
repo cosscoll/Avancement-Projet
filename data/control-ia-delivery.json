@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "reviewed_on": "2026-10-21",
+  "reviewed_on": "2026-10-22",
   "title": "CONTROL IA — Pilotage des livraisons fonctionnelles",
   "purpose": "Transformer les capacités partielles en parcours opérationnels, sans confondre code, CI, publication et recette.",
   "focus_id": "CONTROL-ACCOUNT",
@@ -91,8 +91,8 @@
       "priority": "P0",
       "stage": "deployed",
       "depends_on": [],
-      "summary": "Interface et commandes locales avec confirmation; pas encore d'actions authentifiées sur plusieurs appareils.",
-      "next": "Conserver la recette locale verte ; développer la persistance authentifiée, la reprise multi-appareils et l'isolation des comptes avec CONTROL-ACCOUNT.",
+      "summary": "Interface et actions locales publiées : écritures désormais confirmées uniquement après sauvegarde réussie, avec retour arrière si stockage refusé et récupération des données locales illisibles. Aucun état authentifié multi-appareils.",
+      "next": "Tester les parcours locaux avec stockage plein/corrompu dans un vrai navigateur ; poursuivre l’identité CONTROL et la persistance authentifiée multi-appareils avant toute recette opérationnelle.",
       "blockers": [
         "Persistance limitée au navigateur; aucune isolation de deux comptes réelle.",
         "Aucune recette Android physique documentée."
