@@ -646,6 +646,21 @@ try{
  assert.equal(await js("document.querySelector('#import-preview').hidden"),true);
  log('backup preview blocks silent overwrites, canceled restores and stale snapshots; confirmed data is imported');
 
+ // A rejected second-store write must roll back the first store, not claim a completed restore.
+ await js("(()=>{window.__backupQuotaBefore={command:localStorage.getItem('control-command-v1'),hub:localStorage.getItem('control-hub-v2'),autos:localStorage.getItem('control-automations-v1')};document.querySelector('#import-data').requestSubmit()})()");
+ await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
+ await js("(()=>{const native=Storage.prototype.setItem;const yes=window.confirm;Storage.prototype.setItem=function(key,value){if(key==='control-hub-v2')throw new DOMException('quota','QuotaExceededError');return native.call(this,key,value)};window.confirm=()=>true;try{document.querySelector('#import-apply').click()}finally{Storage.prototype.setItem=native;window.confirm=yes}})()");
+ assert.equal(await js("localStorage.getItem('control-command-v1')"),await js("window.__backupQuotaBefore.command"),'Command store must roll back if the hub write fails');
+ assert.equal(await js("localStorage.getItem('control-hub-v2')"),await js("window.__backupQuotaBefore.hub"));
+ assert.match(await js("document.querySelector('#import-status').textContent"),/Restauration refusée/);
+ await js("(()=>{localStorage.setItem('control-hub-v2','{invalid-hub');document.querySelector('#import-data').requestSubmit()})()");
+ await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
+ assert.match(await js("document.querySelector('#import-comparison').textContent"),/espace\(s\) locaux sont illisibles/);
+ await js("(()=>{const original=window.confirm;window.confirm=()=>true;try{document.querySelector('#import-apply').click()}finally{window.confirm=original}})()");
+ assert.equal(await js("localStorage.getItem('control-hub-v2')!=='{invalid-hub'"),true,'Confirmed backup import repairs malformed hub state');
+ await js("delete window.__backupQuotaBefore");
+ log('backup restore rolls back on a denied storage write and repairs unreadable local records with explicit consent');
+
 
  await js("location.hash="+JSON.stringify(beforeFinderHash));
  await ready(()=>js("!!document.querySelector('.control-delivery-focus')"),8000)();
