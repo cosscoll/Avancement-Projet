@@ -156,7 +156,7 @@ function setAdapter(next){
 }
 document.addEventListener('click',e=>{
  const trigger=e.target.closest?.('[data-control-nav-open]');
- if(trigger){e.preventDefault();open()}
+ if(trigger){e.preventDefault();open({category:trigger.dataset.controlNavCategory||'start'})}
 });
 document.addEventListener('keydown',e=>{
  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){
