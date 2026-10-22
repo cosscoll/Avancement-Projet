@@ -110,7 +110,7 @@ function ensure(){
  '<input type="search" autocomplete="off" spellcheck="false" aria-label="Rechercher une fonction" placeholder="Ex. créer une visio, retrouver une décision…">'+
  '<kbd>Ctrl K</kbd></label>'+
  '<nav class="control-finder-categories" aria-label="Catégories de fonctions"></nav>'+
- '<div class="control-finder-results" id="control-finder-results" role="listbox" aria-label="Fonctions accessibles"></div>'+
+ '<div class="control-finder-results" id="control-finder-results" role="group" aria-label="Fonctions accessibles" aria-live="polite"></div>'+
  '<div class="control-finder-foot"><span>Les fonctions qui nécessitent une connexion restent soumises aux droits du compte.</span><span>Échap pour fermer</span></div>'+
  '</section>';
  document.body.appendChild(dialog);
@@ -128,7 +128,7 @@ function ensure(){
    e.preventDefault();const buttons=[...results.querySelectorAll('[data-finder-id]')];
    if(!buttons.length)return;
    const i=buttons.indexOf(document.activeElement);
-   buttons[(i+(e.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length].focus();
+   buttons[i===-1?(e.key==='ArrowDown'?0:buttons.length-1):(i+(e.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length].focus();
   }
   if(e.key==='Tab'){
    const focusable=[...dialog.querySelectorAll('button:not([disabled]),input:not([disabled])')].filter(x=>x.getClientRects().length);
@@ -149,7 +149,7 @@ function render(){
  const filtered=search?findFeatures(query.value,all):all.filter(item=>category==='all'||item.category===category);
  results.innerHTML=filtered.length?
  '<div class="control-finder-summary">'+(search?filtered.length+' résultat(s) pour « '+escape(query.value.trim())+' »':filtered.length+' fonctions · '+escape(CAT.find(([id])=>id===category)?.[1]||'Toutes les catégories'))+'</div>'+
- '<div class="control-finder-grid">'+filtered.map(item=>'<button type="button" role="option" aria-selected="false" data-finder-id="'+escape(item.id)+'" class="control-finder-item">'+
+ '<div class="control-finder-grid">'+filtered.map(item=>'<button type="button" data-finder-id="'+escape(item.id)+'" class="control-finder-item">'+
  '<span class="control-finder-symbol" aria-hidden="true">↗</span><span><strong>'+escape(item.title)+'</strong><small>'+escape(item.hint)+'</small></span><span class="control-finder-arrow" aria-hidden="true">→</span></button>').join('')+'</div>':
  '<div class="control-finder-empty">Aucune fonction trouvée. Essayez « missions », « visio », « budget » ou « projet ».<button type="button" data-finder-cat="all">Voir toutes les fonctions</button></div>';
 }
