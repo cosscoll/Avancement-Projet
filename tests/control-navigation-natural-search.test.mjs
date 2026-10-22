@@ -83,3 +83,32 @@ test('finder renders untrusted project names safely and provides correct keyboar
  assert.equal(doc.activeElement,elements[0],'ArrowDown from last should wrap to first');
  assert.equal(prevented,2);
 });
+
+test('Enter on a natural-language query opens the first matching project without a mouse',()=>{
+ const listeners={};
+ const input={value:'',focus(){},select(){},addEventListener(){}};
+ const cats={innerHTML:''};
+ const results={innerHTML:'',querySelector(selector){
+  if(selector!=='[data-finder-id]')return null;
+  const match=this.innerHTML.match(/data-finder-id="([^"]+)"/);
+  return match?{dataset:{finderId:match[1]}}:null;
+ }};
+ const dialog={hidden:true,innerHTML:'',addEventListener(type,fn){listeners[type]=fn},
+  querySelector(selector){return selector==='input[type="search"]'?input:selector==='.control-finder-results'?results:selector==='.control-finder-categories'?cats:null}};
+ const location={hash:'#/'};
+ const document={activeElement:{isConnected:true,focus(){}},createElement(){return dialog},
+  body:{appendChild(){},classList:{add(){},remove(){}}},addEventListener(){}};
+ const localWindow={};
+ runInNewContext(source,{window:localWindow,document,location,sessionStorage:{setItem(){}}});
+ localWindow.CONTROL_NAVIGATION.setAdapter({mode:'personal',getProjects:()=>[{id:'ucp-123',name:'Un Coup de Pouce'}]});
+ assert.equal(localWindow.CONTROL_NAVIGATION.open({query:'Coup de Pouce'}),true);
+ let prevented=0;
+ listeners.keydown({key:'Enter',target:input,preventDefault(){prevented++}});
+ assert.equal(prevented,1);
+ assert.equal(location.hash,'#/project/ucp-123/ai');
+ assert.equal(dialog.hidden,true);
+ localWindow.CONTROL_NAVIGATION.open();
+ listeners.keydown({key:'Enter',target:input,preventDefault(){prevented++}});
+ assert.equal(prevented,1,'Blank search must not open a random feature');
+ assert.equal(location.hash,'#/project/ucp-123/ai');
+});
