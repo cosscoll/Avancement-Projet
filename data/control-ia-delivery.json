@@ -91,8 +91,8 @@
       "priority": "P0",
       "stage": "deployed",
       "depends_on": [],
-      "summary": "Actions et projets locaux sauvegardés ; restauration en deux étapes avec visualisation des quantités, alertes sur les pertes, refus si changement entre prévisualisation et application, retour arrière des trois magasins. Aucun compte multi-appareils.",
-      "next": "Recette navigateur post-déploiement et tests sur appareils physiques, puis vraie identité Cloud et RLS JWT A/B après accord infrastructure.",
+      "summary": "PWA V55 : gestion locale de projets/actions et sauvegarde chiffrable. Avant remplacement des trois magasins, comparaison privée des ajouts/suppressions/modifications par identifiants stables, avertissements sur les éléments indéterminés, validation séparée, protection contre les changements concurrents et retour arrière en cas de refus du stockage. Les comptes et la synchronisation externes ne sont pas activés.",
+      "next": "Tester sauvegardes/imports sur iOS et Android réels. Construire ensuite auth JWT A/B et synchronisation Cloud après vérification isolation serveur et autorisation explicite.",
       "blockers": [
         "Persistance limitée au navigateur; aucune isolation de deux comptes réelle.",
         "Aucune recette Android physique documentée."
@@ -147,8 +147,8 @@
       "depends_on": [
         "CONTROL-ACTIONS"
       ],
-      "summary": "Routeur déterministe et petit modèle local expérimental; pas de moteur général fiable ni outils multi-services.",
-      "next": "Définir un banc de 40 scénarios réels d'intention/permissions, mesurer refus et erreurs, brancher un registre d'outils autorisé.",
+      "summary": "Assistant local déterministe : intentions de lecture, propositions d'actions locales avec confirmation et receipt, refus des comptes externes, des créations niées et des demandes contradictoires, lecture limitée au projet actif. Banc de 53 requêtes synthétiques + recettes Chromium (pas de modèle agent autonome ni API tierce).",
+      "next": "Étendre le banc de scénarios avec formulations réelles validées par utilisateurs, mesures de précision/rappels et attaques multilingues. Authentifier puis intégrer les outils externes officiellement, avec scopes et preuves d'autorisation.",
       "blockers": [
         "Modèle génératif local limité; qualité et latence sur appareil réel non mesurées."
       ],
@@ -472,8 +472,8 @@
       "priority": "P1",
       "stage": "ci_tested",
       "depends_on": [],
-      "summary": "Tests Node et déploiement Pages verts, mais pas d'essais confirmés sur appareils réels ni de parcours utilisateur complet.",
-      "next": "Mettre en place une recette end-to-end traçable (desktop, Chrome Android, Safari iOS) et corriger les erreurs d'usage constatées.",
+      "summary": "CI Node et navigateur Chromium : garde-fous sur stockage, sauvegardes, projets et commandes. Le banc d'essai assistant couvre 53 requêtes déterministes et le comparateur détecte les enregistrements modifiés sans les afficher. Android physique, Safari iOS et audit WCAG/Lighthouse restent à réaliser.",
+      "next": "Mesurer précisément la navigation clavier/mobile et lancer des tests sur appareils réels avant validation QA-02..QA-04 ; ne pas confondre tests synthétiques et recette utilisateur.",
       "blockers": [
         "Tests physiques Android/iOS non vérifiés.",
         "CI statique ne prouve pas la navigation ni l'accessibilité réelle."

@@ -79,12 +79,12 @@ test('unrelated legacy asset failure cannot prevent CONTROL core PWA installatio
  assert.equal(h.state.skip,1);
 });
 
-test('failed v54 installation removes partial caches without deleting active v37 caches',async()=>{
+test('failed v55 installation removes partial caches without deleting active v37 caches',async()=>{
  const h=harness({fail:'assets/control-operator-core.js'});
  h.stores.set('control-shell-v37',{items:new Map([['old','preserved']])});
  await assert.rejects(h.install(),/Installation CONTROL incomplète/);
- assert.equal(h.stores.has('control-shell-v54'),false);
- assert.equal(h.stores.has('control-public-data-v54'),false);
+ assert.equal(h.stores.has('control-shell-v55'),false);
+ assert.equal(h.stores.has('control-public-data-v55'),false);
  assert.equal(h.stores.get('control-shell-v37').items.get('old'),'preserved');
  assert.equal(h.state.skip,0);
 });
@@ -93,29 +93,29 @@ test('PWA manifest HTML fallback must fail closed',async()=>{
  await assert.rejects(h.install(),/Installation CONTROL incomplète/);
  assert.equal(h.state.skip,0);
 });
-test('successful v54 install caches delivery tracker and preserves critical shell',async()=>{
+test('successful v55 install caches delivery tracker and preserves critical shell',async()=>{
  const h=harness();await h.install();
  assert.equal(h.state.skip,1);
  assert.ok(h.calls.includes('assets/control-delivery.js'));
  assert.ok(h.calls.includes('data/control-ia-delivery.json'));
  assert.ok(h.calls.includes('data/control-ia-requirements.json'));
- assert.ok(h.stores.get('control-public-data-v54').items.has(origin+'data/control-ia-requirements.json'));
- assert.ok(h.stores.has('control-shell-v54'));
- assert.ok(h.stores.get('control-shell-v54').items.has(origin+'assets/navigation-hub.js'));
- assert.ok(h.stores.get('control-shell-v54').items.has(origin+'assets/navigation-hub.css'));
- assert.ok(h.stores.get('control-shell-v54').items.has(origin+'assets/workspace-shell.css'));
+ assert.ok(h.stores.get('control-public-data-v55').items.has(origin+'data/control-ia-requirements.json'));
+ assert.ok(h.stores.has('control-shell-v55'));
+ assert.ok(h.stores.get('control-shell-v55').items.has(origin+'assets/navigation-hub.js'));
+ assert.ok(h.stores.get('control-shell-v55').items.has(origin+'assets/navigation-hub.css'));
+ assert.ok(h.stores.get('control-shell-v55').items.has(origin+'assets/workspace-shell.css'));
 
 });
 
 test('network-first refresh must never poison cached CONTROL JS with HTTP 200 HTML',async()=>{
  const h=harness();await h.install();
  const path='assets/control-operator-core.js';
- const cached=h.stores.get('control-shell-v54').items.get(origin+path);
+ const cached=h.stores.get('control-shell-v55').items.get(origin+path);
  assert.ok(cached);
  h.state.badMime=path;
  const served=await h.fetchAsset(path);
  assert.equal(served,cached);
- assert.equal(h.stores.get('control-shell-v54').items.get(origin+path),cached);
+ assert.equal(h.stores.get('control-shell-v55').items.get(origin+path),cached);
 });
 test('critical local IA UI resources are required before activating the PWA',async()=>{
  for(const path of ['assets/local-ai.js','assets/local-ai.css','assets/control-delivery.js','assets/control-delivery.css']){
@@ -128,16 +128,16 @@ test('critical local IA UI resources are required before activating the PWA',asy
 test('HTTP 200 HTML cannot poison cached public V1.2 requirements',async()=>{
  const h=harness();await h.install();
  const path='data/control-ia-requirements.json';
- const cached=h.stores.get('control-public-data-v54').items.get(origin+path);
+ const cached=h.stores.get('control-public-data-v55').items.get(origin+path);
  assert.ok(cached,'Initial successful JSON should be precached');
  h.state.badMime=path;
  const served=await h.fetchAsset(path);
  assert.equal(served,cached,'HTML body must not replace last verified JSON');
- assert.equal(h.stores.get('control-public-data-v54').items.get(origin+path),cached);
+ assert.equal(h.stores.get('control-public-data-v55').items.get(origin+path),cached);
 });
 test('cold-install HTML fallback never enters public V1.2 requirements cache',async()=>{
  const h=harness({badMime:'data/control-ia-requirements.json'});
  await h.install();
  assert.equal(h.state.skip,1,'optional requirements data cannot prevent a safe core shell');
- assert.ok(!h.stores.get('control-public-data-v54').items.has(origin+'data/control-ia-requirements.json'));
+ assert.ok(!h.stores.get('control-public-data-v55').items.has(origin+'data/control-ia-requirements.json'));
 });
