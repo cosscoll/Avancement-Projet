@@ -503,6 +503,23 @@ try{
  await js("document.querySelector('.shell-project-more [data-tab=meetings]').click()");
  await ready(()=>js("location.hash.endsWith('/meetings')"),8000)();
  log('320px project navigation exposes advanced sections on demand without overflow');
+
+ // The personal project store must never be overwritten after a corrupted read.
+ await js("(()=>{const raw=localStorage.getItem('control-hub-v2');sessionStorage.setItem('control-smoke-hub-before',raw===null?'__ABSENT__':raw);localStorage.setItem('control-hub-v2','{invalid-hub');location.hash='#/'})()");
+ await command('Page.reload',{ignoreCache:false});
+ await ready(()=>js("!!document.querySelector('.shell-dashboard')&&!!document.querySelector('#main [role=alert]')"),16000)();
+ const hubWarn=await js("document.querySelector('#main [role=alert]')?.textContent||''");
+ assert.match(hubWarn,/données locales des projets sont illisibles/);
+ await js("document.querySelector('#add-project').click()");
+ await ready(()=>js("!document.querySelector('#add-box')?.classList.contains('hidden')"),6000)();
+ await js("(()=>{const f=document.querySelector('#new-project');f.elements.name.value='Projet qui ne doit pas exister';f.requestSubmit()})()");
+ assert.equal(await js("localStorage.getItem('control-hub-v2')"),'{invalid-hub','Corrupted original project storage must remain untouched');
+ assert.ok(!(await js("document.querySelector('#cards')?.textContent?.includes('Projet qui ne doit pas exister')")),'Unsaved project must not appear');
+ await js("(()=>{const previous=sessionStorage.getItem('control-smoke-hub-before');if(previous==='__ABSENT__')localStorage.removeItem('control-hub-v2');else localStorage.setItem('control-hub-v2',previous);sessionStorage.removeItem('control-smoke-hub-before');location.hash='#/'})()");
+ await command('Page.reload',{ignoreCache:false});
+ await ready(()=>js("!!document.querySelector('.shell-dashboard')&&!document.querySelector('#main [role=alert]')"),16000)();
+ log('project hub refuses overwriting corrupt JSON and restores normal operation after recovery');
+
  await js("location.hash="+JSON.stringify(beforeFinderHash));
  await ready(()=>js("!!document.querySelector('.control-delivery-focus')"),8000)();
 
