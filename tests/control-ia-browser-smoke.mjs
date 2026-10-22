@@ -620,6 +620,32 @@ try{
  await ready(()=>js("!!document.querySelector('.shell-dashboard')"),16000)();
  log('corrupt automation drafts block new entries without enabling scheduled tasks');
 
+ // A new encrypted or plain backup must be inspected before any local overwrite.
+ await js("location.hash='#/control/backup'");
+ await ready(()=>js("!!document.querySelector('#import-data')&&!!document.querySelector('#import-preview')"),10000)();
+ const backupBefore=await js("({command:localStorage.getItem('control-command-v1'),hub:localStorage.getItem('control-hub-v2'),autos:localStorage.getItem('control-automations-v1')})");
+ await js("(()=>{const command=JSON.parse(localStorage.getItem('control-command-v1')||'{}');command.actions=Array.isArray(command.actions)?command.actions:[];command.missions=Array.isArray(command.missions)?command.missions:[];command.actions.push({id:'recette-import-confirmation',title:'RECETTE-IMPORT-UNIQUEMENT',status:'todo'});const envelope={format:'control-v2-plain',created:'2026-10-22T10:00:00Z',data:{command,hub:JSON.parse(localStorage.getItem('control-hub-v2')||'{}'),automations:JSON.parse(localStorage.getItem('control-automations-v1')||'{}')}};const dt=new DataTransfer();dt.items.add(new File([JSON.stringify(envelope)],'recette.json',{type:'application/json'}));const form=document.querySelector('#import-data');form.elements.file.files=dt.files;form.requestSubmit()})()");
+ await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
+ assert.match(await js("document.querySelector('#import-comparison').textContent"),/Avant de remplacer mes données/);
+ assert.deepEqual(await js("({command:localStorage.getItem('control-command-v1'),hub:localStorage.getItem('control-hub-v2'),autos:localStorage.getItem('control-automations-v1')})"),backupBefore,'Review must not mutate local storage');
+ await js("(()=>{const before=localStorage.getItem('control-command-v1');localStorage.setItem('control-command-v1',before+' ');document.querySelector('#import-apply').click()})()");
+ assert.equal(await js("document.querySelector('#import-preview').hidden"),true,'Review is invalid after a concurrent write');
+ assert.match(await js("document.querySelector('#import-status').textContent"),/ont changé/);
+ await js("(()=>{const text=localStorage.getItem('control-command-v1');localStorage.setItem('control-command-v1',text.slice(0,-1));document.querySelector('#import-data').requestSubmit()})()");
+ await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
+ await js("document.querySelector('#import-cancel').click()");
+ assert.equal(await js("document.querySelector('#import-preview').hidden"),true);
+ assert.deepEqual(await js("({command:localStorage.getItem('control-command-v1'),hub:localStorage.getItem('control-hub-v2'),autos:localStorage.getItem('control-automations-v1')})"),backupBefore);
+ await js("document.querySelector('#import-data').requestSubmit()");
+ await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
+ await js("(()=>{const confirmBefore=window.confirm;window.confirm=()=>false;try{document.querySelector('#import-apply').click()}finally{window.confirm=confirmBefore}})()");
+ assert.equal(await js("document.querySelector('#import-preview').hidden"),false,'Declining restore must preserve preview');
+ assert.deepEqual(await js("({command:localStorage.getItem('control-command-v1'),hub:localStorage.getItem('control-hub-v2'),autos:localStorage.getItem('control-automations-v1')})"),backupBefore);
+ await js("(()=>{const confirmBefore=window.confirm;window.confirm=()=>true;try{document.querySelector('#import-apply').click()}finally{window.confirm=confirmBefore}})()");
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-command-v1')).actions.some(x=>x.title==='RECETTE-IMPORT-UNIQUEMENT')"),true);
+ assert.equal(await js("document.querySelector('#import-preview').hidden"),true);
+ log('backup preview blocks silent overwrites, canceled restores and stale snapshots; confirmed data is imported');
+
 
  await js("location.hash="+JSON.stringify(beforeFinderHash));
  await ready(()=>js("!!document.querySelector('.control-delivery-focus')"),8000)();
