@@ -122,6 +122,9 @@ function interpret(input,snapshot={},scope='general'){
   return {kind:'help',text:'Suppression en masse interdite depuis cet assistant. Aucune donnée locale ou externe ne sera supprimée.'};
  const createTask=/(?:cree|creer|ajoute|ajouter|note|planifie)\b/.test(q)&&/\b(?:tache|action)\b/.test(q);
  const createEvent=/(?:cree|creer|ajoute|ajouter|programme|programmer|planifie|planifier)\b/.test(q)&&/\b(?:rdv|rendez[- ]vous|reunion|evenement)\b/.test(q);
+ const conflictingMutation=/\b(?:supprime|supprimer|annule|annuler|efface|decale|decaler|deplace|deplacer|reprogramme|reprogrammer|modifie|modifier|termine|terminer|acheve|marque)\b/.test(q);
+ if((createTask||createEvent)&&conflictingMutation)
+  return {kind:'help',text:'Création et modification ou suppression demandées ensemble. Sépare ces opérations et confirme chacune individuellement.'};
  if(createTask&&createEvent)return {kind:'help',text:'Deux créations différentes ont été demandées. Sépare la tâche et le rendez-vous en demandes distinctes.'};
  if(createTask||createEvent){
   if(!project)return {kind:'help',text:'Choisis un projet ou indique son nom avant toute création.'};
