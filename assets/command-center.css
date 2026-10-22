@@ -49,3 +49,8 @@ header.control-head{flex-wrap:wrap;gap:10px}
 .backup-restore-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:15px}
 .backup-restore-actions button{font-size:13px;min-height:43px}
 @media(max-width:500px){.backup-restore-preview{padding:13px}.backup-diff-table th,.backup-diff-table td{padding:9px 5px;font-size:11px}.backup-restore-actions button{width:100%}}
+
+.backup-diff-scroll{overflow-x:auto;max-width:100%;outline-offset:3px}
+.backup-diff-table{min-width:580px}
+.backup-diff-table td:nth-child(n+4){font-variant-numeric:tabular-nums}
+.backup-diff-scroll:focus-visible{outline:3px solid #4c83b9}

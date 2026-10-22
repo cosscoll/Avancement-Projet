@@ -609,12 +609,14 @@ function backup(){
  const resetPreview=()=>{pending=null;preview.hidden=true;comparison.replaceChildren()};
  const renderReview=review=>{
   const rows=review.changes.filter(x=>x.before||x.after);
-  const body=rows.length?rows.map(x=>'<tr><th scope="row">'+h(x.label)+'</th><td>'+x.before+'</td><td>'+x.after+'</td></tr>').join(''):
-   '<tr><td colspan="3">Aucun élément local comptabilisé dans les catégories suivies.</td></tr>';
-  comparison.innerHTML='<h3>Avant de remplacer mes données</h3><p>Éléments enregistrés actuellement : <strong>'+review.totalBefore+'</strong> · Dans le fichier : <strong>'+review.totalAfter+'</strong></p>'+
-   '<table class="backup-diff-table"><thead><tr><th>Type</th><th>Actuel</th><th>Fichier</th></tr></thead><tbody>'+body+'</tbody></table>'+
-   (review.losses.length?'<p role="alert" class="notice"><strong>Attention :</strong> '+review.losses.length+' catégorie(s) contiennent moins d’éléments dans le fichier. La restauration remplacera les versions actuelles.</p>':'')+
-   '<p class="muted">Même nombre ≠ même contenu. Les trois magasins locaux sont remplacés, pas fusionnés. Une copie de sauvegarde actuelle est recommandée avant toute restauration.</p>';
+  const n=v=>v===null?'Non déterminé':String(v);
+  const body=rows.length?rows.map(x=>'<tr><th scope="row">'+h(x.label)+'</th><td>'+x.before+'</td><td>'+x.after+'</td><td>'+n(x.added)+'</td><td>'+n(x.removed)+'</td><td>'+n(x.modified)+'</td></tr>').join(''):
+   '<tr><td colspan="6">Aucun élément local comptabilisé dans les catégories suivies.</td></tr>';
+  comparison.innerHTML='<h3>Avant de remplacer mes données</h3><p>Éléments actuels : <strong>'+review.totalBefore+'</strong> · Dans le fichier : <strong>'+review.totalAfter+'</strong> · Suppressions identifiées : <strong>'+review.totalRemoved+'</strong> · Modifications identifiées : <strong>'+review.totalModified+'</strong></p>'+
+   '<div class="backup-diff-scroll" tabindex="0" role="region" aria-label="Comparaison détaillée des sauvegardes"><table class="backup-diff-table"><thead><tr><th>Type</th><th>Actuel</th><th>Fichier</th><th>Ajouts</th><th>Retraits</th><th>Modifiés</th></tr></thead><tbody>'+body+'</tbody></table></div>'+
+   (review.losses.length||review.modified.length?'<p role="alert" class="notice"><strong>Attention :</strong> '+review.losses.length+' catégorie(s) avec suppressions, '+review.modified.length+' avec modifications identifiées. La restauration écrasera ces informations locales.</p>':'')+
+   (review.uncertain.length?'<p class="muted">Comparaison incomplète pour '+review.uncertain.length+' catégorie(s) sans identifiants uniques ou au format ancien. Des changements peuvent ne pas apparaître.</p>':'')+
+   '<p class="muted">Les nombres ne révèlent aucun contenu privé. Les trois magasins locaux sont remplacés, pas fusionnés. Conserve une copie des données actuelles avant de restaurer.</p>';
   preview.hidden=false;
  };
  $('#import-cancel').onclick=()=>{resetPreview();message.textContent='Import annulé. Aucune donnée modifiée.'};
