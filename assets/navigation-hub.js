@@ -156,6 +156,22 @@ function ensure(){
   }
  });
 }
+const RECENT_KEY='control-finder-recent-personal';
+function recentIds(){
+ if(adapter.mode!=='personal')return [];
+ try{
+  const ids=JSON.parse(sessionStorage.getItem?.(RECENT_KEY)||'[]');
+  return Array.isArray(ids)?ids.filter(id=>typeof id==='string').slice(0,4):[];
+ }catch{return []}
+}
+function saveRecent(id){
+ if(adapter.mode!=='personal')return;
+ try{sessionStorage.setItem(RECENT_KEY,JSON.stringify([id,...recentIds().filter(x=>x!==id)].slice(0,4)))}catch{}
+}
+function itemButton(item){
+ return '<button type="button" data-finder-id="'+escape(item.id)+'" class="control-finder-item">'+
+ '<span class="control-finder-symbol" aria-hidden="true">↗</span><span><strong>'+escape(item.title)+'</strong><small>'+escape(item.hint)+'</small></span><span class="control-finder-arrow" aria-hidden="true">→</span></button>';
+}
 function render(){
  const mode=adapter.mode==='cloud'?'cloud':'personal';
  const all=catalog();const search=norm(query.value);
@@ -164,11 +180,12 @@ function render(){
  '<button type="button" data-finder-cat="'+id+'" aria-pressed="'+(search?'false':String(category===id))+'" class="'+(!search&&category===id?'is-active':'')+'">'+label+'</button>').join('')+
  '<button type="button" data-finder-cat="all" aria-pressed="'+(!search&&category==='all')+'" class="'+(!search&&category==='all'?'is-active':'')+'">Tout voir</button>';
  const filtered=search?findFeatures(query.value,all):all.filter(item=>category==='all'||item.category===category);
- results.innerHTML=filtered.length?
+ const recent=!search&&category==='start'?recentIds().map(id=>all.find(item=>item.id===id)).filter(item=>item&&item.category!=='start'):[];
+ const recentHtml=recent.length?'<section class="control-finder-recents" aria-label="Reprendre une fonction récente"><div class="control-finder-recents-title">Reprendre</div><div class="control-finder-grid">'+recent.map(itemButton).join('')+'</div></section>':'';
+ results.innerHTML=recentHtml+(filtered.length?
  '<div class="control-finder-summary" role="status" aria-live="polite">'+(search?filtered.length+' résultat(s) pour « '+escape(query.value.trim())+' »':filtered.length+' fonctions · '+escape(CAT.find(([id])=>id===category)?.[1]||'Toutes les catégories'))+'</div>'+
- '<div class="control-finder-grid">'+filtered.map(item=>'<button type="button" data-finder-id="'+escape(item.id)+'" class="control-finder-item">'+
- '<span class="control-finder-symbol" aria-hidden="true">↗</span><span><strong>'+escape(item.title)+'</strong><small>'+escape(item.hint)+'</small></span><span class="control-finder-arrow" aria-hidden="true">→</span></button>').join('')+'</div>':
- '<div class="control-finder-empty">Aucune fonction trouvée. Essayez « missions », « visio », « budget » ou « projet ».<button type="button" data-finder-cat="all">Voir toutes les fonctions</button></div>';
+ '<div class="control-finder-grid">'+filtered.map(itemButton).join('')+'</div>':
+ '<div class="control-finder-empty">Aucune fonction trouvée. Essayez « missions », « visio », « budget » ou « projet ».<button type="button" data-finder-cat="all">Voir toutes les fonctions</button></div>');
 }
 function select(item){
  if(adapter.mode==='cloud'){
@@ -180,6 +197,7 @@ function select(item){
   else if(target)window.dispatchEvent(new HashChangeEvent('hashchange'));
  }
  try{sessionStorage.setItem('control-finder-last-'+adapter.mode,item.id)}catch{}
+ saveRecent(item.id);
  close();
 }
 function open(opts={}){
