@@ -424,7 +424,31 @@ function tools(){
   {name:'Organiser',subtitle:'Planifier et garder le contrôle',open:false,tools:[['missions','Toutes les missions','Suivi détaillé et historique'],['meetings','Visios et rendez-vous','Équipe, clients et prospects'],['calendar','Calendrier','Échéances enregistrées'],['memory','Décisions','Historique de projet'],['goals','Planifier un objectif','Étapes modifiables et sources locales'],['budget','Budget et quotas','Suivi déclaratif des coûts'],['backup','Sauvegardes','Exporter ou importer tes données'],['settings','Paramètres','Règles et confidentialité'],['inbox','À traiter','Actions prioritaires']]}
  ];
  const markup=groups.map((group,index)=>'<details class="clarity-toolgroup" '+(group.open?'open':'')+'><summary><span><strong>'+h(group.name)+'</strong><small>'+h(group.subtitle)+'</small></span><span class="clarity-chevron">⌄</span></summary><div class="clarity-toolcards">'+group.tools.map(([route,title,description])=>'<a class="clarity-tool-link" href="#/control/'+h(route)+'"><strong>'+h(title)+'</strong><small>'+h(description)+'</small><span aria-hidden="true">→</span></a>').join('')+'</div></details>').join('');
- $('#main').innerHTML=view('Tous les outils','Les essentiels d’abord. Le reste est rangé par usage.',markup);
+ const finder='<section class="shell-tools-search" aria-label="Rechercher un outil">'+
+ '<label for="tools-filter">Quel outil cherchez-vous ?</label>'+
+ '<div class="shell-tools-search-row"><input id="tools-filter" type="search" class="field" placeholder="Ex. visio, automatisation, budget, GitHub…" autocomplete="off">'+
+ '<span id="tools-filter-status" role="status" aria-live="polite">Parcourez les fonctions par catégorie.</span></div></section>';
+ $('#main').innerHTML=view('Tous les outils','Recherchez directement une fonction ou explorez les catégories.',finder+markup);
+ const field=$('#tools-filter'),sections=[...$('#main').querySelectorAll('.clarity-toolgroup')];
+ const original=sections.map(section=>section.open);
+ field?.addEventListener('input',()=>{
+  const query=field.value.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().trim();
+  let count=0;
+  sections.forEach((section,i)=>{
+   let match=0;
+   section.querySelectorAll('.clarity-tool-link').forEach(link=>{
+    const label=link.textContent.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase();
+    const show=!query||query.split(/\\s+/).every(word=>label.includes(word));
+    link.hidden=!show;
+    if(show)match++;
+   });
+   section.hidden=Boolean(query&&!match);
+   section.open=query?Boolean(match):original[i];
+   count+=query?match:0;
+  });
+  const status=$('#tools-filter-status');
+  if(status)status.textContent=query?count+' fonction(s) correspondante(s)':'Parcourez les fonctions par catégorie.';
+ });
 }
 function settings(){$('#main').innerHTML=view('Règles et sécurité','Protection des projets et limites des intégrations',box('Règles globales',note('Ces règles sont ajoutées aux demandes de mission copiées depuis CONTROL. Elles ne sont pas automatiquement appliquées sur les comptes Claude, ChatGPT ou Gemini.')+'<form id="global-rules">'+textarea('Règles générales','rules',db.globalRules||'','rows="8" maxlength="10000"')+'<button class="primary">Enregistrer</button></form>')+
  box('Notifications','<p class="muted">Les échéances apparaissent dans CONTROL, mais les notifications automatiques lorsque l’application est fermée exigeraient un service push privé. Ici, seuls les droits du navigateur peuvent être activés.</p>'+btn('Activer les notifications navigateur','notify')+'<p id="notification-state" class="muted"></p>')+
