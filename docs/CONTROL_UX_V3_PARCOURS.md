@@ -18,7 +18,7 @@ Après l'ajout de nombreuses capacités, l'utilisateur n'arrivait plus à retrou
 
 ## Hygiène de publication
 
-La PWA utilise les caches **`control-shell-v44`** et **`control-public-data-v44`** après toutes ces corrections, pour éviter de servir le JavaScript/CSS de l'ancienne interface aux utilisateurs ayant déjà installé CONTROL. `assets/workspace-shell.css` est une ressource critique mise en cache ; la page Cloud privée n'est pas précachée.
+Après les correctifs de navigation du 22 octobre, la PWA utilise les caches **`control-shell-v56`** et **`control-public-data-v56`**. Les ressources publiques sont servies en priorité depuis le réseau et conservées localement pour le mode hors connexion ; cette rotation renouvelle également le précache lors de l'installation du nouveau service worker. `assets/workspace-shell.css` est une ressource critique mise en cache ; la page Cloud privée n'est pas précachée.
 
 La mention **INTERFACE V3** dans l'en-tête permet de repérer visuellement une ancienne page en cache. Les navigateurs peuvent nécessiter un rechargement lorsque le service worker vient de se mettre à jour.
 
@@ -30,6 +30,14 @@ La mention **INTERFACE V3** dans l'en-tête permet de repérer visuellement une 
 - `tests/pwa-atomic-install.test.mjs` : cache critique/offline après la rotation V44.
 
 **État de recette :** les tests natifs, Chromium et le déploiement doivent être associés au SHA exact de la version finale. Toute documentation ou clôture ultérieure déclenche un nouveau SHA, à vérifier séparément.
+
+## Amélioration incrémentale : recherche des fonctions (22 octobre 2026)
+
+- **Trouver une fonction** accepte mieux les requêtes françaises naturelles : accents, singulier/pluriel, synonymes contrôlés et expressions telles que « créer un nouveau projet », « organiser une réunion », « consulter les échéances », « modifier les paramètres » ou « sauvegarder mes données ».
+- **Accessibilité :** les résultats sont des boutons natifs dans un groupe nommé, sans rôle `listbox` simulé ; une pression sur Flèche haut depuis le champ renvoie au dernier résultat.
+- **Sécurité :** le moteur ne lit que le catalogue local des routes autorisées déjà existantes. Il ne transmet aucune requête à une IA externe, n'active aucun compte Cloud et ne prétend pas chercher dans tous les documents privés.
+- **Vérifications :** les nouveaux cas sont ajoutés à `tests/control-navigation-natural-search.test.mjs` ; contrôle JavaScript isolé effectué sur le code récupéré depuis `main`. Validation GitHub Actions et recette navigateur public du SHA final à confirmer séparément.
+- **Portée :** amélioration UX incrémentale, **aucun critère Auth/JWT/RLS ou recette utilisateur physique nouvellement marqué vérifié**.
 
 ## Reste à approfondir
 
