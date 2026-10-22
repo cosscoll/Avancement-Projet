@@ -192,7 +192,24 @@ try{
  await js("location.hash='#/control/calendar'");
  await ready(()=>js("[...document.querySelectorAll('#main .inbox-item strong')].some(e=>e.textContent.trim()==='Recette Agenda Unique')"),9000)();
  const listed=await js("[...document.querySelectorAll('#main .inbox-item')].find(e=>e.querySelector('strong')?.textContent==='Recette Agenda Unique')?.textContent||''");
- assert.ok(listed.includes(tomorrow+'T14:30'),'Calendar page is missing the recorded event time');
+ assert.ok(listed.includes('14:30'),'Calendar page is missing the recorded local hour');
+  // Overlapping records need explicit confirmation before a local save.
+  await js("(()=>{const f=document.querySelector('#new-event');f.elements.title.value='Recette Conflit Local';f.elements.date.value="+JSON.stringify(tomorrow+"T14:30")+";f.elements.durationMinutes.value='60';f.requestSubmit()})()");
+  await ready(()=>js("document.querySelector('#calendar-feedback')?.textContent.includes('Conflit détecté')"),7000)();
+  assert.equal(await js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').events.filter(e=>e.title==='Recette Conflit Local').length"),0);
+  assert.match(await js("document.querySelector('#calendar-feedback')?.textContent||''"),/Recette Agenda Unique/);
+  await js("(()=>{const f=document.querySelector('#new-event');f.elements.namedItem('override').checked=true;f.requestSubmit()})()");
+  await ready(()=>js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').events.some(e=>e.title==='Recette Conflit Local')"),9000)();
+  assert.ok(await js("[...document.querySelectorAll('#main .inbox-item')].some(e=>e.textContent.includes('chevauchement'))"));
+  log('calendar blocks conflicts until explicit override');
+  await js("(()=>{const e=JSON.parse(localStorage.getItem('control-command-v1')).events.find(e=>e.title==='Recette Conflit Local');document.querySelector('[data-act=\"edit-event:'+e.id+'\"]').click()})()");
+  await ready(()=>js("!document.querySelector('#calendar-editor')?.classList.contains('hidden')"),7000)();
+  await js("(()=>{const f=document.querySelector('#edit-event');f.elements.date.value="+JSON.stringify(tomorrow+"T16:00")+";f.elements.namedItem('override').checked=false;f.requestSubmit()})()");
+  await ready(()=>js("JSON.parse(localStorage.getItem('control-command-v1')).events.some(e=>e.title==='Recette Conflit Local'&&e.date.endsWith('T16:00'))"),9000)();
+  const icsChecks=await js("(()=>{const e=JSON.parse(localStorage.getItem('control-command-v1')).events.find(e=>e.title==='Recette Conflit Local');const i=window.CONTROL_CALENDAR_CORE.icalEvent(e);return {ok:i.includes('BEGIN:VCALENDAR')&&i.includes('DTSTART:')&&i.includes('SUMMARY:Recette Conflit Local'),count:i.split('BEGIN:VEVENT').length-1}})()");
+  assert.deepEqual(icsChecks,{ok:true,count:1});
+  log('calendar updates an event and constructs a valid one-event .ics export');
+
  log('new event and requested hour are visible on the actual Calendar screen');
  await js("location.hash='#/control/localai'");
  await ready(()=>js("!!document.querySelector('[data-op-consent]')"),9000)();
