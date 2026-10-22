@@ -18,7 +18,7 @@ Après l'ajout de nombreuses capacités, l'utilisateur n'arrivait plus à retrou
 
 ## Hygiène de publication
 
-Après les correctifs de navigation du 22 octobre, la PWA utilise les caches **`control-shell-v58`** et **`control-public-data-v58`**. Les ressources publiques sont servies en priorité depuis le réseau et conservées localement pour le mode hors connexion ; cette rotation renouvelle également le précache lors de l'installation du nouveau service worker. `assets/workspace-shell.css` est une ressource critique mise en cache ; la page Cloud privée n'est pas précachée.
+Après les correctifs de navigation du 22 octobre, la PWA utilise les caches **`control-shell-v59`** et **`control-public-data-v59`**. Les ressources publiques sont servies en priorité depuis le réseau et conservées localement pour le mode hors connexion ; cette rotation renouvelle également le précache lors de l'installation du nouveau service worker. `assets/workspace-shell.css` est une ressource critique mise en cache ; la page Cloud privée n'est pas précachée.
 
 La mention **INTERFACE V3** dans l'en-tête permet de repérer visuellement une ancienne page en cache. Les navigateurs peuvent nécessiter un rechargement lorsque le service worker vient de se mettre à jour.
 
