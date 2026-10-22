@@ -50,7 +50,7 @@ test('backup review is loaded before the command center, cached, and never publi
  const app=readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
  assert.ok(index.indexOf('assets/control-backup-review.js')<index.indexOf('assets/command-center.js'));
  assert.ok(sw.includes("'./assets/control-backup-review.js'"));
- assert.ok(sw.includes("const CACHE_SHELL='control-shell-v61'"));
+ assert.ok(sw.includes("const CACHE_SHELL='control-shell-v62'"));
  assert.match(app,/Examiner la sauvegarde/);
  assert.match(app,/id="import-preview"/);
  assert.match(app,/id="import-apply"/);
