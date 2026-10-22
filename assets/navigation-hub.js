@@ -6,8 +6,8 @@ const CAT=[
  ['publish','Ressources & publication'],['account','Compte & sécurité'],['project','Dans ce projet']
 ];
 const FEATURES=[
- {id:'projects',title:'Mes projets',hint:'Ouvrir et retrouver mes espaces',category:'start',keywords:'accueil liste projet dossier commencer',personal:'#/',cloud:'projects'},
- {id:'inbox',title:'À traiter',hint:'Priorités, tâches et validations',category:'start',keywords:'action urgent faire tâche todo rappels',personal:'#/control/inbox',cloud:'inbox'},
+ {id:'projects',title:'Mes projets',hint:'Ouvrir et retrouver mes espaces',category:'start',keywords:'accueil liste projet dossier commencer creer ajouter nouveau supprimer espace',personal:'#/',cloud:'projects'},
+ {id:'inbox',title:'À traiter',hint:'Priorités, tâches et validations',category:'start',keywords:'action urgent faire tâche todo rappels creer ajouter priorite modifier terminer',personal:'#/control/inbox',cloud:'inbox'},
  {id:'manager',title:'Piloter avec CONTROL',hint:'Bilans, état des projets et prochaines étapes',category:'start',keywords:'chef projet synthèse tableau bord avancée statut',personal:'#/control/manager',cloud:'manager'},
  {id:'search',title:'Rechercher dans mes données',hint:'Projets, décisions, notes et ressources',category:'start',keywords:'retrouver chercher recherche universelle fichier',personal:'#/control/search',cloud:'tools:search'},
  {id:'tools',title:'Explorer tous les outils',hint:'Parcourir les fonctions par usage',category:'start',keywords:'annuaire catalogue menu fonctions',personal:'#/control/tools',cloud:'tools'},
@@ -27,7 +27,7 @@ const FEATURES=[
  {id:'activity',title:'Activité GitHub et tests',hint:'Suivi des dépôts et preuves publiques',category:'publish',keywords:'ci publication actions commits',personal:'#/control/activity',cloud:null},
  {id:'budget',title:'Budget et quotas',hint:'Consulter les dépenses renseignées',category:'account',keywords:'prix limite forfait argent coût finances',personal:'#/control/budget',cloud:'tools:budget'},
  {id:'backup',title:'Sauvegarder mes données',hint:'Exporter et protéger mes données',category:'account',keywords:'exporter json sauvegarde chiffrer restaurer fichier',personal:'#/control/backup',cloud:'account'},
- {id:'settings',title:'Paramètres et confidentialité',hint:'Règles, comptes et sécurité',category:'account',keywords:'préférences profil connexion se déconnecter',personal:'#/control/settings',cloud:'account'}
+ {id:'settings',title:'Paramètres et confidentialité',hint:'Règles, comptes et sécurité',category:'account',keywords:'préférences profil connexion se déconnecter reglages configuration modifier',personal:'#/control/settings',cloud:'account'}
 ];
 const PROJECT_SECTIONS=[
  ['ai','Espaces IA','Ouvrir les espaces ChatGPT, Claude et autres','agents projets liens'],
@@ -60,13 +60,13 @@ let adapter={mode:'personal',getActiveProject:()=>null,getProjects:()=>[],naviga
 let dialog=null,query=null,results=null,category='start',lastFocus=null;
 const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const STOP_WORDS=new Set(['un','une','le','la','les','des','du','de','d','en','a','au','aux','mon','ma','mes','son','sa','ses','pour','je','veux','comment','faire','dans','sur','avec','ou','est','sont','peux','puis','aller','voir','ouvrir','retrouver']);
+const STOP_WORDS=new Set(['un','une','le','la','les','des','du','de','d','en','a','au','aux','mon','ma','mes','son','sa','ses','pour','je','veux','comment','faire','dans','sur','avec','ou','est','sont','peux','puis','aller','voir','ouvrir','retrouver','modifier','consulter','afficher','chercher','cherche','trouver','ajouter','verifier','souhaite','souhaiterais','voudrais','voudrait','besoin','j','m','ce','que','quoi','acceder','permet','possible']);
 const ALIASES={
  rdv:'rendez',reunion:'visio',reunions:'visio',appel:'visio',
  taches:'tache',actions:'action',projets:'projet',documents:'document',
  sauvegardes:'sauvegarde',sauvegarder:'sauvegarde',exporter:'export',
  publier:'publication',deployer:'deploiement',sites:'site',
- parametres:'parametre',reglages:'parametre',depenses:'budget',
+ parametres:'parametre',reglages:'parametre',depenses:'budget',recherche:'rechercher',
  rappels:'rappel',decisions:'decision',connexions:'connexion'
 };
 const searchableWord=w=>ALIASES[w]||w.replace(/(ements|ations|euses|eurs|es|s)$/,'');
