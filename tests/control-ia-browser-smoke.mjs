@@ -151,7 +151,7 @@ try{
  assert.equal(await js("document.querySelector('[data-op-consent]').checked"),true);
  // Conflicting, negative and destructive requests must never prepare a write.
  for(const unsafe of ['Ne crée pas une tâche pour UCP','Efface toutes les actions pour UCP','Crée une tâche Effacer le devis puis supprime le rendez-vous pour UCP']){
-  await js("(()=>{const f=document.querySelector('[data-op-form]');f.querySelector('textarea').value="+JSON.stringify("REPLACE")+";f.requestSubmit()})()".replace("REPLACE",unsafe));
+  await js("(()=>{const f=document.querySelector('[data-op-form]');f.querySelector('textarea').value="+JSON.stringify(unsafe)+";f.requestSubmit()})()");
   assert.equal(await js("document.querySelector('[data-op-draft]').hidden"),true,'Unsafe intent must not create an actionable proposal');
  }
  log('assistant rejects negated, bulk-destructive and contradictory commands in actual Chromium');
