@@ -313,3 +313,17 @@ test('webbuilder exposes multipage selector and preview tabs in the editor',()=>
  assert.match(ui,/engine\.pageMarkup\(working,page,true\)/);
  assert.match(ui,/frame\.srcdoc=previewContent/);
 });
+
+test('guided brief preserves multipage choice and valid visual customization without hidden reset',()=>{
+ const previous=site.normalize({theme:'atelier',siteStructure:'multipage',palette:'olive',typography:'editorial'});
+ const proposed=site.fromBrief('Je suis artisan et je réalise des meubles en bois pour des clients professionnels.',previous);
+ assert.equal(proposed.theme,'atelier');
+ assert.equal(proposed.siteStructure,'multipage');
+ assert.equal(proposed.palette,'olive');
+ assert.equal(proposed.typography,'editorial');
+ const switched=site.fromBrief('Nous construisons une application SaaS pour rendre la gestion des équipes plus simple.',previous);
+ assert.equal(switched.theme,'produit');
+ assert.equal(switched.siteStructure,'multipage');
+ assert.equal(switched.palette,'mint');
+ assert.equal(switched.typography,'editorial');
+});

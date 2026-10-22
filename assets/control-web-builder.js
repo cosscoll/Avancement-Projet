@@ -148,7 +148,8 @@ function fromBrief(brief,previous={}){
  const clean=raw.split(/\r?\n/).filter(line=>!/^\s*(nom du projet|nom de marque|marque|titre|accroche|prestations|services|offres)\s*:/i.test(line)).join(' ').replace(/\s+/g,' ').trim();
  const desc=(clean||raw.replace(/\s+/g,' ')).slice(0,160).trim();
  return normalize({theme,brand:brand|| (baseline.brand!=='MON STUDIO'?baseline.brand:'VOTRE MARQUE'),
-  title:title||chosen.title,description:desc,services,cta:chosen.cta,email:baseline.email,typography:baseline.typography});
+  title:title||chosen.title,description:desc,services,cta:chosen.cta,email:baseline.email,typography:baseline.typography,
+  siteStructure:baseline.siteStructure,palette:theme===baseline.theme?baseline.palette:undefined});
 }
 function versionDraft(previous,input,reference,now){
  const data=normalize(input),project=String(input?.project||'').slice(0,96),id=String(reference||'');
