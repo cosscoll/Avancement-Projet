@@ -451,6 +451,15 @@ try{
  assert.ok(desktop.heroBackground!=='rgb(255, 255, 255)'&&desktop.projectsY<desktop.newsY,'Projects must appear above the announcements in a non-white editorial dashboard: '+JSON.stringify(desktop));
  assert.ok(desktop.links>=7&&desktop.overflow<=desktop.width+4,'Desktop navigation or page overflows: '+JSON.stringify(desktop));
  log('1440px desktop has persistent dark navigation, separate content canvas and project-first layout');
+ // Direct homepage intent must open the matching function without forcing a menu-first journey.
+ await js("(()=>{const field=document.querySelector('#shell-quick-query');field.value='budget';field.form.requestSubmit()})()");
+ await ready(()=>js("document.querySelector('.control-finder')?.hidden===false"),8000)();
+ assert.equal(await js("!!document.querySelector('.control-finder [data-finder-id=budget]')"),true);
+ await js("document.querySelector('.control-finder [data-finder-id=budget]').click()");
+ await ready(()=>js("location.hash==='#/control/budget'"),8000)();
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('#shell-quick-query')"),8000)();
+ log('desktop homepage intent finds and opens budget without an intermediate category menu');
  // UX regression: new project opens close to its action, with an explicit
  // cancel path, and advanced project sections are visible on desktop.
  await js("document.querySelector('#add-project').click()");
