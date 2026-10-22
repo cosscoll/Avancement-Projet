@@ -497,6 +497,20 @@ try{
   log('a local guided brief creates a customizable preview and stores nothing before explicit save');
   log('site builder: sandbox preview, local save, ZIP files, responsive mode and reload persistence');
 
+  await js("(()=>{const f=document.querySelector('#builder-form');f.elements.siteStructure.value='multipage';f.elements.siteStructure.dispatchEvent(new Event('change',{bubbles:true}))})()");
+  await ready(()=>js("document.querySelector('#builder-pages')?.hidden===false"),8000)();
+  await js("document.querySelector('[data-builder-page=services]').click()");
+  assert.match(await js("document.querySelector('#builder-preview').srcdoc"),/Nos prestations|Ce que nous faisons/);
+  await js("document.querySelector('[data-builder-page=contact]').click()");
+  assert.match(await js("document.querySelector('#builder-preview').srcdoc"),/Contacter|PRENONS CONTACT/);
+  const multiOut=await js("(()=>{const f=document.querySelector('#builder-form'),args=Object.fromEntries(new FormData(f));const result=window.CONTROL_WEB_BUILDER_CORE.files(args);return {names:Object.keys(result),contact:result['contact.html'].includes('aria-current=\"page\"'),services:result['services.html'].includes('./contact.html'),index:result['index.html'].includes('./services.html')}})()");
+  assert.deepEqual(multiOut.names,['index.html','styles.css','services.html','contact.html','standalone.html','README.md']);
+  assert.ok(multiOut.contact&&multiOut.services&&multiOut.index,'Separate static pages must link correctly');
+  await js("document.querySelector('#builder-form').requestSubmit()");
+  await ready(()=>js("JSON.parse(localStorage.getItem('control-command-v1')).websites.some(x=>x.siteStructure==='multipage')"),9000)();
+  log('multi-page preview switches between Accueil, Prestations and Contact; export builds linked HTML files');
+
+
  // The mission list must not be pushed below a lengthy creation form.
  await js("location.hash='#/control/missions'");
  await ready(()=>js("!!document.querySelector('#mission-create')"),8000)();
