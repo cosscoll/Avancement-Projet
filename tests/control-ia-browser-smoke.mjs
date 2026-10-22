@@ -442,6 +442,18 @@ try{
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('.shell-dashboard')"),8000)();
  await command('Emulation.setDeviceMetricsOverride',{width:320,height:700,deviceScaleFactor:2,mobile:true});
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('.shell-projects-list a.card')"),8000)();
+ await js("document.querySelector('.shell-projects-list a.card').click()");
+ await ready(()=>js("!!document.querySelector('.shell-project-more')"),8000)();
+ const mobileProject=await js("({width:innerWidth,scroll:document.documentElement.scrollWidth,open:document.querySelector('.shell-project-more').open,display:getComputedStyle(document.querySelector('.shell-project-more .clarity-advanced')).display})");
+ assert.ok(!mobileProject.open&&mobileProject.display==='none'&&mobileProject.scroll<=mobileProject.width+4,
+  '320px project advanced sections must be collapsed without overflow: '+JSON.stringify(mobileProject));
+ await js("document.querySelector('.shell-project-more>summary').click()");
+ assert.equal(await js("document.querySelector('.shell-project-more').open"),true);
+ await js("document.querySelector('.shell-project-more [data-tab=meetings]').click()");
+ await ready(()=>js("location.hash.endsWith('/meetings')"),8000)();
+ log('320px project navigation exposes advanced sections on demand without overflow');
  await js("location.hash="+JSON.stringify(beforeFinderHash));
  await ready(()=>js("!!document.querySelector('.control-delivery-focus')"),8000)();
 
