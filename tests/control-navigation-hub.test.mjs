@@ -70,13 +70,16 @@ test('project sections are absent outside a project, so shortcuts cannot lead to
  h.api.setAdapter({mode:'personal',getActiveProject:()=>null});
  assert.equal(h.api.getItems().some(x=>x.category==='project'),false);
 });
-test('Cloud mode hides unsupported routes and maps nested tool categories',()=>{
+test('Cloud finder fails closed before login and maps only supported routes after login',()=>{
  const h=harness();
- h.api.setAdapter({mode:'cloud',isAvailable:()=>false});
+ h.api.setAdapter({mode:'cloud',isAvailable:()=>false,getProjects:()=>[{id:'private-id',name:'Private name'}]});
+ assert.equal(h.api.getItems().length,0,'Unauthenticated session must reveal no catalog or project names');
+ h.api.setAdapter({isAvailable:()=>true});
  const features=h.api.getItems();
  assert.ok(features.some(x=>x.id==='calendar'&&x.target==='tools:calendar'));
  assert.ok(features.some(x=>x.id==='backup'&&x.target==='account'));
  assert.ok(features.some(x=>x.id==='command'&&x.target==='command'));
+ assert.ok(features.some(x=>x.id==='open-project:private-id'&&x.target==='project-open:private-id'));
  for(const id of ['goals','activity','localai'])assert.ok(!features.some(x=>x.id===id),id);
  assert.ok(features.every(x=>x.target&&!x.target.startsWith('#/')));
 });
