@@ -12,6 +12,7 @@ const find=(query)=>window.CONTROL_NAVIGATION.find(query,window.CONTROL_NAVIGATI
 test('finder handles accents, plurals and natural French requests',()=>{
  assert.ok(find('mes rendez-vous').includes('meetings'));
  assert.ok(find('réunions').includes('meetings'));
+ assert.ok(find('rdv').includes('meetings'));
  assert.ok(find('sauvegarder mes données').includes('backup'));
  assert.ok(find('mes projets').includes('projects'));
  assert.ok(find('retrouver une décision').includes('decisions'));
