@@ -178,3 +178,27 @@ body.cloud-shell-v3 .shell-side-footer>button{margin-top:10px}
  .shell-project-more .clarity-advanced{grid-template-columns:repeat(2,minmax(0,1fr))!important}
  .shell-create-form{padding:16px!important}
 }
+
+
+/* Dense screens: instant feature filtering and create-on-demand forms. */
+.shell-tools-search{border:1px solid #dcded9;background:#fdfcf8;border-radius:14px;padding:16px 18px;margin:14px 0 22px;max-width:900px}
+.shell-tools-search label{display:block;font-size:12px;font-weight:810;margin:0 0 9px;color:#30485f}
+.shell-tools-search-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.shell-tools-search input{margin:0;flex:1 1 330px;min-width:160px;max-width:620px}
+.shell-tools-search [role=status]{font-size:12px;line-height:1.4;color:#65768a}
+.clarity-tool-link[hidden],.clarity-toolgroup[hidden]{display:none!important}
+.shell-progressive-form{padding:0!important;max-width:1000px}
+.shell-progressive-form>summary{cursor:pointer;padding:18px 21px;min-height:65px;display:flex;justify-content:space-between;gap:12px;align-items:center;list-style:none}
+.shell-progressive-form>summary::-webkit-details-marker{display:none}
+.shell-progressive-form>summary strong{font-size:14px;line-height:1.3;color:#253e55}
+.shell-progressive-form>summary small{font-size:11px;color:#728295;font-weight:470}
+.shell-progressive-form[open]>summary{border-bottom:1px solid #e0e6e9;background:#fafaf7}
+.shell-progressive-body{padding:20px 21px}
+@media(max-width:640px){
+ .shell-tools-search{padding:13px}
+ .shell-tools-search-row{display:block}
+ .shell-tools-search input{width:100%}
+ .shell-tools-search [role=status]{display:block;margin:9px 1px 0}
+ .shell-progressive-form>summary{flex-direction:column;align-items:flex-start;gap:4px;padding:14px 16px}
+ .shell-progressive-body{padding:14px 16px}
+}
