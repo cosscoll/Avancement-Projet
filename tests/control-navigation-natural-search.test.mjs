@@ -31,6 +31,8 @@ test('finder prioritizes exact feature title over description matches',()=>{
 });
 test('finder does not silently match an unrelated term',()=>{
  assert.deepEqual(find('inexistantxyz'),[]);
+ assert.deepEqual(find('je veux'),[],'Stop-word-only intent must not list every function');
+ assert.ok(find('').length>0,'Empty finder still exposes browseable categories');
 });
 
 test('finder uses accessible native buttons and handles ArrowUp from search field',()=>{
