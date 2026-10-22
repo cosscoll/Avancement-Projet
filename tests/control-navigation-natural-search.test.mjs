@@ -7,7 +7,7 @@ const source=readFileSync(new URL('../assets/navigation-hub.js',import.meta.url)
 const window={};
 const document={addEventListener(){}};
 runInNewContext(source,{window,document,location:{hash:'#/'},sessionStorage:{setItem(){}}});
-const find=(query)=>window.CONTROL_NAVIGATION.find(query,window.CONTROL_NAVIGATION.getItems()).map(x=>x.id);
+const find=(query)=>Array.from(window.CONTROL_NAVIGATION.find(query,window.CONTROL_NAVIGATION.getItems()),x=>x.id);
 
 test('finder handles accents, plurals and natural French requests',()=>{
  assert.ok(find('mes rendez-vous').includes('meetings'));
