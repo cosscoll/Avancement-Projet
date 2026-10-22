@@ -9,6 +9,7 @@ const FEATURES=[
  {id:'projects',title:'Mes projets',hint:'Ouvrir et retrouver mes espaces',category:'start',keywords:'accueil liste projet dossier commencer creer ajouter nouveau supprimer espace',personal:'#/',cloud:'projects'},
  {id:'new-project',title:'Créer un nouveau projet',hint:'Afficher directement le formulaire de création',category:'start',keywords:'creer nouveau projet ajouter ouvrir formulaire espace',personal:'#/new-project',cloud:null},
  {id:'inbox',title:'À traiter',hint:'Priorités, tâches et validations',category:'start',keywords:'action urgent faire tâche todo rappels creer ajouter priorite modifier terminer',personal:'#/control/inbox',cloud:'inbox'},
+ {id:'new-action',title:'Créer une tâche',hint:'Afficher directement le formulaire d’action',category:'start',keywords:'nouvelle tâche action ajouter créer saisie todo priorité',personal:'#/control/inbox/new',cloud:null},
  {id:'manager',title:'Piloter avec CONTROL',hint:'Bilans, état des projets et prochaines étapes',category:'start',keywords:'chef projet synthèse tableau bord avancée statut',personal:'#/control/manager',cloud:'manager'},
  {id:'search',title:'Rechercher dans mes données',hint:'Projets, décisions, notes et ressources',category:'start',keywords:'retrouver chercher recherche universelle fichier',personal:'#/control/search',cloud:'tools:search'},
  {id:'tools',title:'Explorer tous les outils',hint:'Parcourir les fonctions par usage',category:'start',keywords:'annuaire catalogue menu fonctions',personal:'#/control/tools',cloud:'tools'},
