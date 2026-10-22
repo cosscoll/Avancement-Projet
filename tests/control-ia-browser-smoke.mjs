@@ -21,6 +21,12 @@ const deadline=(fn,max=18000,step=180)=>async()=>{
 // Detect stale GitHub Pages before claiming that a browser tested this commit.
 // The fresh public HTML/data/JS must match the checked-out source bytes.
 const PUBLIC_ORIGIN='https://cosscoll.github.io/Avancement-Projet/';
+const swSource=readFileSync(resolve(root,'service-worker.js'),'utf8');
+const swCaches=['CACHE_SHELL','CACHE_PUBLIC'].map(key=>{
+ const match=swSource.match(new RegExp("const "+key+"='([^']+)'"));
+ assert.ok(match,'Missing service worker cache version: '+key);
+ return match[1];
+});
 const PUBLIC_ASSETS=['service-worker.js','index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/control-web-builder.js','assets/control-web-builder-ui.js','assets/control-web-builder.css','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','assets/navigation-hub.js','assets/navigation-hub.css','data/control-ia-delivery.json','data/control-ia-requirements.json'];
 const hash=data=>createHash('sha256').update(data).digest('hex');
 async function verifyPublishedFiles(){
@@ -630,7 +636,7 @@ try{
   await ready(()=>js("Boolean(navigator.serviceWorker.controller)"),14000)();
   const cacheNames=await js("(async()=>await caches.keys())()");
   assert.ok(Array.isArray(cacheNames)&&cacheNames.some(name=>name.startsWith('control-shell-')),'Public PWA must cache the application shell');
-  assert.ok(cacheNames.includes('control-shell-v51')&&cacheNames.includes('control-public-data-v51'),'PWA must have installed the verified v51 caches');
+  assert.ok(swCaches.every(name=>cacheNames.includes(name)),'PWA must have installed the cache versions declared by the checked-out service worker: '+swCaches.join(' & '));
   log('public PWA service worker activated and offline shell cache created');
   await command('Network.enable');
   try{

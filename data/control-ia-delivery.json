@@ -423,8 +423,8 @@
         "CONTROL-ASSISTANT",
         "CONTROL-AGENTS"
       ],
-      "summary": "Prototype statique local PWA V51 : brief libre interprété par règles (sans IA), 3 univers, 9 palettes à fort contraste et 3 typographies, édition de contenu, aperçu sécurisé mobile/desktop, contrôle qualité indicatif, huit versions récupérables et ZIP HTML/CSS. Génération autonome libre et publication autorisée depuis le chat non opérationnelles.",
-      "next": "Créer un éditeur multi-fichiers contrôlé, mesurer la qualité réelle par Lighthouse et tests sur mobiles physiques ; développer le flux de revue/publication après autorisation explicite. Auth et Cloud demeurent bloqués jusqu'à recette A/B réelle.",
+      "summary": "PWA V52 : atelier de sites une page ou trois pages autonomes (Accueil, Prestations, Contact), navigation relative, aperçu par page, 3 styles structurés, 9 palettes, 3 typographies, brief déterministe local, 8 contrôles éditoriaux, historiques réversibles et export ZIP. Aucune génération IA arbitraire ni mise en ligne automatisée.",
+      "next": "Réaliser une véritable génération HTML/CSS multi-fichiers pilotée par un moteur IA autorisé et isolé ; connecter GitHub uniquement après examen diff + confirmation utilisateur ; recette auth Cloud multi-appareils indépendante.",
       "blockers": [
         "Orchestrateur d'outils exécutable et sandbox sécurisée non disponibles."
       ],
