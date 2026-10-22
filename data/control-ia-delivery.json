@@ -91,8 +91,8 @@
       "priority": "P0",
       "stage": "deployed",
       "depends_on": [],
-      "summary": "Fonctionnalités locales publiées : actions et édition de projets avec confirmation de l'écriture, retour arrière des modifications refusées, sauvegardes multi-espaces bloquées si corrompues, récupération de fichiers bruts. Synchronisation réelle non prouvée.",
-      "next": "Conserver les tests réels Chromium et vérifier sur téléphone le stockage plein et la restauration ; poursuivre les vrais comptes CONTROL Cloud puis la synchronisation et l'isolation multi-utilisateurs.",
+      "summary": "Écritures locales confirmées ou annulées : création/édition d'actions et projets, liens outils/hébergement, bilans et historiques ; les trois magasins détectent une corruption et bloquent les exports trompeurs. Cloud et synchronisation réelle non prouvés.",
+      "next": "Tester les parcours de récupération sur téléphones physiques et poursuivre Auth JWT A/B, isolation et synchronisation CONTROL Cloud après consentement explicite.",
       "blockers": [
         "Persistance limitée au navigateur; aucune isolation de deux comptes réelle.",
         "Aucune recette Android physique documentée."
