@@ -55,7 +55,7 @@ test('personal new-project button no longer opens a distant undiscoverable form'
  assert.match(local,/addBox\.querySelector\('input\[name="name"\]'\)\?\.focus/);
  assert.match(local,/id="cancel-add-project"/);
  assert.match(local,/\.setAttribute\('aria-expanded',String\(opening\)\)/);
- assert.match(local,/$('#new-project')/); // intact form registration
+ assert.ok(local.includes("$('#new-project')")); // intact form registration
 });
 test('Cloud project and item forms scroll into view and guide focus',()=>{
  assert.match(cloudCode,/case 'toggle-project-form'/);
