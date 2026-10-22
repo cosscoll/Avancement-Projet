@@ -19,7 +19,7 @@ function sourceLink(project,provider){const x=openProject(project);return provid
 function availableAgents(){const ids=new Set(agents.map(a=>a.id));for(const p of ctx.projects){const d=openProject(p.id);for(const key of Object.keys(d.spaces||{}))ids.add(key);for(const key of (d.customProviders||[]))ids.add(key)}return [...ids]}
 function providerURL(project,provider){return safe(sourceLink(project,provider))||agents.find(x=>x.id===provider)?.url||''}
 function storage(){try{const raw=localStorage.getItem(KEY);if(raw===null){localStoreCorrupt=false;return {}}const a=JSON.parse(raw);if(!a||typeof a!=='object'||Array.isArray(a))throw Error('Invalid local data');localStoreCorrupt=false;return a}catch{localStoreCorrupt=true;return{}}}
-function init(){db=Object.assign({version:1,actions:[],missions:[],events:[],expenses:[],decisions:[],goalPlans:[],messages:[],globalRules:'Aucune dépense, abonnement, achat de crédits ou action engageante sans autorisation explicite. Ne pas utiliser de quotas partagés interdits par les consignes du projet. Ne pas publier de données sensibles. Vérifier les résultats avant de les annoncer terminés.',notifications:false},storage());for(const key of ['actions','missions','events','meetings','expenses','income','decisions','goalPlans','messages'])if(!Array.isArray(db[key]))db[key]=[]}
+function init(){db=Object.assign({version:1,actions:[],missions:[],events:[],expenses:[],decisions:[],goalPlans:[],websites:[],messages:[],globalRules:'Aucune dépense, abonnement, achat de crédits ou action engageante sans autorisation explicite. Ne pas utiliser de quotas partagés interdits par les consignes du projet. Ne pas publier de données sensibles. Vérifier les résultats avant de les annoncer terminés.',notifications:false},storage());for(const key of ['actions','missions','events','meetings','expenses','income','decisions','goalPlans','websites','messages'])if(!Array.isArray(db[key]))db[key]=[]}
 function save(){if(localStoreCorrupt){toast('Stockage local illisible : restaure une sauvegarde avant toute modification.');return false}try{db.lastChanged=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(db));return true}catch{toast('Stockage indisponible ou plein. Effectue une sauvegarde.');return false}}
 // A local operation is confirmed only after durable storage has accepted the full state.
 // Roll back the in-memory changes too: rerendering an unpersisted state would mislead users.
@@ -492,10 +492,36 @@ function meetings(){
  remove:async m=>{const index=db.meetings.findIndex(x=>x.id===m.id);if(index<0)throw Error('Fiche introuvable.');const old=db.meetings.splice(index,1)[0];if(!save()){db.meetings.splice(index,0,old);throw Error('Suppression impossible.')}return true}
  });
 }
+function webbuilder(){
+ const ui=window.CONTROL_WEB_BUILDER_UI,engine=window.CONTROL_WEB_BUILDER_CORE;
+ if(!ui||!engine){$('#main').innerHTML=view('Constructeur de sites','Éditeur de sites local',note('Constructeur indisponible : actualise CONTROL.'));return}
+ ui.mount($('#main'),{
+  projects:ctx.projects,
+  list:()=>db.websites.slice(),
+  projectName:project=>ctx.projects.find(p=>p.id===project)?.name||'',
+  id,
+  save:input=>{
+   const p=engine.normalize(input),project=String(input.project||'');
+   if(project&&!ctx.projects.some(x=>x.id===project))return false;
+   const reference=String(input.id||id());
+   if(!/^[a-z0-9_-]{6,90}$/i.test(reference))return false;
+   return commitLocal(()=>{
+    const entry={...p,project,id:reference,updatedAt:new Date().toISOString()};
+    const index=db.websites.findIndex(x=>x.id===reference);
+    if(index>=0)db.websites[index]=entry;
+    else{if(db.websites.length>=40)throw Error('Limite de 40 brouillons atteinte.');db.websites.push(entry)}
+   });
+  },
+  remove:ref=>{
+   if(!db.websites.some(x=>x.id===ref))return false;
+   return commitLocal(()=>{db.websites=db.websites.filter(x=>x.id!==ref)});
+  }
+ });
+}
 function tools(){
  const groups=[
   {name:'Essentiels',subtitle:'Ce que tu utilises au quotidien',open:true,tools:[['localai','CONTROL IA locale','Discuter avec un vrai modèle gratuit'],['command','Claude & Gemini','Préparer et centraliser les missions'],['lab','Laboratoire IA','Créer des briefs et contrôler les réponses'],['library','Ressources','Tes liens et documents'],['search','Rechercher','Retrouver un projet ou un fichier']]},
-  {name:'Explorer',subtitle:'Apprendre, créer et publier',open:false,tools:[['catalog','Bibliothèques IA','87 outils et 12 kits pratiques'],['deploy','Mise en ligne','Guides GitHub, IONOS et autres'],['activity','GitHub et tests','Suivi des dépôts publics']]},
+  {name:'Explorer',subtitle:'Apprendre, créer et publier',open:false,tools:[['webbuilder','Constructeur de sites','Modèles éditables, aperçu et export HTML/CSS'],['catalog','Bibliothèques IA','87 outils et 12 kits pratiques'],['deploy','Mise en ligne','Guides GitHub, IONOS et autres'],['activity','GitHub et tests','Suivi des dépôts publics']]},
   {name:'Organiser',subtitle:'Planifier et garder le contrôle',open:false,tools:[['missions','Toutes les missions','Suivi détaillé et historique'],['meetings','Visios et rendez-vous','Équipe, clients et prospects'],['calendar','Calendrier','Échéances enregistrées'],['memory','Décisions','Historique de projet'],['goals','Planifier un objectif','Étapes modifiables et sources locales'],['budget','Budget et quotas','Suivi déclaratif des coûts'],['backup','Sauvegardes','Exporter ou importer tes données'],['settings','Paramètres','Règles et confidentialité'],['inbox','À traiter','Actions prioritaires']]}
  ];
  const markup=groups.map((group,index)=>'<details class="clarity-toolgroup" '+(group.open?'open':'')+'><summary><span><strong>'+h(group.name)+'</strong><small>'+h(group.subtitle)+'</small></span><span class="clarity-chevron">⌄</span></summary><div class="clarity-toolcards">'+group.tools.map(([route,title,description])=>'<a class="clarity-tool-link" href="#/control/'+h(route)+'"><strong>'+h(title)+'</strong><small>'+h(description)+'</small><span aria-hidden="true">→</span></a>').join('')+'</div></details>').join('');
@@ -552,7 +578,7 @@ function validateBackupData(data){
  if(!obj(data)||!obj(data.command)||!obj(data.hub)||!obj(data.automations))return false;
  const command=data.command;
  if(!Array.isArray(command.actions)||!Array.isArray(command.missions))return false;
- for(const key of ['actions','missions','events','meetings','expenses','income','decisions','messages']){
+ for(const key of ['actions','missions','events','meetings','expenses','income','decisions','websites','messages']){
   if(command[key]!==undefined&&(!Array.isArray(command[key])||command[key].length>15000||command[key].some(x=>!obj(x))))return false;
  }
  // Reject prototype-mutating JSON keys, including inside imported project records.
@@ -791,6 +817,6 @@ function paintSprints(selector,onlyBlockers=false){const out=$(selector);if(!out
  const n=Object.keys(sprintLoaded).length;if(n<SPRINT_IDS.length)out.innerHTML+=tiny((SPRINT_IDS.length-n)+' source(s) non vérifiée(s), information potentiellement partielle.');
  out.innerHTML+=tiny('Ces données sont des journaux GitHub, pas un suivi en direct de ChatGPT. Le statut en ligne nécessite une preuve de recette réelle.');
 }
-function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,meetings,command,localai,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,goals,budget,backup,settings,search};(pages[page]||manager)()}
+function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,webbuilder,meetings,command,localai,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,goals,budget,backup,settings,search};(pages[page]||manager)()}
 window.CONTROL_CENTER={render};
 })();
