@@ -36,8 +36,8 @@ test('new homepage links are mobile responsive and keyboard reachable',()=>{
  assert.match(home,/\.control-whats-new-links a:focus-visible/);
 });
 test('new PWA version invalidates stale offline home cache',()=>{
- assert.match(offline,/CACHE_SHELL='control-shell-v62'/);
- assert.match(offline,/CACHE_PUBLIC='control-public-data-v62'/);
+ assert.match(offline,/CACHE_SHELL='control-shell-v63'/);
+ assert.match(offline,/CACHE_PUBLIC='control-public-data-v63'/);
  assert.match(offline,/fetch\(request,\{cache:'no-cache'\}\)/);
  assert.match(offline,/await self\.clients\.claim\(\)/);
 });
