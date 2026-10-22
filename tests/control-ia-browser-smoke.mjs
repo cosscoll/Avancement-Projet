@@ -460,6 +460,15 @@ try{
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('#shell-quick-query')"),8000)();
  log('desktop homepage intent finds and opens budget without an intermediate category menu');
+ // Direct request should lead to the actual new-project form, not merely the project overview.
+ await js("(()=>{const field=document.querySelector('#shell-quick-query');field.value='créer un nouveau projet';field.form.requestSubmit()})()");
+ await ready(()=>js("!!document.querySelector('.control-finder [data-finder-id=new-project]')"),8000)();
+ await js("document.querySelector('.control-finder [data-finder-id=new-project]').click()");
+ await ready(()=>js("location.hash==='#/new-project'&&!document.querySelector('#add-box')?.classList.contains('hidden')"),8000)();
+ assert.equal(await js("document.activeElement?.getAttribute('name')"),'name');
+ await js("document.querySelector('#cancel-add-project').click()");
+ await ready(()=>js("location.hash==='#/'&&!!document.querySelector('#add-box')?.classList.contains('hidden')"),8000)();
+ log('desktop direct creation request opens focused form, cancels without project mutation');
  // UX regression: new project opens close to its action, with an explicit
  // cancel path, and advanced project sections are visible on desktop.
  await js("document.querySelector('#add-project').click()");
