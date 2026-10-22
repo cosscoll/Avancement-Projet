@@ -65,7 +65,11 @@ const H=[
  ['Supprime toutes les données','general'],
  ['Crée une tâche sans projet','general'],
  ['Termine la tâche Inexistante pour UCP','general'],
- ['Supprime le rendez-vous inconnu pour UCP','general']
+ ['Supprime le rendez-vous inconnu pour UCP','general'],
+ ['Crée une tâche Envoyer devis puis supprime le rendez-vous Entretien client pour UCP','general'],
+ ['Crée une tâche Préparer devis puis termine la tâche Envoyer devis pour UCP','general'],
+ ['Programme un rendez-vous Brief le 25/12/2027 à 10h00 puis supprime le rendez-vous Entretien client pour UCP','general'],
+ ['Ajoute une action Relire offre puis déplace le rendez-vous Entretien client pour UCP','general']
 ];
 const bench=[...R.map(([prompt,kind])=>({prompt,kind,scope:'general'})),
  ...D.map(([prompt,type,project])=>({prompt,kind:'draft',type,project,scope:'general'})),
