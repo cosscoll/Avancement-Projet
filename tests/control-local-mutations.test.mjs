@@ -73,3 +73,44 @@ test('all routine command-center editors use an atomic storage transaction',()=>
  assert.match(source,/if\(status==='done'&&!result\)return toast\(/);
  assert.doesNotMatch(source,/m\.status=String\(f\.get\('status'\)\);m\.result=/);
 });
+
+test('malformed local JSON is never silently overwritten by an empty dashboard',()=>{
+ const storageFn=source.match(/function storage\(\)\{[^\n]+/)?.[0];
+ const saveFn=source.match(/function save\(\)\{[^\n]+/)?.[0];
+ assert.ok(storageFn&&saveFn);
+ let writes=0;const alerts=[];
+ const api=new Function('localStorage','toast',
+  'const KEY="control-command-v1";let localStoreCorrupt=false,db={actions:[]};'+storageFn+'\n'+saveFn+'\nreturn {storage,save,flag:()=>localStoreCorrupt};'
+ )({getItem:()=>'{malformed-json',setItem:()=>{writes++}},message=>alerts.push(message));
+ assert.deepEqual(api.storage(),{});
+ assert.equal(api.flag(),true);
+ assert.equal(api.save(),false);
+ assert.equal(writes,0);
+ assert.match(alerts.at(-1),/restaure une sauvegarde/);
+});
+
+test('valid local state still persists normally after corruption recovery',()=>{
+ const storageFn=source.match(/function storage\(\)\{[^\n]+/)?.[0];
+ const saveFn=source.match(/function save\(\)\{[^\n]+/)?.[0];
+ let raw='{broken',writes=0;
+ const api=new Function('localStorage','toast',
+  'const KEY="control-command-v1";let localStoreCorrupt=false,db={actions:[]};'+storageFn+'\n'+saveFn+'\nreturn {storage,save,flag:()=>localStoreCorrupt};'
+ )({getItem:()=>raw,setItem:(_,v)=>{writes++;raw=v}},()=>{});
+ api.storage();
+ assert.equal(api.flag(),true);
+ raw='{"actions":[{"id":"recovered"}]}';
+ assert.deepEqual(api.storage(),{actions:[{id:'recovered'}]});
+ assert.equal(api.flag(),false);
+ assert.equal(api.save(),true);
+ assert.equal(writes,1);
+});
+
+test('recovery surface offers raw download, blocks normal export and keeps Cloud disabled',()=>{
+ assert.match(source,/role="alert"[\s\S]{0,200}Stockage local illisible/);
+ assert.match(source,/data-act="download-corrupt"/);
+ assert.match(source,/if\(localStoreCorrupt\)return toast\('Export normal bloqué/);
+ assert.match(source,/const raw=localStorage\.getItem\(KEY\)/);
+ assert.match(source,/localStoreCorrupt=false;init\(\)/);
+ const cloud=JSON.parse(readFileSync(new URL('../config/cloud.json',import.meta.url),'utf8'));
+ assert.equal(cloud.enabled,false);
+});
