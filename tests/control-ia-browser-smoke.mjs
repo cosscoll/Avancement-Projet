@@ -448,6 +448,30 @@ try{
  await js("(()=>{const x=document.querySelector('#tools-filter');x.value='';x.dispatchEvent(new Event('input',{bubbles:true}))})()");
  assert.equal(await js("document.querySelectorAll('.clarity-toolgroup[open]').length"),1);
  log('desktop tool search finds hidden visio feature and restores categories');
+
+  // Local site builder is a real, sandboxed, user-controlled editor, not remote AI generation.
+  await js("location.hash='#/control/webbuilder'");
+  await ready(()=>js("!!document.querySelector('#builder-form')&&!!document.querySelector('#builder-preview')"),8000)();
+  const builderState=await js("({sandbox:document.querySelector('#builder-preview')?.getAttribute('sandbox'),source:document.querySelector('#builder-preview')?.srcdoc||'',modes:document.querySelectorAll('[data-builder-viewport]').length})");
+  assert.equal(builderState.sandbox,'','Preview must not be allowed to run scripts or same-origin access');
+  assert.ok(builderState.source.includes('<style>')&&builderState.source.includes('Notre expertise.'),'Generator should render a complete preview');
+  assert.equal(builderState.modes,2);
+  await js("(()=>{const form=document.querySelector('#builder-form');form.elements.brand.value='STUDIO CONTROL RECETTE';form.elements.brand.dispatchEvent(new Event('input',{bubbles:true}));form.elements.theme.value='produit';form.elements.theme.dispatchEvent(new Event('change',{bubbles:true}));form.requestSubmit()})()");
+  await ready(()=>js("JSON.parse(localStorage.getItem('control-command-v1')||'{}').websites?.some(s=>s.brand==='STUDIO CONTROL RECETTE')"),9000)();
+  assert.equal(await js("document.querySelector('#builder-preview').srcdoc.includes('STUDIO CONTROL RECETTE')"),true);
+  assert.ok(await js("document.querySelector('[data-builder-viewport=mobile]')?.click();document.querySelector('#builder-preview')?.classList.contains('is-mobile')"));
+  const builderZip=await js("(()=>{const item=JSON.parse(localStorage.getItem('control-command-v1')).websites.find(s=>s.brand==='STUDIO CONTROL RECETTE');const files=window.CONTROL_WEB_BUILDER_CORE.files(item),zip=window.CONTROL_WEB_BUILDER_CORE.zip(files);return {count:Object.keys(files).length,bytes:zip.length,head:[...zip.slice(0,4)]}})()");
+  assert.equal(builderZip.count,4);
+  assert.deepEqual(builderZip.head,[80,75,3,4]);
+  assert.ok(builderZip.bytes>1000);
+  await command('Page.reload',{ignoreCache:true});
+  await ready(()=>js("!!document.querySelector('.shell-dashboard')"),8000)();
+  await js("location.hash='#/control/webbuilder'");
+  await ready(()=>js("!!document.querySelector('[data-open-draft]')"),8000)();
+  await js("document.querySelector('[data-open-draft]').click()");
+  assert.equal(await js("document.querySelector('#builder-form [name=brand]').value"),'STUDIO CONTROL RECETTE');
+  log('site builder: sandbox preview, local save, ZIP files, responsive mode and reload persistence');
+
  // The mission list must not be pushed below a lengthy creation form.
  await js("location.hash='#/control/missions'");
  await ready(()=>js("!!document.querySelector('#mission-create')"),8000)();
