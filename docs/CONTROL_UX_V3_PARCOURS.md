@@ -34,6 +34,14 @@ Lorsque l'utilisateur recherche « créer un nouveau projet », le moteur prése
 - `tests/control-ia-browser-smoke.mjs` : étape Chromium de création/annulation ajoutée ; pas encore exécutée sur le dernier SHA de production.
 - Le nouveau parcours est un raccourci UI : aucun compte Cloud, aucun fournisseur externe, aucune automatisation ne sont activés.
 
+## Création de tâche sans détour (V61)
+
+La recherche « créer une tâche » affiche désormais la destination personnelle **Créer une tâche** en premier. La route `#/control/inbox/new` conserve la page « À traiter » et met directement en vue le formulaire « Ajouter une action », avec le curseur dans le champ de titre. L'ouverture de cette route **n'enregistre rien** et n'envoie aucune information à un fournisseur externe. L'utilisateur doit toujours confirmer l'ajout.
+
+- `tests/control-new-task-intent.test.mjs` : intention et contrôle Cloud, reconnaissance de la route et focus sans écriture.
+- `tests/control-ia-browser-smoke.mjs` : étape prévue sous Chromium pour vérifier le formulaire, son focus et l'absence de modification de `control-command-v1` jusqu'à la validation ; test navigateur public non encore exécuté.
+- Le raccourci n'est pas proposé dans Cloud, dont l'authentification réelle demeure soumise à ses propres contrôles A/B.
+
 ## Hygiène de publication
 
 Après les correctifs de navigation du 22 octobre, la PWA utilise les caches **`control-shell-v61`** et **`control-public-data-v61`**. Les ressources publiques sont servies en priorité depuis le réseau et conservées localement pour le mode hors connexion ; cette rotation renouvelle également le précache lors de l'installation du nouveau service worker. `assets/workspace-shell.css` est une ressource critique mise en cache ; la page Cloud privée n'est pas précachée.
