@@ -149,6 +149,12 @@ try{
  log('operator refuses access before consent');
  await js("document.querySelector('[data-op-consent]').click()");
  assert.equal(await js("document.querySelector('[data-op-consent]').checked"),true);
+ // Conflicting, negative and destructive requests must never prepare a write.
+ for(const unsafe of ['Ne crée pas une tâche pour UCP','Efface toutes les actions pour UCP','Crée une tâche Effacer le devis puis supprime le rendez-vous pour UCP']){
+  await js("(()=>{const f=document.querySelector('[data-op-form]');f.querySelector('textarea').value="+JSON.stringify("REPLACE")+";f.requestSubmit()})()".replace("REPLACE",unsafe));
+  assert.equal(await js("document.querySelector('[data-op-draft]').hidden"),true,'Unsafe intent must not create an actionable proposal');
+ }
+ log('assistant rejects negated, bulk-destructive and contradictory commands in actual Chromium');
  // A fresh ephemeral Chrome profile is used. All actions are local test fixtures only.
  await js("document.querySelector('[data-op-form] textarea').value='Crée une tâche Recette Navigateur Unique pour UCP';document.querySelector('[data-op-form]').requestSubmit()");
  await ready(()=>js("document.querySelector('[data-op-draft]').hidden===false"),9000)();
