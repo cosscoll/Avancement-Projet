@@ -85,7 +85,8 @@ function findFeatures(raw,entries=catalog()){
 const catalog=()=>{
  const mode=adapter.mode==='cloud'?'cloud':'personal';
  if(mode==='cloud'&&!adapter.isAvailable?.())return [];
- const ownProjects=Array.isArray(adapter.getProjects?.())?adapter.getProjects():[];
+ const collection=adapter.getProjects?.();
+ const ownProjects=Array.isArray(collection)?collection:[];
  const projectEntries=ownProjects.filter(p=>p&&typeof p.id==='string'&&p.id&&typeof p.name==='string'&&p.name.trim()).slice(0,5000).map(p=>({
   id:'open-project:'+p.id,title:p.name.trim(),hint:'Ouvrir ce projet',
   category:'projects',keywords:'projet espace '+String(p.category||''),
@@ -117,7 +118,7 @@ function ensure(){
  '<input type="search" autocomplete="off" spellcheck="false" aria-label="Rechercher une fonction" placeholder="Ex. créer une visio, retrouver une décision…">'+
  '<kbd>Ctrl K</kbd></label>'+
  '<nav class="control-finder-categories" aria-label="Catégories de fonctions"></nav>'+
- '<div class="control-finder-results" id="control-finder-results" role="group" aria-label="Fonctions accessibles" aria-live="polite"></div>'+
+ '<div class="control-finder-results" id="control-finder-results" role="group" aria-label="Fonctions accessibles"></div>'+
  '<div class="control-finder-foot"><span>Les fonctions qui nécessitent une connexion restent soumises aux droits du compte.</span><span>Échap pour fermer</span></div>'+
  '</section>';
  document.body.appendChild(dialog);
@@ -155,7 +156,7 @@ function render(){
  '<button type="button" data-finder-cat="all" aria-pressed="'+(!search&&category==='all')+'" class="'+(!search&&category==='all'?'is-active':'')+'">Tout voir</button>';
  const filtered=search?findFeatures(query.value,all):all.filter(item=>category==='all'||item.category===category);
  results.innerHTML=filtered.length?
- '<div class="control-finder-summary">'+(search?filtered.length+' résultat(s) pour « '+escape(query.value.trim())+' »':filtered.length+' fonctions · '+escape(CAT.find(([id])=>id===category)?.[1]||'Toutes les catégories'))+'</div>'+
+ '<div class="control-finder-summary" role="status" aria-live="polite">'+(search?filtered.length+' résultat(s) pour « '+escape(query.value.trim())+' »':filtered.length+' fonctions · '+escape(CAT.find(([id])=>id===category)?.[1]||'Toutes les catégories'))+'</div>'+
  '<div class="control-finder-grid">'+filtered.map(item=>'<button type="button" data-finder-id="'+escape(item.id)+'" class="control-finder-item">'+
  '<span class="control-finder-symbol" aria-hidden="true">↗</span><span><strong>'+escape(item.title)+'</strong><small>'+escape(item.hint)+'</small></span><span class="control-finder-arrow" aria-hidden="true">→</span></button>').join('')+'</div>':
  '<div class="control-finder-empty">Aucune fonction trouvée. Essayez « missions », « visio », « budget » ou « projet ».<button type="button" data-finder-cat="all">Voir toutes les fonctions</button></div>';
