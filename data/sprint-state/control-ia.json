@@ -161,5 +161,39 @@
     "stage": "main_code_v8_tested_ci_unverified",
     "commit_sha": "fecad30c035c05265506a27068045a13d4b8fde1",
     "evidence_url": "https://github.com/cosscoll/Avancement-Projet/commit/fecad30c035c05265506a27068045a13d4b8fde1"
+  },
+  "pending_verification": {
+    "date": "2026-10-22",
+    "source": "conversation",
+    "code_commit_sha": "907db5c947e011e735ae165b6321ba51fd79c340",
+    "branch": "main",
+    "scope": "Navigation V3: requêtes françaises naturelles, recherche directe des projets, clavier/accessibilité et non-divulgation Cloud avant connexion; caches PWA v56.",
+    "changed_files": [
+      "assets/navigation-hub.js",
+      "assets/cloud-app.js",
+      "tests/control-navigation-natural-search.test.mjs",
+      "tests/control-ia-browser-smoke.mjs",
+      "service-worker.js",
+      "tests/pwa-atomic-install.test.mjs",
+      "tests/control-workspace-shell.test.mjs",
+      "docs/CONTROL_UX_V3_PARCOURS.md"
+    ],
+    "checks_completed": [
+      "25 assertions isolées exécutées directement sur les fichiers main récupérés par GitHub",
+      "4 vérifications de rendu/échappement/navigation clavier sur DOM simulé",
+      "Syntaxe JavaScript du navigateur et du module Cloud vérifiée dans un moteur V8"
+    ],
+    "checks_not_yet_verified": [
+      "Suite Node complète sur le dernier SHA GitHub Actions",
+      "Recette Chromium du projet réel sur GitHub Pages après déploiement",
+      "Parcours tactile sur vrai Android/iOS",
+      "Auth JWT/PostgREST RLS A/B et synchronisation multi-appareils"
+    ],
+    "ci": "unverified",
+    "live_pages": "unverified",
+    "operational_claim_allowed": false,
+    "cloud_enabled": false,
+    "automations_changed": false,
+    "next_action": "Confirmer CI sur le SHA final puis navigateur Pages, corriger toute régression avant nouvelle fonctionnalité; conserver Cloud fermé sans vraie Auth A/B, ne réactiver aucune automatisation."
   }
 }
