@@ -75,6 +75,7 @@ body.control-shell-v3 .panel,body.control-shell-v3 .card,body.cloud-shell-v3.she
 .shell-dashboard-section .clarity-listhead h2{font-size:22px!important;letter-spacing:-.5px}
 .shell-dashboard-section .shell-project-toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0 18px}
 .shell-dashboard-section .shell-project-toolbar input{margin:0;width:100%;max-width:350px;border-color:#d5d5d0;background:#fff}
+.shell-project-count{color:#67768a;font-size:12px;line-height:1.45;min-height:18px;font-weight:620}
 .shell-projects-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:0!important}
 .shell-projects-list .card{min-height:94px!important;padding:15px 16px!important;border-radius:12px!important;display:grid!important;grid-template-columns:42px 1fr 18px;grid-template-rows:1fr;gap:13px;align-items:center;transition:border-color .12s,background .12s!important}
 .shell-projects-list .card .badge{width:42px!important;height:42px!important;min-width:42px;border-radius:9px!important;margin:0!important;background:#eae9e4!important;color:#465366!important}
