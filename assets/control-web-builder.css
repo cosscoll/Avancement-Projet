@@ -54,3 +54,10 @@
 .web-builder-audit li button{padding:5px 8px;font-size:11px;border-radius:6px;white-space:nowrap}
 .web-builder-audit>p{font-size:11px;line-height:1.5}
 @media(max-width:740px){.web-builder-audit ul{grid-template-columns:1fr}.web-builder-audit{padding:15px}}
+
+.web-builder-history{margin:20px 0 0;padding-top:14px;border-top:1px solid #e3e8ec}
+.web-builder-history h3{font-size:14px;letter-spacing:-.02em;margin:0 0 8px}
+.web-builder-history small{font-size:11px;color:#718095}
+.web-builder-current{font-size:12px;font-weight:750;color:#486258}
+.web-builder-version{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #edf0f3;font-size:12px}
+.web-builder-version button{min-height:32px;padding:5px 9px;border-radius:7px;font-size:11px;white-space:nowrap}

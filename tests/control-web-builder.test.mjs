@@ -139,3 +139,41 @@ test('static quality panel remains advisory and never runs tests on untrusted HT
  assert.match(ui,/ne remplacent pas une recette SEO/);
  assert.match(ui,/iframe id="builder-preview"[^>]+sandbox=""/);
 });
+
+test('template placeholder text cannot pass as original work in the quality score',()=>{
+ for(const theme of Object.keys(site.THEMES)){
+  const report=site.audit({theme,brand:'MON STUDIO'});
+  for(const id of ['brand','title','description','services','email']){
+   const check=report.checks.find(x=>x.id===id);
+   assert.ok(check&&!check.ok,theme+' '+id+' should flag the example copy');
+  }
+ }
+});
+test('deterministic site draft history retains eight rollback points and allows restoring',()=>{
+ const initial=site.versionDraft(null,{brand:'Atelier 1',theme:'studio'},'custom-web-1','2026-10-22T10:00:00Z');
+ assert.equal(initial.version,1);
+ assert.deepEqual(initial.revisions,[]);
+ let row=initial;
+ for(let i=2;i<=12;i++){
+  row=site.versionDraft(row,{...row,title:'Titre de version '+i},'custom-web-1','2026-10-22T10:00:00Z');
+  assert.equal(row.version,i);
+  assert.ok(row.revisions.length<=8);
+ }
+ assert.deepEqual(row.revisions.map(v=>v.version),[4,5,6,7,8,9,10,11]);
+ const restored=site.versionDraft(row,{...row.revisions[0].draft},'custom-web-1','2026-10-22T11:00:00Z');
+ assert.equal(restored.version,13);
+ assert.equal(restored.title,'Titre de version 4');
+ assert.equal(restored.revisions.at(-1).version,12);
+ const unchanged=site.versionDraft(restored,{...restored},'custom-web-1','2026-10-22T12:00:00Z');
+ assert.deepEqual(unchanged,restored,'Saving without any content change cannot generate a false version');
+});
+test('history restoration is never a hidden third-party action',()=>{
+ const ui=readFileSync(new URL('../assets/control-web-builder-ui.js',import.meta.url),'utf8');
+ const app=readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
+ assert.match(ui,/data-restore-version/);
+ assert.match(ui,/Version actuelle/);
+ assert.match(ui,/api\.save\(candidate\)/);
+ assert.match(ui,/confirm\('Restaurer la version/);
+ assert.match(app,/engine\.versionDraft\(/);
+ assert.doesNotMatch(ui,/fetch\(|XMLHttpRequest|WebSocket|sendBeacon/);
+});

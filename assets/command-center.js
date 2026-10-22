@@ -506,8 +506,8 @@ function webbuilder(){
    const reference=String(input.id||id());
    if(!/^[a-z0-9_-]{6,90}$/i.test(reference))return false;
    return commitLocal(()=>{
-    const entry={...p,project,id:reference,updatedAt:new Date().toISOString()};
     const index=db.websites.findIndex(x=>x.id===reference);
+    const entry=engine.versionDraft(index>=0?db.websites[index]:null,{...p,project},reference,new Date().toISOString());
     if(index>=0)db.websites[index]=entry;
     else{if(db.websites.length>=40)throw Error('Limite de 40 brouillons atteinte.');db.websites.push(entry)}
    });

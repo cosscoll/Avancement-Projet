@@ -26,12 +26,25 @@ function mount(target,api){
  };
  target.innerHTML='<div class="web-builder"><div class="web-builder-intro"><div><p class="quiet">CRÉATION WEB / ATELIER LOCAL</p><h1>Un site qui prend forme sous vos yeux.</h1><p>Choisissez une direction, personnalisez votre contenu et récupérez un site HTML/CSS utilisable. Aucune IA appelée, aucune publication automatique.</p></div><span class="chip">Prototype local · 3 modèles</span></div>'+
   '<div class="web-builder-layout"><div class="web-builder-panel"><h2>Personnaliser</h2><div id="builder-fields">'+form()+'</div><div class="web-builder-saves"><div class="row"><h3>Mes brouillons</h3><button type="button" id="builder-new">Nouveau</button></div><div id="builder-drafts">'+entries()+'</div><button type="button" id="builder-delete" hidden>Supprimer ce brouillon</button></div></div>'+
+ 
+   '<section class="web-builder-history" id="builder-history" aria-label="Versions de ce brouillon"><h3>Historique des versions</h3><div id="builder-revisions"></div><small>Une version précédente restaurée devient une nouvelle version. Les 8 dernières versions antérieures sont conservées sur cet appareil.</small></section>'+
   '<div class="web-builder-work"><div class="web-builder-toolbar"><strong>Aperçu sécurisé</strong><div class="web-builder-modes"><button type="button" data-builder-viewport="desktop" aria-pressed="true">Ordinateur</button><button type="button" data-builder-viewport="mobile" aria-pressed="false">Mobile</button></div></div>'+
   '<div class="web-builder-canvas"><iframe id="builder-preview" title="Aperçu isolé du site généré" sandbox="" referrerpolicy="no-referrer"></iframe></div>'+
   '<section class="web-builder-audit" aria-labelledby="builder-audit-title"><div class="web-builder-audit-top"><h3 id="builder-audit-title">Contrôles avant export</h3><strong id="builder-audit-score" aria-live="polite"></strong></div><ul id="builder-audit-list"></ul><p class="muted">Contrôles statiques indicatifs : ils ne remplacent pas une recette SEO, WCAG ou Lighthouse, ni les essais sur appareils réels.</p></section>'+
   '<details class="web-builder-code"><summary>Voir le code HTML généré</summary><p class="muted">Code en lecture seule : modifiez les champs à gauche, puis exportez les fichiers.</p><textarea id="builder-code" readonly spellcheck="false" aria-label="Code HTML généré" rows="12"></textarea></details>'+
   '<p class="web-builder-limits">Aperçu isolé : les scripts, formulaires et contenus externes sont désactivés. L’export fournit index.html, styles.css, standalone.html et README.md. Aucune connexion ni hébergement externe.</p></div></div></div>';
  const $=s=>target.querySelector(s),query=s=>[...target.querySelectorAll(s)];
+ const history=()=>{
+  const panel=$('#builder-history'),box=$('#builder-revisions');
+  const current=api.list().find(x=>x.id===selectedId);
+  panel.hidden=!current;
+  if(!current){box.textContent='';return}
+  const version=Number.isSafeInteger(current.version)&&current.version>0?current.version:1;
+  const rows=Array.isArray(current.revisions)?current.revisions.slice(-8).reverse():[];
+  box.innerHTML='<p class="web-builder-current">Version actuelle : v'+version+'</p>'+
+   (rows.length?rows.map(x=>'<div class="web-builder-version"><span>v'+escape(x.version)+' · '+escape(String(x.at||'').slice(0,10)||'date inconnue')+'</span><button type="button" data-restore-version="'+escape(x.version)+'">Restaurer</button></div>').join(''):'<p class="muted">Les anciennes versions apparaîtront après votre prochaine modification enregistrée.</p>');
+ };
+
  const status=text=>{const el=$('#builder-status');if(el)el.textContent=text};
  function values(){
   const f=new FormData($('#builder-form')),out={};
@@ -61,6 +74,7 @@ function mount(target,api){
   if(!keepMessage)unsaved=false;
   $('#builder-delete').hidden=!selectedId;
   $('#builder-drafts').innerHTML=entries();
+  history();
   const editor=$('#builder-form');
   editor.addEventListener('input',()=>{unsaved=true;preview()});
   editor.addEventListener('change',()=>{unsaved=true;preview()});
@@ -91,6 +105,18 @@ function mount(target,api){
   selectedId='';working=engine.normalize({theme:'studio'});redraw();status('Brouillon supprimé sur cet appareil.');
  };
  target.querySelector('.web-builder').addEventListener('click',event=>{
+
+  const restore=event.target.closest('[data-restore-version]');
+  if(restore){
+   const row=api.list().find(x=>x.id===selectedId),version=Number(restore.dataset.restoreVersion);
+   const archived=Array.isArray(row?.revisions)?row.revisions.find(x=>x.version===version):null;
+   if(!archived||!archived.draft)return;
+   if(unsaved&&!confirm('Abandonner les modifications en cours non enregistrées ?'))return;
+   if(!confirm('Restaurer la version '+version+' en créant une nouvelle version ?'))return;
+   const candidate={...engine.normalize(archived.draft),project:archived.draft.project||'',id:selectedId};
+   if(!api.save(candidate)){status('Restauration refusée : stockage indisponible.');return}
+   working=candidate;unsaved=false;redraw();status('Version '+version+' restaurée en une nouvelle version.');return;
+  }
   const fix=event.target.closest('[data-audit-field]');
   if(fix){const el=$('#builder-form [name="'+fix.dataset.auditField+'"]');if(el){el.focus({preventScroll:true});el.scrollIntoView({block:'center',behavior:'auto'})}return}
   const viewport=event.target.closest('[data-builder-viewport]');
