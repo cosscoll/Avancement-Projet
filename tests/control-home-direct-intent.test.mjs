@@ -31,9 +31,7 @@ test('home search delegates only navigation, without automatic mutations or exte
  const nodes={'#shell-quick-find':{},'#shell-quick-query':{value:'  créer un site web  '}};
  const find=(selector)=>nodes[selector];
  const window={CONTROL_NAVIGATION:{open:opts=>{requested=opts}}};
- const quick=new Function('
-});
-,'window',wiring+'return quickFind;')(find,window);
+ const quick=new Function(String.fromCharCode(36),'window',wiring+'return quickFind;')(find,window);
  quick.onsubmit({preventDefault(){prevented++}});
  assert.equal(prevented,1,'Submitting the form must not navigate/reload the browser');
  assert.deepEqual(requested,{query:'créer un site web'});
