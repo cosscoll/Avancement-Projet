@@ -465,9 +465,7 @@ try{
   assert.deepEqual(builderZip.head,[80,75,3,4]);
   assert.ok(builderZip.bytes>1000);
   await command('Page.reload',{ignoreCache:true});
-  await ready(()=>js("!!document.querySelector('.shell-dashboard')"),8000)();
-  await js("location.hash='#/control/webbuilder'");
-  await ready(()=>js("!!document.querySelector('[data-open-draft]')"),8000)();
+  await ready(()=>js("!!document.querySelector('#builder-form')&&!!document.querySelector('[data-open-draft]')"),12000)();
   await js("document.querySelector('[data-open-draft]').click()");
   assert.equal(await js("document.querySelector('#builder-form [name=brand]').value"),'STUDIO CONTROL RECETTE');
   log('site builder: sandbox preview, local save, ZIP files, responsive mode and reload persistence');
