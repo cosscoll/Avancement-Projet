@@ -58,13 +58,13 @@ test('unserializable prior state prevents a mutation from starting',()=>{
  assert.equal(invoked,false);
 });
 test('all routine command-center editors use an atomic storage transaction',()=>{
- for(const name of ['new-action','new-mission','edit-mission','new-event','new-resource','new-expense','new-income','monthly-limit','global-rules']){
+ for(const name of ['new-action','new-mission','edit-mission','new-resource','new-expense','new-income','monthly-limit','global-rules']){
   const start=source.indexOf("registerForm('#"+name+"'");
   assert.ok(start>0,name+' form exists');
   const fragment=source.slice(start, start+950);
   assert.match(fragment,/commitLocal\(/,name+' must not claim success before a storage commit');
  }
- for(const event of ['done:','delete-event:','expense-del:']){
+ for(const event of ['done:','expense-del:']){
   const start=source.indexOf("[data-act^=\""+event+"\"]");
   assert.ok(start>0,event+' handler exists');
   assert.match(source.slice(start,start+600),/commitLocal\(/,event+' handler must roll back on write errors');
@@ -144,4 +144,12 @@ test('backup interface exposes only local recovery and refuses incomplete export
  assert.match(source,/function downloadRawStorage\(key,label\)/);
  assert.match(source,/data-act="download-raw:\x27\+name/);
  assert.doesNotMatch(source.slice(source.indexOf('function downloadRawStorage('),source.indexOf('function backup(){')),/fetch\(|XMLHttpRequest/);
+});
+
+test('local agenda uses a single validated and atomic event commit',()=>{
+ assert.match(source,/function submitEvent\(form,editId=''\)/);
+ assert.match(source,/registerForm\('#new-event',\(f,form\)=>submitEvent\(form\)\)/);
+ assert.match(source,/registerForm\('#edit-event',\(f,form\)=>submitEvent\(form,String\(f.get\('id'\)\)\)\)/);
+ assert.match(source,/if\(!commitLocal\(\(\)=>\{if\(editId\)/);
+ assert.match(source,/if\(commitLocal\(\(\)=>\{db\.events=db\.events\.filter\(e=>e\.id!==eventId\)\}\)\)calendar\(\)/);
 });
