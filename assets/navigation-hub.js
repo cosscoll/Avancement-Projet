@@ -60,14 +60,24 @@ let adapter={mode:'personal',getActiveProject:()=>null,getProjects:()=>[],naviga
 let dialog=null,query=null,results=null,category='start',lastFocus=null;
 const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const STOP_WORDS=new Set(['un','une','le','la','les','des','du','de','d','en','a','au','aux','mon','ma','mes','son','sa','ses','pour','je','veux','comment','faire','dans','sur','avec']);
+const STOP_WORDS=new Set(['un','une','le','la','les','des','du','de','d','en','a','au','aux','mon','ma','mes','son','sa','ses','pour','je','veux','comment','faire','dans','sur','avec','ou','est','sont','peux','puis','aller','voir','ouvrir','retrouver']);
+const ALIASES={
+ rdv:'rendez-vous',reunion:'visio',reunions:'visio',appel:'visio',
+ taches:'tache',actions:'action',projets:'projet',documents:'document',
+ sauvegardes:'sauvegarde',sauvegarder:'sauvegarde',exporter:'export',
+ publier:'publication',deployer:'deploiement',sites:'site',
+ parametres:'parametre',reglages:'parametre',depenses:'budget',
+ rappels:'rappel',decisions:'decision',connexions:'connexion'
+};
+const searchableWord=w=>ALIASES[w]||w.replace(/(ements|ations|euses|eurs|es|s)$/,'');
 function findFeatures(raw,entries=catalog()){
- const parts=norm(raw).split(/\s+/).filter(w=>w&&!STOP_WORDS.has(w));
+ const parts=norm(raw).split(/[^a-z0-9]+/).filter(w=>w.length>1&&!STOP_WORDS.has(w)).map(searchableWord);
  if(!parts.length)return entries;
  return entries.map(item=>{
   const title=norm(item.title),hint=norm(item.hint),keys=norm(item.keywords);
-  const matched=parts.every(word=>title.includes(word)||hint.includes(word)||keys.includes(word));
-  const score=parts.reduce((n,w)=>n+(title.includes(w)?4:hint.includes(w)?2:keys.includes(w)?1:0),0);
+  const fields=[title,hint,keys].map(t=>t.split(/[^a-z0-9]+/).filter(Boolean).map(searchableWord));
+  const matched=parts.every(word=>fields.some(tokens=>tokens.some(token=>token===word||(word.length>=4&&token.startsWith(word))||(token.length>=4&&word.startsWith(token)))));
+  const score=parts.reduce((n,w)=>n+fields.reduce((best,tokens,i)=>Math.max(best,tokens.includes(w)?[6,3,1][i]:tokens.some(token=>w.length>=4&&token.startsWith(w))?[3,2,1][i]:0),0),0);
   return {item,matched,score};
  }).filter(x=>x.matched).sort((a,b)=>b.score-a.score).map(x=>x.item);
 }
