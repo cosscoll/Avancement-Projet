@@ -2947,5 +2947,121 @@
       "The actual browser geometry check now guards against regressing back to a centered webpage, which the earlier tests had missed."
     ],
     "next": "Validate appearance on user's browser at latest UI V3 marker, refresh PWA cache if not visible, obtain usability feedback. Then reorganize overly long missions/tools/settings screens with contextual actions and progressive disclosure, while independently testing CONTROL Cloud with two real JWT users before enabling."
+  },
+  {
+    "schema_version": 2,
+    "id": "control-ia-20261022-screen-ux-0914",
+    "started_at": "2026-10-22T07:14:00Z",
+    "ended_at": "2026-10-22T07:37:00Z",
+    "summary": "CONTROL visual V3 user journey refinement on main: fixed hidden new-project form and contextual finder; exposed 11 personal/12 Cloud project tabs with mobile disclosure, added tool search and collapsed mission creation. PWA cache v44 forces existing devices to refresh. Native 484 tests green, Pages + real Chromium desktop 1440px and mobile 320px success for code SHA 5da5b553; private Auth remains intentionally disabled.",
+    "objectives": [
+      {
+        "before": "UI V3 had sidebar/dashboard but project advanced tabs still hidden behind Plus, new-project form far from click, project finder opened generic category, mission creator dominated history and grouped tools required manual expansion.",
+        "after": "Desktop shows project secondary sections in place and mobile collapses safely; new-project form scrolls/focuses with cancel, contextual finder routes both app modes, tools search shows matches and restores disclosure state, mission form opens on demand, PWA cache rotates.",
+        "acceptance": "Code SHA 5da5b553 passed 484 Node native tests, GitHub Pages 39741206900 success, real Chromium after-publication 39741284135 success with desktop/mobile project, tools/mission flows. Cloud stays off."
+      }
+    ],
+    "done": [
+      "Acquired exclusive CONTROL cooperative sprint lease on main without triggering automation, agents or paid services.",
+      "Fixed project category handoff to universal feature finder and added 12 Cloud-only owner-context project sections and safe project-tab route whitelist.",
+      "Moved new-project interaction into accessible discoverable form behavior with aria-expanded, focus, scroll into view and cancel; added similar Cloud project/item form focus.",
+      "Personal project page reveals seven advanced sections on desktop in a grouped navigation; mobile hides advanced links until expanded, then keeps active advanced section visible.",
+      "Cloud project page presents eight advanced sections under the same responsive disclosure logic, while its entry points remain gated behind authUser and config enabled false.",
+      "Added inline searchable tools directory, including automatic opening of matching categories, diacritic-insensitive phrase matching, status counts and state restoration on clearing.",
+      "Replaced always-visible long mission creation form with a native details panel to keep current mission statistics/history immediately accessible; saved mission actions unchanged.",
+      "Added responsive project-nav form/search styles; rotated PWA shell/public cache to v44 after code changes to avoid old client versions.",
+      "Added twelve native Node tests across project discoverability and task-first UX; updated PWA/cache/version tests and expanded actual Chromium browser acceptance for create/cancel, project sections, contextual finder, tools search and mission form.",
+      "Verified native quality / GitHub Pages / after-publication Chromium on SHA 5da5b553, 484/484 Node tests, and Chromium desktop 1440px plus mobile 320px without horizontal overflow.",
+      "Documented user journeys and remaining limits at docs/CONTROL_UX_V3_PARCOURS.md and CONTROL retrospectives."
+    ],
+    "blockers": [
+      "Cloud sign-in is deliberately disabled pending two real approved Supabase Auth accounts, JWT A/B RLS isolation and live cross-device checks; browser proof is public PWA only.",
+      "Real usability feedback from user on physical mobile and their personal project priorities is still needed to validate tap count and visual comfort.",
+      "Visible links to third-party AI platforms do not prove APIs or autonomous jobs actually execute. No third-party paid calls made.",
+      "All public online verification references code SHA 5da5b553; docs/report/lease commits afterward must pass their own workflows before final-head assurance."
+    ],
+    "quality": {
+      "ci": "success",
+      "real_browser_verified": true,
+      "checks_run": [
+        "Node.js native suite on commit 5da5b553 (all tracked functional regressions)",
+        "GitHub Pages deploy for code SHA 5da5b553",
+        "Real Chromium public PWA on desktop 1440 and mobile 320 including new project, project sections, finder, tools and missions",
+        "Offline PWA cache upgrade from v43 to v44 with v44 version assertions"
+      ],
+      "checks_passed": [
+        "484/484 native Node tests green: https://github.com/cosscoll/Avancement-Projet/actions/runs/39741206324",
+        "GitHub Pages success: https://github.com/cosscoll/Avancement-Projet/actions/runs/39741206900",
+        "Chromium after deploy success: https://github.com/cosscoll/Avancement-Projet/actions/runs/39741284135",
+        "Docs code reference Pages and browser: https://github.com/cosscoll/Avancement-Projet/actions/runs/39741314363 and https://github.com/cosscoll/Avancement-Projet/actions/runs/39741368908"
+      ],
+      "checks_failed": [],
+      "limitations": [
+        "No real Cloud Auth A/B or physical Android/iOS device test.",
+        "No claim of operational third-party AI provider execution.",
+        "No update of formal V1.2 real_verified criteria based only on UI or mocked browser journeys."
+      ]
+    },
+    "deliverables": [
+      {
+        "name": "Accessible project navigation, context finder and project form focus",
+        "kind": "code",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "5da5b553db110dceb04b2d1f11bc4538fe90182d",
+        "url": "https://github.com/cosscoll/Avancement-Projet/commit/5da5b553db110dceb04b2d1f11bc4538fe90182d",
+        "online_url": null,
+        "online_verified_at": null
+      },
+      {
+        "name": "Public UX V3: tool search, collapsible mission form, responsive project flows and offline v44 cache",
+        "kind": "evidence",
+        "stage": "verified_online",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "5da5b553db110dceb04b2d1f11bc4538fe90182d",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39741206324",
+        "online_url": "https://cosscoll.github.io/Avancement-Projet/",
+        "online_evidence_url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39741284135",
+        "online_verified_at": "2026-10-22T07:33:30Z"
+      },
+      {
+        "name": "V3 user journeys and criteria boundary guide",
+        "kind": "documentation",
+        "stage": "merged",
+        "repository": "cosscoll/Avancement-Projet",
+        "ref": "bac263c946c805675b4fa3df0d3b8a2b1b362435",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/docs/CONTROL_UX_V3_PARCOURS.md",
+        "online_url": null,
+        "online_verified_at": null
+      }
+    ],
+    "links": [
+      {
+        "label": "Published CONTROL",
+        "url": "https://cosscoll.github.io/Avancement-Projet/"
+      },
+      {
+        "label": "Node 484",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39741206324"
+      },
+      {
+        "label": "Chromium actual screen",
+        "url": "https://github.com/cosscoll/Avancement-Projet/actions/runs/39741284135"
+      },
+      {
+        "label": "Design spec",
+        "url": "https://github.com/cosscoll/Avancement-Projet/blob/main/docs/CONTROL_UX_V3_PARCOURS.md"
+      }
+    ],
+    "incidents": [],
+    "critique": [
+      "Previous visually distinct V3 still buried task flows inside projects; fix is to simplify actual interactions rather than add decorative cards.",
+      "The general function finder ignored data-control-nav-category, opening Essentials even from the project. Context now enforced in both app modes.",
+      "Long mission creation blocked visibility of existing missions; disclosure keeps it available without forcing the user to scroll past forms.",
+      "Filtering grouped tools is now automatic and remains local-only; Cloud identity boundaries unchanged.",
+      "Static tests were briefly red due to a test assuming a separately declared tabs array; adapted assertion to existing declaration, not production logic; final browser and native suite passed.",
+      "Cache v43 had been deployed before later UX files changed, risking stale assets on installed PWAs; bumped to v44 only after final JS/CSS changes."
+    ],
+    "next": "Validate actual Android usage with the owner, refine high-frequency routes and task completion taps, but prioritize real two-account CONTROL-ACCOUNT Auth/JWT/RLS acceptance before enabling Cloud. Continue no-cost, main-only, WIP=1 workflow."
   }
 ]
