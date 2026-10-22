@@ -520,6 +520,21 @@ try{
  await ready(()=>js("!!document.querySelector('.shell-dashboard')&&!document.querySelector('#main [role=alert]')"),16000)();
  log('project hub refuses overwriting corrupt JSON and restores normal operation after recovery');
 
+ // The local automation register is not an execution system; malformed data must remain untouched.
+ await js("(()=>{const raw=localStorage.getItem('control-automations-v1');sessionStorage.setItem('control-smoke-autos-before',raw===null?'__ABSENT__':raw);localStorage.setItem('control-automations-v1','{invalid-autos');location.hash='#/automations'})()");
+ await command('Page.reload',{ignoreCache:false});
+ await ready(()=>js("document.querySelector('#main [role=alert]')?.textContent?.includes('registre local des automatisations est illisible')"),16000)();
+ await js("location.hash='#/automations/Claude'");
+ await ready(()=>js("!!document.querySelector('#auto-create')"),10000)();
+ await js("(()=>{document.querySelector('#auto-new').click();const form=document.querySelector('#auto-create');form.elements.title.value='NE-PAS-CREER';form.requestSubmit()})()");
+ assert.equal(await js("localStorage.getItem('control-automations-v1')"),'{invalid-autos','Corrupt automation draft storage must stay intact');
+ assert.equal(await js("location.hash"),'#/automations/Claude','Draft creation must be refused while storage is corrupt');
+ await js("(()=>{const previous=sessionStorage.getItem('control-smoke-autos-before');if(previous==='__ABSENT__')localStorage.removeItem('control-automations-v1');else localStorage.setItem('control-automations-v1',previous);sessionStorage.removeItem('control-smoke-autos-before');location.hash='#/'})()");
+ await command('Page.reload',{ignoreCache:false});
+ await ready(()=>js("!!document.querySelector('.shell-dashboard')"),16000)();
+ log('corrupt automation drafts block new entries without enabling scheduled tasks');
+
+
  await js("location.hash="+JSON.stringify(beforeFinderHash));
  await ready(()=>js("!!document.querySelector('.control-delivery-focus')"),8000)();
 
