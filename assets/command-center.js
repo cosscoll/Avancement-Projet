@@ -432,13 +432,13 @@ function tools(){
  const field=$('#tools-filter'),sections=[...$('#main').querySelectorAll('.clarity-toolgroup')];
  const original=sections.map(section=>section.open);
  field?.addEventListener('input',()=>{
-  const query=field.value.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().trim();
+  const query=field.value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
   let count=0;
   sections.forEach((section,i)=>{
    let match=0;
    section.querySelectorAll('.clarity-tool-link').forEach(link=>{
-    const label=link.textContent.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase();
-    const show=!query||query.split(/\\s+/).every(word=>label.includes(word));
+    const label=link.textContent.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+    const show=!query||query.split(/\s+/).every(word=>label.includes(word));
     link.hidden=!show;
     if(show)match++;
    });
