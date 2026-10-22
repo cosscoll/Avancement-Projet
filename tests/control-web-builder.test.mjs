@@ -97,7 +97,9 @@ test('user interface is in a sandbox with no scripts or remote publishing',()=>{
  const app=readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
  assert.match(ui,/sandbox=""/);
  assert.match(ui,/referrerpolicy="no-referrer"/);
- assert.match(ui,/\.srcdoc=engine\.markup/);
+ assert.match(ui,/\.srcdoc=previewContent/);
+ assert.match(ui,/engine\.markup\(working,true\)/);
+ assert.match(ui,/engine\.pageMarkup\(working,page,true\)/);
  assert.match(ui,/engine\.zip\(files\)/);
  assert.match(ui,/id="builder-code" readonly/);
  assert.match(ui,/api\.save\(item\)/);
