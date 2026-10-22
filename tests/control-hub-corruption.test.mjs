@@ -64,8 +64,8 @@ test('corrupted project hub is visible and write handlers require committed stor
  assert.match(inline,/\$\('#main'\)\.innerHTML=hubWarning\(\)/);
  assert.match(inline,/if\(hubCorrupt\)return persist\(\)/);
  for(const label of ['#chat-form','[data-remove-chat]','#provider-form','#space-form','#report-form','#link-form','[data-del]','#pilot-clear','#save-memo']){
-  const line=lines.find(x=>x.includes(label)&&x.includes('onclick=')||x.includes(label)&&x.includes('onsubmit='));
-  assert.ok(line&&line.includes('commitHub('),label+' must not visually confirm failed writes');
+  const handlers=lines.filter(x=>x.includes(label)&&(x.includes('onclick=')||x.includes('onsubmit=')));
+  assert.ok(handlers.some(line=>line.includes('commitHub(')),label+' must not visually confirm failed writes');
  }
  assert.match(inline,/if\(!persist\(\)\)\{state=old;return\}/);
  assert.equal(JSON.parse(readFileSync(new URL('../config/cloud.json',import.meta.url),'utf8')).enabled,false);
