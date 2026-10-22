@@ -119,7 +119,7 @@ function ensure(){
  '<kbd>Ctrl K</kbd></label>'+
  '<nav class="control-finder-categories" aria-label="Catégories de fonctions"></nav>'+
  '<div class="control-finder-results" id="control-finder-results" role="group" aria-label="Fonctions accessibles"></div>'+
- '<div class="control-finder-foot"><span>Les fonctions qui nécessitent une connexion restent soumises aux droits du compte.</span><span>Échap pour fermer</span></div>'+
+ '<div class="control-finder-foot"><span>Entrée : ouvrir le premier résultat · Flèches : parcourir.</span><span>Échap pour fermer</span></div>'+
  '</section>';
  document.body.appendChild(dialog);
  query=dialog.querySelector('input[type="search"]');
@@ -132,6 +132,15 @@ function ensure(){
  query.addEventListener('input',()=>render());
  dialog.addEventListener('keydown',e=>{
   if(e.key==='Escape'){e.preventDefault();close();return}
+  if(e.key==='Enter'&&e.target===query&&query.value.trim()){
+   const first=results.querySelector('[data-finder-id]');
+   if(first){
+    e.preventDefault();
+    const item=catalog().find(x=>x.id===first.dataset.finderId);
+    if(item)select(item);
+   }
+   return;
+  }
   if(e.key==='ArrowDown'||e.key==='ArrowUp'){
    e.preventDefault();const buttons=[...results.querySelectorAll('[data-finder-id]')];
    if(!buttons.length)return;
