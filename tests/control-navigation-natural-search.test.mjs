@@ -38,3 +38,22 @@ test('finder uses accessible native buttons and handles ArrowUp from search fiel
  assert.doesNotMatch(source,/role="listbox"|role="option"/);
  assert.ok(source.includes("buttons[i===-1?(e.key==='ArrowDown'?0:buttons.length-1)"));
 });
+
+test('finder discovers projects by name and routes to the matching personal project',()=>{
+ const navigation=window.CONTROL_NAVIGATION;
+ navigation.setAdapter({mode:'personal',getProjects:()=>[
+  {id:'ucp-1',name:'Un Coup de Pouce',category:'Entreprise'},
+  {id:'proj2',name:'Business Procédures',category:'Entreprise'}]});
+ const result=Array.from(navigation.find('Coup de Pouce',navigation.getItems()));
+ assert.equal(result[0]?.id,'open-project:ucp-1');
+ assert.equal(result[0]?.target,'#/project/ucp-1/ai');
+ assert.equal(navigation.getItems().filter(x=>x.category==='projects').length,2);
+});
+test('Cloud finder never reveals project names while unauthenticated',()=>{
+ const navigation=window.CONTROL_NAVIGATION;
+ navigation.setAdapter({mode:'cloud',isAvailable:()=>false,getProjects:()=>[{id:'secret1',name:'Private project'}]});
+ assert.deepEqual(Array.from(navigation.getItems()),[]);
+ navigation.setAdapter({isAvailable:()=>true});
+ assert.equal(navigation.getItems().find(x=>x.id==='open-project:secret1')?.target,'project-open:secret1');
+ navigation.setAdapter({mode:'personal',getProjects:()=>[]});
+});
