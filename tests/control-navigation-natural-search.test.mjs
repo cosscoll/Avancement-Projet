@@ -28,6 +28,10 @@ test('finder handles accents, plurals and natural French requests',()=>{
 test('finder prioritizes exact feature title over description matches',()=>{
  assert.equal(find('calendrier')[0],'calendar');
  assert.equal(find('budget')[0],'budget');
+ assert.equal(find('mes tâches')[0],'inbox','Consulting tasks must not open task creation');
+ assert.equal(find('mes projets')[0],'projects','Consulting projects must not open project creation');
+ assert.equal(find('créer une tâche')[0],'new-action');
+ assert.equal(find('créer un nouveau projet')[0],'new-project');
 });
 test('finder does not silently match an unrelated term',()=>{
  assert.deepEqual(find('inexistantxyz'),[]);
