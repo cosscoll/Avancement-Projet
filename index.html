@@ -145,10 +145,11 @@ function home(){
   if(opening){
    addBox.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
    addBox.querySelector('input[name="name"]')?.focus({preventScroll:true});
-  }else addButton.focus();
+  }else{addButton.focus();if(location.hash==='#/new-project')location.hash='#/' }
  };
  $('#cancel-add-project').onclick=()=>{if(!addBox.classList.contains('hidden'))addButton.click()};
  $('#new-project').onsubmit=e=>{e.preventDefault();if(hubCorrupt)return persist();const fd=new FormData(e.target),name=String(fd.get('name')).trim(),url=String(fd.get('url')).trim();if(!name)return;if(url&&!chatHost(url)){notify('Utilise un lien ChatGPT valide.');return}const id='custom-'+(globalThis.crypto?.randomUUID?.()||Date.now());const p={id,name,symbol:name.slice(0,2).toUpperCase(),category:'Projet personnalisé'};const previous=Array.isArray(state.custom)?state.custom.slice():[];state.custom=[...previous,p];scoped(id).projectUrl=url;if(!persist()){state.custom=previous;delete state[id];notify('Projet non créé : impossible d’enregistrer sur cet appareil. Libère de l’espace ou vérifie les paramètres du navigateur.');return}projects.push(p);go(id)};
+ if(location.hash==='#/new-project')addButton.click();
 }
 function workspace(p,t){
  active=p.id;tab=t;
@@ -321,13 +322,13 @@ function render(){
  }
  document.querySelectorAll('.shell-sidebar [data-shell-route]').forEach(link=>{
   const route=link.dataset.shellRoute;
-  const chosen=route==='home'&&(current==='#/'||!current||current.startsWith('#/project/'))||
+  const chosen=route==='home'&&(current==='#/'||current==='#/new-project'||!current||current.startsWith('#/project/'))||
    route==='automations'&&current.startsWith('#/automations')||
    route!=='home'&&route!=='automations'&&current.startsWith('#/control/'+route);
   link.setAttribute('aria-current',chosen?'page':'false');
  });
  document.querySelectorAll('.mobilefoot [data-go]').forEach(b=>{
-  const k=b.dataset.go,selected=k==='home'&&(current==='#/'||!current||current.startsWith('#/project/'))||k==='inbox'&&current.startsWith('#/control/inbox')||k==='manager'&&current.startsWith('#/control/manager')||k==='tools'&&(current.startsWith('#/control/')&&!current.startsWith('#/control/inbox')&&!current.startsWith('#/control/manager')||current.startsWith('#/automations'));
+  const k=b.dataset.go,selected=k==='home'&&(current==='#/'||current==='#/new-project'||!current||current.startsWith('#/project/'))||k==='inbox'&&current.startsWith('#/control/inbox')||k==='manager'&&current.startsWith('#/control/manager')||k==='tools'&&(current.startsWith('#/control/')&&!current.startsWith('#/control/inbox')&&!current.startsWith('#/control/manager')||current.startsWith('#/automations'));
   b.setAttribute('aria-current',selected?'page':'false');
  });
  if(location.hash.startsWith('#/control/')){active=null;window.CONTROL_CENTER.render({projects,state});return}if(location.hash.startsWith('#/automations')){active=null;window.CONTROL_AUTOMATIONS.render({projects,state});return}let r=route();if(r.id){let p=projects.find(p=>p.id===r.id);if(p)return workspace(p,r.tab);location.hash='#/';return}r.tab==='settings'?settings():home()}
