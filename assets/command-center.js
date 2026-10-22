@@ -599,15 +599,68 @@ function backup(){
  const recovery=brokenStores.filter(x=>x.key!==KEY).map(x=>'<p role="alert">Attention : les données de « '+h(x.label)+' » sont illisibles. L’export normal est bloqué pour éviter un fichier incomplet. '+btn('Télécharger la copie brute','download-raw:'+(x.key===HUB?'hub':'automations'))+'</p>').join('');
  $('#main').innerHTML=view('Sauvegarde et récupération','Protéger les données de CONTROL et changer d’appareil',note('Le stockage local peut disparaître lors d’un nettoyage du navigateur. Télécharge une sauvegarde régulière. Le fichier contient éventuellement des liens vers des espaces privés : utilise un mot de passe si tu le transfères.')+recovery+
  box('Exporter les informations','<p class="muted">Exporte les données de CONTROL, les liens de projets et les brouillons d’automatisations. Les conversations réelles des IA ne sont pas exportées.</p><form id="export-data">'+field('Mot de passe de chiffrement facultatif (12 caractères minimum)','password','','password','autocomplete="new-password"')+'<button class="primary">Télécharger ma sauvegarde</button></form>')+
- box('Importer une sauvegarde','<p class="muted">L’import remplace les trois espaces de stockage locaux du navigateur. Conserve auparavant une copie de l’état actuel.</p>'+(localStoreCorrupt?'<p role="alert">Le stockage actuel n’est pas lisible. Tu peux télécharger les données brutes sans les modifier, puis restaurer un fichier valide.</p>'+btn('Télécharger les données brutes','download-corrupt'):'')+'<form id="import-data"><label>Fichier JSON<input class="field" name="file" type="file" required accept=".json,application/json"></label>'+field('Mot de passe du fichier','password','','password')+'<button>Vérifier et restaurer</button></form><p class="muted" id="import-status"></p>'));
+ box('Importer une sauvegarde','<p class="muted">La première étape vérifie le fichier <strong>sans modifier les données</strong>. Compare les quantités, puis décide séparément si les trois espaces de stockage doivent être remplacés.</p>'+(localStoreCorrupt?'<p role="alert">Le stockage actuel n’est pas lisible. Tu peux télécharger les données brutes sans les modifier, puis restaurer un fichier valide.</p>'+btn('Télécharger les données brutes','download-corrupt'):'')+'<form id="import-data"><label>Fichier JSON<input class="field" name="file" type="file" required accept=".json,application/json"></label>'+field('Mot de passe du fichier','password','','password')+'<button type="submit">Examiner la sauvegarde</button></form><p class="muted" id="import-status" role="status" aria-live="polite"></p><section class="backup-restore-preview" id="import-preview" aria-label="Aperçu de restauration" hidden><div id="import-comparison"></div><div class="backup-restore-actions"><button type="button" class="primary" id="import-apply">Appliquer la restauration</button><button type="button" id="import-cancel">Annuler</button></div></section>'));
  registerForm('#export-data',async f=>{if(localStoreCorrupt)return toast('Export normal bloqué : utilise « Télécharger les données brutes » avant une restauration.');if(backupStorageIssues().length)return toast('Export bloqué : un espace local est illisible. Télécharge sa copie brute et restaure une sauvegarde valide.');const pw=String(f.get('password')||'');if(pw&&pw.length<12)return toast('12 caractères minimum ou champ vide.');try{const data=await pack({command:db,hub:getStorage(HUB),automations:getStorage(AUTOS)},pw);const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='CONTROL-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Fichier téléchargé : conserve-le dans un emplacement sûr.')}catch{toast('Sauvegarde impossible sur ce navigateur.')}});
  $('#main [data-act="download-corrupt"]')?.addEventListener('click',()=>{try{const raw=localStorage.getItem(KEY);if(raw===null)throw Error('Données non accessibles');const url=URL.createObjectURL(new Blob([raw],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='CONTROL-donnees-brutes-'+new Date().toISOString().slice(0,10)+'.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Copie brute téléchargée. Elle peut contenir des informations sensibles.')}catch{toast('Récupération brute impossible dans ce navigateur.')}});
  for(const [key,name] of [[HUB,'hub'],[AUTOS,'automations']])$('#main [data-act="download-raw:'+name+'"]')?.addEventListener('click',()=>downloadRawStorage(key,name));
- registerForm('#import-data',async f=>{let rollbackUncertain=false;const file=f.get('file'),pw=String(f.get('password')||'');if(!file||typeof file.size!=='number'||file.size>4000000)return toast('Fichier requis, 4 Mo maximum.');try{const data=await unpack(JSON.parse(await file.text()),pw);if(!validateBackupData(data))throw Error('Invalid backup format');
- if(!confirm('Restaurer les données et remplacer les informations locales actuelles ?'))return;
- const old=[KEY,HUB,AUTOS].map(k=>[k,localStorage.getItem(k)]);
- try{localStorage.setItem(KEY,JSON.stringify(data.command));localStorage.setItem(HUB,JSON.stringify(data.hub));localStorage.setItem(AUTOS,JSON.stringify(data.automations))}catch(e){for(const [k,v] of old){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch{rollbackUncertain=true}}throw e}
- localStoreCorrupt=false;init();$('#import-status').textContent='Données restaurées. Recharge CONTROL pour actualiser les projets.';toast('Sauvegarde importée.')}catch{$('#import-status').textContent=rollbackUncertain?'Restauration interrompue : le navigateur a aussi refusé le retour arrière. Certaines données locales ont pu changer. Ne supprime pas ton fichier de sauvegarde.':'Import refusé : fichier incorrect, mot de passe erroné ou espace insuffisant. Les anciennes données ont été conservées ou restaurées.'}});
+ const restore=window.CONTROL_BACKUP_REVIEW;
+ let pending=null;
+ const preview=$('#import-preview'),comparison=$('#import-comparison'),message=$('#import-status');
+ const resetPreview=()=>{pending=null;preview.hidden=true;comparison.replaceChildren()};
+ const renderReview=review=>{
+  const rows=review.changes.filter(x=>x.before||x.after);
+  const body=rows.length?rows.map(x=>'<tr><th scope="row">'+h(x.label)+'</th><td>'+x.before+'</td><td>'+x.after+'</td></tr>').join(''):
+   '<tr><td colspan="3">Aucun élément local comptabilisé dans les catégories suivies.</td></tr>';
+  comparison.innerHTML='<h3>Avant de remplacer mes données</h3><p>Éléments enregistrés actuellement : <strong>'+review.totalBefore+'</strong> · Dans le fichier : <strong>'+review.totalAfter+'</strong></p>'+
+   '<table class="backup-diff-table"><thead><tr><th>Type</th><th>Actuel</th><th>Fichier</th></tr></thead><tbody>'+body+'</tbody></table>'+
+   (review.losses.length?'<p role="alert" class="notice"><strong>Attention :</strong> '+review.losses.length+' catégorie(s) contiennent moins d’éléments dans le fichier. La restauration remplacera les versions actuelles.</p>':'')+
+   '<p class="muted">Même nombre ≠ même contenu. Les trois magasins locaux sont remplacés, pas fusionnés. Une copie de sauvegarde actuelle est recommandée avant toute restauration.</p>';
+  preview.hidden=false;
+ };
+ $('#import-cancel').onclick=()=>{resetPreview();message.textContent='Import annulé. Aucune donnée modifiée.'};
+ $('#import-data').addEventListener('change',()=>{if(pending){resetPreview();message.textContent='Fichier ou mot de passe modifié : relance la vérification.'}});
+ registerForm('#import-data',async f=>{
+  resetPreview();
+  const file=f.get('file'),pw=String(f.get('password')||'');
+  if(!file||typeof file.size!=='number'||file.size>4000000||file.size===0){message.textContent='Choisis un fichier JSON (4 Mo maximum).';return}
+  try{
+   const data=await unpack(JSON.parse(await file.text()),pw);
+   if(!validateBackupData(data))throw Error('Invalid backup format');
+   // A valid backup is only inspected; no storage writes during this phase.
+   const original=restore.snapshot(localStorage);
+   const existing={
+    command:readBackupStore(KEY),hub:readBackupStore(HUB),automations:readBackupStore(AUTOS)
+   };
+   const report=restore.compare(data,existing);
+   pending={data,original};
+   renderReview(report);
+   message.textContent='Sauvegarde déchiffrée et vérifiée. Examine les différences avant de confirmer.';
+  }catch(error){
+   resetPreview();
+   message.textContent='Impossible de lire le fichier ou les données actuelles : vérifie le mot de passe, le format et l’espace local.';
+  }
+ });
+ $('#import-apply').onclick=()=>{
+  const staged=pending;
+  if(!staged){message.textContent='Examine d’abord le fichier de sauvegarde.';return}
+  if(!restore.unchanged(localStorage,staged.original)){resetPreview();message.textContent='Des données locales ont changé depuis la vérification : relance la comparaison avant toute restauration.';return}
+  if(!confirm('Remplacer maintenant les trois espaces de données CONTROL par le contenu du fichier vérifié ? Cette action écrasera les données actuelles.'))return;
+  let rollbackUncertain=false;
+  const old=restore.storeKeys.map((key,i)=>[key,staged.original[i]]);
+  try{
+   localStorage.setItem(KEY,JSON.stringify(staged.data.command));
+   localStorage.setItem(HUB,JSON.stringify(staged.data.hub));
+   localStorage.setItem(AUTOS,JSON.stringify(staged.data.automations));
+   resetPreview();localStoreCorrupt=false;init();
+   message.textContent='Restauration confirmée et enregistrée. Recharge CONTROL pour actualiser les projets.';
+   toast('Sauvegarde importée.');
+  }catch{
+   for(const [key,raw] of old){try{if(raw===null)localStorage.removeItem(key);else localStorage.setItem(key,raw)}catch{rollbackUncertain=true}}
+   resetPreview();
+   message.textContent=rollbackUncertain?'Le retour arrière a échoué : certaines données ont pu être modifiées. Conserve le fichier de sauvegarde.':'Restauration refusée par le stockage. Les anciennes données ont été rétablies.';
+  }
+ };
+
 }
 // Search only live, authorized device-local records. No stale cached index.
 // Provenance is user-declared until an authenticated provider is available.
