@@ -70,7 +70,8 @@ const server=createServer((req,res)=>{
  }catch{res.writeHead(404,{'Content-Type':'text/plain'});res.end('Not found')}
 });
 let browser=null,ws=null,serverClosed=false;
-const profile=mkdtempSync(join(tmpdir(),'control-ia-browser-'));
+let profile=mkdtempSync(join(tmpdir(),'control-ia-browser-'));
+const profiles=[profile];
 let socketClosed=false;
 try{
  await new Promise((yes,no)=>{server.once('error',no);server.listen(0,'127.0.0.1',yes)});
@@ -78,9 +79,26 @@ try{
  const candidates=[process.env.CHROME_BIN,'google-chrome','google-chrome-stable','chromium','chromium-browser'].filter(Boolean);
  const binary=candidates.find(c=>spawnSync('which',[c],{stdio:'ignore'}).status===0);
  assert.ok(binary,'No preinstalled Chromium/Chrome found. Browser verification cannot be declared successful.');
- browser=spawn(binary,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--no-first-run','--no-default-browser-check','--disable-background-networking','--remote-allow-origins=*','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe'],detached:true});
- let chromeError='';browser.stderr?.on('data',chunk=>{chromeError+=String(chunk).slice(-900);chromeError=chromeError.slice(-1800)});
- const debugPort=await waitPort().catch(error=>{throw Error('Chrome startup failed (status '+String(browser.exitCode)+'): '+chromeError.slice(-900)+' | '+error.message)});
+ let debugPort=0,chromeError='';
+ const startupFailures=[];
+ for(let attempt=1;attempt<=2;attempt++){
+  chromeError='';
+  browser=spawn(binary,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--no-first-run','--no-default-browser-check','--disable-background-networking','--remote-allow-origins=*','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe'],detached:true});
+  browser.stderr?.on('data',chunk=>{chromeError+=String(chunk).slice(-900);chromeError=chromeError.slice(-1800)});
+  try{debugPort=await waitPort();break}
+  catch(error){
+   startupFailures.push('attempt '+attempt+': process '+String(browser.exitCode)+' · '+String(error.message)+' · '+chromeError.slice(-500));
+   const previous=browser;
+   const exited=previous.exitCode!==null?Promise.resolve():new Promise(resolve=>previous.once('exit',resolve));
+   try{if(process.platform!=='win32')process.kill(-previous.pid,'SIGTERM');else previous.kill('SIGTERM')}catch{}
+   await Promise.race([exited,delay(1700)]);
+   if(previous.exitCode===null){try{if(process.platform!=='win32')process.kill(-previous.pid,'SIGKILL');else previous.kill('SIGKILL')}catch{}}
+   if(attempt===2)throw Error('Chrome startup failed after two isolated profiles: '+startupFailures.join(' | '));
+   // Runner startup races should not poison the retry's isolated browser profile.
+   profile=mkdtempSync(join(tmpdir(),'control-ia-browser-'));profiles.push(profile);
+   process.stderr.write('BROWSER STARTUP RETRY — DevTools unavailable; launching fresh profile once.\n');
+  }
+ }
  const targets=await (await fetch('http://127.0.0.1:'+debugPort+'/json')).json();
  const page=targets.find(t=>t.type==='page'&&t.webSocketDebuggerUrl);
  assert.ok(page,'No Chrome page target');
@@ -779,11 +797,12 @@ try{
   }
  }
  if(!serverClosed){serverClosed=true;server.close()}
- try{rmSync(profile,{recursive:true,force:true,maxRetries:5,retryDelay:100})}
- catch(error){
-  // The runner is ephemeral and contains only synthetic browser fixtures.
-  // Do not misclassify a Chromium shutdown race as an application failure.
-  if(!['ENOTEMPTY','EBUSY','EPERM'].includes(error?.code))throw error;
-  process.stderr.write('BROWSER CLEANUP: temporary profile will be removed by ephemeral runner ('+error.code+')\n');
+ for(const folder of profiles){
+  try{rmSync(folder,{recursive:true,force:true,maxRetries:5,retryDelay:100})}
+  catch(error){
+   // Runner contains synthetic fixtures. Do not misclassify Chrome shutdown races as app defects.
+   if(!['ENOTEMPTY','EBUSY','EPERM'].includes(error?.code))throw error;
+   process.stderr.write('BROWSER CLEANUP: temporary profile will be removed by ephemeral runner ('+error.code+')\n');
+  }
  }
 }
