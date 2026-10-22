@@ -62,7 +62,7 @@ const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLo
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const STOP_WORDS=new Set(['un','une','le','la','les','des','du','de','d','en','a','au','aux','mon','ma','mes','son','sa','ses','pour','je','veux','comment','faire','dans','sur','avec','ou','est','sont','peux','puis','aller','voir','ouvrir','retrouver']);
 const ALIASES={
- rdv:'rendez-vous',reunion:'visio',reunions:'visio',appel:'visio',
+ rdv:'rendez',reunion:'visio',reunions:'visio',appel:'visio',
  taches:'tache',actions:'action',projets:'projet',documents:'document',
  sauvegardes:'sauvegarde',sauvegarder:'sauvegarde',exporter:'export',
  publier:'publication',deployer:'deploiement',sites:'site',
