@@ -103,7 +103,7 @@ function taskReport(t){
  const last=latestSprint(t.id),link=p?'#/'+p.id+'/overview':'#/automations';
  const problem=Array.isArray(last?.blockers)&&last.blockers.length;
  return `<article class="automation-card panel">
-   <div class="auto-head"><span class="auto-symbol" aria-hidden="true">${safe(p?.symbol||'◉')}</span><div class="auto-copy"><strong>${safe(t.title)}</strong><span>${safe(t.schedule)}</span></div>${badge(t.active_at_last_check?'Actif · dernier relevé':'Statut à confirmer','neutral')}</div>
+   <div class="auto-head"><span class="auto-symbol" aria-hidden="true">${safe(p?.symbol||'◉')}</span><div class="auto-copy"><strong>${safe(t.title)}</strong><span>${safe(t.schedule)}</span></div>${badge('Archive · statut actuel inconnu','neutral')}</div>
    <div class="auto-lines"><div><span>Dernier rapport :</span><b>${last?safe(dateFR(last.ended_at||last.started_at)):'En attente'}</b></div><div><span>Rapports :</span><b>${reports.length}</b></div></div>
    <p class="auto-last">${last?safe(last.summary||'Compte rendu disponible'):'Aucun rapport centralisé pour le moment.'}</p>
    ${problem?`<a class="auto-alert" href="#/${safe(t.id)}/sprints"><span aria-hidden="true">!</span> ${safe(last.blockers[0].slice(0,130))}</a>`:''}
