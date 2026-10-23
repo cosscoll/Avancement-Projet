@@ -52,7 +52,7 @@ test('unrelated origin or unchanged content does not falsely alarm',()=>{
 
 test('storage clear invalidates all local state and keeps warning visible across routes',()=>{
  const t=mount();
- t.dispatch(null,'saved',null);
+ t.dispatch(null,null,null); // real StorageEvent payload for localStorage.clear()
  assert.equal(t.notice.hidden,false);
  assert.match(html,/<div id="control-external-change"[^>]*role="alert" hidden>/);
  assert.ok(html.indexOf('id="control-external-change"')<html.indexOf('id="main"'));
