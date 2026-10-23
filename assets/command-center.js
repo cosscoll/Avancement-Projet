@@ -2,7 +2,7 @@
    Aucune API privée, dépense, autorisation ou modification d'automatisation. */
 (()=>{'use strict';
 const KEY='control-command-v1',HUB='control-hub-v2',AUTOS='control-automations-v1',OWNER='cosscoll';
-let localStoreCorrupt=false;
+let localStoreCorrupt=false,localLastLoadedRaw=null;
 let db,ctx={projects:[],state:{}},live={},sprints={},sprintLoaded={},sprintLoading=null;
 const $=s=>document.querySelector(s);
 const h=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -18,9 +18,9 @@ const agents=[{id:'ChatGPT',url:'https://chatgpt.com/'},{id:'Claude',url:'https:
 function sourceLink(project,provider){const x=openProject(project);return provider==='ChatGPT'?(x.projectUrl||x.spaces?.ChatGPT||''):(x.spaces?.[provider]||'')}
 function availableAgents(){const ids=new Set(agents.map(a=>a.id));for(const p of ctx.projects){const d=openProject(p.id);for(const key of Object.keys(d.spaces||{}))ids.add(key);for(const key of (d.customProviders||[]))ids.add(key)}return [...ids]}
 function providerURL(project,provider){return safe(sourceLink(project,provider))||agents.find(x=>x.id===provider)?.url||''}
-function storage(){try{const raw=localStorage.getItem(KEY);if(raw===null){localStoreCorrupt=false;return {}}const a=JSON.parse(raw);if(!a||typeof a!=='object'||Array.isArray(a))throw Error('Invalid local data');localStoreCorrupt=false;return a}catch{localStoreCorrupt=true;return{}}}
+function storage(){try{const raw=localStorage.getItem(KEY);if(raw===null){localStoreCorrupt=false;localLastLoadedRaw=null;return {}}const a=JSON.parse(raw);if(!a||typeof a!=='object'||Array.isArray(a))throw Error('Invalid local data');localStoreCorrupt=false;localLastLoadedRaw=raw;return a}catch{localStoreCorrupt=true;return{}}}
 function init(){db=Object.assign({version:1,actions:[],missions:[],events:[],expenses:[],decisions:[],goalPlans:[],websites:[],messages:[],globalRules:'Aucune dépense, abonnement, achat de crédits ou action engageante sans autorisation explicite. Ne pas utiliser de quotas partagés interdits par les consignes du projet. Ne pas publier de données sensibles. Vérifier les résultats avant de les annoncer terminés.',notifications:false},storage());for(const key of ['actions','missions','events','meetings','expenses','income','decisions','goalPlans','websites','messages'])if(!Array.isArray(db[key]))db[key]=[]}
-function save(){if(localStoreCorrupt){toast('Stockage local illisible : restaure une sauvegarde avant toute modification.');return false}try{db.lastChanged=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(db));return true}catch{toast('Stockage indisponible ou plein. Effectue une sauvegarde.');return false}}
+function save(){if(localStoreCorrupt){toast('Stockage local illisible : restaure une sauvegarde avant toute modification.');return false}try{if(localStorage.getItem(KEY)!==localLastLoadedRaw){toast('Données modifiées dans un autre onglet : enregistrement annulé. Recharge CONTROL pour récupérer la dernière version.');return false}db.lastChanged=new Date().toISOString();const serialized=JSON.stringify(db);localStorage.setItem(KEY,serialized);localLastLoadedRaw=serialized;return true}catch{toast('Stockage indisponible ou plein. Effectue une sauvegarde.');return false}}
 // A local operation is confirmed only after durable storage has accepted the full state.
 // Roll back the in-memory changes too: rerendering an unpersisted state would mislead users.
 function commitLocal(change){
