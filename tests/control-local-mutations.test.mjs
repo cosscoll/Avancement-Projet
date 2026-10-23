@@ -80,7 +80,7 @@ test('malformed local JSON is never silently overwritten by an empty dashboard',
  assert.ok(storageFn&&saveFn);
  let writes=0;const alerts=[];
  const api=new Function('localStorage','toast',
-  'const KEY="control-command-v1";let localStoreCorrupt=false,db={actions:[]};'+storageFn+'\n'+saveFn+'\nreturn {storage,save,flag:()=>localStoreCorrupt};'
+  'const KEY="control-command-v1";let localStoreCorrupt=false,localLastLoadedRaw=null,db={actions:[]};'+storageFn+'\n'+saveFn+'\nreturn {storage,save,flag:()=>localStoreCorrupt};'
  )({getItem:()=>'{malformed-json',setItem:()=>{writes++}},message=>alerts.push(message));
  assert.deepEqual(api.storage(),{});
  assert.equal(api.flag(),true);
@@ -94,7 +94,7 @@ test('valid local state still persists normally after corruption recovery',()=>{
  const saveFn=source.match(/function save\(\)\{[^\n]+/)?.[0];
  let raw='{broken',writes=0;
  const api=new Function('localStorage','toast',
-  'const KEY="control-command-v1";let localStoreCorrupt=false,db={actions:[]};'+storageFn+'\n'+saveFn+'\nreturn {storage,save,flag:()=>localStoreCorrupt};'
+  'const KEY="control-command-v1";let localStoreCorrupt=false,localLastLoadedRaw=null,db={actions:[]};'+storageFn+'\n'+saveFn+'\nreturn {storage,save,flag:()=>localStoreCorrupt};'
  )({getItem:()=>raw,setItem:(_,v)=>{writes++;raw=v}},()=>{});
  api.storage();
  assert.equal(api.flag(),true);
