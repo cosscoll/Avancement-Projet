@@ -163,44 +163,47 @@
     "evidence_url": "https://github.com/cosscoll/Avancement-Projet/commit/fecad30c035c05265506a27068045a13d4b8fde1"
   },
   "pending_verification": {
-    "date": "2026-10-22",
+    "date": "2026-10-23",
     "source": "conversation",
     "branch": "main",
-    "code_commit_sha": "a50ea93a0290d7a23d7c96fdd1cdd326c5df7b48",
-    "scope": "V63 CONTROL UX: percent-safe project route and breadcrumbs, accent-insensitive project filter with term-order tolerance, accessible result counter, direct create/read intents preserved, Cloud auth gate kept fail-closed.",
+    "code_commit_sha": "197035ebb0da67",
+    "scope": "P0 local durability guard V64: stale cross-tab write detection for control-command-v1, control-hub-v2 and control-automations-v1; preserve transaction rollback and refuse overwriting newer data; no Cloud activation.",
     "changed_files": [
+      "assets/command-center.js",
       "index.html",
-      "assets/workspace-shell.css",
-      "tests/control-project-route-decoding.test.mjs",
-      "tests/control-project-list-search.test.mjs",
-      "tests/control-ia-browser-smoke.mjs",
+      "assets/automations-hub.js",
+      "tests/control-local-tab-isolation.test.mjs",
+      "tests/control-cross-tab-stores.test.mjs",
+      "tests/control-local-mutations.test.mjs",
+      "tests/control-hub-corruption.test.mjs",
+      "tests/control-automation-draft-storage.test.mjs",
       "service-worker.js",
       "tests/pwa-atomic-install.test.mjs",
       "tests/control-workspace-shell.test.mjs",
       "tests/control-ux-project-discovery.test.mjs",
       "tests/control-home-discovery.test.mjs",
       "tests/control-backup-review.test.mjs",
-      "docs/CONTROL_UX_V3_PARCOURS.md",
+      "docs/CONTROL_LOCAL_MULTI_ONGLETS.md",
       "docs/CONTROL_IA_CAHIER_V1_2_SUIVI.md",
       "README.md"
     ],
     "checks_completed": [
-      "44 targeted V8 assertions passed from current GitHub main files: 28 navigation/list/route and 16 task/form/home coverage.",
-      "Index inline JS parse and smoke-test JS parse passed.",
-      "Selected offline test contracts and service worker reference control-shell-v63 and control-public-data-v63.",
-      "Public Chromium smoke script enhanced for Révisions IFSI via accent-free inverted query."
+      "10 new targeted simulated JS tests passed: stale tabs, successful reload, consecutive saves, corruption and all three guarded stores.",
+      "22 preexisting storage/recovery tests passed in a custom isolated JavaScript runner.",
+      "Core JS syntax checked for command center, project shell and automation registry.",
+      "PWA shell and public cache versions V64 aligned across known regression tests; Cloud config enabled:false."
     ],
     "checks_not_yet_verified": [
-      "Native complete GitHub Actions quality.yml node --test tests/*.test.mjs on current main",
-      "Live browser Chromium desktop and mobile on public GitHub Pages",
-      "Physical mobile and assistive-technology tests",
-      "Real Auth A/B JWT, RLS and multi-device synchronization"
+      "Full native node --test tests/*.test.mjs and GitHub Actions result on latest code SHA.",
+      "Published Pages desktop/mobile Chromium validation and real two-tab manual acceptance journey.",
+      "OS-level atomic concurrency and real mobile devices not verified; localStorage compare-before-write is best-effort only.",
+      "Supabase Auth A/B real JWT, RLS isolation and cross-device sync remain incomplete."
     ],
     "ci": "unverified",
     "live_pages": "unverified",
     "operational_claim_allowed": false,
     "cloud_enabled": false,
     "automations_changed": false,
-    "next_action": "Confirm the latest push's GitHub Actions status and rerun full native Node tests; verify Pages desktop/mobile browser with named-project and special-route journeys. Resolve any new failure first. Keep Cloud and automations disabled; no spending or limited Work/Codex tools."
+    "next_action": "Check latest main GitHub Actions and public Pages; run manual two-tab browser scenario per docs/CONTROL_LOCAL_MULTI_ONGLETS.md; fix any regression. Resume P0 authentic-account validation only after explicit owner consent and no-cost approval. Keep automations disabled and zero spend."
   }
 }
