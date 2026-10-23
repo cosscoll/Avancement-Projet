@@ -1,6 +1,6 @@
 # CONTROL Cloud — plateforme multi-utilisateurs (bêta technique)
 
-**Statut au 17 octobre 2026 : code et schéma prêts, INSCRIPTIONS DÉSACTIVÉES.** Ne pas présenter cette préparation comme un service de comptes fonctionnel. Le projet Supabase CONTROL indépendant, ses tests de séparation des utilisateurs, l'activation OAuth et la procédure de suppression de compte ne sont **pas encore réalisés**.
+**Statut vérifié au 23 octobre 2026 :** le projet Supabase indépendant **CONTROL Cloud** existe, est `ACTIVE_HEALTHY` dans une organisation `Free`, avec six tables protégées par RLS et 22 politiques. Les **INSCRIPTIONS ET CONNEXIONS PUBLIQUES RESTENT DÉSACTIVÉES** : tests Supabase Auth/JWT/PostgREST avec deux véritables utilisateurs, synchronisation mobile, OAuth et suppression de compte non validés. [Audit en lecture seule du 23/10](CONTROL_CLOUD_SECURITE_AUDIT_2026_10_23.md).
 
 ## Fichiers
 
@@ -10,11 +10,11 @@
 - `supabase/migrations/20261017_control_saas_v1.sql` : schéma PostgreSQL de six tables avec 22 politiques RLS et clés étrangères empêchant d'associer un élément à un projet d'un autre propriétaire.
 - `supabase/functions/control-delete-account/index.ts` : fonction de suppression du compte nécessitant la vérification de l'identité. **Non déployée** et non exposée dans l'application tant que `accountDeletionEnabled` n'est pas explicitement activé.
 
-## Étape nécessaire avant de créer l'infrastructure
+## Infrastructure indépendante : étape accomplie, ne pas recréer
 
-Demander à l'utilisateur **dans quelle organisation Supabase** installer CONTROL : la seule organisation accessible actuellement s'appelle « IAgile » (offre Free). Le projet IAgile Academy est actuellement le seul projet présent et **ne doit pas être réutilisé**. Il faut créer un **nouveau projet Supabase exclusivement pour CONTROL**, même s'il se trouve dans une organisation existante.
+Au 23 octobre, le projet séparé **CONTROL Cloud** est présent et opérationnel côté infrastructure (statut `ACTIVE_HEALTHY`). Son organisation est en offre `Free`. La base IAgile Academy demeure exclue du périmètre ; **aucun nouveau projet ni aucune dépense ne sont nécessaires pour reproduire l'audit en lecture seule**. La gratuité de tout usage futur n'est pas acquise : vérifier les quotas et obtenir une autorisation explicite avant toute opération potentiellement facturable.
 
-Avant toute création, consulter le prix réel avec `get_cost`, prévenir l'utilisateur et respecter les éventuelles demandes de confirmation. Ne jamais lancer une ressource facturée ni contourner une limite de projet gratuit.
+Les essais d'authentification réels restent à valider avant d'exposer des comptes dans CONTROL.
 
 ## Verrou de sécurité des migrations (ajouté après l'audit)
 
@@ -29,10 +29,10 @@ SET app.control_isolated_project = 'confirmed';
 
 Ne jamais inscrire cette confirmation par défaut dans les fichiers de migrations, les scripts de production ou le projet IAgile. Si le mode d'exécution choisi n'autorise pas une confirmation de session sûre, interrompre la migration : mieux vaut attendre que risquer d'affecter une base existante. Ce verrou est un garde-fou supplémentaire, **pas une preuve** que la bonne instance est sélectionnée. Les comptes Cloud restent désactivés.
 
-## Installation contrôlée après validation de l'organisation
+## Installation contrôlée — historique et étapes restant à tester
 
-1. Créer un nouveau projet Supabase **CONTROL Cloud** dans la région européenne retenue par le propriétaire. Ne jamais migrer le schéma dans la base IAgile existante.
-2. Exécuter **une seule fois**, sur le nouveau projet vide uniquement, la migration `supabase/migrations/20261017_control_saas_v1.sql`.
+1. **Fait :** le projet Supabase indépendant **CONTROL Cloud** existe. Ne pas créer un deuxième projet.
+2. **Fait côté base :** les six tables, 22 politiques RLS et clé étrangère composite sont présentes (audit en lecture seule du 23/10). **Ne pas réexécuter les migrations** sur ces tables sans besoin démontré ni autorisation.
 3. Configurer dans Supabase **Authentication → URL Configuration** : Site URL `https://cosscoll.github.io/Avancement-Projet/app.html` et redirect URL autorisée `https://cosscoll.github.io/Avancement-Projet/app.html`. Les liens e-mail et OAuth doivent retourner exactement à cette adresse HTTPS. Ajuster si le domaine officiel change.
 4. Vérifier l'envoi d'e-mails d'authentification et les quotas/délivrabilité du fournisseur. L'option **Google OAuth** exige de configurer le client OAuth et la page de consentement Google ; la simple connexion au compte Google ne donne pas les droits Google Drive/Gmail.
 5. Déployer la fonction `control-delete-account` avec vérification JWT activée et variable d'environnement `CONTROL_ALLOWED_ORIGIN=https://cosscoll.github.io`. La clé de service ne doit exister que dans les secrets du fournisseur, **jamais dans les fichiers GitHub**.
@@ -113,4 +113,4 @@ Exemple : [`config/cloud.example.json`](../config/cloud.example.json), conservan
 
 **Preuves disponibles :** [CI de configuration et tests de session synthétique](https://github.com/cosscoll/Avancement-Projet/actions/runs/39403753476), 20/20 réussis. Parmi eux, les fonctions `verifiedSession` et `reload` de la vraie application Cloud sont exercées avec deux utilisateurs fictifs : isolation des réponses tardives A→B, déconnexion pendant un chargement, refus d'afficher des erreurs obsolètes de A, et fusion de rafraîchissements simultanés. Ces scénarios restent des **simulations du client**, pas des connexions Supabase avec JWT vérifiés. Le cahier `T-16` est suivi comme preuve partielle uniquement, sans validation complète.
 
-**Blocage P0 maintenu :** absence de projet CONTROL indépendant approuvé, absence de recette Auth/PostgREST par deux utilisateurs réels et synchronisation multi-appareils. Les critères réels `ACC-01..04`, `T-15/16/21` restent non certifiés.
+**Blocage P0 maintenu au 23/10 :** le projet Supabase indépendant et les protections RLS sont confirmés, mais **la recette Auth/PostgREST par deux véritables utilisateurs et la synchronisation multi-appareils n'existent pas encore comme preuves acceptées**. Les critères `ACC-01..04`, `T-15/16/21` restent non certifiés ; `config/cloud.json.enabled=false`.
