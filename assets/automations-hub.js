@@ -16,9 +16,10 @@ const https=v=>{try{let u=new URL(String(v||''));return u.protocol==='https:'&&!
 const l=(u,label,cls='button')=>https(u)?'<a class="'+cls+'" target="_blank" rel="noopener noreferrer" href="'+h(https(u))+'">'+h(label)+' ↗</a>':'';
 const enc=encodeURIComponent;
 const localKey='control-automations-v1';
-let localCorrupt=false;function getLocal(){try{const raw=localStorage.getItem(localKey);if(raw===null){localCorrupt=false;return{}}const v=JSON.parse(raw);if(!v||typeof v!=='object'||Array.isArray(v))throw Error('Invalid local automations');localCorrupt=false;return v}catch{localCorrupt=true;return{}}}
+let localLoadedRaw=null;
+let localCorrupt=false;function getLocal(){try{const raw=localStorage.getItem(localKey);if(raw===null){localCorrupt=false;localLoadedRaw=null;return{}}const v=JSON.parse(raw);if(!v||typeof v!=='object'||Array.isArray(v))throw Error('Invalid local automations');localCorrupt=false;localLoadedRaw=raw;return v}catch{localCorrupt=true;return{}}}
 let local=getLocal();
-function save(){if(localCorrupt){toast('Registre local illisible : sauvegarde bloquée pour préserver les données. Ouvre Sauvegardes.');return false}try{localStorage.setItem(localKey,JSON.stringify(local));return true}catch{toast('Stockage local indisponible : aucun brouillon enregistré.');return false}}
+function save(){if(localCorrupt){toast('Registre local illisible : sauvegarde bloquée pour préserver les données. Ouvre Sauvegardes.');return false}try{if(localStorage.getItem(localKey)!==localLoadedRaw){toast('Le registre a changé dans un autre onglet : brouillon non enregistré. Recharge CONTROL avant de modifier.');return false}const serialized=JSON.stringify(local);localStorage.setItem(localKey,serialized);localLoadedRaw=serialized;return true}catch{toast('Stockage local indisponible : aucun brouillon enregistré.');return false}}
 function commitDraft(change){if(localCorrupt){save();return false}let before;try{before=JSON.stringify(local)}catch{toast('Registre illisible : modification refusée.');return false}try{change()}catch{try{local=JSON.parse(before)}catch{}toast('Modification annulée.');return false}if(save())return true;try{local=JSON.parse(before)}catch{}return false}
 function all(ctx){return [...seeded,...(Array.isArray(local.extra)?local.extra:[])];}
 function activeProviders(ctx){
