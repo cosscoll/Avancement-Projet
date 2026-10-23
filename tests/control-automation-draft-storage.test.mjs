@@ -9,7 +9,7 @@ assert.ok(helpers.every(Boolean),'Automation draft persistence helpers should ex
 function harness(raw,quota=false){
  let value=raw,writes=0;const notices=[];
  const api=new Function('localStorage','toast',
-  'const localKey="control-automations-v1";'+helpers[0]+'\nlet local=getLocal();'+helpers.slice(1).join('\n')+
+  'const localKey="control-automations-v1";let localLoadedRaw=null;'+helpers[0]+'\nlet local=getLocal();'+helpers.slice(1).join('\n')+
   '\nreturn {get:()=>local,flag:()=>localCorrupt,commitDraft,save};'
  )({getItem:()=>value,setItem:(_,v)=>{writes++;if(quota)throw Error('QuotaExceeded');value=v}},v=>notices.push(v));
  return {...api,getRaw:()=>value,writes:()=>writes,notices};
