@@ -166,8 +166,8 @@
     "date": "2026-10-23",
     "source": "conversation",
     "branch": "main",
-    "code_commit_sha": "197035ebb0da672af75b2de0089f752d72d9f6db",
-    "scope": "P0 local durability guard V64: stale cross-tab write detection for control-command-v1, control-hub-v2 and control-automations-v1; preserve transaction rollback and refuse overwriting newer data; no Cloud activation. Read-only P0 infrastructure audit confirms isolated Supabase project healthy/Free, 6 RLS tables, 22 owner-only policies, anonymous data privileges denied and ownership FK; real user Auth/JWT A/B still unverified.",
+    "code_commit_sha": "0afeae5983d78b",
+    "scope": "CONTROL V65 P0: local backups now verify most recent command-state baseline plus snapshot of three local stores, reject stale-tab data and refuse download if any store changes during async encryption; IMP-10 moved to in_code without accepted criteria. Cloud remains disabled.",
     "changed_files": [
       "assets/command-center.js",
       "index.html",
@@ -185,28 +185,27 @@
       "tests/control-backup-review.test.mjs",
       "docs/CONTROL_LOCAL_MULTI_ONGLETS.md",
       "docs/CONTROL_IA_CAHIER_V1_2_SUIVI.md",
-      "README.md"
+      "README.md",
+      "tests/control-backup-export-consistency.test.mjs",
+      "data/control-ia-strategy.json"
     ],
     "checks_completed": [
-      "10 new targeted simulated JS tests passed: stale tabs, successful reload, consecutive saves, corruption and all three guarded stores.",
-      "22 preexisting storage/recovery tests passed in a custom isolated JavaScript runner.",
-      "Core JS syntax checked for command center, project shell and automation registry.",
-      "PWA shell and public cache versions V64 aligned across known regression tests; Cloud config enabled:false.",
-      "Read-only Supabase metadata audit: CONTROL Cloud ACTIVE_HEALTHY, organization Free, 6 protected tables, 22 RLS policies, anon data privileges disabled, composite ownership FK, 0 publicly exposed SQL functions, 0 security advisor lint findings."
+      "Seven new backup export regression cases passed in an isolated JavaScript runner, including post-async-encryption cancellation and successful unchanged backup.",
+      "48 of 48 relevant isolated backup, local mutation, backup-preview, corruption, and cross-tab regression cases passed after including required CSS fixture.",
+      "V65 shell/public cache names and referenced cache regression tests updated.",
+      "Strategy validator returned no errors: IMP-10 in_code, 0/3 accepted, 0/10 operational. Cloud enabled:false."
     ],
     "checks_not_yet_verified": [
-      "Full native node --test tests/*.test.mjs and GitHub Actions result on latest code SHA.",
-      "Published Pages desktop/mobile Chromium validation and real two-tab manual acceptance journey.",
-      "OS-level atomic concurrency and real mobile devices not verified; localStorage compare-before-write is best-effort only.",
-      "Supabase Auth A/B real JWT, RLS isolation and cross-device sync remain incomplete.",
-      "Real JWT A/B PostgREST with two dedicated Auth users; no test users, migrations or settings were changed during read-only audit."
+      "Full native Node test suite on final main SHA and GitHub Actions workflow result.",
+      "Real Chrome/Chromium desktop/mobile Pages flow, two real browser tabs, encrypted export timing.",
+      "True Auth/JWT PostgREST A/B and multi-device syncing, as well as transactional inter-tab locking."
     ],
     "ci": "unverified",
     "live_pages": "unverified",
     "operational_claim_allowed": false,
     "cloud_enabled": false,
     "automations_changed": false,
-    "next_action": "First verify native GitHub CI and Pages Chromium for V64; then obtain explicit permission for real two-account Auth/JWT/PostgREST A/B and cross-device test flow on existing free CONTROL Cloud. Do not enable signup/Cloud, create paid resources, or reactivate automations without owner authorization.",
+    "next_action": "Confirm GitHub Actions native Node + Pages Chromium on V65; perform multi-tab backup export recipe in real browser, then continue P0 account A/B testing only with authorization. Keep all automations disabled and never use paid/limited model resources.",
     "cloud_infrastructure_readonly_audit": {
       "date": "2026-10-23",
       "project_name": "CONTROL Cloud",
