@@ -6,6 +6,14 @@
 
 **Ne pas transférer le contenu complet du cahier privé dans GitHub public, ni publier les conversations, clés, comptes, documents et données privés.** Les identifiants et liens de test déjà publics peuvent être suivis dans ce dépôt.
 
+## Audit P0 des comptes CONTROL Cloud — 23 octobre 2026
+
+**Infrastructure indépendante vérifiée en lecture seule, sans création de compte ni dépense :** le projet `CONTROL Cloud` est `ACTIVE_HEALTHY`, son organisation est au forfait `Free`, six tables ont leur RLS activée, 22 politiques de propriétaire sont présentes, les quatre privilèges de données pour le rôle anonyme sont refusés sur les six tables et la clé étrangère composite protège le rattachement d'un élément au projet du même propriétaire. L'advisor Supabase ne signale aucune alerte et aucune fonction RPC `public` n'est exposée.
+
+**Ancien blocage levé :** il n'est plus nécessaire de créer une nouvelle infrastructure CONTROL pour commencer la validation des politiques déjà déployées. **Blocage P0 restant :** deux vraies sessions Supabase Auth avec JWT distincts, isolation PostgREST A/B réelle, synchronisation entre appareils, révocation et suppression du compte, vérifications physiques et autorisation explicite avant activation de `config/cloud.json`.
+
+Le plan de recette réelle existant `tests/control-cloud-real-auth-e2e.mjs` reste non exécuté. Les exigences `ACC-01..04` ne sont donc **pas acceptées**. [Rapport de sécurité du 23 octobre](CONTROL_CLOUD_SECURITE_AUDIT_2026_10_23.md) · [Procédure Cloud et historique](CONTROL_CLOUD_SAAS.md).
+
 ## Correction vérifiée de nomenclature
 
 - **22 tickets de développement historiques** `BACK-001` → `BACK-022`.
