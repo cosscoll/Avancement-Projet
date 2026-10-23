@@ -44,6 +44,14 @@ Le validateur `scripts/control-ia-requirements.mjs` contrôle désormais les ré
 
 Preuves techniques déjà identifiées : [recette navigateur locale](https://github.com/cosscoll/Avancement-Projet/actions/runs/39230180420), [RLS PostgreSQL A/B fictif](https://github.com/cosscoll/Avancement-Projet/actions/runs/39233284788). Les tests partiels portent sur les identifiants `T-05`, `T-14`, `T-15`, `T-16`, `T-25`. Ils gardent le statut `partial_mock`, pas `real_verified`.
 
+## Sécurisation V64 — conflits entre onglets (23 octobre 2026)
+
+- **Problème corrigé :** si deux onglets CONTROL chargent le même état puis l'un modifie les projets, tâches, décisions, réunions ou brouillons d'automatisations, le second pouvait écraser le premier sans savoir que les données avaient changé.
+- **Mécanisme :** les trois sources locales (`control-command-v1`, `control-hub-v2`, `control-automations-v1`) mémorisent le contenu exact lu et refusent un enregistrement si la version en stockage a changé depuis ; l'utilisateur reçoit un message demandant de recharger. Les transactions déjà prévues annulent la mutation en mémoire en cas de refus.
+- **Couverture :** 10 nouveaux contrôles ciblés et 22 tests existants de stockage/corruption exécutés avec succès dans un environnement JavaScript isolé. Les deux autres registres de sécurité et la suite Native Node complète restent à vérifier sur GitHub Actions et navigateur pour ce commit.
+- **Limite :** ce contrôle de version du stockage local n'est **pas une transaction atomique inter-onglets** et ne garantit ni une écriture concurrente parfaitement sérialisée ni la synchronisation serveur entre appareils. C'est une prévention des écrasements *séquentiels* de versions obsolètes. Auth JWT/RLS A/B et reprise multi-appareils restent des exigences P0 non validées.
+- **Statuts du cahier inchangés :** 22 tickets BACK, 42 recettes, 3/36 critères historiques prouvés, 0/10 améliorations pleinement opérationnelles. Aucune recette supplémentaire déclarée terminée du seul fait de ces tests.
+
 ## Vérifications complémentaires V64 — recherche et parcours projets (22 octobre 2026)
 
 - **Routes personnelles :** décodage du seul segment d'identifiant pour conserver les caractères spéciaux (notamment `/` encodé) ; les échappements URI malformés sont rejetés sans bloquer toute l'interface.
