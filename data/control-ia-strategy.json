@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project": "control-ia",
-  "updated_on": "2026-10-20",
+  "updated_on": "2026-10-23",
   "mission": "Réduire la fragmentation numérique : depuis une seule conversation, retrouver l'information et réaliser des actions autorisées, avec preuves et reprises fiables.",
   "governing_sources": [
     "data/control-ia-requirements.json",
@@ -377,9 +377,12 @@
       "external_blockers": [
         "Synchronisation distante et reprise multi-appareils dépendent de CONTROL-ACCOUNT."
       ],
-      "status": "planned",
+      "status": "in_code",
       "accepted_criteria": [],
-      "evidence_urls": []
+      "evidence_urls": [
+        "https://github.com/cosscoll/Avancement-Projet/commit/2f203456c48e9ba139fd07488e3168b41879fe78",
+        "https://github.com/cosscoll/Avancement-Projet/commit/ea88049536a8fdaae89a49f4eafc6906c9f56675"
+      ]
     }
   ],
   "metrics": {
