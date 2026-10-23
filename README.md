@@ -1,5 +1,12 @@
 # CONTROL — Centre de pilotage des projets
 
+## Avertissement multi-onglets — V66 (23 octobre 2026)
+
+CONTROL signale maintenant les modifications de projets, tâches ou brouillons effectuées dans un autre onglet, y compris l'effacement complet du stockage. Un bandeau persistant propose **Recharger les données**, après confirmation explicite pour protéger les saisies non enregistrées. Aucun rechargement automatique, aucune activation Cloud ou automatisation.
+
+Le code et les tests ciblés sont sur `main` ; les tests Chromium sur GitHub Pages et la suite GitHub Actions complète restent non confirmés pour le SHA actuel. [Protocole de recette](docs/CONTROL_LOCAL_MULTI_ONGLETS.md).
+
+
 ## Sauvegarde fiable entre plusieurs onglets — V65 (23 octobre 2026)
 
 L'export local compare maintenant le contenu chargé dans l'onglet avec la version effectivement enregistrée. Il photographie les trois espaces de CONTROL (centre de commande, projets et brouillons d'automatisations), puis vérifie qu'ils n'ont pas changé **après tout chiffrement**, avant de télécharger le fichier. Si une autre fenêtre a écrit entre-temps, la sauvegarde est refusée avec un message explicite : le fichier ne doit pas masquer de modifications plus récentes. Les exports et imports ne créent aucun compte ni aucune automatisation.
