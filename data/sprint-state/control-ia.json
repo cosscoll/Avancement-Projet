@@ -166,7 +166,7 @@
     "date": "2026-10-23",
     "source": "conversation",
     "branch": "main",
-    "code_commit_sha": "197035ebb0da67",
+    "code_commit_sha": "197035ebb0da672af75b2de0089f752d72d9f6db",
     "scope": "P0 local durability guard V64: stale cross-tab write detection for control-command-v1, control-hub-v2 and control-automations-v1; preserve transaction rollback and refuse overwriting newer data; no Cloud activation.",
     "changed_files": [
       "assets/command-center.js",
