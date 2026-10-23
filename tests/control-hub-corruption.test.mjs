@@ -18,7 +18,7 @@ function mount(initial,writeFailure=false){
   setItem:(key,value)=>{writes++;if(writeFailure)throw Error('QuotaExceededError');raw=value}
  };
  const module=new Function('localStorage','notify',
-  'const base="control-hub-v2";'+entries[0]+'\nlet state=load();'+entries.slice(1).join('\n')+
+  'const base="control-hub-v2";let hubLoadedRaw=null;'+entries[0]+'\nlet state=load();'+entries.slice(1).join('\n')+
   '\nreturn {state:()=>state,hubCorrupt:()=>hubCorrupt,load,persist,commitHub,hubWarning};'
  )(store,msg=>notices.push(msg));
  return {...module,getRaw:()=>raw,writes:()=>writes,notices};
