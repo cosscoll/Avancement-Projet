@@ -210,3 +210,13 @@ body.cloud-shell-v3 .shell-side-footer>button{margin-top:10px}
  .shell-progressive-form>summary{flex-direction:column;align-items:flex-start;gap:4px;padding:14px 16px}
  .shell-progressive-body{padding:14px 16px}
 }
+
+/* Cross-tab change warning: a visible state, not a transient toast. */
+.control-external-change[hidden]{display:none!important}
+.control-external-change{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 17px;margin:0 0 17px;background:#fff4e5;border:1px solid #d9a353;border-radius:11px;color:#583d18;box-shadow:0 1px 3px rgba(75,48,13,.08)}
+.control-external-change>div{display:flex;flex-direction:column;gap:5px;min-width:0;line-height:1.45}
+.control-external-change strong{font-size:13px}
+.control-external-change span{font-size:12px}
+.control-external-change button{flex:0 0 auto;min-height:42px!important;padding:9px 14px!important;border:1px solid #795221!important;border-radius:9px!important;background:#684821!important;color:#fff!important;font-size:12px!important;font-weight:780!important}
+.control-external-change button:focus-visible{outline:3px solid #2563eb;outline-offset:3px}
+@media(max-width:640px){.control-external-change{flex-direction:column;align-items:stretch;gap:11px;padding:12px}.control-external-change button{width:100%}}
