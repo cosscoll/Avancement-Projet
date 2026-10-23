@@ -6,6 +6,16 @@
 
 **Ne pas transférer le contenu complet du cahier privé dans GitHub public, ni publier les conversations, clés, comptes, documents et données privés.** Les identifiants et liens de test déjà publics peuvent être suivis dans ce dépôt.
 
+## Fiabilité P0 — export de sauvegardes V65 (23 octobre 2026)
+
+- **Défaut corrigé :** un export lancé dans un onglet périmé pouvait recopier en mémoire d'anciennes actions ou missions, même si un autre onglet avait déjà enregistré une version plus récente.
+- **Protection :** comparaison avec la dernière version chargée du centre de commande, photographie des **trois magasins locaux**, puis recontrôle après la préparation et après tout chiffrement asynchrone. L'export est annulé si un changement intervient avant la création du fichier.
+- **Information utilisateur :** la page Sauvegardes explique pourquoi une exportation peut être refusée et demande un rechargement.
+- **Vérification ciblée :** 7 nouveaux scénarios pour l'export (dont le véritable gestionnaire asynchrone), et 48 contrôles de régression centrés sur les sauvegardes, la corruption, le stockage entre onglets et la récupération exécutés avec succès en JavaScript isolé. CI native complète et navigateur public non encore vérifiés sur le SHA final.
+- **Limite :** une photographie de `localStorage` ne fournit pas une transaction atomique entre tous les onglets ; les tests manuels multi-onglets et la future synchronisation Cloud demeurent nécessaires. Les 36 critères historiques et 30 critères IMP conservent leurs statuts antérieurs ; aucune recette supplémentaire certifiée.
+
+[Protocole de recette multi-onglets et export](CONTROL_LOCAL_MULTI_ONGLETS.md)
+
 ## Audit P0 des comptes CONTROL Cloud — 23 octobre 2026
 
 **Infrastructure indépendante vérifiée en lecture seule, sans création de compte ni dépense :** le projet `CONTROL Cloud` est `ACTIVE_HEALTHY`, son organisation est au forfait `Free`, six tables ont leur RLS activée, 22 politiques de propriétaire sont présentes, les quatre privilèges de données pour le rôle anonyme sont refusés sur les six tables et la clé étrangère composite protège le rattachement d'un élément au projet du même propriétaire. L'advisor Supabase ne signale aucune alerte et aucune fonction RPC `public` n'est exposée.
