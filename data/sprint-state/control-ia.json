@@ -166,8 +166,8 @@
     "date": "2026-10-23",
     "source": "conversation",
     "branch": "main",
-    "code_commit_sha": "0afeae5983d78b21bf4d2105a8e93f9f148bb0c3",
-    "scope": "CONTROL V65 P0: local backups now verify most recent command-state baseline plus snapshot of three local stores, reject stale-tab data and refuse download if any store changes during async encryption; IMP-10 moved to in_code without accepted criteria. Cloud remains disabled.",
+    "code_commit_sha": "c0f0504f07f3fbe7ebdd19b359836e8c6dc7f575",
+    "scope": "CONTROL V66: personal workspace proactively warns of changes to command, project or automation localStorage in another tab, including storage clear null-null events; explicit consent to reload protects unsaved forms. No Cloud or automation changes.",
     "changed_files": [
       "assets/command-center.js",
       "index.html",
@@ -187,25 +187,28 @@
       "docs/CONTROL_IA_CAHIER_V1_2_SUIVI.md",
       "README.md",
       "tests/control-backup-export-consistency.test.mjs",
-      "data/control-ia-strategy.json"
+      "data/control-ia-strategy.json",
+      "assets/workspace-shell.css",
+      "tests/control-cross-tab-notice.test.mjs",
+      "tests/control-ia-browser-smoke.mjs"
     ],
     "checks_completed": [
-      "Seven new backup export regression cases passed in an isolated JavaScript runner, including post-async-encryption cancellation and successful unchanged backup.",
-      "48 of 48 relevant isolated backup, local mutation, backup-preview, corruption, and cross-tab regression cases passed after including required CSS fixture.",
-      "V65 shell/public cache names and referenced cache regression tests updated.",
-      "Strategy validator returned no errors: IMP-10 in_code, 0/3 accepted, 0/10 operational. Cloud enabled:false."
+      "Five newly added cross-tab notice tests pass in isolated JavaScript, including real null/null localStorage.clear event and cancellation of reload.",
+      "Five legacy hub storage corruption tests pass in isolated JavaScript, and 21 of 22 initial integration assertions passed before fixing an isolated test runner's missing fixture; last legacy run passed 5/5.",
+      "Inline CONTROL personal JavaScript, service-worker.js and Chromium smoke script syntax checked successfully.",
+      "PWA shell/public cache V66; Cloud enabled:false; no ChatGPT automations activated."
     ],
     "checks_not_yet_verified": [
-      "Full native Node test suite on final main SHA and GitHub Actions workflow result.",
-      "Real Chrome/Chromium desktop/mobile Pages flow, two real browser tabs, encrypted export timing.",
-      "True Auth/JWT PostgREST A/B and multi-device syncing, as well as transactional inter-tab locking."
+      "Native node --test tests/*.test.mjs on last main SHA, GitHub Actions quality workflow.",
+      "Real Chromium desktop/mobile on deployed GitHub Pages, actual two simultaneous browser tabs storage event and reload UI.",
+      "Real JWT A/B PostgREST and cross-device Cloud authorization, and reliable atomic inter-tab transactions."
     ],
     "ci": "unverified",
     "live_pages": "unverified",
     "operational_claim_allowed": false,
     "cloud_enabled": false,
     "automations_changed": false,
-    "next_action": "Confirm GitHub Actions native Node + Pages Chromium on V65; perform multi-tab backup export recipe in real browser, then continue P0 account A/B testing only with authorization. Keep all automations disabled and never use paid/limited model resources.",
+    "next_action": "Check native GitHub Actions and deployed Pages on V66; perform real two-tab browsing and change/reload scenario per docs/CONTROL_LOCAL_MULTI_ONGLETS.md. Fix any failures before considering P0 complete. Maintain Cloud disabled and all automations paused; zero spend.",
     "cloud_infrastructure_readonly_audit": {
       "date": "2026-10-23",
       "project_name": "CONTROL Cloud",
