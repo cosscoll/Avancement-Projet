@@ -166,7 +166,7 @@
     "date": "2026-10-23",
     "source": "conversation",
     "branch": "main",
-    "code_commit_sha": "0afeae5983d78b",
+    "code_commit_sha": "0afeae5983d78b21bf4d2105a8e93f9f148bb0c3",
     "scope": "CONTROL V65 P0: local backups now verify most recent command-state baseline plus snapshot of three local stores, reject stale-tab data and refuse download if any store changes during async encryption; IMP-10 moved to in_code without accepted criteria. Cloud remains disabled.",
     "changed_files": [
       "assets/command-center.js",
