@@ -26,7 +26,7 @@ function harness(){
  };
  const loaded=storage.getItem(keys[0]);
  const db=JSON.parse(loaded);
- const make=()=>new Function('window','localStorage','db','localLastLoadedRaw',readStore+'\n'+validate+'\n'+preparer+'\nreturn prepareBackupExport;')(
+ const make=()=>new Function('window','localStorage','db','localLastLoadedRaw',"const HUB='control-hub-v2', AUTOS='control-automations-v1';\n"+readStore+'\n'+validate+'\n'+preparer+'\nreturn prepareBackupExport;')(
   {CONTROL_BACKUP_REVIEW:reviewer},storage,db,loaded
  );
  return {store,storage,db,keys,make,setOnRead:fn=>{callback=fn}};
