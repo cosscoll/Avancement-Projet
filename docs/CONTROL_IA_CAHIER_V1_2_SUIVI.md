@@ -6,6 +6,16 @@
 
 **Ne pas transférer le contenu complet du cahier privé dans GitHub public, ni publier les conversations, clés, comptes, documents et données privés.** Les identifiants et liens de test déjà publics peuvent être suivis dans ce dépôt.
 
+## Reprise locale sûre — V66 : notifier les changements entre onglets (23 octobre 2026)
+
+- **Amélioration utilisable :** un panneau persistant et accessible prévient si les projets, actions ou brouillons d'automatisation ont changé dans un autre onglet. La notification n'effectue aucune écriture ni rechargement automatique.
+- **Protection du brouillon :** recharger nécessite une confirmation explicite qui prévient de la perte possible des formulaires non enregistrés ; ignorer le message n'autorise pas les modifications périmées grâce aux garde-fous V64.
+- **Cas particulier testé :** `localStorage.clear()` avec clé et valeurs nulles est reconnu.
+- **Preuve ciblée :** 5 tests de notification et 5 tests du stockage des projets exécutés avec succès en JavaScript isolé ; le contrôle régressif du shell PWA V66 a également été passé. Une vérification Chromium figure dans le script de smoke, mais **son exécution réelle n'est pas confirmée**.
+- **Statut du cahier :** IMP-10 reste `in_code`, 0/3 critères IMP-10 pleinement acceptés. Pas de modification des 3/36 critères historiques validés ; Cloud `enabled:false`.
+
+[Recette multi-onglets et limitations](CONTROL_LOCAL_MULTI_ONGLETS.md)
+
 ## Fiabilité P0 — export de sauvegardes V65 (23 octobre 2026)
 
 **Traçabilité du programme des dix améliorations :** `IMP-10` (Reprise et récupération fiable des travaux) passe de `planned` à **`in_code`** car son volet prévention des écrasements locaux et sauvegardes cohérentes a du code et des tests. **0/3 critères IMP-10 acceptés** : la reprise de mission par checkpoint, une coordination réellement atomique et les preuves d'échec restent incomplètes. Cela ne modifie ni les 3/36 critères historiques certifiés ni les 0/10 améliorations opérationnelles.
