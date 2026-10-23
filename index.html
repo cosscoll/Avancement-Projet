@@ -342,7 +342,7 @@ async function init(){const data=await Promise.allSettled(['data/projects.json',
 function externalChangeNotice(event){
  if(event.storageArea&&event.storageArea!==localStorage)return;
  if(event.key!==null&&!['control-command-v1','control-hub-v2','control-automations-v1'].includes(event.key))return;
- if(event.oldValue===event.newValue)return;
+ if(event.key!==null&&event.oldValue===event.newValue)return;
  const alert=$('#control-external-change');
  if(alert)alert.hidden=false;
 }
