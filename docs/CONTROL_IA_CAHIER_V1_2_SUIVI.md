@@ -1,6 +1,6 @@
 # CONTROL IA — Suivi du cahier V1.2 (index public, contenu privé)
 
-**Mise à jour : 21 octobre 2026.** Ce fichier est uniquement un **suivi public expurgé**. Le cahier des charges fonctionnel et technique V1.2 intégral, conservant la V1.1 et ses annexes, se trouve en bibliothèque personnelle privée :
+**Mise à jour : 23 octobre 2026.** Ce fichier est uniquement un **suivi public expurgé**. Le cahier des charges fonctionnel et technique V1.2 intégral, conservant la V1.1 et ses annexes, se trouve en bibliothèque personnelle privée :
 
 `/CONTROL-IA/CONTROL_IA_Cahier_des_charges_V1_2_PRIVE.md`
 
@@ -48,6 +48,7 @@ Preuves techniques déjà identifiées : [recette navigateur locale](https://git
 
 - **Problème corrigé :** si deux onglets CONTROL chargent le même état puis l'un modifie les projets, tâches, décisions, réunions ou brouillons d'automatisations, le second pouvait écraser le premier sans savoir que les données avaient changé.
 - **Mécanisme :** les trois sources locales (`control-command-v1`, `control-hub-v2`, `control-automations-v1`) mémorisent le contenu exact lu et refusent un enregistrement si la version en stockage a changé depuis ; l'utilisateur reçoit un message demandant de recharger. Les transactions déjà prévues annulent la mutation en mémoire en cas de refus.
+- **Protocole de recette :** [Essai multi-onglets et limites de protection](CONTROL_LOCAL_MULTI_ONGLETS.md) : séquence A/B, protection de l'onglet en retard, réessai après rechargement, refus de quota, collecte de preuves SHA/navigateur.
 - **Couverture :** 10 nouveaux contrôles ciblés et 22 tests existants de stockage/corruption exécutés avec succès dans un environnement JavaScript isolé. Les deux autres registres de sécurité et la suite Native Node complète restent à vérifier sur GitHub Actions et navigateur pour ce commit.
 - **Limite :** ce contrôle de version du stockage local n'est **pas une transaction atomique inter-onglets** et ne garantit ni une écriture concurrente parfaitement sérialisée ni la synchronisation serveur entre appareils. C'est une prévention des écrasements *séquentiels* de versions obsolètes. Auth JWT/RLS A/B et reprise multi-appareils restent des exigences P0 non validées.
 - **Statuts du cahier inchangés :** 22 tickets BACK, 42 recettes, 3/36 critères historiques prouvés, 0/10 améliorations pleinement opérationnelles. Aucune recette supplémentaire déclarée terminée du seul fait de ces tests.
