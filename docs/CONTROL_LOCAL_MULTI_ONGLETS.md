@@ -18,6 +18,14 @@ Une tentative d'écriture après une modification externe retourne `false`, cons
 
 Cette protection n'est **pas une opération comparer-et-écrire atomique entre navigateurs**, ne remplace pas un verrou transactionnel serveur, ni les vérifications JWT/RLS et la synchronisation prévue par `CONTROL-ACCOUNT`.
 
+## Avertissement permanent en cas de changement externe (V66)
+
+Le panneau personnel contient maintenant un avertissement persistant et accessible (`role="alert"`) lorsque le navigateur reçoit un événement `storage` concernant l'un des trois registres CONTROL. Contrairement au message temporaire, il reste visible pendant la navigation entre les pages. L'utilisateur dispose d'un bouton **« Recharger les données »**, mais le rechargement nécessite une confirmation expliquant le risque de perdre une saisie non enregistrée. L'application n'écrit aucune donnée en réaction à cet événement.
+
+Le cas `localStorage.clear()` est couvert : un navigateur émet un événement où `key`, `oldValue` et `newValue` valent `null`. Le panneau s'affiche aussi dans ce cas. Les clés étrangères au projet et les événements sans changement de valeur sont ignorés.
+
+**Tests isolés :** `tests/control-cross-tab-notice.test.mjs` (5 cas), ainsi que la vérification de non-régression du stockage projets. **Scénario Chromium prévu** dans `tests/control-ia-browser-smoke.mjs` ; exécution réelle et validation mobile non confirmées. Le message n'est pas une synchronisation automatique : pour éviter de perdre les formulaires incomplets, c'est l'utilisateur qui décide quand recharger.
+
 ## Recette manuelle à réaliser dans un navigateur réel
 
 1. Ouvrir CONTROL dans deux onglets **A** et **B** du même navigateur/profil, à partir de la même version de données ; créer une sauvegarde d'abord.
