@@ -70,3 +70,39 @@ test('download is guarded after asynchronous encryption and cannot leak stale co
  assert.ok(exportHandler.indexOf('unchanged(localStorage,exportData.original)')<exportHandler.indexOf('new Blob('));
  assert.doesNotMatch(exportHandler,/command:db,hub:getStorage\(HUB\)/);
 });
+
+test('a change during asynchronous encryption cancels download before creating a file',async()=>{
+ const handler=source.slice(source.indexOf("registerForm('#export-data'"),source.indexOf("$('#main [data-act=\"download-corrupt\"]')"));
+ let run=null,downloads=0,blobs=0;
+ const notices=[];
+ const reviewer={unchanged:()=>false};
+ const factory=new Function('registerForm','localStoreCorrupt','backupStorageIssues','toast','pack','prepareBackupExport','window','localStorage','Blob','document','URL','setTimeout','Date',handler);
+ factory((selector,fn)=>{assert.equal(selector,'#export-data');run=fn},false,()=>[],x=>notices.push(x),
+  async()=>({format:'control-v2-aes-gcm'}),()=>({data:{command:{}},original:[null,null,null]}),
+  {CONTROL_BACKUP_REVIEW:reviewer},{},
+  class{constructor(){blobs++}},
+  {createElement(){downloads++;return{click(){},remove(){}}},body:{appendChild(){}}},
+  {createObjectURL(){downloads++;return'blob:example'},revokeObjectURL(){}},()=>{},Date);
+ assert.equal(typeof run,'function');
+ await run({get:()=>''});
+ assert.equal(blobs,0);
+ assert.equal(downloads,0);
+ assert.match(notices.join(' '),/changé pendant le chiffrement/);
+});
+
+test('unchanged snapshot still produces a normal downloaded backup',async()=>{
+ const handler=source.slice(source.indexOf("registerForm('#export-data'"),source.indexOf("$('#main [data-act=\"download-corrupt\"]')"));
+ let run=null,clicks=0,blobs=0;
+ const notices=[];
+ new Function('registerForm','localStoreCorrupt','backupStorageIssues','toast','pack','prepareBackupExport','window','localStorage','Blob','document','URL','setTimeout','Date',handler)(
+  (_,fn)=>{run=fn},false,()=>[],x=>notices.push(x),async()=>({format:'control-v2-plain'}),
+  ()=>({data:{command:{actions:[]}},original:[null,null,null]}),
+  {CONTROL_BACKUP_REVIEW:{unchanged:()=>true}},{},
+  class{constructor(){blobs++}},
+  {createElement(){return{click(){clicks++},remove(){}}},body:{appendChild(){}}},
+  {createObjectURL(){return 'blob:example'},revokeObjectURL(){}},()=>{},Date);
+ await run({get:()=>''});
+ assert.equal(blobs,1);
+ assert.equal(clicks,1);
+ assert.match(notices.join(' '),/Fichier téléchargé/);
+});
