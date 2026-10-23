@@ -8,6 +8,10 @@
 
 ## Fiabilité P0 — export de sauvegardes V65 (23 octobre 2026)
 
+**Traçabilité du programme des dix améliorations :** `IMP-10` (Reprise et récupération fiable des travaux) passe de `planned` à **`in_code`** car son volet prévention des écrasements locaux et sauvegardes cohérentes a du code et des tests. **0/3 critères IMP-10 acceptés** : la reprise de mission par checkpoint, une coordination réellement atomique et les preuves d'échec restent incomplètes. Cela ne modifie ni les 3/36 critères historiques certifiés ni les 0/10 améliorations opérationnelles.
+
+
+
 - **Défaut corrigé :** un export lancé dans un onglet périmé pouvait recopier en mémoire d'anciennes actions ou missions, même si un autre onglet avait déjà enregistré une version plus récente.
 - **Protection :** comparaison avec la dernière version chargée du centre de commande, photographie des **trois magasins locaux**, puis recontrôle après la préparation et après tout chiffrement asynchrone. L'export est annulé si un changement intervient avant la création du fichier.
 - **Information utilisateur :** la page Sauvegardes explique pourquoi une exportation peut être refusée et demande un rechargement.
