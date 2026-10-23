@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "reviewed_on": "2026-10-22",
+  "reviewed_on": "2026-10-23",
   "title": "CONTROL IA — Pilotage des livraisons fonctionnelles",
   "purpose": "Transformer les capacités partielles en parcours opérationnels, sans confondre code, CI, publication et recette.",
   "focus_id": "CONTROL-ACCOUNT",
@@ -38,10 +38,10 @@
       "stage": "in_code",
       "depends_on": [],
       "summary": "Auth CONTROL, base dédiée, séparation des utilisateurs, synchronisation entre appareils et retrait du compte.",
-      "next": "RLS PostgreSQL A/B sur base jetable validé (pas Supabase Auth). Vérifier une base CONTROL réellement dédiée et son coût 0 €, puis tester vraies sessions JWT A/B et synchronisation avant toute activation Cloud.",
+      "next": "Infrastructure CONTROL Cloud indépendante vérifiée ACTIVE_HEALTHY, forfait d'organisation Free, 6 tables RLS, 22 politiques propriétaires et aucune permission anonyme. Prochaine porte P0 : après accord explicite, exécuter les vraies recettes Supabase Auth/JWT/PostgREST A/B, révocation et synchronisation inter-appareils avec deux comptes de test dédiés et vides ; maintenir Cloud désactivé d'ici là.",
       "blockers": [
-        "Base CONTROL indépendante non activée; accord d'infrastructure à obtenir après vérification du coût.",
-        "config/cloud.json reste enabled:false."
+        "Aucune preuve de sessions réelles avec deux véritables comptes Supabase Auth, deux JWT distincts et isolation via PostgREST A/B.",
+        "Aucune recette réelle validée de synchronisation inter-appareils, révocation/suppression du compte et activation autorisée ; config/cloud.json reste enabled:false."
       ],
       "source_tickets": [
         "BACK-004",
