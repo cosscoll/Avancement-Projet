@@ -1,5 +1,10 @@
 # CONTROL — Centre de pilotage des projets
 
+## Protection contre l’écrasement des données entre onglets (23 octobre 2026)
+
+Les trois magasins locaux de CONTROL (projets, actions/missions/calendrier et brouillons d’automatisations) vérifient désormais que la version lue au chargement n’a pas changé avant de sauvegarder. Si un autre onglet a enregistré entre-temps, l’écriture est **refusée**, les mutations sont annulées localement et CONTROL demande de recharger. Cette prévention couvre les conflits séquentiels, **pas une transaction atomique ni une synchronisation Cloud** ; la validation serveur et les tests Auth A/B restent obligatoires. Tests ciblés : `tests/control-local-tab-isolation.test.mjs` et `tests/control-cross-tab-stores.test.mjs`.
+
+
 ## Accueil simplifié et recherche directe (22 octobre 2026)
 
 La PWA personnelle propose dès l'accueil un champ **« Rechercher une fonction ou un projet »** : saisir « budget », « créer un site » ou le nom d'un projet ouvre le moteur local avec les résultats correspondants, sans créer d'action. Les demandes **« créer un nouveau projet »** et **« créer une tâche »** mènent maintenant directement à leurs formulaires, avec le curseur prêt à saisir ; **« mes projets »** et **« mes tâches »** affichent au contraire les listes correspondantes. Le moteur propose également des raccourcis vers les dernières fonctions utilisées pendant la session. Aucun compte Cloud n'est ouvert et aucune automatisation réelle n'est activée.
