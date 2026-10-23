@@ -28,6 +28,14 @@ Cette protection n'est **pas une opération comparer-et-écrire atomique entre n
 6. Tester un `localStorage` plein/refusé et une valeur JSON illisible ; le stockage initial ne doit pas être remplacé par une liste vide. Vérifier l'option de récupération des données brutes.
 7. Vérifier le comportement sur Chrome desktop et sur un vrai téléphone. Consigner le navigateur, le SHA déployé et des captures/étapes reproductibles.
 
+## Export de sauvegarde cohérent (V65)
+
+Un nouvel audit a constaté que l'export utilisait un état `db` conservé en mémoire, susceptible d'être plus ancien que le stockage partagé avec un autre onglet. L'export de CONTROL compare désormais le dernier état de commande chargé avec la version effectivement enregistrée, puis capture les trois zones. Si le moindre espace change pendant la préparation **ou pendant le chiffrement asynchrone**, l'export s'interrompt avant de créer le fichier.
+
+Recette manuelle complémentaire : ouvrir CONTROL dans les onglets A et B, conserver « Sauvegardes » ouvert dans B, modifier une action dans A, puis déclencher l'export depuis B ; **aucun fichier périmé ne doit être produit** et un message doit demander le rechargement. Renouveler avec une modification d'un lien de projet et d'un brouillon d'automatisation pendant une exportation chiffrée (sans activer de tâche réelle).
+
+Tests : `tests/control-backup-export-consistency.test.mjs`, sept cas ciblés dont deux scénarios exécutant le véritable gestionnaire asynchrone de téléchargement avec versions stables/modifiées. Les tests isolés ne remplacent pas les essais dans Chromium ni sur mobile.
+
 ## Tests de code disponibles
 
 - `tests/control-local-tab-isolation.test.mjs` : conflit, conservation de l'écriture récente, rechargement, suite d'écritures du même onglet et stockage défectueux.
