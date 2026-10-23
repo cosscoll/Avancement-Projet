@@ -817,6 +817,13 @@ try{
 
  // Account gate is not the same as personal CONTROL: public Cloud must remain disabled.
  // We test the actual app.html and public config, not merely assert file contents in Node.
+ // Cross-tab guard: browser must alert without discarding a draft or reloading automatically.
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('#control-external-change')"),8000)();
+ await js("window.dispatchEvent(new StorageEvent('storage',{key:'control-command-v1',oldValue:'previous',newValue:'newer',storageArea:localStorage}))");
+ assert.equal(await js("document.querySelector('#control-external-change').hidden"),false);
+ assert.equal(await js("(()=>{const previous=window.confirm;window.confirm=()=>false;const hash=location.hash;document.querySelector('#control-external-reload').click();window.confirm=previous;return location.hash===hash&&!document.querySelector('#control-external-change').hidden})()"),true);
+ log('cross-tab change warns persistently and refuses automatic reload without consent');
  const targetCloud=production?PUBLIC_ORIGIN+'app.html':'http://127.0.0.1:'+port+'/app.html';
  await command('Page.navigate',{url:targetCloud});
  await ready(()=>js("document.querySelector('#setup')?.hidden===false"),16000)();
