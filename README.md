@@ -1,5 +1,12 @@
 # CONTROL — Centre de pilotage des projets
 
+## Sauvegarde fiable entre plusieurs onglets — V65 (23 octobre 2026)
+
+L'export local compare maintenant le contenu chargé dans l'onglet avec la version effectivement enregistrée. Il photographie les trois espaces de CONTROL (centre de commande, projets et brouillons d'automatisations), puis vérifie qu'ils n'ont pas changé **après tout chiffrement**, avant de télécharger le fichier. Si une autre fenêtre a écrit entre-temps, la sauvegarde est refusée avec un message explicite : le fichier ne doit pas masquer de modifications plus récentes. Les exports et imports ne créent aucun compte ni aucune automatisation.
+
+Les contrôles ciblés de sauvegarde et de stockage passent en exécution JavaScript isolée ; la CI Node native, le navigateur public et les essais multi-onglets réels restent à confirmer. [Protocole de recette](docs/CONTROL_LOCAL_MULTI_ONGLETS.md).
+
+
 ## Audit P0 du Cloud CONTROL (23 octobre 2026)
 
 L'infrastructure Supabase indépendante est désormais **vérifiée en lecture seule** : organisation sur offre Free, projet `ACTIVE_HEALTHY`, six tables RLS, 22 politiques d'isolation par propriétaire et aucune permission de données pour les accès anonymes. Ce constat **ne valide pas les comptes** : les essais avec deux vrais utilisateurs, leurs JWT, la synchronisation et le cycle de vie des comptes restent non réalisés. `config/cloud.json.enabled=false` et aucune dépense n'a été engagée. [Audit et prochaines recettes](docs/CONTROL_CLOUD_SECURITE_AUDIT_2026_10_23.md).
