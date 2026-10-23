@@ -167,7 +167,7 @@
     "source": "conversation",
     "branch": "main",
     "code_commit_sha": "197035ebb0da672af75b2de0089f752d72d9f6db",
-    "scope": "P0 local durability guard V64: stale cross-tab write detection for control-command-v1, control-hub-v2 and control-automations-v1; preserve transaction rollback and refuse overwriting newer data; no Cloud activation.",
+    "scope": "P0 local durability guard V64: stale cross-tab write detection for control-command-v1, control-hub-v2 and control-automations-v1; preserve transaction rollback and refuse overwriting newer data; no Cloud activation. Read-only P0 infrastructure audit confirms isolated Supabase project healthy/Free, 6 RLS tables, 22 owner-only policies, anonymous data privileges denied and ownership FK; real user Auth/JWT A/B still unverified.",
     "changed_files": [
       "assets/command-center.js",
       "index.html",
@@ -191,19 +191,38 @@
       "10 new targeted simulated JS tests passed: stale tabs, successful reload, consecutive saves, corruption and all three guarded stores.",
       "22 preexisting storage/recovery tests passed in a custom isolated JavaScript runner.",
       "Core JS syntax checked for command center, project shell and automation registry.",
-      "PWA shell and public cache versions V64 aligned across known regression tests; Cloud config enabled:false."
+      "PWA shell and public cache versions V64 aligned across known regression tests; Cloud config enabled:false.",
+      "Read-only Supabase metadata audit: CONTROL Cloud ACTIVE_HEALTHY, organization Free, 6 protected tables, 22 RLS policies, anon data privileges disabled, composite ownership FK, 0 publicly exposed SQL functions, 0 security advisor lint findings."
     ],
     "checks_not_yet_verified": [
       "Full native node --test tests/*.test.mjs and GitHub Actions result on latest code SHA.",
       "Published Pages desktop/mobile Chromium validation and real two-tab manual acceptance journey.",
       "OS-level atomic concurrency and real mobile devices not verified; localStorage compare-before-write is best-effort only.",
-      "Supabase Auth A/B real JWT, RLS isolation and cross-device sync remain incomplete."
+      "Supabase Auth A/B real JWT, RLS isolation and cross-device sync remain incomplete.",
+      "Real JWT A/B PostgREST with two dedicated Auth users; no test users, migrations or settings were changed during read-only audit."
     ],
     "ci": "unverified",
     "live_pages": "unverified",
     "operational_claim_allowed": false,
     "cloud_enabled": false,
     "automations_changed": false,
-    "next_action": "Check latest main GitHub Actions and public Pages; run manual two-tab browser scenario per docs/CONTROL_LOCAL_MULTI_ONGLETS.md; fix any regression. Resume P0 authentic-account validation only after explicit owner consent and no-cost approval. Keep automations disabled and zero spend."
+    "next_action": "First verify native GitHub CI and Pages Chromium for V64; then obtain explicit permission for real two-account Auth/JWT/PostgREST A/B and cross-device test flow on existing free CONTROL Cloud. Do not enable signup/Cloud, create paid resources, or reactivate automations without owner authorization.",
+    "cloud_infrastructure_readonly_audit": {
+      "date": "2026-10-23",
+      "project_name": "CONTROL Cloud",
+      "project_health": "ACTIVE_HEALTHY",
+      "organization_plan": "free",
+      "rls_tables_verified": 6,
+      "owner_policies_verified": 22,
+      "anonymous_data_privileges_verified_false": 6,
+      "public_rpc_functions": 0,
+      "supabase_security_advisor_lints": 0,
+      "cross_owner_project_fk_verified": true,
+      "evidence_doc": "docs/CONTROL_CLOUD_SECURITE_AUDIT_2026_10_23.md",
+      "auth_jwt_ab_verified": false,
+      "cross_device_verified": false,
+      "account_deletion_verified": false,
+      "cloud_enabled": false
+    }
   }
 }
