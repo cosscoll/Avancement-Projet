@@ -1,0 +1,37 @@
+# CONTROL IA — Protection du stockage entre plusieurs onglets (V64)
+
+Date : 23 octobre 2026. Portée : application personnelle locale. **Aucune activation Cloud ni synchronisation entre appareils.**
+
+## Risque et principe
+
+Deux onglets ayant chargé la même version des données pouvaient réenregistrer un ancien état et effacer une action ou un projet ajouté entre-temps.
+
+Les trois zones locales suivies sont :
+
+| Stockage | Données concernées | Contrôle |
+|---|---|---|
+| `control-command-v1` | Actions, missions, événements, réunions, décisions | Référence du dernier contenu lu puis vérification avant écriture |
+| `control-hub-v2` | Fiches projets, liens, notes, espaces IA | Même protection avec restauration de l'objet et des tableaux existants en cas d'échec |
+| `control-automations-v1` | Fiches et brouillons du registre | Refus d'enregistrer un brouillon issu d'un état obsolète |
+
+Une tentative d'écriture après une modification externe retourne `false`, conserve l'état enregistré et indique de recharger l'application. Un retour arrière est appliqué aux changements non enregistrés par les transactions locales.
+
+Cette protection n'est **pas une opération comparer-et-écrire atomique entre navigateurs**, ne remplace pas un verrou transactionnel serveur, ni les vérifications JWT/RLS et la synchronisation prévue par `CONTROL-ACCOUNT`.
+
+## Recette manuelle à réaliser dans un navigateur réel
+
+1. Ouvrir CONTROL dans deux onglets **A** et **B** du même navigateur/profil, à partir de la même version de données ; créer une sauvegarde d'abord.
+2. Dans **A**, ajouter une action test et vérifier qu'elle est conservée après un rechargement de **A**.
+3. Sans recharger **B**, essayer de créer une autre action : **B doit afficher l'avertissement de conflit**, refuser la confirmation et préserver l'action de **A**.
+4. Recharger **B**, puis créer la deuxième action : **les deux actions doivent être présentes**.
+5. Répéter sur une fiche projet (modifier des liens ou notes dans chaque onglet) puis sur un brouillon d'automatisation **sans rien programmer chez ChatGPT ou d'autres fournisseurs**.
+6. Tester un `localStorage` plein/refusé et une valeur JSON illisible ; le stockage initial ne doit pas être remplacé par une liste vide. Vérifier l'option de récupération des données brutes.
+7. Vérifier le comportement sur Chrome desktop et sur un vrai téléphone. Consigner le navigateur, le SHA déployé et des captures/étapes reproductibles.
+
+## Tests de code disponibles
+
+- `tests/control-local-tab-isolation.test.mjs` : conflit, conservation de l'écriture récente, rechargement, suite d'écritures du même onglet et stockage défectueux.
+- `tests/control-cross-tab-stores.test.mjs` : brouillons d'automatisations, liens de projets, refus des écritures périmées et absence d'activation des programmations réelles.
+- `tests/control-local-mutations.test.mjs`, `tests/control-hub-corruption.test.mjs`, `tests/control-automation-draft-storage.test.mjs` : protections historiques contre corruption et échec d'écriture.
+
+**Situation actuelle :** tests ciblés exécutés dans un environnement JavaScript isolé. Le flux `node --test tests/*.test.mjs` sous GitHub Actions, la recette Chromium publiée et les essais sur appareils physiques ne sont pas encore prouvés sur cette version. Le nombre de critères d'acceptation V1.2 certifiés **reste inchangé**.
