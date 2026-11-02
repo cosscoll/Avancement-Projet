@@ -63,7 +63,7 @@ function showCloudReadiness(cfg){
  const required=[["activeProjectVerified","Projet CONTROL réactivé et son état contrôlé"],["authAccountsABVerified","Deux utilisateurs réels de recette authentifiés"],["jwtRlsABVerified","Accès JWT/PostgREST et isolation A/B vérifiés"],["sessionRevocationVerified","Déconnexion, renouvellement et révocation vérifiés"],["accountDeletionVerified","Suppression complète des comptes testée"],["redirectPkceVerified","Redirections autorisées et retour PKCE vérifiés"],["crossDeviceVerified","Recette navigateur, mobile et deuxième appareil réalisée"],["launchApproved","Autorisation explicite d'ouverture des connexions CONTROL"]];
  const observed=cfg?.lastObservedBackendStatus;
  const observedValue=observed?.value==='INACTIVE'?'INACTIVE':observed?.value==='ACTIVE_HEALTHY'?'ACTIVE_HEALTHY':'non vérifié';
- const observedDate=typeof observed?.date==='string'&&/^\\d{4}-\\d{2}-\\d{2}$/.test(observed.date)?observed.date:'date inconnue';
+ const observedDate=typeof observed?.date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(observed.date)?observed.date:'date inconnue';
  const stages=required.map(([id,label])=>({label,verified:cfg?.launchChecks?.[id]===true}));
  const passed=stages.filter(x=>x.verified).length;
  root.innerHTML='<h2>Ouverture des comptes : '+passed+' / '+stages.length+' contrôles</h2>'+

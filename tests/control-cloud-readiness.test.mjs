@@ -8,7 +8,7 @@ const workflow=read('.github/workflows/control-cloud-real-auth.yml');
 const runner=read('tests/control-cloud-real-auth-e2e.mjs');
 
 test('Cloud public setup reflects existing separate backend but never claims completed Auth JWT',()=>{
- assert.match(setup,/CONTROL Cloud : base prête, accès en validation/);
+ assert.match(setup,/CONTROL Cloud : base créée, accès en validation/);
  assert.match(setup,/six tables protégées par RLS et 22 politiques/);
  assert.match(setup,/deux connexions Supabase Auth réelles/);
  assert.match(setup,/Les inscriptions ne sont pas encore ouvertes/);
@@ -51,4 +51,27 @@ test('launch readiness remains visible while signup stays locked and project obs
  assert.equal(Object.values(c.launchChecks).filter(x=>x===true).length,0);
  assert.match(setup,/id="cloud-readiness"/);
  assert.match(read('assets/cloud-app.js'),/showCloudReadiness\(cfg\)/);
+});
+
+test('dated readiness dashboard renders actual observation, zero validation and no tokens',()=>{
+ const script=read('assets/cloud-app.js');
+ const from=script.indexOf('function showCloudReadiness(cfg){');
+ const to=script.indexOf('async function boot(){',from);
+ assert.ok(from>=0&&to>from,'readiness function exists');
+ const elements={'cloud-readiness':{innerHTML:''}};
+ const api=new Function('byId','H',script.slice(from,to)+'; return showCloudReadiness;')(
+  id=>elements[id],
+  x=>String(x??'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))
+ );
+ const config=JSON.parse(read('config/cloud.json'));
+ api(config);
+ const html=elements['cloud-readiness'].innerHTML;
+ assert.match(html,/0 \/ 8 contrôles/);
+ assert.match(html,/2026-11-02/,'Date observation must not silently disappear');
+ assert.match(html,/INACTIVE/);
+ assert.match(html,/Deux utilisateurs réels de recette authentifiés/);
+ assert.doesNotMatch(html,/sb_publishable_|access_token|refresh_token/);
+ const malicious={...config,lastObservedBackendStatus:{value:'<img src=x>',date:'<script>'}};
+ api(malicious);
+ assert.doesNotMatch(elements['cloud-readiness'].innerHTML,/<img|<script>/);
 });

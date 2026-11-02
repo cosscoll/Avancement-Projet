@@ -899,7 +899,7 @@ try{
  assert.equal(cloudState.setup,false,'Disabled Cloud must show setup panel');
  assert.equal(cloudState.auth,true,'Disabled Cloud must not show sign-in or account creation');
  assert.equal(cloudState.workspace,true,'Disabled Cloud must not expose private workspace');
- assert.match(cloudState.screen||'',/CONTROL Cloud : base prête, accès en validation/);
+ assert.match(cloudState.screen||'',/CONTROL Cloud : base créée, accès en validation/);
  assert.match(await js("document.querySelector('#setup').textContent"),/En attente : deux connexions Supabase Auth réelles/);
  assert.match(await js("document.querySelector('#setup').textContent"),/Les inscriptions ne sont pas encore ouvertes/);
  await ready(()=>js("document.querySelector('#cloud-readiness')?.textContent.includes('0 / 8 contrôles')"),9000)();
