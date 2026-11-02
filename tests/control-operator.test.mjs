@@ -109,19 +109,28 @@ test('UI requires consent and confirmation, no external tokens',()=>{
 test('confirmed calendar edit and delete remain local and reversible on storage failure',()=>{
  const source=readFileSync('assets/command-center.js','utf8');
  const snippet=source.slice(source.indexOf('function operatorSnapshot(){'),source.indexOf('function localai(){'));
- const db={actions:[],missions:[],events:[{id:'e1',project:'ucp',title:'Revue de projet',date:'2026-10-20T14:00'}],meetings:[],operatorAudit:[]};
+ // Future local wall-clock fixtures avoid date-sensitive failures as real time advances.
+ const pad=n=>String(n).padStart(2,'0');
+ const day=(d)=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+ const french=(d)=>pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear();
+ const original=new Date();original.setDate(original.getDate()+13);original.setHours(14,0,0,0);
+ const move=new Date(original);move.setDate(move.getDate()+1);move.setHours(16,0,0,0);
+ const retry=new Date(move);retry.setDate(retry.getDate()+2);retry.setHours(10,30,0,0);
+ const originalAt=day(original)+'T14:00',movedAt=day(move)+'T16:00',retryAt=day(retry)+'T10:30';
+ assert.ok(new Date(movedAt).getTime()>Date.now(),'Test dates must remain in the future');
+ const db={actions:[],missions:[],events:[{id:'e1',project:'ucp',title:'Revue de projet',date:originalAt}],meetings:[],operatorAudit:[]};
  const ctx={projects:sample.projects};
  let saveOk=true;
  const sandbox=vm.createContext({ctx,db,window:{CONTROL_OPERATOR_CORE:core},save:()=>saveOk,id:()=>String(Date.now()),Date});
  vm.runInContext(snippet,sandbox);
- const moved=core.interpret('Déplace le rendez-vous Revue de projet au 25/10/2026 à 16h00 pour UCP',{...sample,events:db.events});
+ const moved=core.interpret('Déplace le rendez-vous Revue de projet au '+french(move)+' à 16h00 pour UCP',{...sample,events:db.events});
  assert.equal(moved.action.type,'update_event');
- assert.equal(moved.action.date,'2026-10-25T16:00');
+ assert.equal(moved.action.date,movedAt);
  assert.equal(sandbox.operatorExecute(moved.action),true);
- assert.equal(db.events[0].date,'2026-10-25T16:00');
+ assert.equal(db.events[0].date,movedAt);
  saveOk=false;
- assert.throws(()=>sandbox.operatorExecute({type:'update_event',id:'e1',projectId:'ucp',title:'Revue de projet',date:'2026-10-27T10:30',expectedDate:'2026-10-25T16:00'}),/Stockage indisponible/);
- assert.equal(db.events[0].date,'2026-10-25T16:00');
+ assert.throws(()=>sandbox.operatorExecute({type:'update_event',id:'e1',projectId:'ucp',title:'Revue de projet',date:retryAt,expectedDate:movedAt}),/Stockage indisponible/);
+ assert.equal(db.events[0].date,movedAt);
  const canceled=core.interpret('Supprime le rendez-vous Revue de projet',{...sample,events:db.events});
  assert.equal(canceled.action.type,'delete_event');
  assert.throws(()=>sandbox.operatorExecute(canceled.action),/Stockage indisponible/);
