@@ -1,3 +1,11 @@
+## Sprint — récupération indépendante du Studio IA (2 novembre 2026)
+
+**Risque évité :** les conversations locales, mémoires et agents de `control-ai-studio-v1` étaient absents de la sauvegarde générale de CONTROL. La sauvegarde globale existante reste volontairement sur trois magasins pour protéger ses anciens exports ; un encart avertit désormais clairement de ce manque avec un accès direct au Studio.
+
+**Livraison locale :** export JSON du Studio, restauration indépendante avec validation stricte du schéma V1, intégrité des références, isolation des mémoires par projet, limites de taille, prévisualisation de quatre compteurs, annulation, confirmation de remplacement et refus si un autre onglet modifie les données. Une restauration n'active aucun compte ni API, et le fichier est non chiffré (à protéger).
+
+**Limites restantes :** deux sauvegardes distinctes sont encore nécessaires, l'opération n'est pas une transaction entre onglets, et aucun accès Cloud ni historique natif n'est synchronisé. L'unification chiffrée des quatre magasins reste un chantier de fiabilité non terminé.
+
 ## Sprint Cloud P0 — garde d'ouverture et statut réel (2 novembre 2026)
 
 - **Constat en lecture seule du projet Supabase CONTROL Cloud : statut `INACTIVE` au 2 novembre 2026.** Les notes d'octobre indiquant `ACTIVE_HEALTHY` sont historiques et ne valent pas preuve actuelle de disponibilité. Aucun réveil, changement de forfait, dépense ou compte test n'a été lancé.

@@ -116,3 +116,9 @@ test('diff table exposes redacted counts and accessible horizontal scrolling',()
  assert.match(app,/review\.modified\.length/);
  assert.match(css,/\.backup-diff-scroll\{overflow-x:auto/);
 });
+
+test('general backup must expose that AI Studio requires its own separate backup',()=>{
+ const center=readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
+ assert.match(center,/Studio IA ne sont pas inclus/);
+ assert.match(center,/href="#\/control\/aistudio"/);
+});

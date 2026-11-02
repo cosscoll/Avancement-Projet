@@ -6,7 +6,7 @@ function mount(root,adapter={}){
  if(!root||!core)return;
  window.CONTROL_AI_STUDIO?.unmount?.(root);
  const storage=adapter.storage||localStorage,loaded=core.read(storage);
- let db=loaded.state,raw=loaded.raw,blocked=loaded.error,tab='accounts',preview=null,query='',selectedImport=null,selectedAgent=null,selectedThread=null,editingMemoryId=null;
+ let db=loaded.state,raw=loaded.raw,blocked=loaded.error,tab='accounts',preview=null,query='',selectedImport=null,selectedAgent=null,selectedThread=null,editingMemoryId=null,restoreDraft=null;
  let worker=null,ready=false,loading=false,generating=false,disposed=false,requestId=0,pending=null;
  const projects=[{id:'general',name:'Tous mes projets'},...(adapter.projects||[]).filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string')];
  const $=s=>root.querySelector(s);
@@ -68,7 +68,22 @@ function agentPanel(){
   return '<div class="as-agent-layout"><aside class="as-card as-agent-side"><div class="as-card-head"><span class="as-overline">MON ÉQUIPE IA</span><h2>Assistants <span class="as-count">'+db.agents.length+'</span></h2></div><div class="as-agent-list">'+(db.agents.length?db.agents.map(a=>'<button class="as-agent-item" data-as-open-agent="'+esc(a.id)+'" aria-current="'+(current?.id===a.id?'page':'false')+'"><span class="as-avatar">'+esc(a.name.slice(0,1).toUpperCase())+'</span><span><strong>'+esc(a.name)+'</strong><small>'+esc(projects.find(x=>x.id===a.projectId)?.name||'Général')+'</small></span></button>').join(''):'<p class="as-small">Crée ton premier assistant ci-dessous.</p>')+'</div><details class="as-new-agent" '+(!db.agents.length?'open':'')+'><summary>+ Nouvel assistant</summary><form id="as-agent-form"><label for="as-agent-name">Nom</label><input id="as-agent-name" maxlength="90" required placeholder="Ex. Assistant marketing"><label for="as-agent-project">Projet</label><select id="as-agent-project">'+projects.map(p=>option(p.id,p.name,false)).join('')+'</select><label for="as-agent-instructions">Rôle et instructions</label><textarea id="as-agent-instructions" rows="4" maxlength="1300" required placeholder="Tu es un assistant spécialisé en…"></textarea><fieldset><legend>Conversations sources (facultatives)</legend>'+(db.imports.length?db.imports.map(c=>'<label class="as-check"><input type="checkbox" name="agent-source" value="'+esc(c.id)+'" '+(selectedImport===c.id?'checked':'')+'>'+esc(c.provider+' · '+c.title)+'</label>').join(''):'<small>Tu peux créer un assistant sans importer de fichier.</small>')+'</fieldset><fieldset><legend>Mémoires autorisées</legend>'+ (db.memories.length?db.memories.map(m=>'<label class="as-check"><input type="checkbox" name="agent-memory" value="'+esc(m.id)+'" data-memory-project="'+esc(m.projectId)+'">'+esc(m.title)+'</label>').join(''):'<small>Crée des mémoires depuis l’onglet précédent.</small>')+'</fieldset><button type="submit" class="as-primary">Créer l’assistant</button></form></details></aside>'+
  '<section class="as-card as-agent-detail">'+(current?'<div class="as-agent-toolbar"><div><span class="as-overline">ASSISTANT PERSONNALISÉ</span><h2>'+esc(current.name)+'</h2><p>Instructions : '+esc(current.instructions)+'</p><small>'+current.memoryIds.filter(id=>db.memories.some(m=>m.id===id)).length+' mémoire(s) autorisée(s) · '+current.conversationIds.length+' conversation(s) source</small></div><div class="as-inline-actions"><button type="button" data-as-action="toggle-agent-edit">Modifier l’agent</button><button class="as-danger" data-as-action="delete-agent">Supprimer l’agent</button></div></div><details id="as-agent-edit" class="as-config"><summary>Paramètres de l’agent et sources autorisées</summary><form id="as-agent-edit-form"><label for="as-edit-agent-name">Nom</label><input id="as-edit-agent-name" maxlength="90" required value="'+esc(current.name)+'"><label for="as-edit-agent-instructions">Instructions</label><textarea id="as-edit-agent-instructions" rows="4" maxlength="1300" required>'+esc(current.instructions)+'</textarea><p class="as-small">Projet conservé : '+esc(projects.find(p=>p.id===current.projectId)?.name||current.projectId)+'. Crée un nouvel agent pour changer de projet.</p><fieldset><legend>Conversations choisies</legend>'+(db.imports.length?db.imports.map(c=>'<label class="as-check"><input type="checkbox" name="edit-agent-source" value="'+esc(c.id)+'" '+(current.conversationIds.includes(c.id)?'checked':'')+'>'+esc(c.provider+' · '+c.title)+'</label>').join(''):'<small>Aucune conversation importée.</small>')+'</fieldset><fieldset><legend>Mémoires autorisées</legend>'+(db.memories.some(m=>m.projectId==='general'||m.projectId===current.projectId)?db.memories.filter(m=>m.projectId==='general'||m.projectId===current.projectId).map(m=>'<label class="as-check"><input type="checkbox" name="edit-agent-memory" value="'+esc(m.id)+'" '+(current.memoryIds.includes(m.id)?'checked':'')+'>'+esc(m.title)+' (v'+(Math.max(1,Number(m.version)||1))+')</label>').join(''):'<small>Aucune mémoire autorisée pour ce projet.</small>')+'</fieldset><button type="submit" class="as-primary">Enregistrer les paramètres</button></form></details><div class="as-chatbar"><label>Discussion <select id="as-thread">'+current.threads.map(t=>option(t.id,t.name,t.id===thread?.id)).join('')+'</select></label><button data-as-action="new-thread">+ Discussion</button><button data-as-action="copy-prompt">Copier le contexte</button><button class="as-danger" data-as-action="clear-thread">Effacer le fil</button></div><div class="as-chat" aria-label="Conversation avec un assistant personnalisé">'+(thread?.messages.length?thread.messages.map(m=>'<div class="as-bubble '+(m.role==='user'?'as-user':'as-assistant')+'"><span>'+(m.role==='user'?'Vous':esc(current.name))+'</span><p>'+esc(m.content)+'</p></div>').join(''):'<div class="as-empty"><span>✧</span><strong>Votre conversation commence ici.</strong><p>Charge le modèle local pour obtenir des réponses réellement générées avec les mémoires sélectionnées.</p></div>')+'</div><div class="as-modelbar"><div><strong>SmolLM2 · modèle IA local expérimental</strong><small>Aucun abonnement IA n’est utilisé. Téléchargement d’environ 180 Mo sur action volontaire. Résultats limités.</small></div><div class="as-model-actions"><button data-as-action="load-model" '+(ready||loading?'disabled':'')+'>'+ (ready?'Modèle chargé':loading?'Chargement…':'Charger le modèle IA')+'</button><button data-as-action="stop-model" '+(!loading&&!ready?'disabled':'')+'>Arrêter</button></div></div><form id="as-chat-form"><label for="as-chat-message">Écrire à '+esc(current.name)+'</label><textarea id="as-chat-message" rows="3" maxlength="1400" placeholder="Pose une question sur ton projet…" '+(!ready||generating?'disabled':'')+' required></textarea><button class="as-primary" type="submit" '+(!ready||generating?'disabled':'')+'>'+ (generating?'Réponse en cours…':'Envoyer au modèle local')+'</button></form><p class="as-small">Les conversations et instructions restent dans le navigateur. Aucune synchronisation avec les mémoires natives ChatGPT, Claude ou Gemini.</p>':'<div class="as-empty as-wide-empty"><span>✧</span><strong>Personnalise ton premier assistant</strong><p>Choisis une conversation source, ajoute des mémoires, puis crée un assistant pour ton projet.</p></div>')+'</section></div>';
  }
- function render(){if(disposed)return;root.innerHTML='<div class="as-shell">'+header()+(!db?'<div class="as-card"><h2>Impossible d’ouvrir cet espace</h2><p>'+esc(blocked)+'</p><p>Ne supprime pas tes données locales : elles pourraient être récupérées par une sauvegarde.</p></div>':stats()+(tab==='accounts'?accountsPanel():tab==='imports'?importPanel():tab==='memories'?memoryPanel():agentPanel()))+'<div class="as-bottom"><p data-as-status role="status" aria-live="polite">Aucun compte externe connecté. Les données créées restent locales.</p><button data-as-action="export" '+(!db?'disabled':'')+'>Exporter les données de ce module</button></div></div>';wire()}
+
+ function studioBackupPanel(){
+  const v=restoreDraft?.counts;
+  const table=v?'<div class="as-backup-compare"><table><thead><tr><th>Contenu</th><th>Sur cet appareil</th><th>Dans le fichier</th></tr></thead><tbody>'+
+   [['Conversations','imports'],['Mémoires','memories'],['Agents','agents'],['Discussions','threads']].map(([label,key])=>'<tr><th scope="row">'+label+'</th><td>'+v.before[key]+'</td><td>'+v.after[key]+'</td></tr>').join('')+'</tbody></table></div>':'';
+  return '<details class="as-studio-backup" '+(restoreDraft?'open':'')+'><summary>Sauvegarder ou récupérer mes agents et mémoires</summary><div class="as-backup-inner">'+
+   '<p>La sauvegarde générale CONTROL n’inclut pas encore le Studio IA. Exporte séparément les agents, discussions, mémoires et archives locales. <strong>Le fichier exporté n’est pas chiffré.</strong> Aucun compte IA externe ne sera connecté par une restauration.</p>'+
+   '<button data-as-action="export" '+(!db?'disabled':'')+'>Télécharger mes données IA Studio</button>'+
+   (!db?'<button data-as-action="download-raw-studio">Sauver les données locales brutes illisibles</button>':'')+
+   '<form id="as-restore-form"><label for="as-restore-file">Restaurer une sauvegarde du Studio (JSON)</label><input id="as-restore-file" type="file" accept=".json,application/json" required><button type="submit">Examiner avant de restaurer</button></form>'+
+   (restoreDraft?'<div class="as-restore-review" role="region" aria-label="Comparaison avant restauration"><strong>Aperçu vérifié, aucune donnée encore modifiée.</strong>'+table+
+    '<p role="alert">Attention : la restauration <strong>remplace toutes les données actuelles du Studio IA</strong> sans fusion. Garde une copie avant de confirmer.</p>'+
+    '<div class="as-inline-actions"><button type="button" data-as-action="confirm-studio-restore" class="as-primary">Confirmer le remplacement</button><button type="button" data-as-action="cancel-studio-restore">Annuler</button></div></div>':'')+
+   '</div></details>';
+ }
+ function render(){if(disposed)return;root.innerHTML='<div class="as-shell">'+header()+(!db?'<div class="as-card"><h2>Impossible d’ouvrir cet espace</h2><p>'+esc(blocked)+'</p><p>Ne supprime pas tes données locales : elles pourraient être récupérées par une sauvegarde.</p></div>':stats()+(tab==='accounts'?accountsPanel():tab==='imports'?importPanel():tab==='memories'?memoryPanel():agentPanel()))+studioBackupPanel()+'<div class="as-bottom"><p data-as-status role="status" aria-live="polite">Aucun compte externe connecté. Les données créées restent locales.</p></div></div>';wire()}
  function refresh(){render()}
  function saveImport(){if(!preview)return;const result=core.importRows(db,preview.rows);if(commit(copy=>{copy.imports=result.state.imports})){preview=null;refresh();notify(result.added+' conversation(s) importée(s), '+result.duplicates+' doublon(s) ignoré(s).')}}
  function showTab(name){tab=name;refresh()}
@@ -80,6 +95,18 @@ function agentPanel(){
    if(!/\.(json|txt)$/i.test(file.name)||file.size>9000000)return notify('Format ou taille non pris en charge (JSON/TXT, 9 Mo maximum).',true);
    try{const rows=core.parse(provider,await file.text(),file.name);preview={rows,provider};refresh();notify('Aucune donnée enregistrée : vérifie l’aperçu puis confirme.')}
    catch(err){preview=null;refresh();notify(String(err.message||err),true)}
+  };
+  const restoreForm=$('#as-restore-form');if(restoreForm)restoreForm.onsubmit=async e=>{
+   e.preventDefault();const file=$('#as-restore-file')?.files?.[0];
+   if(!file||!/\.json$/i.test(file.name)||file.size>5000000||file.size===0)return notify('Choisis une sauvegarde JSON du Studio (5 Mo maximum).',true);
+   let before;
+   try{
+    before=storage.getItem(core.KEY);
+    const state=core.parseBackup(await file.text());
+    if(storage.getItem(core.KEY)!==before)throw Error('Les données ont changé dans un autre onglet : nouvelle vérification requise.');
+    restoreDraft={state,currentRaw:before,counts:core.backupComparison(db,state)};
+    refresh();notify('Aperçu prêt : aucune donnée remplacée.');
+   }catch(error){restoreDraft=null;refresh();notify(String(error.message||error),true)}
   };
   const search=$('#as-search');if(search)search.oninput=e=>{query=e.target.value;const at=e.target.selectionStart;refresh();const next=$('#as-search');next?.focus();next?.setSelectionRange(at,at)};
   root.querySelectorAll('[data-as-view]').forEach(b=>b.onclick=()=>{selectedImport=b.dataset.asView;refresh();$('#as-reader')?.scrollIntoView({block:'nearest'})});
@@ -125,6 +152,27 @@ function agentPanel(){
  function action(name){
   if(name==='go-agents')return showTab('agents');
   if(name==='show-archives')return showTab('imports');
+  if(name==='cancel-studio-restore'){restoreDraft=null;return refresh()}
+  if(name==='confirm-studio-restore'){
+   const draft=restoreDraft;if(!draft)return notify('Examine le fichier avant de le restaurer.',true);
+   if(!confirm('Remplacer TOUS les agents, mémoires, discussions et archives locales du Studio IA ? Les données actuelles seront perdues.'))return;
+   try{
+    const next=core.write(storage,draft.state,draft.currentRaw);
+    stop();raw=next;db=draft.state;blocked=null;restoreDraft=null;
+    selectedAgent=null;selectedThread=null;selectedImport=null;editingMemoryId=null;preview=null;query='';
+    refresh();notify('Sauvegarde du Studio IA restaurée. Les conversations et mémoires restent locales.');
+   }catch(error){restoreDraft=null;refresh();notify('Restauration refusée : '+String(error.message||error),true)}
+   return;
+  }
+  if(name==='download-raw-studio'){
+   try{
+    const text=storage.getItem(core.KEY);if(!text)throw Error('Données indisponibles.');
+    const blob=new Blob([text],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download='CONTROL-studio-donnees-brutes.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);
+    notify('Copie brute téléchargée : conserve-la hors ligne, elle peut contenir des données privées.');
+   }catch(error){notify('Copie brute impossible.',true)}
+   return;
+  }
   if(name==='cancel-memory-edit'){editingMemoryId=null;return refresh()}
   if(name==='toggle-agent-edit'){const panel=$('#as-agent-edit');if(panel){panel.open=!panel.open;if(panel.open)$('#as-edit-agent-name')?.focus()}return}
   if(name==='confirm-import')return saveImport();
@@ -134,6 +182,7 @@ function agentPanel(){
   if(name==='stop-model'){stop();return refresh()}
   if(name==='export'){
    if(!db||!confirm('Exporter tes conversations, mémoires et agents dans un fichier JSON non chiffré ? Protège ce fichier.'))return;
+   try{if(storage.getItem(core.KEY)!==raw)return notify('Les données ont changé dans un autre onglet : recharge avant la sauvegarde.',true)}catch{return notify('Stockage inaccessible : sauvegarde annulée.',true)}
    const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='control-ai-studio-export.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);return;
   }
   const a=db.agents.find(x=>x.id===selectedAgent);if(!a)return;

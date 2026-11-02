@@ -871,6 +871,22 @@ try{
  assert.match(await js("(()=>{const s=JSON.parse(localStorage.getItem('control-ai-studio-v1'));return window.CONTROL_AI_STUDIO_CORE.context(s,s.agents[0])})()"),/Seconde source/);
  log('AI Studio edits versioned memory and agent, preserves data and links two imported conversations');
 
+ 
+ await js("document.querySelector('.as-studio-backup').open=true");
+ const exportState=await js("localStorage.getItem('control-ai-studio-v1')");
+ const testFlow=JSON.stringify(JSON.parse(exportState)); // local JS source in browser using an embedded string? avoid embedding real user data; fixture in isolated browser only.
+ await js("(()=>{const text=localStorage.getItem('control-ai-studio-v1');const input=document.querySelector('#as-restore-file');const dt=new DataTransfer();dt.items.add(new File([text],'studio-backup.json',{type:'application/json'}));input.files=dt.files;document.querySelector('#as-restore-form').requestSubmit()})()");
+ await ready(()=>js("!!document.querySelector('[data-as-action=confirm-studio-restore]')"),6000)();
+ assert.match(await js("document.querySelector('.as-restore-review')?.textContent"),/Aperçu vérifié/);
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents.length"),1,'Restore preview must not overwrite');
+ await js("document.querySelector('[data-as-action=cancel-studio-restore]').click()");
+ assert.equal(await js("!!document.querySelector('[data-as-action=confirm-studio-restore]')"),false,'Cancel must close preview');
+ await js("(()=>{const text=localStorage.getItem('control-ai-studio-v1');const dt=new DataTransfer();dt.items.add(new File([text],'studio-backup.json',{type:'application/json'}));document.querySelector('#as-restore-file').files=dt.files;document.querySelector('#as-restore-form').requestSubmit()})()");
+ await ready(()=>js("!!document.querySelector('[data-as-action=confirm-studio-restore]')"),6000)();
+ await js("(()=>{const previous=window.confirm;window.confirm=()=>true;document.querySelector('[data-as-action=confirm-studio-restore]').click();window.confirm=previous})()");
+ await ready(()=>js("!!document.querySelector('.as-provider-grid')&&JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents.length===1"),6000)();
+ log('AI Studio backup preview, cancellation and confirmed safe restoration succeeded');
+
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('.control-whats-new')"),6000)();
  await js("location.hash='#/control/aistudio'");

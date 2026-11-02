@@ -101,3 +101,44 @@ test('Studio UI exposes edit and multi-source controls without requiring imports
  assert.match(ui,/Tu peux créer un assistant sans importer/);
  assert.doesNotMatch(ui,/id="as-agent-source"/);
 });
+
+test('Studio recovery accepts authentic exports, refuses corrupt references and never mutates during preview',()=>{
+ const s=fresh();s.imports=x.importRows(s,x.parse('chatgpt',JSON.stringify([sample]),'conversations.json')).state.imports;
+ const m=x.memory(s,{title:'Décision UX',content:'Naviguer facilement',conversationId:s.imports[0].id,projectId:'ucp'});s.memories.push(m);
+ const a=x.agent(s,{name:'Assistant UX',instructions:'Respecte les décisions.',projectId:'ucp',conversationIds:[s.imports[0].id],memoryIds:[m.id]});
+ a.threads[0].messages.push({role:'user',content:'Salut'});s.agents.push(a);
+ const serialized=JSON.stringify(s);
+ const parsed=x.parseBackup(serialized);
+ assert.equal(parsed.agents[0].threads[0].messages[0].content,'Salut');
+ assert.equal(x.backupComparison(fresh(),parsed).after.agents,1);
+ assert.equal(x.backupComparison(s,parsed).before.memories,1);
+ const corrupt=JSON.parse(serialized);corrupt.agents[0].memoryIds=['missing'];
+ assert.throws(()=>x.parseBackup(JSON.stringify(corrupt)),/Mémoire non autorisée/);
+ const foreign=JSON.parse(serialized);foreign.memories[0].projectId='other';
+ assert.throws(()=>x.parseBackup(JSON.stringify(foreign)),/Mémoire non autorisée/);
+ const duplicated=JSON.parse(serialized);duplicated.imports.push(duplicated.imports[0]);
+ assert.throws(()=>x.parseBackup(JSON.stringify(duplicated)),/dupliqués/);
+ const poisoned='{"version":1,"imports":[],"memories":[],"agents":[],"__proto__":{"admin":true}}';
+ assert.throws(()=>x.parseBackup(poisoned),/interdits/);
+ assert.throws(()=>x.parseBackup('{"command":{}}'),/Studio IA/);
+});
+test('Studio backup rejects stale writes and leaves preexisting data untouched',()=>{
+ const store=storage(),a=fresh(),b=fresh();
+ a.memories.push(x.memory(a,{title:'Source',content:'Ancienne donnée'}));
+ b.memories.push(x.memory(b,{title:'Restauration',content:'Nouvelle donnée'}));
+ const first=x.write(store,a,null);
+ const incoming=x.parseBackup(JSON.stringify(b));
+ store.setItem(x.KEY,JSON.stringify(a).replace('Ancienne donnée','Modification depuis autre onglet'));
+ assert.throws(()=>x.write(store,incoming,first),/autre onglet/);
+ assert.match(store.getItem(x.KEY),/Modification depuis autre onglet/);
+});
+test('Studio preview is separate from confirm and general CONTROL backup explicitly excludes its data',()=>{
+ const ui=fs.readFileSync(new URL('../assets/control-ai-studio.js',import.meta.url),'utf8');
+ const center=fs.readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
+ assert.match(ui,/core\.parseBackup\(await file\.text\(\)\)/);
+ assert.match(ui,/data-as-action="confirm-studio-restore"/);
+ assert.match(ui,/data-as-action="cancel-studio-restore"/);
+ assert.match(ui,/core\.write\(storage,draft\.state,draft\.currentRaw\)/);
+ assert.match(center,/les agents, les mémoires et les discussions du Studio IA ne sont pas inclus/);
+ assert.match(center,/href="#\/control\/aistudio"/);
+});

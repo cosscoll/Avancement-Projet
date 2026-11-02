@@ -149,5 +149,64 @@ function context(state,ag){
  for(const c of sources)result+='\nSource importée en lecture seule ('+c.provider+', '+clean(c.title,60)+') : '+c.messages.slice(-2).map(x=>x.role+' : '+clean(x.content,140)).join(' | ')+'\n';
  return result.slice(0,1800);
 }
-window.CONTROL_AI_STUDIO_CORE=Object.freeze({KEY,read,write,parse,importRows,memory,agent,editMemory,editAgent,context,empty});
+
+/* Restore only a complete export from CONTROL AI Studio, never a provider archive.
+   Strict structure, reference integrity and project isolation; no network. */
+function validateBackupState(state){
+ if(!isObj(state)||state.version!==1||!Array.isArray(state.imports)||!Array.isArray(state.memories)||!Array.isArray(state.agents))throw Error('Le fichier ne contient pas une sauvegarde valide du Studio IA.');
+ if(state.imports.length>180||state.memories.length>500||state.agents.length>100)throw Error('Sauvegarde trop volumineuse pour cette version.');
+ const serialized=JSON.stringify(state);
+ if(serialized.length>LIMIT_BYTES)throw Error('Sauvegarde trop volumineuse pour le stockage local.');
+ const seen=new Set(),stack=[state];let count=0;
+ while(stack.length){
+  const v=stack.pop();
+  if(v===null||typeof v!=='object')continue;
+  if(++count>80000)throw Error('Sauvegarde excessivement complexe.');
+  for(const [key,value] of Object.entries(v)){
+   if(['__proto__','prototype','constructor'].includes(key))throw Error('Sauvegarde avec champs interdits.');
+   if(value&&typeof value==='object')stack.push(value);
+  }
+ }
+ const unique=(rows,label)=>{
+  const ids=new Set();
+  for(const row of rows){
+   if(!isObj(row)||!safeId(row.id)||ids.has(row.id))throw Error('Identifiants invalides ou dupliqués : '+label+'.');
+   ids.add(row.id);
+  }
+  return ids;
+ };
+ const imports=unique(state.imports,'conversations');
+ for(const c of state.imports){
+  if(!['chatgpt','claude','gemini'].includes(c.provider)||typeof c.title!=='string'||!c.title.trim()||c.title.length>120||!Array.isArray(c.messages)||!c.messages.length||c.messages.length>1500)throw Error('Une conversation du fichier est invalide.');
+  for(const m of c.messages)if(!isObj(m)||!['user','assistant'].includes(m.role)||typeof m.content!=='string'||!m.content.trim()||m.content.length>3500)throw Error('Un message de la sauvegarde est invalide.');
+ }
+ const memories=unique(state.memories,'mémoires');
+ for(const m of state.memories){
+  if(typeof m.title!=='string'||!m.title.trim()||m.title.length>100||typeof m.content!=='string'||!m.content.trim()||m.content.length>1600||!safeId(m.projectId)||typeof m.conversationId!=='string'||(m.conversationId&&!imports.has(m.conversationId)))throw Error('Une mémoire du fichier est invalide.');
+ }
+ unique(state.agents,'agents');
+ for(const a of state.agents){
+  if(typeof a.name!=='string'||!a.name.trim()||a.name.length>90||typeof a.instructions!=='string'||!a.instructions.trim()||a.instructions.length>1300||!safeId(a.projectId)||!Array.isArray(a.conversationIds)||a.conversationIds.length>30||a.conversationIds.some(id=>!imports.has(id))||new Set(a.conversationIds).size!==a.conversationIds.length)throw Error('Un agent de la sauvegarde est invalide.');
+  if(!Array.isArray(a.memoryIds)||a.memoryIds.length>50||new Set(a.memoryIds).size!==a.memoryIds.length||a.memoryIds.some(id=>!memories.has(id)||!state.memories.some(m=>m.id===id&&(m.projectId==='general'||m.projectId===a.projectId))))throw Error('Mémoire non autorisée dans un agent sauvegardé.');
+  if(!Array.isArray(a.threads)||a.threads.length<1||a.threads.length>30)throw Error('Une liste de discussions de la sauvegarde est invalide.');
+  unique(a.threads,'discussions');
+  for(const t of a.threads){
+   if(typeof t.name!=='string'||!t.name.trim()||t.name.length>100||!Array.isArray(t.messages)||t.messages.length>40)throw Error('Une discussion est invalide.');
+   for(const m of t.messages)if(!isObj(m)||!['user','assistant'].includes(m.role)||typeof m.content!=='string'||!m.content.trim()||m.content.length>(m.role==='user'?1400:3500))throw Error('Un message d’agent est invalide.');
+  }
+ }
+ return state;
+}
+function parseBackup(text){
+ if(typeof text!=='string'||!text.trim()||text.length>5000000)throw Error('Sélectionne une sauvegarde JSON du Studio IA (5 Mo maximum).');
+ let data;try{data=JSON.parse(text)}catch{throw Error('Sauvegarde JSON illisible.')}
+ return validateBackupState(data);
+}
+function backupComparison(previous,next){
+ validateBackupState(next);
+ const before=previous&&isObj(previous)?previous:empty();
+ const countThreads=s=>list(s.agents).reduce((sum,a)=>sum+list(a.threads).length,0);
+ return {before:{imports:list(before.imports).length,memories:list(before.memories).length,agents:list(before.agents).length,threads:countThreads(before)},after:{imports:next.imports.length,memories:next.memories.length,agents:next.agents.length,threads:countThreads(next)}};
+}
+window.CONTROL_AI_STUDIO_CORE=Object.freeze({KEY,read,write,parse,importRows,memory,agent,editMemory,editAgent,context,empty,parseBackup,backupComparison});
 })();
