@@ -57,3 +57,47 @@ test('No provider credential prompts, remote uploads, or fabricated AI replies',
  assert.match(ui,/Aucune synchronisation/);
  new Function('window','localStorage','document',ui);
 });
+test('Versioned memory correction keeps the same identity, project and propagates into agent prompts',()=>{
+ const s=fresh();const m=x.memory(s,{title:'Mobile',content:'Première décision',projectId:'ucp'});s.memories.push(m);
+ const a=x.agent(s,{name:'Assistant UCP',instructions:'Aide au projet',projectId:'ucp',memoryIds:[m.id]});s.agents.push(a);
+ const updated=x.editMemory(s,m.id,{title:'Priorité mobile',content:'Nouvelle décision approuvée'});
+ assert.equal(updated.id,m.id);assert.equal(updated.version,2);assert.equal(updated.projectId,'ucp');
+ s.memories[0]=updated;
+ assert.match(x.context(s,a),/Nouvelle décision approuvée/);
+ assert.doesNotMatch(x.context(s,a),/Première décision/);
+ assert.throws(()=>x.editMemory(s,m.id,{title:' ',content:'Texte'}),/Titre/);
+ assert.throws(()=>x.editMemory(s,m.id,{title:'Titre',content:'x'.repeat(1601)}),/1 600/);
+});
+test('Agent editing can choose multiple imported conversations without losing existing threads',()=>{
+ const s=fresh();
+ const alpha={id:'imp-first',provider:'chatgpt',title:'Projet',messages:[{role:'user',content:'Projet A'}]};
+ const beta={id:'imp-second',provider:'claude',title:'UX',messages:[{role:'user',content:'Simplicité'}]};
+ s.imports.push(alpha,beta);
+ const memory=x.memory(s,{title:'Décision',content:'Conserver le mobile',projectId:'ucp'});s.memories.push(memory);
+ const a=x.agent(s,{name:'Agent ancien',instructions:'Anciennes instructions',projectId:'ucp'});
+ a.threads[0].messages.push({role:'user',content:'Discussion sauvegardée'});s.agents.push(a);
+ const newer=x.editAgent(s,a.id,{name:'Agent refondu',instructions:'Nouvelles instructions',conversationIds:[alpha.id,beta.id],memoryIds:[memory.id]});
+ assert.equal(newer.configVersion,2);assert.deepEqual([...newer.conversationIds],[alpha.id,beta.id]);
+ assert.equal(newer.id,a.id);assert.equal(newer.projectId,'ucp');
+ assert.equal(newer.threads[0].messages[0].content,'Discussion sauvegardée');
+ assert.match(x.context(s,newer),/Conserver le mobile/);
+ assert.match(x.context(s,newer),/Nouvelles instructions/);
+ assert.throws(()=>x.editAgent(s,a.id,{name:'X',instructions:'Y',conversationIds:['missing'],memoryIds:[]}),/Conversation source/);
+});
+test('Agent editing blocks private memories from unrelated projects and preserves original configuration on rejection',()=>{
+ const s=fresh();
+ const secret=x.memory(s,{title:'Interne',content:'Données privées',projectId:'ucp'});s.memories.push(secret);
+ const a=x.agent(s,{name:'IAgile',instructions:'Formation',projectId:'iagile'});s.agents.push(a);
+ assert.throws(()=>x.editAgent(s,a.id,{name:'IAgile',instructions:'Formation',conversationIds:[],memoryIds:[secret.id]}),/hors du projet/);
+ assert.deepEqual([...a.memoryIds],[]);
+ assert.doesNotMatch(x.context(s,a),/Données privées/);
+});
+test('Studio UI exposes edit and multi-source controls without requiring imports for agent creation',()=>{
+ const ui=fs.readFileSync(new URL('../assets/control-ai-studio.js',import.meta.url),'utf8');
+ for(const selector of ['id="as-memory-form"','id="as-agent-edit-form"','name="agent-source"','name="edit-agent-source"','data-as-edit-memory'])
+  assert.ok(ui.includes(selector),selector);
+ assert.match(ui,/core\.editMemory\(/);
+ assert.match(ui,/core\.editAgent\(/);
+ assert.match(ui,/Tu peux créer un assistant sans importer/);
+ assert.doesNotMatch(ui,/id="as-agent-source"/);
+});
