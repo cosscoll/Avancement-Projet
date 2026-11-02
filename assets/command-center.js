@@ -523,9 +523,14 @@ function webbuilder(){
   }
  });
 }
+function aistudio(){
+ const root=$('#main');
+ if(!window.CONTROL_AI_STUDIO){root.innerHTML=note('Studio IA indisponible : recharge CONTROL.');return}
+ window.CONTROL_AI_STUDIO.mount(root,{projects:ctx.projects});
+}
 function tools(){
  const groups=[
-  {name:'Essentiels',subtitle:'Ce que tu utilises au quotidien',open:true,tools:[['localai','CONTROL IA locale','Discuter avec un vrai modèle gratuit'],['command','Claude & Gemini','Préparer et centraliser les missions'],['lab','Laboratoire IA','Créer des briefs et contrôler les réponses'],['library','Ressources','Tes liens et documents'],['search','Rechercher','Retrouver un projet ou un fichier']]},
+  {name:'Essentiels',subtitle:'Ce que tu utilises au quotidien',open:true,tools:[['aistudio','Comptes IA & agents','Importer des conversations et personnaliser des assistants'],['localai','CONTROL IA locale','Discuter avec un vrai modèle gratuit'],['command','Claude & Gemini','Préparer et centraliser les missions'],['lab','Laboratoire IA','Créer des briefs et contrôler les réponses'],['library','Ressources','Tes liens et documents'],['search','Rechercher','Retrouver un projet ou un fichier']]},
   {name:'Explorer',subtitle:'Apprendre, créer et publier',open:false,tools:[['webbuilder','Constructeur de sites','Modèles éditables, aperçu et export HTML/CSS'],['catalog','Bibliothèques IA','87 outils et 12 kits pratiques'],['deploy','Mise en ligne','Guides GitHub, IONOS et autres'],['activity','GitHub et tests','Suivi des dépôts publics']]},
   {name:'Organiser',subtitle:'Planifier et garder le contrôle',open:false,tools:[['missions','Toutes les missions','Suivi détaillé et historique'],['meetings','Visios et rendez-vous','Équipe, clients et prospects'],['calendar','Calendrier','Échéances enregistrées'],['memory','Décisions','Historique de projet'],['goals','Planifier un objectif','Étapes modifiables et sources locales'],['budget','Budget et quotas','Suivi déclaratif des coûts'],['backup','Sauvegardes','Exporter ou importer tes données'],['settings','Paramètres','Règles et confidentialité'],['inbox','À traiter','Actions prioritaires']]}
  ];
@@ -902,6 +907,6 @@ function paintSprints(selector,onlyBlockers=false){const out=$(selector);if(!out
  const n=Object.keys(sprintLoaded).length;if(n<SPRINT_IDS.length)out.innerHTML+=tiny((SPRINT_IDS.length-n)+' source(s) non vérifiée(s), information potentiellement partielle.');
  out.innerHTML+=tiny('Ces données sont des journaux GitHub, pas un suivi en direct de ChatGPT. Le statut en ligne nécessite une preuve de recette réelle.');
 }
-function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,webbuilder,meetings,command,localai,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,goals,budget,backup,settings,search};(pages[page]||manager)()}
+function render(input){ctx=input||ctx;init();try{const today=new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a.status!=='done'&&a.due&&a.due<today).length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,aistudio,webbuilder,meetings,command,localai,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,goals,budget,backup,settings,search};(pages[page]||manager)()}
 window.CONTROL_CENTER={render};
 })();

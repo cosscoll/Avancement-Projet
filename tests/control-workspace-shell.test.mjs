@@ -49,8 +49,8 @@ test('responsive layout hides the desktop sidebar and preserves readable phone d
  assert.match(css,/\.shell-feature-grid\{grid-template-columns:1fr/);
 });
 test('current PWA release precaches the redesigned shell and invalidates stale installations',()=>{
- assert.match(sw,/CACHE_SHELL='control-shell-v67'/);
- assert.match(sw,/CACHE_PUBLIC='control-public-data-v67'/);
+ assert.match(sw,/CACHE_SHELL='control-shell-v68'/);
+ assert.match(sw,/CACHE_PUBLIC='control-public-data-v68'/);
  assert.match(sw,/\.\/assets\/workspace-shell\.css/);
  assert.match(personal,/href="assets\/workspace-shell.css"/);
  assert.match(cloud,/href="\.\/assets\/workspace-shell.css"/);

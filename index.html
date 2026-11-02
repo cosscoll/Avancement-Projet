@@ -36,6 +36,7 @@
 .control-whats-new-status strong{color:#374a63}
 @media(max-width:640px){.control-whats-new{padding:14px 13px;margin:10px 0 18px}.control-whats-new-heading{align-items:flex-start;flex-direction:column;gap:5px}.control-whats-new-links{grid-template-columns:1fr;gap:7px}.control-whats-new-links a{min-height:0;padding:10px 12px;gap:2px}.control-whats-new-links span{font-size:12px}.control-whats-new-more{margin-top:1px}}
 </style><link rel="stylesheet" href="assets/workspace-shell.css">
+<link rel="stylesheet" href="assets/control-ai-studio.css">
  <link rel="stylesheet" href="assets/control-web-builder.css"></head><body class="control-shell-v3">
 <aside class="shell-sidebar" aria-label="Navigation permanente">
  <a href="#/" class="shell-brand"><span class="shell-brand-mark">◈</span><span>CONTROL<span class="shell-brand-sub">ESPACE DE TRAVAIL</span></span></a>
@@ -44,6 +45,7 @@
    <a class="shell-side-link" data-shell-route="home" href="#/"><span class="shell-glyph">▦</span>Vue d’ensemble</a>
    <a class="shell-side-link" data-shell-route="inbox" href="#/control/inbox"><span class="shell-glyph">☷</span>À traiter</a>
    <a class="shell-side-link" data-shell-route="manager" href="#/control/manager"><span class="shell-glyph">◈</span>CONTROL IA</a>
+   <a class="shell-side-link" data-shell-route="aistudio" href="#/control/aistudio"><span class="shell-glyph">✧</span>Comptes IA & agents</a>
    <button type="button" class="shell-side-link shell-side-link--find" data-control-nav-open><span class="shell-glyph">⌕</span>Trouver une fonction<span class="shell-side-shortcut">⌘ K</span></button>
   </div>
   <div class="shell-side-group"><div class="shell-side-heading">Organisation</div>
@@ -61,7 +63,9 @@
 <script src="assets/control-backup-review.js"></script>
  <script src="assets/control-web-builder.js"></script>
  <script src="assets/control-web-builder-ui.js"></script>
- <script src="assets/command-center.js"></script>
+ <script src="assets/control-ai-studio-core.js"></script>
+<script src="assets/control-ai-studio.js"></script>
+<script src="assets/command-center.js"></script>
 <script src="assets/tool-catalog.js"></script>
 <script src="assets/deployment-guides.js"></script>
 <script src="assets/control-help.js"></script>
@@ -300,6 +304,7 @@ function render(){
  window.CONTROL_VISIOS?.unmount?.(workspaceRoot);
  window.CONTROL_MULTI_AI?.unmount?.(workspaceRoot);
  window.CONTROL_LOCAL_AI?.unmount?.(workspaceRoot);
+ window.CONTROL_AI_STUDIO?.unmount?.(workspaceRoot);
  const current=location.hash;
  const where=$('#control-location');
  if(where){
