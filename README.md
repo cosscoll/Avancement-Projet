@@ -1,3 +1,15 @@
+## Statut vérifié — 2 novembre 2026
+
+**CONTROL personnel :** disponible sur [GitHub Pages](https://cosscoll.github.io/Avancement-Projet/). Le Studio « Comptes IA & agents » gère localement des mémoires approuvées, des assistants modifiables, leurs fils de discussion et des conversations exportées facultativement. **Aucun compte ChatGPT, Claude ou Gemini n'est connecté** ; aucune récupération native de leurs historiques. L'IA locale est expérimentale et ne se charge qu'après action de l'utilisateur.
+
+**Fiabilité des sauvegardes :** la sauvegarde principale transporte désormais les données locales du Studio IA si elles existent, en plus des projets, actions et brouillons. Restauration prévisualisée, détection des éditions concurrentes, refus des références ou formats invalides ; anciens fichiers sans Studio IA compatibles et non destructifs pour les agents existants. Le Studio conserve également sa propre sauvegarde et restauration indépendantes.
+
+**Preuves contrôlées :** [637/637 tests Node](https://github.com/cosscoll/Avancement-Projet/actions/runs/41426100486), [parcours Chromium complet](https://github.com/cosscoll/Avancement-Projet/actions/runs/41425742193), [publication GitHub Pages](https://github.com/cosscoll/Avancement-Projet/actions/runs/41426099535).
+
+**Cloud CONTROL :** projet Supabase dédié constaté `INACTIVE` lors du contrôle en lecture seule du 2 novembre ; `config/cloud.json.enabled=false`. Les huit conditions d'authentification et sécurité sont encore non validées ; aucun compte Cloud ouvert. Les sessions A/B JWT/PostgREST et la synchronisation réelle entre appareils n'ont pas été démontrées. **Aucune automatisation ChatGPT, aucun quota Work/Codex ni API payante activés.**
+
+**Organisation des prochaines sessions :** [plan de travail manuel, limites et critères de recette](docs/CONTROL_IA_PLAN_SESSIONS_MANUELLES.md). Les rubriques historiques V66/V65 ci-dessous documentent l'évolution antérieure et ne remplacent pas ce statut.
+
 # CONTROL — Centre de pilotage des projets
 
 ## Avertissement multi-onglets — V66 (23 octobre 2026)
