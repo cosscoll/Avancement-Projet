@@ -6,7 +6,7 @@ function mount(root,adapter={}){
  if(!root||!core)return;
  window.CONTROL_AI_STUDIO?.unmount?.(root);
  const storage=adapter.storage||localStorage,loaded=core.read(storage);
- let db=loaded.state,raw=loaded.raw,blocked=loaded.error,tab='accounts',preview=null,query='',selectedImport=null,selectedAgent=null,selectedThread=null;
+ let db=loaded.state,raw=loaded.raw,blocked=loaded.error,tab='accounts',preview=null,query='',selectedImport=null,selectedAgent=null,selectedThread=null,editingMemoryId=null;
  let worker=null,ready=false,loading=false,generating=false,disposed=false,requestId=0,pending=null;
  const projects=[{id:'general',name:'Tous mes projets'},...(adapter.projects||[]).filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string')];
  const $=s=>root.querySelector(s);
@@ -48,8 +48,19 @@ const stats=()=>'<div class="as-metrics"><div><strong>'+db.imports.length+'</str
  '<section class="as-card"><div class="as-list-header"><div><span class="as-overline">BIBLIOTHÈQUE</span><h2>Mes conversations <span class="as-count">'+db.imports.length+'</span></h2></div><input id="as-search" type="search" placeholder="Rechercher dans les conversations" value="'+esc(query)+'" aria-label="Rechercher des conversations"></div>'+(list.length?'<div class="as-records">'+list.map(c=>'<article class="as-record"><div><span class="as-source">'+esc(c.provider)+'</span><strong>'+esc(c.title)+'</strong><small>'+c.messages.length+' messages · import local</small></div><div class="as-record-actions"><button data-as-view="'+esc(c.id)+'">Lire</button><button data-as-create-memory="'+esc(c.id)+'">Créer une mémoire</button><button data-as-source-agent="'+esc(c.id)+'">Créer un agent</button><button class="as-danger" data-as-delete-import="'+esc(c.id)+'" aria-label="Supprimer cette conversation">Supprimer</button></div></article>').join('')+'</div>':'<p class="as-emptytext">Aucune conversation correspondante. Importe un fichier pour commencer.</p>')+'</section>'+
  (selectedImport?(()=>{const c=db.imports.find(x=>x.id===selectedImport);return c?'<section class="as-card" id="as-reader"><div class="as-list-header"><div><span class="as-overline">LECTURE · '+esc(c.provider)+'</span><h2>'+esc(c.title)+'</h2></div><button data-as-action="close-reader">Fermer</button></div><div class="as-transcript">'+c.messages.slice(-80).map(m=>'<div class="as-bubble '+(m.role==='user'?'as-user':'as-assistant')+'"><span>'+ (m.role==='user'?'Utilisateur':'Assistant')+'</span><p>'+esc(m.content)+'</p></div>').join('')+'</div><p class="as-small">Affichage des 80 derniers messages. Les archives restent consultables uniquement sur cet appareil.</p></section>':''})():'');
  }
- function memoryPanel(){return '<div class="as-two"><section class="as-card"><div class="as-card-head"><span class="as-overline">MÉMOIRE CONTRÔLÉE</span><h2>Ajouter une mémoire</h2><p>Tu décides du contenu conservé. Aucun résumé automatique n’est inventé à partir d’un export.</p></div><form id="as-memory-form"><label for="as-memory-title">Titre de la mémoire</label><input required id="as-memory-title" maxlength="100" placeholder="Ex. Positionnement de mon entreprise"><label for="as-memory-project">Périmètre</label><select id="as-memory-project">'+projects.map(p=>option(p.id,p.name,false)).join('')+'</select><label for="as-memory-source">Source (facultative)</label><select id="as-memory-source">'+option('','Sans conversation source',true)+db.imports.map(c=>option(c.id,c.provider+' · '+c.title,selectedImport===c.id)).join('')+'</select><label for="as-memory-content">Informations à retenir et approuver</label><textarea id="as-memory-content" maxlength="1600" rows="6" placeholder="Note les faits, décisions et préférences utiles à tes futurs agents…" required></textarea><button class="as-primary" type="submit">Enregistrer cette mémoire</button></form></section><section class="as-card"><div class="as-card-head"><span class="as-overline">CONTRÔLE</span><h2>Mes mémoires · '+db.memories.length+'</h2></div>'+(db.memories.length?db.memories.map(m=>'<article class="as-memory"><span class="as-source">'+esc(projects.find(x=>x.id===m.projectId)?.name||m.projectId)+'</span><strong>'+esc(m.title)+'</strong><p>'+esc(m.content)+'</p><button data-as-delete-memory="'+esc(m.id)+'" class="as-danger">Révoquer et supprimer</button></article>').join(''):'<div class="as-empty">Aucune mémoire approuvée.</div>')+'</section></div>'}
- function agentPanel(){
+ 
+function memoryPanel(){
+ const editing=db.memories.find(m=>m.id===editingMemoryId);
+ return '<div class="as-two"><section class="as-card"><div class="as-card-head"><span class="as-overline">MÉMOIRE CONTRÔLÉE</span><h2>'+(editing?'Modifier la mémoire':'Ajouter une mémoire')+'</h2><p>Les corrections sont immédiatement réutilisées dans les prochaines conversations des agents concernés.</p></div>'+
+ '<form id="as-memory-form"><label for="as-memory-title">Titre de la mémoire</label><input required id="as-memory-title" maxlength="100" value="'+esc(editing?.title||'')+'" placeholder="Ex. Positionnement de mon entreprise">'+
+ '<label for="as-memory-project">Périmètre</label><select id="as-memory-project" '+(editing?'disabled':'')+'>'+projects.map(p=>option(p.id,p.name,p.id===(editing?.projectId||'general'))).join('')+'</select>'+
+ '<label for="as-memory-source">Source facultative</label><select id="as-memory-source" '+(editing?'disabled':'')+'>'+option('','Sans conversation source',!(editing?.conversationId||selectedImport))+db.imports.map(c=>option(c.id,c.provider+' · '+c.title,(editing?.conversationId||selectedImport)===c.id)).join('')+'</select>'+
+ '<label for="as-memory-content">Informations approuvées</label><textarea id="as-memory-content" maxlength="1600" rows="6" required>'+esc(editing?.content||'')+'</textarea>'+
+ '<button class="as-primary" type="submit">'+(editing?'Enregistrer les corrections':'Enregistrer cette mémoire')+'</button>'+(editing?'<button type="button" data-as-action="cancel-memory-edit">Annuler</button>':'')+'</form></section>'+
+ '<section class="as-card"><div class="as-card-head"><span class="as-overline">CONTRÔLE</span><h2>Mes mémoires · '+db.memories.length+'</h2></div>'+
+ (db.memories.length?db.memories.map(m=>'<article class="as-memory"><span class="as-source">'+esc(projects.find(x=>x.id===m.projectId)?.name||m.projectId)+'</span><strong>'+esc(m.title)+'</strong><small>Version '+(Math.max(1,Number(m.version)||1))+'</small><p>'+esc(m.content)+'</p><div class="as-inline-actions"><button data-as-edit-memory="'+esc(m.id)+'">Modifier</button><button data-as-delete-memory="'+esc(m.id)+'" class="as-danger">Révoquer et supprimer</button></div></article>').join(''):'<div class="as-empty">Aucune mémoire approuvée.</div>')+'</section></div>';
+}
+function agentPanel(){
   const current=db.agents.find(a=>a.id===selectedAgent)||db.agents[0];
   if(current&&!selectedAgent)selectedAgent=current.id;
   const thread=current?.threads.find(x=>x.id===selectedThread)||current?.threads[0];
@@ -78,7 +89,21 @@ const stats=()=>'<div class="as-metrics"><div><strong>'+db.imports.length+'</str
    const id=b.dataset.asDeleteImport;if(!confirm('Supprimer cette conversation et toutes les mémoires liées ? Les agents perdront ces sources.'))return;
    if(commit(s=>{const removed=s.memories.filter(m=>m.conversationId===id).map(m=>m.id);s.imports=s.imports.filter(x=>x.id!==id);s.memories=s.memories.filter(x=>!removed.includes(x.id));s.agents.forEach(a=>{a.conversationIds=a.conversationIds.filter(x=>x!==id);a.memoryIds=a.memoryIds.filter(x=>!removed.includes(x))})})){selectedImport=null;refresh()}
   });
-  const mForm=$('#as-memory-form');if(mForm)mForm.onsubmit=e=>{e.preventDefault();const data={title:$('#as-memory-title').value,content:$('#as-memory-content').value,conversationId:$('#as-memory-source').value,projectId:$('#as-memory-project').value};try{const item=core.memory(db,data);if(commit(s=>s.memories.push(item))){selectedImport=null;refresh();notify('Mémoire enregistrée après validation de son contenu.')}}catch(e){notify(e.message,true)}};
+  const mForm=$('#as-memory-form');if(mForm)mForm.onsubmit=e=>{e.preventDefault();try{
+   const title=$('#as-memory-title').value,content=$('#as-memory-content').value;
+   if(editingMemoryId){
+    const updated=core.editMemory(db,editingMemoryId,{title,content});
+    if(commit(s=>{const i=s.memories.findIndex(m=>m.id===editingMemoryId);if(i<0)throw Error('Mémoire introuvable.');s.memories[i]=updated})){
+     editingMemoryId=null;refresh();notify('Mémoire corrigée, agents mis à jour pour les prochaines conversations.');
+    }
+   }else{
+    const data={title,content,conversationId:$('#as-memory-source').value,projectId:$('#as-memory-project').value};
+    const item=core.memory(db,data);
+    if(commit(s=>s.memories.push(item))){selectedImport=null;refresh();notify('Mémoire approuvée.')}
+   }
+  }catch(error){notify(error.message,true)}
+ };
+ root.querySelectorAll('[data-as-edit-memory]').forEach(b=>b.onclick=()=>{editingMemoryId=b.dataset.asEditMemory;refresh();$('#as-memory-title')?.focus()});
   root.querySelectorAll('[data-as-delete-memory]').forEach(b=>b.onclick=()=>{const id=b.dataset.asDeleteMemory;if(!confirm('Révoquer cette mémoire pour tous les assistants ?'))return;if(commit(s=>{s.memories=s.memories.filter(m=>m.id!==id);s.agents.forEach(a=>a.memoryIds=a.memoryIds.filter(x=>x!==id))}))refresh()});
   const aForm=$('#as-agent-form');if(aForm){const project=$('#as-agent-project');const sync=()=>root.querySelectorAll('[data-memory-project]').forEach(x=>{const can=x.dataset.memoryProject==='general'||x.dataset.memoryProject===project.value;x.disabled=!can;if(!can)x.checked=false});project.onchange=sync;sync();aForm.onsubmit=e=>{e.preventDefault();const data={name:$('#as-agent-name').value,instructions:$('#as-agent-instructions').value,projectId:project.value,conversationIds:[$('#as-agent-source').value].filter(Boolean),memoryIds:[...root.querySelectorAll('[name="agent-memory"]:checked')].map(x=>x.value)};try{const item=core.agent(db,data);if(commit(s=>s.agents.push(item))){selectedAgent=item.id;selectedThread=item.threads[0].id;selectedImport=null;refresh();notify('Assistant créé. Charge le modèle pour commencer à discuter.')}}catch(e){notify(e.message,true)}}}
   root.querySelectorAll('[data-as-open-agent]').forEach(b=>b.onclick=()=>{selectedAgent=b.dataset.asOpenAgent;selectedThread=null;refresh()});
@@ -89,6 +114,7 @@ const stats=()=>'<div class="as-metrics"><div><strong>'+db.imports.length+'</str
  function action(name){
   if(name==='go-agents')return showTab('agents');
   if(name==='show-archives')return showTab('imports');
+  if(name==='cancel-memory-edit'){editingMemoryId=null;return refresh()}
   if(name==='confirm-import')return saveImport();
   if(name==='cancel-import'){preview=null;return refresh()}
   if(name==='close-reader'){selectedImport=null;return refresh()}
