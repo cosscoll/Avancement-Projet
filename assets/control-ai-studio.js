@@ -141,7 +141,7 @@ function agentPanel(){
      conversationIds:[...root.querySelectorAll('[name="edit-agent-source"]:checked')].map(x=>x.value),
      memoryIds:[...root.querySelectorAll('[name="edit-agent-memory"]:checked')].map(x=>x.value)});
     if(commit(s=>{const i=s.agents.findIndex(a=>a.id===previous.id);if(i<0)throw Error('Assistant introuvable.');s.agents[i]=next})){
-     refresh();notify('Assistant mis à jour. Les anciennes discussions sont conservées.');
+     if(generating)stop();refresh();notify('Assistant mis à jour. Les anciennes discussions sont conservées.');
     }
    }catch(error){notify(error.message,true)}
   };

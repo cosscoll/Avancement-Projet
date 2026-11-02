@@ -1,3 +1,7 @@
+### Complément de recette : révocation pendant une génération (2 novembre 2026)
+
+Modifier un agent annule désormais également une génération locale engagée. Recette Chromium avec moteur `Worker` simulé, sans téléchargement : deux réponses tardives sont injectées après une correction d'instructions puis une révocation de mémoire. Elles doivent être refusées et ne pas réapparaître dans les conversations enregistrées. La simulation ne vaut pas test de qualité d'un modèle réel.
+
 ## Sprint — contexte des agents contrôlable (2 novembre 2026)
 
 - Remplacement de la troncature de prompt globale par un budget distinct pour rôle, mémoires approuvées et archives historiques.

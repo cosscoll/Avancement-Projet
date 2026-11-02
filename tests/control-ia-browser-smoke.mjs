@@ -957,6 +957,35 @@ try{
  const returnedAgent=await js("(()=>{const s=JSON.parse(localStorage.getItem('control-ai-studio-v1'));return {name:s.agents[0].name,version:s.agents[0].configVersion,sources:s.agents[0].conversationIds.length,memoryVersion:s.memories[0].version}})()");
  assert.deepEqual(returnedAgent,{name:'Assistant UX révisé',version:3,sources:2,memoryVersion:2},'Edited agents and versioned memories must persist after navigation');
  log('AI Studio imported ChatGPT preview, approved memory, created persistent agent and never activated a paid or remote model');
+ await js("(()=>{window.__origWorker=window.Worker;window.Worker=class{constructor(){this.last=null;this.terminated=false;window.__fakeWorker=this}postMessage(p){if(p.action==='load')queueMicrotask(()=>this.onmessage?.({data:{type:'ready'}}));if(p.action==='generate')this.last=p}terminate(){this.terminated=true}}})()");
+ await js("document.querySelector('[data-as-action=load-model]').click()");
+ await ready(()=>js("!!document.querySelector('#as-chat-message:not(:disabled)')"),6000)();
+ await js("(()=>{document.querySelector('#as-chat-message').value='Question de test';document.querySelector('#as-chat-form').requestSubmit()})()");
+ await ready(()=>js("!!window.__fakeWorker?.last&&window.__fakeWorker.last.action==='generate'"),6000)();
+ assert.match(await js("window.__fakeWorker.last.context"),/Nouvelle directive UX/);
+ await js("window.__oldWorker=window.__fakeWorker");
+ await js("document.querySelector('[data-as-action=toggle-agent-edit]').click()");
+ await js("(()=>{document.querySelector('#as-edit-agent-instructions').value='Instructions actualisées sans ancienne génération';document.querySelector('#as-agent-edit-form').requestSubmit()})()");
+ await ready(()=>js("window.__oldWorker.terminated===true"),6000)();
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].configVersion"),4);
+ await js("window.__oldWorker.onmessage({data:{type:'answer',requestId:window.__oldWorker.last.requestId,text:'STALE-RESPONSE-AGENT'}})");
+ assert.equal(await js("JSON.stringify(JSON.parse(localStorage.getItem('control-ai-studio-v1'))).includes('STALE-RESPONSE-AGENT')"),false);
+ await js("document.querySelector('[data-as-action=load-model]').click()");
+ await ready(()=>js("!!document.querySelector('#as-chat-message:not(:disabled)')"),6000)();
+ await js("(()=>{document.querySelector('#as-chat-message').value='Seconde question';document.querySelector('#as-chat-form').requestSubmit()})()");
+ await ready(()=>js("!!window.__fakeWorker?.last&&window.__fakeWorker.last.action==='generate'"),6000)();
+ await js("window.__oldWorker=window.__fakeWorker");
+ await js("document.querySelector('[data-as-tab=memories]').click()");
+ await ready(()=>js("!!document.querySelector('[data-as-delete-memory]')"),6000)();
+ await js("(()=>{const prev=window.confirm;window.confirm=()=>true;try{document.querySelector('[data-as-delete-memory]').click()}finally{window.confirm=prev}})()");
+ assert.equal(await js("window.__oldWorker.terminated"),true);
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).memories.length"),0);
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].memoryIds.length"),0);
+ await js("window.__oldWorker.onmessage({data:{type:'answer',requestId:window.__oldWorker.last.requestId,text:'STALE-RESPONSE-MEMORY'}})");
+ assert.equal(await js("JSON.stringify(JSON.parse(localStorage.getItem('control-ai-studio-v1'))).includes('STALE-RESPONSE-MEMORY')"),false);
+ await js("(()=>{window.Worker=window.__origWorker;delete window.__origWorker;delete window.__oldWorker;delete window.__fakeWorker})()");
+ log('In-flight local model replies are discarded on agent edits and memory revocations');
+
 
  // Account gate is not the same as personal CONTROL: public Cloud must remain disabled.
  // We test the actual app.html and public config, not merely assert file contents in Node.

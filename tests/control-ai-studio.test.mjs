@@ -184,3 +184,11 @@ test('agent interface previews effective prompt and describes general encrypted 
  assert.match(ui,/La sauvegarde générale CONTROL inclut également le Studio IA/);
  assert.doesNotMatch(ui,/La sauvegarde générale CONTROL n’inclut pas encore le Studio IA/);
 });
+
+test('revoking memory or editing agent invalidates pending model answers',()=>{
+ const ui=fs.readFileSync(new URL('../assets/control-ai-studio.js',import.meta.url),'utf8');
+ assert.match(ui,/s\.agents\[i\]=next\}\)\)\{\s*if\(generating\)stop\(\)/);
+ assert.match(ui,/if\(generating\)stop\(\);refresh\(\)/);
+ assert.match(ui,/m\.requestId===requestId&&pending/);
+ assert.match(ui,/function stop\(\)\{\+\+requestId;worker\?\.terminate\(\)/);
+});
