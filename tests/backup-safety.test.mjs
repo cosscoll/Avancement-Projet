@@ -27,6 +27,6 @@ test('Reject prototype-mutation JSON keys at any nesting level',()=>{
 });
 test('Import has an explicit warning if storage rollback itself fails',()=>{
  assert.match(code,/rollbackUncertain=true/);
- assert.match(code,/Certaines données locales ont pu changer/);
+ assert.match(code,/Restauration interrompue : des données ont pu changer dans un autre onglet/);
  assert.match(code,/validateBackupData\(data\)/);
 });

@@ -38,7 +38,8 @@ test('Failed local storage never creates a phantom user project',()=>{
 });
 
 test('Personal persistent saves acknowledge success only after write',()=>{
- assert.match(code,/localStorage\.setItem\(base,JSON\.stringify\(state\)\);return true/);
+ assert.match(code,/const serialized=JSON\.stringify\(state\);localStorage\.setItem\(base,serialized\);hubLoadedRaw=serialized;return true/);
+ assert.match(code,/localStorage\.getItem\(base\)!==hubLoadedRaw/);
  assert.match(code,/if\(!persist\(\)\)\{state\.custom=previous;delete state\[id\]/);
 });
 
