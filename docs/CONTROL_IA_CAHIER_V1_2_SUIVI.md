@@ -124,6 +124,19 @@ La navigation CONTROL V3 a été améliorée directement sur `main` : formulatio
 
 Détails : [parcours UX V3](CONTROL_UX_V3_PARCOURS.md) et [état de reprise prudent](../data/sprint-state/control-ia.json).
 
+## Nouveaux modules approuvés — avenant privé du 2 novembre 2026
+
+Le cahier privé `/CONTROL-IA/CONTROL_IA_Cahier_des_charges_V1_2_PRIVE.md` contient désormais **l'annexe C** ajoutant deux lots au périmètre officiel de CONTROL :
+
+- **`EXT-IA-001` — Comptes IA, historique et mémoire :** importer volontairement des archives exportables ChatGPT, Claude et Gemini, retrouver les fils et leurs sources, approuver des mémoires isolées par projet et gérer leur suppression. Connexion officielle seulement lorsque les permissions du fournisseur permettent l'accès visé ; pas d'accès automatique aux historiques natifs par OAuth ordinaire.
+- **`EXT-AGT-001` — Studio d'agents personnalisés :** créer un agent depuis une ou plusieurs conversations sélectionnées, choisir et approuver les mémoires à lui transmettre, modifier son rôle/instructions, reprendre ses conversations persistantes et afficher les sources utilisées.
+
+**10 nouveaux critères d'acceptation `EXT-IA-AC1..5` et `EXT-AGT-AC1..5`**, initialement non vérifiés, font l'objet d'un registre public expurgé : [`data/control-ia-scope-extensions.json`](../data/control-ia-scope-extensions.json).
+
+**Dépendances impératives :** compte CONTROL réel et isolation A/B, import sûr des fichiers, consentement source par source, suppression/révocation, séparation entre données importées et instructions d'agent, aucune permission implicite ni API payante. Les fils importés n'autorisent ni commande de fournisseur ni accès à la mémoire native. Les fonctions de configuration et d'import local peuvent être réalisées avant une connexion API.
+
+**Périmètre V1.2 historique conservé :** 22 tickets BACK, 42 recettes T, 10 améliorations IMP, 36 critères historiques et 30 critères IMP. Les deux ajouts `EXT` restent comptés séparément pour ne pas falsifier l'avancement précédent. **À ce jour, aucune fonctionnalité de cet avenant n'est certifiée réalisée ni déployée.**
+
 ## MVP : cinq jalons successifs
 
 1. **Identité indépendante** : vrai projet CONTROL distinct de toutes les autres bases ; création uniquement après approbation explicite et attestation coût 0 €, contrôle RLS par deux vrais utilisateurs, sessions révoquées, export/suppression. La configuration Cloud reste `enabled:false` jusqu'à la recette.

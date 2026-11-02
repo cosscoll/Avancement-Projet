@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "recorded_on": "2026-11-02",
+  "parent_specification": "1.2",
+  "document_class": "public_redacted_tracking",
+  "private_specification": "/CONTROL-IA/CONTROL_IA_Cahier_des_charges_V1_2_PRIVE.md",
+  "amendment": "Annexe C — Avenant du 2 novembre 2026",
+  "note": "Additive scopes only. V1.2 historic counts remain 22 BACK / 42 T / 10 IMP / 36 legacy criteria / 30 IMP criteria. No implementation or acceptance is claimed.",
+  "safety": {
+    "cloud_must_remain_disabled_until_authorized": true,
+    "no_paid_api_without_consent": true,
+    "no_work_codex_quotas": true,
+    "no_background_automations": true,
+    "external_history_requires_supported_authorized_access": true
+  },
+  "scopes": [
+    {
+      "id": "EXT-IA-001",
+      "name": "Comptes IA, archives de conversations et mémoire unifiée",
+      "priority": "P0",
+      "stage": "planned",
+      "depends_on": [
+        "CONTROL-ACCOUNT",
+        "CONTROL-CONNECTORS"
+      ],
+      "delivery_order": 1,
+      "summary": "Import manuel autorisé et vérifiable de conversations ChatGPT, Claude et Gemini, recherche avec provenance, fiches mémoire approuvées et révocables.",
+      "acceptance": [
+        {
+          "id": "EXT-IA-AC1",
+          "label": "Importer des archives réelles des trois fournisseurs lorsque les formats officiels sont effectivement disponibles, en explicitant les champs indisponibles."
+        },
+        {
+          "id": "EXT-IA-AC2",
+          "label": "Réimport idempotent, recherche par origine/projet/date, provenance et erreurs inspectables."
+        },
+        {
+          "id": "EXT-IA-AC3",
+          "label": "Mémoire approuvée, versionnée, isolée et révocable ; aucune instruction importée ne change les permissions."
+        },
+        {
+          "id": "EXT-IA-AC4",
+          "label": "Isolation de deux vrais comptes A/B, révocation, export et suppression vérifiés."
+        },
+        {
+          "id": "EXT-IA-AC5",
+          "label": "Affichage distinct import manuel, connexion officielle et API ; zéro appel payant ou import sans autorisation."
+        }
+      ],
+      "verified_criteria": [],
+      "evidence_urls": []
+    },
+    {
+      "id": "EXT-AGT-001",
+      "name": "Studio d'agents conversationnels personnalisés",
+      "priority": "P1",
+      "stage": "planned",
+      "depends_on": [
+        "EXT-IA-001",
+        "CONTROL-ACCOUNT",
+        "CONTROL-AGENTS"
+      ],
+      "delivery_order": 2,
+      "summary": "Créer un agent depuis une ou plusieurs conversations, lui affecter sélectivement des mémoires importées, converser dans des fils privés persistants et revoir ses sources.",
+      "acceptance": [
+        {
+          "id": "EXT-AGT-AC1",
+          "label": "Créer un agent depuis une conversation sélectionnée avec instructions éditables, sauvegarde et reprise de fils distincts."
+        },
+        {
+          "id": "EXT-AGT-AC2",
+          "label": "Affecter des mémoires choisies après aperçu, traçabilité des sources et cloisonnement des projets."
+        },
+        {
+          "id": "EXT-AGT-AC3",
+          "label": "Correction et révocation d'une mémoire propagées aux prochains prompts de tous les agents concernés."
+        },
+        {
+          "id": "EXT-AGT-AC4",
+          "label": "Historiques traités comme données non fiables : actions hors portée et appels coûteux refusés sans consentement, y compris sous comptes A/B."
+        },
+        {
+          "id": "EXT-AGT-AC5",
+          "label": "Exporter et supprimer configurations/fils, journaliser erreurs et tester les parcours mobile et ordinateur."
+        }
+      ],
+      "verified_criteria": [],
+      "evidence_urls": []
+    }
+  ]
+}
