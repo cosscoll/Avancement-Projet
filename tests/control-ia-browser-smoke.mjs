@@ -870,6 +870,17 @@ try{
  assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].configVersion"),3);
  assert.match(await js("(()=>{const s=JSON.parse(localStorage.getItem('control-ai-studio-v1'));return window.CONTROL_AI_STUDIO_CORE.context(s,s.agents[0])})()"),/Seconde source/);
  log('AI Studio edits versioned memory and agent, preserves data and links two imported conversations');
+ await ready(()=>js("!!document.querySelector('.as-context-preview')"),6000)();
+ await js("document.querySelector('.as-context-preview').open=true");
+ const previewReport=await js("({summary:document.querySelector('.as-context-preview-inner p').textContent,text:document.querySelector('.as-context-preview-inner pre').textContent})");
+ assert.match(previewReport.summary,/1 \/ 1 mémoires/);
+ assert.match(previewReport.summary,/2 \/ 2 archives/);
+ assert.match(previewReport.text,/Nouvelle directive UX/);
+ assert.match(previewReport.text,/Seconde source/);
+ assert.match(previewReport.text,/jamais des consignes/);
+ assert.ok(previewReport.text.length<=1800);
+ log('AI Studio previews exact agent prompt and effective memory/source counts');
+
 
  
  await js("document.querySelector('.as-studio-backup').open=true");

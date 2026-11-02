@@ -1,3 +1,12 @@
+## Sprint — contexte des agents contrôlable (2 novembre 2026)
+
+- Remplacement de la troncature de prompt globale par un budget distinct pour rôle, mémoires approuvées et archives historiques.
+- Indication exacte du nombre de mémoires et archives effectivement incluses ou omises dans le prompt, avec aperçu du texte transmis au modèle local ; isolation des mémoires d'un autre projet.
+- Les archives importées sont présentées comme données historiques non fiables, non comme instructions ; cela ne garantit pas la résistance totale d'un modèle expérimental aux attaques par injection.
+- Arrêt d'une génération en cours si une mémoire est révoquée/corrigée ou si une conversation source est supprimée.
+- Correction du texte des sauvegardes Studio : la sauvegarde générale peut les inclure et les chiffrer, l'export indépendant reste en clair.
+- Cloud toujours désactivé, aucun fournisseur IA externe relié, aucune API payante.
+
 ## Sprint S2 — sûreté des sauvegardes chiffrées (2 novembre 2026)
 
 La recette de sauvegarde unifiée est étendue à l'enveloppe chiffrée AES-GCM V2, au refus d'un mauvais mot de passe et à la validation des métadonnées cryptographiques. Les champs contenant des mots de passe sont effacés après soumission. Les anciens exports clairs restent acceptés. Les agents et mémoires du Studio IA sont inclus seulement lorsque leurs données locales existent, sans accès fournisseur et sans synchronisation Cloud.
