@@ -5,7 +5,7 @@
   "document_class": "public_redacted_tracking",
   "private_specification": "/CONTROL-IA/CONTROL_IA_Cahier_des_charges_V1_2_PRIVE.md",
   "amendment": "Annexe C — Avenant du 2 novembre 2026",
-  "note": "Additive scopes only. V1.2 historic counts remain 22 BACK / 42 T / 10 IMP / 36 legacy criteria / 30 IMP criteria. No implementation or acceptance is claimed.",
+  "note": "Additive V1.2 scopes, initial local-first UI released. V1.2 historic counts are unchanged. Cloud accounts, provider OAuth, history sync and native memory sync remain unimplemented and unverified. No acceptance gate is certified.",
   "safety": {
     "cloud_must_remain_disabled_until_authorized": true,
     "no_paid_api_without_consent": true,
@@ -18,7 +18,7 @@
       "id": "EXT-IA-001",
       "name": "Comptes IA, archives de conversations et mémoire unifiée",
       "priority": "P0",
-      "stage": "planned",
+      "stage": "in_code",
       "depends_on": [
         "CONTROL-ACCOUNT",
         "CONTROL-CONNECTORS"
@@ -48,13 +48,16 @@
         }
       ],
       "verified_criteria": [],
-      "evidence_urls": []
+      "evidence_urls": [
+        "https://github.com/cosscoll/Avancement-Projet/commit/65db25912e291fc853cdd28934cea763504794c2",
+        "https://github.com/cosscoll/Avancement-Projet/actions/runs/41413819471"
+      ]
     },
     {
       "id": "EXT-AGT-001",
       "name": "Studio d'agents conversationnels personnalisés",
       "priority": "P1",
-      "stage": "planned",
+      "stage": "in_code",
       "depends_on": [
         "EXT-IA-001",
         "CONTROL-ACCOUNT",
@@ -85,7 +88,10 @@
         }
       ],
       "verified_criteria": [],
-      "evidence_urls": []
+      "evidence_urls": [
+        "https://github.com/cosscoll/Avancement-Projet/commit/65db25912e291fc853cdd28934cea763504794c2",
+        "https://github.com/cosscoll/Avancement-Projet/actions/runs/41413819471"
+      ]
     }
   ]
 }

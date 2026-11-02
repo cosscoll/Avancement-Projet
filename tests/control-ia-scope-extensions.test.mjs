@@ -13,7 +13,7 @@ test('the private V1.2 specification is extended by two public-redacted, non-ope
  assert.equal(doc.document_class,'public_redacted_tracking');
  assert.equal(doc.private_specification,original.private_source);
  assert.deepEqual(doc.scopes.map(x=>x.id),['EXT-IA-001','EXT-AGT-001']);
- assert.ok(doc.scopes.every(x=>x.stage==='planned'));
+ assert.ok(doc.scopes.every(x=>x.stage==='in_code'));
  assert.ok(doc.scopes.every(x=>x.verified_criteria.length===0&&x.evidence_urls.length===0));
  assert.match(index,/EXT-IA-001/);
  assert.match(index,/EXT-AGT-001/);

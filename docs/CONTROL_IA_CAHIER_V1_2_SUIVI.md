@@ -135,7 +135,7 @@ Le cahier privé `/CONTROL-IA/CONTROL_IA_Cahier_des_charges_V1_2_PRIVE.md` conti
 
 **Dépendances impératives :** compte CONTROL réel et isolation A/B, import sûr des fichiers, consentement source par source, suppression/révocation, séparation entre données importées et instructions d'agent, aucune permission implicite ni API payante. Les fils importés n'autorisent ni commande de fournisseur ni accès à la mémoire native. Les fonctions de configuration et d'import local peuvent être réalisées avant une connexion API.
 
-**Périmètre V1.2 historique conservé :** 22 tickets BACK, 42 recettes T, 10 améliorations IMP, 36 critères historiques et 30 critères IMP. Les deux ajouts `EXT` restent comptés séparément pour ne pas falsifier l'avancement précédent. **À ce jour, aucune fonctionnalité de cet avenant n'est certifiée réalisée ni déployée.**
+**Périmètre V1.2 historique conservé :** 22 tickets BACK, 42 recettes T, 10 améliorations IMP, 36 critères historiques et 30 critères IMP. Les deux ajouts `EXT` restent comptés séparément pour ne pas falsifier l'avancement précédent. **État au 2 novembre :** une première interface **locale** est déployée dans `#/control/aistudio` (import des fichiers reconnus, mémoire manuelle approuvée, agents, discussions et génération facultative avec le petit modèle IA local). **Aucun des 10 nouveaux critères n'est déclaré entièrement vérifié** : les comptes Cloud, le véritable OAuth des fournisseurs, la synchronisation native des historiques/mémoires et les essais physiques multi-appareils restent à développer. [Code](../assets/control-ai-studio.js) · [Recette Chromium](https://github.com/cosscoll/Avancement-Projet/actions/runs/41413819471).
 
 ## MVP : cinq jalons successifs
 
