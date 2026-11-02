@@ -123,3 +123,14 @@
 .as-connect-actions button{flex:1 1 170px}
 @media(max-width:900px){.as-provider-grid{grid-template-columns:1fr}.as-connect-card{gap:9px}}
 @media(max-width:640px){.as-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.as-connect-intro{align-items:flex-start;flex-direction:column;gap:8px}.as-connect-card{padding:16px}.as-connect-actions{flex-direction:column}}
+
+/* Scoped editor controls for agent and versioned-memory maintenance. */
+.as-inline-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.as-memory small{display:block;color:#6b7c91;font-size:11px;margin:4px 0}
+.as-config{border:1px solid #dbe6f3;background:#f7faff;border-radius:13px;margin:14px 0;padding:13px 16px}
+.as-config summary{font-size:13px;font-weight:760;color:#315a93;cursor:pointer}
+.as-config fieldset{border:1px solid #dce5f0;border-radius:11px;margin:13px 0;padding:11px}
+.as-config legend{font-size:11px;color:#536a8c;font-weight:800;padding:0 5px}
+.as-config .as-check{display:flex;align-items:flex-start;gap:8px;margin:9px 0;line-height:1.45;overflow-wrap:anywhere;font-weight:500}
+.as-config .as-check input{width:17px;height:17px;flex:0 0 17px}
+@media(max-width:640px){.as-inline-actions{width:100%;align-items:stretch}.as-inline-actions button{flex:1}.as-config{padding:12px}}
