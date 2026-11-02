@@ -873,8 +873,6 @@ try{
 
  
  await js("document.querySelector('.as-studio-backup').open=true");
- const exportState=await js("localStorage.getItem('control-ai-studio-v1')");
- const testFlow=JSON.stringify(JSON.parse(exportState)); // local JS source in browser using an embedded string? avoid embedding real user data; fixture in isolated browser only.
  await js("(()=>{const text=localStorage.getItem('control-ai-studio-v1');const input=document.querySelector('#as-restore-file');const dt=new DataTransfer();dt.items.add(new File([text],'studio-backup.json',{type:'application/json'}));input.files=dt.files;document.querySelector('#as-restore-form').requestSubmit()})()");
  await ready(()=>js("!!document.querySelector('[data-as-action=confirm-studio-restore]')"),6000)();
  assert.match(await js("document.querySelector('.as-restore-review')?.textContent"),/Aperçu vérifié/);
@@ -884,7 +882,8 @@ try{
  await js("(()=>{const text=localStorage.getItem('control-ai-studio-v1');const dt=new DataTransfer();dt.items.add(new File([text],'studio-backup.json',{type:'application/json'}));document.querySelector('#as-restore-file').files=dt.files;document.querySelector('#as-restore-form').requestSubmit()})()");
  await ready(()=>js("!!document.querySelector('[data-as-action=confirm-studio-restore]')"),6000)();
  await js("(()=>{const previous=window.confirm;window.confirm=()=>true;document.querySelector('[data-as-action=confirm-studio-restore]').click();window.confirm=previous})()");
- await ready(()=>js("!!document.querySelector('.as-provider-grid')&&JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents.length===1"),6000)();
+ await ready(()=>js("!!document.querySelector('.as-agent-toolbar')&&!document.querySelector('[data-as-action=confirm-studio-restore]')&&JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents.length===1"),6000)();
+ assert.match(await js("document.querySelector('[data-as-status]').textContent"),/restaurée/);
  log('AI Studio backup preview, cancellation and confirmed safe restoration succeeded');
 
  await js("location.hash='#/'");
