@@ -125,7 +125,7 @@ test('backup rejects corrupt project and automation stores instead of exporting 
   ['control-automations-v1','[]']
  ]);
  const check=new Function('localStorage',
-  'const KEY="control-command-v1",HUB="control-hub-v2",AUTOS="control-automations-v1";'+readFn+'\n'+issuesFn+'\nreturn {readBackupStore,backupStorageIssues};'
+  'const KEY="control-command-v1",HUB="control-hub-v2",AUTOS="control-automations-v1",STUDIO="control-ai-studio-v1";'+readFn+'\n'+issuesFn+'\nreturn {readBackupStore,backupStorageIssues};'
  )({getItem:key=>values.get(key)??null});
  assert.deepEqual(check.readBackupStore('control-command-v1'),{actions:[],missions:[]});
  assert.deepEqual(check.backupStorageIssues().map(x=>x.key),['control-hub-v2','control-automations-v1']);

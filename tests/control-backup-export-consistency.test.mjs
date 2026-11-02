@@ -7,6 +7,9 @@ const reviewSource=readFileSync(new URL('../assets/control-backup-review.js',imp
 const reviewerWindow={};
 new Function('window',reviewSource)(reviewerWindow);
 const reviewer=reviewerWindow.CONTROL_BACKUP_REVIEW;
+const studioWindow={};
+new Function('window',readFileSync(new URL('../assets/control-ai-studio-core.js',import.meta.url),'utf8'))(studioWindow);
+const studioCore=studioWindow.CONTROL_AI_STUDIO_CORE;
 const preparer=source.match(/function prepareBackupExport\(\)\{[\s\S]*?\n\}/)?.[0];
 const readStore=source.match(/function readBackupStore\(key\)\{[^\n]+/)?.[0];
 const validate=source.slice(source.indexOf('function validateBackupData(data){'),source.indexOf('function prepareBackupExport(){'));
@@ -27,7 +30,7 @@ function harness(){
  const loaded=storage.getItem(keys[0]);
  const db=JSON.parse(loaded);
  const make=()=>new Function('window','localStorage','db','localLastLoadedRaw',"const HUB='control-hub-v2', AUTOS='control-automations-v1', STUDIO='control-ai-studio-v1';\n"+readStore+'\n'+validate+'\n'+preparer+'\nreturn prepareBackupExport;')(
-  {CONTROL_BACKUP_REVIEW:reviewer},storage,db,loaded
+  {CONTROL_BACKUP_REVIEW:reviewer,CONTROL_AI_STUDIO_CORE:studioCore},storage,db,loaded
  );
  return {store,storage,db,keys,make,setOnRead:fn=>{callback=fn}};
 }
