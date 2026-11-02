@@ -843,6 +843,34 @@ try{
  assert.equal(await js("document.querySelector('#as-chat-message').disabled"),true,'No simulated answer or paid inference without optional local model load');
  const approvedContext=await js("(()=>{const s=JSON.parse(localStorage.getItem('control-ai-studio-v1'));return window.CONTROL_AI_STUDIO_CORE.context(s,s.agents[0])})()");
  assert.match(approvedContext,/Prioriser la navigation mobile/);
+
+ await js("document.querySelector('[data-as-tab=memories]').click()");
+ await ready(()=>js("!!document.querySelector('[data-as-edit-memory]')"),6000)();
+ await js("document.querySelector('[data-as-edit-memory]').click()");
+ await js("(()=>{document.querySelector('#as-memory-content').value='Nouvelle directive UX : privilégier la navigation mobile.';document.querySelector('#as-memory-form').requestSubmit()})()");
+ await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).memories[0].version===2"),6000)();
+ await js("document.querySelector('[data-as-tab=agents]').click()");
+ await ready(()=>js("!!document.querySelector('.as-agent-toolbar')"),6000)();
+ await js("document.querySelector('[data-as-action=toggle-agent-edit]').click()");
+ await ready(()=>js("document.querySelector('#as-agent-edit')?.open===true"),6000)();
+ await js("(()=>{document.querySelector('#as-edit-agent-name').value='Assistant UX révisé';document.querySelector('#as-edit-agent-instructions').value='Analyse UX accessible et responsive';document.querySelector('[name=edit-agent-source]').checked=true;document.querySelector('#as-agent-edit-form').requestSubmit()})()");
+ await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].configVersion===2"),6000)();
+ assert.match(await js("document.querySelector('.as-agent-toolbar h2')?.textContent"),/UX révisé/);
+ assert.match(await js("(()=>{const s=JSON.parse(localStorage.getItem('control-ai-studio-v1'));return window.CONTROL_AI_STUDIO_CORE.context(s,s.agents[0])})()"),/Nouvelle directive UX/);
+ await js("document.querySelector('[data-as-tab=imports]').click()");
+ await ready(()=>js("!!document.querySelector('#as-import-form')"),6000)();
+ await js("(()=>{const dt=new DataTransfer();dt.items.add(new File([JSON.stringify([{uuid:'second',name:'Seconde source',chat_messages:[{sender:'human',text:'Tester deux conversations sources'},{sender:'assistant',text:'Conserver les fils existants'}]}])],'claude.json',{type:'application/json'}));document.querySelector('#as-provider').value='claude';document.querySelector('#as-file').files=dt.files;document.querySelector('#as-import-form').requestSubmit()})()");
+ await ready(()=>js("!!document.querySelector('[data-as-action=confirm-import]')"),6000)();
+ await js("document.querySelector('[data-as-action=confirm-import]').click()");
+ await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).imports?.length===2"),6000)();
+ await js("document.querySelector('[data-as-tab=agents]').click()");
+ await js("document.querySelector('[data-as-action=toggle-agent-edit]').click()");
+ await js("(()=>{document.querySelectorAll('[name=edit-agent-source]').forEach(x=>x.checked=true);document.querySelector('#as-agent-edit-form').requestSubmit()})()");
+ await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].conversationIds?.length===2"),6000)();
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].configVersion"),3);
+ assert.match(await js("(()=>{const s=JSON.parse(localStorage.getItem('control-ai-studio-v1'));return window.CONTROL_AI_STUDIO_CORE.context(s,s.agents[0])})()"),/Seconde source/);
+ log('AI Studio edits versioned memory and agent, preserves data and links two imported conversations');
+
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('.control-whats-new')"),6000)();
  await js("location.hash='#/control/aistudio'");
