@@ -1,3 +1,7 @@
+## Sprint S2 — sûreté des sauvegardes chiffrées (2 novembre 2026)
+
+La recette de sauvegarde unifiée est étendue à l'enveloppe chiffrée AES-GCM V2, au refus d'un mauvais mot de passe et à la validation des métadonnées cryptographiques. Les champs contenant des mots de passe sont effacés après soumission. Les anciens exports clairs restent acceptés. Les agents et mémoires du Studio IA sont inclus seulement lorsque leurs données locales existent, sans accès fournisseur et sans synchronisation Cloud.
+
 ## Sprint — sauvegarde unifiée du Studio IA, rétrocompatibilité (2 novembre 2026)
 
 Le périmètre de la sauvegarde générale CONTROL est étendu au quatrième magasin `control-ai-studio-v1`, lorsqu'il existe. Les nouvelles sauvegardes (chiffrées AES-GCM si l'utilisateur définit un mot de passe, sinon JSON clair) transportent les agents locaux, mémoires, discussions et conversations importées. Le stockage Studio est vérifié avant export, chaque magasin est contrôlé contre les changements entre onglets avant téléchargement et après chiffrement.

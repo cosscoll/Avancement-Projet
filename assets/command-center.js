@@ -581,9 +581,29 @@ async function pack(data,pw){const now=new Date().toISOString();if(!pw)return{fo
  const enc=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(JSON.stringify(data)));
  return{format:'control-v2-aes-gcm',created:now,salt:toB64(salt),iv:toB64(iv),content:toB64(new Uint8Array(enc)),iterations:180000};
 }
-async function unpack(data,pw){if(data?.format==='control-v2-plain')return data.data;
- if(data?.format==='control-v2-aes-gcm'){if(!pw)throw Error('Mot de passe manquant.');const key=await derive(pw,fromB64(data.salt));const bytes=await crypto.subtle.decrypt({name:'AES-GCM',iv:fromB64(data.iv)},key,fromB64(data.content));return JSON.parse(new TextDecoder().decode(bytes))}
- throw Error('Format inconnu.')}
+async function unpack(data,pw){
+ if(!data||typeof data!=='object'||Array.isArray(data))throw Error('Enveloppe de sauvegarde invalide.');
+ if(data.format==='control-v2-plain')return data.data;
+ if(data.format==='control-v2-aes-gcm'){
+  if(!pw)throw Error('Mot de passe manquant.');
+  if(!globalThis.crypto?.subtle)throw Error('Déchiffrement indisponible dans ce navigateur.');
+  // Format V2 uses a fixed, proven 180k PBKDF2 iteration count; do not accept
+  // attacker-controlled iteration counts or malformed salt/IV sizes.
+  if(data.iterations!==180000||typeof data.salt!=='string'||typeof data.iv!=='string'||typeof data.content!=='string'||
+   data.content.length>6000000||data.salt.length>100||data.iv.length>100)throw Error('Métadonnées du fichier chiffré invalides.');
+  let salt,iv,cipher;
+  try{
+   salt=fromB64(data.salt);iv=fromB64(data.iv);cipher=fromB64(data.content);
+   if(salt.length!==16||iv.length!==12||cipher.length<16)throw Error('Invalid length');
+  }catch{throw Error('Métadonnées cryptographiques illisibles.')}
+  try{
+   const key=await derive(pw,salt);
+   const bytes=await crypto.subtle.decrypt({name:'AES-GCM',iv},key,cipher);
+   return JSON.parse(new TextDecoder().decode(bytes));
+  }catch{throw Error('Mot de passe incorrect ou sauvegarde chiffrée altérée.')}
+ }
+ throw Error('Format de sauvegarde inconnu.');
+}
 function validateBackupData(data){
  const obj=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
  if(!obj(data)||!obj(data.command)||!obj(data.hub)||!obj(data.automations))return false;
@@ -627,7 +647,7 @@ function backup(){
  $('#main').innerHTML=view('Sauvegarde et récupération','Protéger les données de CONTROL et changer d’appareil',note('Le stockage local peut disparaître lors d’un nettoyage du navigateur. Télécharge une sauvegarde régulière. Le fichier contient éventuellement des liens vers des espaces privés : utilise un mot de passe si tu le transfères.')+recovery+
  box('Exporter les informations','<p class="muted">Exporte en un fichier les projets, actions, brouillons d’automatisations <strong>et les agents, mémoires et discussions locaux du Studio IA lorsqu’ils existent</strong>. La sauvegarde peut être chiffrée avec un mot de passe. Elle ne récupère pas les conversations natives des comptes ChatGPT, Claude et Gemini. Si un autre onglet modifie les données pendant la préparation ou le chiffrement, l’export est annulé : recharge CONTROL et recommence.</p><form id="export-data">'+field('Mot de passe de chiffrement facultatif (12 caractères minimum)','password','','password','autocomplete="new-password"')+'<button class="primary">Télécharger ma sauvegarde</button></form>')+
  box('Importer une sauvegarde','<p class="muted">La première étape vérifie le fichier <strong>sans modifier les données</strong>. Compare les quantités, puis confirme le remplacement des espaces contenus dans la sauvegarde. <strong>Les anciens fichiers sans Studio IA laissent tes agents et mémoires actuels intacts.</strong></p>'+(localStoreCorrupt?'<p role="alert">Le stockage actuel n’est pas lisible. Tu peux télécharger les données brutes sans les modifier, puis restaurer un fichier valide.</p>'+btn('Télécharger les données brutes','download-corrupt'):'')+'<form id="import-data"><label>Fichier JSON<input class="field" name="file" type="file" required accept=".json,application/json"></label>'+field('Mot de passe du fichier','password','','password')+'<button type="submit">Examiner la sauvegarde</button></form><p class="muted" id="import-status" role="status" aria-live="polite"></p><section class="backup-restore-preview" id="import-preview" aria-label="Aperçu de restauration" hidden><div id="import-comparison"></div><div class="backup-restore-actions"><button type="button" class="primary" id="import-apply">Appliquer la restauration</button><button type="button" id="import-cancel">Annuler</button></div></section>'));
- registerForm('#export-data',async f=>{if(localStoreCorrupt)return toast('Export normal bloqué : utilise « Télécharger les données brutes » avant une restauration.');if(backupStorageIssues().length)return toast('Export bloqué : un espace local est illisible. Télécharge sa copie brute et restaure une sauvegarde valide.');const pw=String(f.get('password')||'');if(pw&&pw.length<12)return toast('12 caractères minimum ou champ vide.');let exportData;try{exportData=prepareBackupExport()}catch(error){return toast(String(error.message||'Sauvegarde impossible.'))}try{const data=await pack(exportData.data,pw);if(!window.CONTROL_BACKUP_REVIEW.unchanged(localStorage,exportData.original))return toast('Des données ont changé pendant le chiffrement : sauvegarde annulée. Relance la vérification.');const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='CONTROL-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Fichier téléchargé : conserve-le dans un emplacement sûr.')}catch{toast('Sauvegarde impossible sur ce navigateur.')}});
+ registerForm('#export-data',async f=>{if(localStoreCorrupt)return toast('Export normal bloqué : utilise « Télécharger les données brutes » avant une restauration.');if(backupStorageIssues().length)return toast('Export bloqué : un espace local est illisible. Télécharge sa copie brute et restaure une sauvegarde valide.');const pw=String(f.get('password')||'');const pwInput=$('#export-data [name="password"]');if(pwInput)pwInput.value='';if(pw&&pw.length<12)return toast('12 caractères minimum ou champ vide.');let exportData;try{exportData=prepareBackupExport()}catch(error){return toast(String(error.message||'Sauvegarde impossible.'))}try{const data=await pack(exportData.data,pw);if(!window.CONTROL_BACKUP_REVIEW.unchanged(localStorage,exportData.original))return toast('Des données ont changé pendant le chiffrement : sauvegarde annulée. Relance la vérification.');const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='CONTROL-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Fichier téléchargé : conserve-le dans un emplacement sûr.')}catch{toast('Sauvegarde impossible sur ce navigateur.')}});
  $('#main [data-act="download-corrupt"]')?.addEventListener('click',()=>{try{const raw=localStorage.getItem(KEY);if(raw===null)throw Error('Données non accessibles');const url=URL.createObjectURL(new Blob([raw],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='CONTROL-donnees-brutes-'+new Date().toISOString().slice(0,10)+'.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Copie brute téléchargée. Elle peut contenir des informations sensibles.')}catch{toast('Récupération brute impossible dans ce navigateur.')}});
  for(const [key,name] of [[HUB,'hub'],[AUTOS,'automations'],[STUDIO,'studio']])$('#main [data-act="download-raw:'+name+'"]')?.addEventListener('click',()=>downloadRawStorage(key,name));
  const restore=window.CONTROL_BACKUP_REVIEW;
@@ -651,7 +671,8 @@ function backup(){
  registerForm('#import-data',async f=>{
   resetPreview();
   const file=f.get('file'),pw=String(f.get('password')||'');
-  if(!file||typeof file.size!=='number'||file.size>4000000||file.size===0){message.textContent='Choisis un fichier JSON (4 Mo maximum).';return}
+  const pwInput=$('#import-data [name="password"]');if(pwInput)pwInput.value='';
+  if(!file||typeof file.size!=='number'||file.size>6000000||file.size===0){message.textContent='Choisis un fichier JSON (6 Mo maximum, chiffré ou non).';return}
   try{
    const data=await unpack(JSON.parse(await file.text()),pw);
    if(!validateBackupData(data))throw Error('Invalid backup format');
@@ -667,7 +688,7 @@ function backup(){
    message.textContent='Sauvegarde déchiffrée et vérifiée. Examine les différences avant de confirmer.';
   }catch(error){
    resetPreview();
-   message.textContent='Impossible de lire le fichier ou les données actuelles : vérifie le mot de passe, le format et l’espace local.';
+   message.textContent=error?.message?.startsWith('Mot de passe incorrect')||error?.message?.startsWith('Métadonnées')||error?.message==='Mot de passe manquant.'?error.message:'Impossible de lire ce fichier de sauvegarde : format invalide, contenu incompatible ou données locales illisibles.';
   }
  });
  $('#import-apply').onclick=()=>{

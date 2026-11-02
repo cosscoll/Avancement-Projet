@@ -893,6 +893,36 @@ try{
  await ready(()=>js("!!document.querySelector('.as-provider-grid')"),6000)();
  log('Unified backup disclosure includes Studio IA, while legacy backups retain existing agent data');
 
+ await js("location.hash='#/control/backup'");
+ await ready(()=>js("!!document.querySelector('#export-data')"),6000)();
+ await js("(()=>{const old=URL.createObjectURL;window.__cryptoBackup={old,blob:null};URL.createObjectURL=function(blob){window.__cryptoBackup.blob=blob;return old.call(URL,blob)};const f=document.querySelector('#export-data');f.querySelector('[name=password]').value='Une longue phrase de test privee';f.requestSubmit()})()");
+ await ready(()=>js("!!window.__cryptoBackup?.blob&&document.querySelector('#toast')?.textContent?.includes('Fichier téléchargé')"),18000)();
+ assert.equal(await js("document.querySelector('#export-data [name=password]').value"),'','Password must not remain in the export form');
+ const backupMeta=await js("(async()=>{const e=JSON.parse(await window.__cryptoBackup.blob.text());return {format:e.format,iterations:e.iterations,containsStudio:JSON.stringify(e).includes('Assistant UX révisé'),blobBytes:window.__cryptoBackup.blob.size}})()");
+ assert.equal(backupMeta.format,'control-v2-aes-gcm');
+ assert.equal(backupMeta.iterations,180000);
+ assert.equal(backupMeta.containsStudio,false,'Encrypted export must not expose agent content');
+ assert.ok(backupMeta.blobBytes>100);
+ await js("(()=>{URL.createObjectURL=window.__cryptoBackup.old;const f=document.querySelector('#import-data');const dt=new DataTransfer();dt.items.add(new File([window.__cryptoBackup.blob],'secure-control-backup.json',{type:'application/json'}));f.elements.file.files=dt.files;f.elements.password.value='incorrecte et longue';f.requestSubmit()})()");
+ await ready(()=>js("document.querySelector('#import-status')?.textContent?.includes('Mot de passe incorrect')"),20000)();
+ assert.equal(await js("document.querySelector('#import-preview').hidden"),true,'Wrong password cannot show the restore action');
+ await js("(()=>{const f=document.querySelector('#import-data');f.elements.password.value='Une longue phrase de test privee';f.requestSubmit()})()");
+ await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),20000)();
+ assert.match(await js("document.querySelector('#import-comparison').textContent"),/Agents du Studio IA/);
+ assert.match(await js("document.querySelector('#import-comparison').textContent"),/Mémoires du Studio IA/);
+ assert.equal(await js("document.querySelector('#import-data [name=password]').value"),'','Password must be cleared after decrypting');
+ const beforeStudio=await js("localStorage.getItem('control-ai-studio-v1')");
+ await js("(()=>{const f=document.querySelector('#import-data');f.elements.password.value='Une longue phrase de test privee';document.querySelector('#import-cancel').click()})()");
+ assert.equal(await js("localStorage.getItem('control-ai-studio-v1')"),beforeStudio,'Cancel must preserve the agent store');
+ await js("(()=>{const f=document.querySelector('#import-data');f.elements.password.value='Une longue phrase de test privee';f.requestSubmit()})()");
+ await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),20000)();
+ await js("(()=>{const old=window.confirm;window.confirm=()=>true;try{document.querySelector('#import-apply').click()}finally{window.confirm=old}})()");
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].name"),'Assistant UX révisé');
+ assert.match(await js("document.querySelector('#import-status').textContent"),/Restauration confirmée/);
+ await js("delete window.__cryptoBackup");
+ log('Encrypted unified backup includes Studio IA: wrong password refused, preview, cancel and restore verified');
+
+
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('.control-whats-new')"),6000)();
  await js("location.hash='#/control/aistudio'");

@@ -13,6 +13,13 @@ Ce plan organise des interventions **déclenchées dans la conversation**. Il ne
 5. Vérifier les tests Node, les tests Chromium et la publication Pages sur le dernier SHA ; corriger les échecs plutôt que les masquer.
 6. Rendre un bilan très court : **changement visible, preuve, limites, prochain problème**.
 
+### Sprint S2 — Recette chiffrée de la sauvegarde (2 novembre 2026)
+
+- Renforcer le contrôle de l'enveloppe chiffrée V2 : `iterations` fixes à 180 000, dimensions du sel/IV, longueur maximale, erreurs lisibles pour mot de passe erroné ou fichier altéré.
+- Ne pas conserver les mots de passe dans les champs de formulaire après lecture ; restaurer uniquement après comparaison et confirmation.
+- Tester réellement les quatre magasins, dont les agents et mémoires, avec chiffrement AES-GCM, mot de passe incorrect, données altérées, fichier ancien sans Studio et annulation.
+- Garder `config/cloud.json.enabled=false`, aucune API distante ou automatisation activée.
+
 ## Sessions prioritaires
 
 | Ordre | Chantier | Livrable concret | Condition de recette |
