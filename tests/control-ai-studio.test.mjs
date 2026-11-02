@@ -139,8 +139,8 @@ test('Studio preview is separate from confirm and general CONTROL backup explici
  assert.match(ui,/data-as-action="confirm-studio-restore"/);
  assert.match(ui,/data-as-action="cancel-studio-restore"/);
  assert.match(ui,/core\.write\(storage,draft\.state,draft\.currentRaw\)/);
- assert.match(center,/les agents, les mémoires et les discussions du Studio IA ne sont pas inclus/);
- assert.match(center,/href="#\/control\/aistudio"/);
+ assert.match(center,/les agents, mémoires et discussions locaux du Studio IA/);
+ assert.match(center,/data.studio=readBackupStore\(STUDIO\)/);
 });
 
 test('validated studio backup state may be included in unified CONTROL export',()=>{
