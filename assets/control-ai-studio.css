@@ -7,7 +7,7 @@
 .as-heading p{font-size:14px;color:var(--as-sub);margin:11px 0 0}
 .as-local-tag{background:#e7f0fa;color:#30527e;border-radius:60px;padding:8px 13px;font-size:12px;font-weight:750;white-space:nowrap}
 .as-notice{border:1px solid #dce6f2;background:#f2f6fc;border-radius:13px;padding:12px 16px;color:#4e6480;font-size:13px;line-height:1.55}
-.as-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:4px;background:#eaf0f7;border-radius:14px}
+.as-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:4px;background:#eaf0f7;border-radius:14px}
 .as-steps button{border:0;box-shadow:none;background:transparent;color:#62758e;min-height:46px;font-size:13px;text-align:center}
 .as-steps button[aria-current=page]{background:#fff;color:#244e86;box-shadow:0 2px 8px #203c5912}
 .as-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
@@ -99,3 +99,27 @@
 @media(max-width:850px){.as-two,.as-agent-layout{grid-template-columns:1fr}.as-agent-side{display:block}.as-agent-list{display:flex;flex-wrap:wrap}.as-agent-item{width:auto;min-width:160px;flex:1}.as-modelbar{flex-direction:column;align-items:flex-start}}
 @media(max-width:600px){.as-heading{align-items:start;flex-direction:column;gap:8px}.as-shell{gap:12px}.as-metrics{gap:7px}.as-metrics>div{padding:11px 10px}.as-metrics strong{font-size:22px}.as-metrics span{font-size:10px}.as-card{padding:15px}.as-steps button{font-size:11px;padding:8px 4px;line-height:1.4}.as-record{align-items:flex-start;flex-direction:column;gap:10px}.as-record-actions{justify-content:flex-start}.as-chatbar{align-items:stretch}.as-chatbar button{flex:1}.as-bubble{max-width:98%}.as-agent-toolbar{flex-direction:column}.as-local-tag{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.as-shell *, .as-shell *:before,.as-shell *:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+.as-connect-intro{display:flex;justify-content:space-between;align-items:center;gap:14px}
+.as-connect-intro h2{font-size:clamp(23px,3vw,30px);margin:0 0 8px;letter-spacing:-.7px}
+.as-connect-intro p{max-width:690px;font-size:13px;color:var(--as-sub);margin:0;line-height:1.6}
+.as-connect-counter{flex-shrink:0;border-radius:99px;background:#f0f2f5;color:#56677b;font-size:12px;font-weight:750;padding:9px 14px}
+.as-provider-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.as-connect-card{border:1px solid #dfe7f1;border-radius:18px;background:#fff;padding:19px;min-width:0;display:flex;flex-direction:column;gap:12px;box-shadow:0 3px 17px #19355008}
+.as-connect-heading{display:flex;align-items:center;gap:11px}
+.as-connect-logo{width:43px;height:43px;flex:0 0 43px;display:grid;place-items:center;border-radius:13px;background:#f0f5fa;color:#295380;font-size:18px;font-weight:850}
+.as-connect-logo-chatgpt{background:#e8f3ef;color:#20684c}
+.as-connect-logo-claude{background:#fcf0e9;color:#a45d37}
+.as-connect-logo-gemini{background:#eef0fb;color:#6052b8}
+.as-connect-heading h3{font-size:16px;margin:0 0 3px}
+.as-connect-unlinked{font-size:11px;color:#795d39;font-weight:750}
+.as-connect-method{margin:0;font-size:12px;font-weight:750;color:#2e4f7d}
+.as-connect-status{margin:0;font-size:12px;font-weight:800;color:#4c6078}
+.as-connect-description{margin:0;color:#6a7b91;font-size:12px;line-height:1.55;flex:1}
+.as-connect-card button{background:#edf1f6;color:#66778b;cursor:not-allowed;width:100%;font-size:12px;font-weight:750;border:1px solid #dae3ed}
+.as-connect-card a{display:block;text-align:center;text-decoration:underline;text-underline-offset:3px;color:#315e91;font-size:12px;font-weight:700}
+.as-connect-plan h2{margin:0 0 10px;font-size:19px}
+.as-connect-plan p{font-size:13px;line-height:1.65;color:#586d86}
+.as-connect-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.as-connect-actions button{flex:1 1 170px}
+@media(max-width:900px){.as-provider-grid{grid-template-columns:1fr}.as-connect-card{gap:9px}}
+@media(max-width:640px){.as-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.as-connect-intro{align-items:flex-start;flex-direction:column;gap:8px}.as-connect-card{padding:16px}.as-connect-actions{flex-direction:column}}

@@ -47,6 +47,10 @@ test('No provider credential prompts, remote uploads, or fabricated AI replies',
  assert.doesNotMatch(core,/\bfetch\s*\(|XMLHttpRequest|localStorage\.clear/);
  assert.doesNotMatch(ui,/\bfetch\s*\(|XMLHttpRequest|sendBeacon|api\.openai\.com|api\.anthropic\.com/);
  assert.match(ui,/worker\.postMessage\(\{action:'generate'/);
+ assert.match(ui,/tab='accounts'/);
+ assert.match(ui,/Connexion non disponible/);
+ assert.match(ui,/data-as-action="go-agents"/);
+ assert.match(ui,/data-as-action="show-archives"/);
  assert.match(ui,/data-as-action="confirm-import"/);
  assert.match(ui,/data-as-action="load-model"/);
  assert.match(ui,/Révoquer et supprimer/);

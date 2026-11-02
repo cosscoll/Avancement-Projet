@@ -817,7 +817,12 @@ try{
 
  // Real personal AI Studio flow: the upload is synthetic and never leaves this browser.
  await js("location.hash='#/control/aistudio'");
- await ready(()=>js("!!document.querySelector('#as-import-form')&&!!document.querySelector('[data-as-tab=agents]')"),12000)();
+ await ready(()=>js("!!document.querySelector('.as-provider-grid')&&!!document.querySelector('[data-as-tab=agents]')"),12000)();
+ assert.equal(await js("document.querySelectorAll('.as-connect-card').length"),3);
+ assert.equal(await js("document.querySelectorAll('.as-connect-card button:not(:disabled)').length"),0,'No fake login');
+ assert.match(await js("document.querySelector('.as-connect-counter').textContent"),/0 compte lié/);
+ await js("document.querySelector('[data-as-action=show-archives]').click()");
+ await ready(()=>js("!!document.querySelector('#as-import-form')"),6000)();
  assert.match(await js("document.querySelector('.as-heading h1').textContent"),/Comptes IA/);
  assert.ok(await js("!!document.querySelector('.shell-sidebar a[data-shell-route=aistudio]')"),'AI Studio must be a visible navigation destination');
  await js("(()=>{const data=[{id:'smoke-1',title:'Décisions UX du projet',current_node:'final',mapping:{first:{parent:null,message:{author:{role:'user'},content:{parts:['La version mobile est prioritaire.']},create_time:1}},final:{parent:'first',message:{author:{role:'assistant'},content:{parts:['Préserver la navigation.']},create_time:2}}}}];const dt=new DataTransfer();dt.items.add(new File([JSON.stringify(data)],'conversations.json',{type:'application/json'}));document.querySelector('#as-provider').value='chatgpt';document.querySelector('#as-file').files=dt.files;document.querySelector('#as-import-form').requestSubmit()})()");
@@ -841,7 +846,7 @@ try{
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('.control-whats-new')"),6000)();
  await js("location.hash='#/control/aistudio'");
- await ready(()=>js("!!document.querySelector('#as-import-form')"),6000)();
+ await ready(()=>js("!!document.querySelector('.as-provider-grid')"),6000)();
  await js("document.querySelector('[data-as-tab=agents]').click()");
  await ready(()=>js("!!document.querySelector('.as-agent-list')"),6000)();
  assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents.length"),1);
