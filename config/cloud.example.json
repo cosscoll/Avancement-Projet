@@ -7,5 +7,15 @@
   "accountDeletionEnabled": false,
   "supabaseUrl": "https://DEDICATED_CONTROL_PROJECT_REF.supabase.co",
   "supabasePublishableKey": "sb_publishable_REPLACE_WITH_PUBLIC_PROJECT_KEY",
-  "aiDispatchEnabled": false
+  "aiDispatchEnabled": false,
+  "launchChecks": {
+    "activeProjectVerified": false,
+    "authAccountsABVerified": false,
+    "jwtRlsABVerified": false,
+    "sessionRevocationVerified": false,
+    "accountDeletionVerified": false,
+    "redirectPkceVerified": false,
+    "crossDeviceVerified": false,
+    "launchApproved": false
+  }
 }

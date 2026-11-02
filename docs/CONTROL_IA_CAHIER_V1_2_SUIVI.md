@@ -1,3 +1,12 @@
+## Sprint Cloud P0 — garde d'ouverture et statut réel (2 novembre 2026)
+
+- **Constat en lecture seule du projet Supabase CONTROL Cloud : statut `INACTIVE` au 2 novembre 2026.** Les notes d'octobre indiquant `ACTIVE_HEALTHY` sont historiques et ne valent pas preuve actuelle de disponibilité. Aucun réveil, changement de forfait, dépense ou compte test n'a été lancé.
+- **Code livré :** huit barrières explicites dans `safeClientConfig`, toutes exigées avant de charger le SDK Cloud. Elles couvrent l'activité de l'instance, deux vraies identités Auth, le test JWT/PostgREST RLS A/B, les sessions et leur révocation, la suppression de compte, le retour PKCE, deux appareils et l'approbation d'ouverture.
+- **Parcours utilisateur :** `app.html` affiche la situation actuelle, chaque contrôle non validé, la date d'observation Supabase et le fait que les déclarations de configuration ne remplacent pas une recette réelle. `config/cloud.json.enabled=false` demeure inchangé et les huit indicateurs restent `false`.
+- **Limite :** barrière préventive côté navigateur, pas preuve cryptographique ou audit autonome des 8 contrôles ; même huit booléens `true` ne dispensent pas de l'autorisation du propriétaire ni de la recette de sécurité indépendante.
+- **Blocage pour recette complète :** infrastructure Supabase inactive et absence de deux sessions Auth de recette validées ; ne pas lever les barrières avant ces vérifications.
+- **Règle :** aucune automatisation ou API payante réactivée.
+
 ## Sprint de développement — édition des agents et mémoire (2 novembre 2026)
 
 **Livré dans CONTROL personnel / V69 :** correction de mémoires approuvées avec versionnement (identifiant et périmètre conservés), modification du nom et des instructions d'un agent, affectation ou révocation de plusieurs mémoires et conversations sources, création d'agent sans importer de fichier, maintien de ses discussions existantes. Les mémoires d'un autre projet sont rejetées lors de l'édition ; les données restent locales. Le parcours de navigation et les modifications ont été ajoutés aux recettes Chromium ; tests de cœur fonctionnel : Node.js.

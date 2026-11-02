@@ -8,6 +8,7 @@
 <meta name="description" content="CONTROL — Pilotez vos projets, vos IA et vos actions depuis un espace privé.">
 <title>CONTROL Cloud · Mes projets</title>
 <link rel="stylesheet" href="./assets/cloud-app.css">
+<style>.cloud-release-gates{list-style:none;margin:13px 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.cloud-release-gates li{display:grid;grid-template-columns:22px 1fr;gap:1px 8px;background:#f6f8fb;border:1px solid #e1e9f3;border-radius:10px;padding:10px}.cloud-release-gates strong{font-size:12px}.cloud-release-gates small{grid-column:2;font-size:11px;color:#5e738b}.cloud-release-gates span{font-weight:750;color:#52739a}@media(max-width:620px){.cloud-release-gates{grid-template-columns:1fr}}</style>
 <link rel="stylesheet" href="./assets/tool-catalog.css">
 <link rel="stylesheet" href="./assets/deployment-guides.css">
 <link rel="stylesheet" href="./assets/control-help.css">
@@ -58,6 +59,7 @@
       <p><strong>En attente :</strong> deux connexions Supabase Auth réelles, validation des JWT et droits PostgREST, puis recette multi-appareils.</p>
     </div>
     <p class="muted">Les inscriptions ne sont pas encore ouvertes. Aucun mot de passe ni jeton n’est demandé sur cette page. Ne partagez aucun secret par ce site.</p>
+    <div id="cloud-readiness" class="surface" aria-live="polite" aria-label="Vérifications d’ouverture des comptes CONTROL"></div>
     <a class="button primary" href="./index.html">Retourner à CONTROL personnel →</a>
   </section>
   <section id="auth" class="auth-layout" hidden>

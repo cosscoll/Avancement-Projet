@@ -43,3 +43,12 @@ test('unexpected foreign writes are tracked for cleanup before the E2E fails',()
  assert.match(runner,/trackUnexpected\('control_items',tokenB,b,'title',foreignTitle,inject\)/);
  assert.match(runner,/unverifiedCleanup\.push\(table\)/);
 });
+
+test('launch readiness remains visible while signup stays locked and project observation is dated',()=>{
+ const c=JSON.parse(read('config/cloud.json'));
+ assert.equal(c.lastObservedBackendStatus.value,'INACTIVE');
+ assert.equal(c.lastObservedBackendStatus.date,'2026-11-02');
+ assert.equal(Object.values(c.launchChecks).filter(x=>x===true).length,0);
+ assert.match(setup,/id="cloud-readiness"/);
+ assert.match(read('assets/cloud-app.js'),/showCloudReadiness\(cfg\)/);
+});

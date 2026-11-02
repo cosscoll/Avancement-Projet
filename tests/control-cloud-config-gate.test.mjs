@@ -11,7 +11,8 @@ assert.ok(start>0&&end>start,'Exact production safeClientConfig function must be
 const safeClientConfig=new Function(cloud.slice(start,end)+'\nreturn safeClientConfig;')();
 const ref='rvrmjjtdedidjnrkdery';
 const base={enabled:true,independentProjectConfirmed:true,controlProjectRef:ref,
- supabaseUrl:'https://'+ref+'.supabase.co/',supabasePublishableKey:'sb_publishable_controlSafePublic_12345678'};
+ supabaseUrl:'https://'+ref+'.supabase.co/',supabasePublishableKey:'sb_publishable_controlSafePublic_12345678',
+ launchChecks:{"activeProjectVerified":true,"authAccountsABVerified":true,"jwtRlsABVerified":true,"sessionRevocationVerified":true,"accountDeletionVerified":true,"redirectPkceVerified":true,"crossDeviceVerified":true,"launchApproved":true}};
 const accept=x=>safeClientConfig({...base,...x});
 
 test('deployed Cloud is disabled and example is not authorized',()=>{
@@ -81,4 +82,23 @@ test('real boot never imports a cloud provider when safeClientConfig is false',(
  const gate=cloud.indexOf("if(!safeClientConfig(cfg))throw Error('not configured')");
  const importPosition=cloud.indexOf("await import(CDN)");
  assert.ok(gate>0&&gate<importPosition);
+});
+
+test('missing, forged or partial launch preflight never enables Cloud SDK',()=>{
+ assert.equal(accept({launchChecks:undefined}),false);
+ assert.equal(accept({launchChecks:{}}),false);
+ assert.equal(accept({launchChecks:null}),false);
+ assert.equal(accept({launchChecks:{...base.launchChecks,authAccountsABVerified:'true'}}),false);
+ for(const name of Object.keys(base.launchChecks)){
+  assert.equal(accept({launchChecks:{...base.launchChecks,[name]:false}}),false,name);
+  assert.equal(accept({launchChecks:{...base.launchChecks,[name]:null}}),false,name);
+ }
+ assert.equal(actual.launchChecks.launchApproved,false);
+});
+test('Cloud readiness is rendered from published flags before any SDK initialization',()=>{
+ const display=cloud.indexOf('showCloudReadiness(cfg)');
+ const gate=cloud.indexOf("if(!safeClientConfig(cfg))throw Error('not configured')");
+ const sdk=cloud.indexOf('await import(CDN)');
+ assert.ok(display>0&&display<gate&&gate<sdk);
+ assert.match(cloud,/ne constituent jamais une preuve JWT\/RLS/);
 });

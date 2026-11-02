@@ -902,6 +902,9 @@ try{
  assert.match(cloudState.screen||'',/CONTROL Cloud : base prête, accès en validation/);
  assert.match(await js("document.querySelector('#setup').textContent"),/En attente : deux connexions Supabase Auth réelles/);
  assert.match(await js("document.querySelector('#setup').textContent"),/Les inscriptions ne sont pas encore ouvertes/);
+ await ready(()=>js("document.querySelector('#cloud-readiness')?.textContent.includes('0 / 8 contrôles')"),9000)();
+ assert.match(await js("document.querySelector('#cloud-readiness').textContent"),/INACTIVE/);
+ assert.match(await js("document.querySelector('#cloud-readiness').textContent"),/révocation/);
  log('Cloud setup shows installed independent backend but blocks private sign-in until genuine JWT A-B tests');
 
  assert.equal(errors.length,0,'Unexpected JS browser exceptions: '+errors.join(' | '));

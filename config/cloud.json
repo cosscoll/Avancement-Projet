@@ -1,4 +1,19 @@
 {
   "enabled": false,
-  "note": "Independent CONTROL Cloud project rvrmjjtdedidjnrkdery exists with 6 protected tables. Public sign-up and Cloud login remain disabled until two genuine Supabase Auth accounts, JWT/PostgREST A/B, session lifecycle, account deletion and cross-device tests are verified. Never use IAgile Academy data."
+  "note": "Independent CONTROL Cloud project rvrmjjtdedidjnrkdery exists with 6 protected tables. Public sign-up and Cloud login remain disabled until two genuine Supabase Auth accounts, JWT/PostgREST A/B, session lifecycle, account deletion and cross-device tests are verified. Never use IAgile Academy data.",
+  "launchChecks": {
+    "activeProjectVerified": false,
+    "authAccountsABVerified": false,
+    "jwtRlsABVerified": false,
+    "sessionRevocationVerified": false,
+    "accountDeletionVerified": false,
+    "redirectPkceVerified": false,
+    "crossDeviceVerified": false,
+    "launchApproved": false
+  },
+  "lastObservedBackendStatus": {
+    "value": "INACTIVE",
+    "date": "2026-11-02",
+    "observation": "Projet Supabase CONTROL Cloud consulté en lecture seule ; ne pas interpréter comme un contrôle en temps réel."
+  }
 }

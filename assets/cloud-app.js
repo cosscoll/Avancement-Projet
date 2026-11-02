@@ -39,6 +39,10 @@ const providerOpt=(current='ChatGPT')=>choose('IA / fournisseur','provider',[...
 function safeClientConfig(v){
  try{
   if(!v||v.enabled!==true||v.independentProjectConfirmed!==true)return false;
+  // Public configuration is not evidence of a completed security review.
+  // Explicit, independent release gates are required before any SDK import.
+  const required=['activeProjectVerified','authAccountsABVerified','jwtRlsABVerified','sessionRevocationVerified','accountDeletionVerified','redirectPkceVerified','crossDeviceVerified','launchApproved'];
+  if(!v.launchChecks||typeof v.launchChecks!=='object'||required.some(k=>v.launchChecks[k]!==true))return false;
   const url=new URL(v.supabaseUrl);
   if(url.protocol!=='https:'||url.username||url.password||url.port||url.search||url.hash||url.pathname!=='/')return false;
   if(!/^[a-z0-9-]+\.supabase\.co$/.test(url.hostname))return false;
@@ -52,8 +56,23 @@ function safeClientConfig(v){
   return typeof key==='string'&&/^sb_publishable_[A-Za-z0-9_-]{12,}$/.test(key);
  }catch{return false}
 }
+
+function showCloudReadiness(cfg){
+ const root=byId('cloud-readiness');
+ if(!root)return;
+ const required=[["activeProjectVerified","Projet CONTROL réactivé et son état contrôlé"],["authAccountsABVerified","Deux utilisateurs réels de recette authentifiés"],["jwtRlsABVerified","Accès JWT/PostgREST et isolation A/B vérifiés"],["sessionRevocationVerified","Déconnexion, renouvellement et révocation vérifiés"],["accountDeletionVerified","Suppression complète des comptes testée"],["redirectPkceVerified","Redirections autorisées et retour PKCE vérifiés"],["crossDeviceVerified","Recette navigateur, mobile et deuxième appareil réalisée"],["launchApproved","Autorisation explicite d'ouverture des connexions CONTROL"]];
+ const observed=cfg?.lastObservedBackendStatus;
+ const observedValue=observed?.value==='INACTIVE'?'INACTIVE':observed?.value==='ACTIVE_HEALTHY'?'ACTIVE_HEALTHY':'non vérifié';
+ const observedDate=typeof observed?.date==='string'&&/^\\d{4}-\\d{2}-\\d{2}$/.test(observed.date)?observed.date:'date inconnue';
+ const stages=required.map(([id,label])=>({label,verified:cfg?.launchChecks?.[id]===true}));
+ const passed=stages.filter(x=>x.verified).length;
+ root.innerHTML='<h2>Ouverture des comptes : '+passed+' / '+stages.length+' contrôles</h2>'+
+ '<p>Statut observé du projet dédié : <strong>'+H(observedValue)+'</strong> · vérifié le '+H(observedDate)+'. Ceci n’est pas une mesure en direct.</p>'+
+ '<ul class="cloud-release-gates">'+stages.map(x=>'<li><span aria-hidden="true">'+(x.verified?'✓':'○')+'</span><strong>'+H(x.label)+'</strong><small>'+(x.verified?'Attestation déclarée — preuve indépendante requise':'À vérifier avant ouverture')+'</small></li>').join('')+'</ul>'+
+ '<p class="muted">Les contrôles déclarés dans un fichier public ne constituent jamais une preuve JWT/RLS ; une recette avec deux comptes réels est impérative. Aucune connexion ni dépense n’est lancée par cet écran.</p>';
+}
 async function boot(){live('Vérification de la configuration privée…');let cfg;
- try{const r=await fetch(CONFIG_URL,{cache:'no-store'});if(!r.ok)throw Error('not ready');cfg=await r.json();if(!safeClientConfig(cfg))throw Error('not configured');cloudConfig=cfg;byId('google-login').hidden=(cfg.allowGoogleLogin!==true);if(cfg.allowRegistration!==true){document.querySelector('.auth-box h2').textContent='Se connecter à la bêta';document.querySelector('.auth-box .muted').textContent='Accès sur invitation uniquement. Les inscriptions publiques ne sont pas encore ouvertes.'}}catch{visible('setup');return}
+ try{const r=await fetch(CONFIG_URL,{cache:'no-store'});if(!r.ok)throw Error('not ready');cfg=await r.json();showCloudReadiness(cfg);if(!safeClientConfig(cfg))throw Error('not configured');cloudConfig=cfg;byId('google-login').hidden=(cfg.allowGoogleLogin!==true);if(cfg.allowRegistration!==true){document.querySelector('.auth-box h2').textContent='Se connecter à la bêta';document.querySelector('.auth-box .muted').textContent='Accès sur invitation uniquement. Les inscriptions publiques ne sont pas encore ouvertes.'}}catch{visible('setup');return}
  try{live('Initialisation de la connexion sécurisée…');const {createClient}=await import(CDN);client=createClient(cfg.supabaseUrl,cfg.supabasePublishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}});
  client.auth.onAuthStateChange((event,s)=>{if(event==='SIGNED_OUT'){window.CONTROL_HELP?.reset();verificationSeq++;epoch++;authUser=null;waiting=false;waitingOwner=null;cache={projects:[],items:[],preferences:null};byId('page').innerHTML='';visible('auth');setTimeout(()=>verifiedSession(),0);return}if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='USER_UPDATED'){setTimeout(()=>verifiedSession(),0)}});
  await verifiedSession();
