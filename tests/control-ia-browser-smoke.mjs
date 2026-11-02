@@ -27,7 +27,7 @@ const swCaches=['CACHE_SHELL','CACHE_PUBLIC'].map(key=>{
  assert.ok(match,'Missing service worker cache version: '+key);
  return match[1];
 });
-const PUBLIC_ASSETS=['service-worker.js','index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/control-backup-review.js','assets/control-web-builder.js','assets/control-web-builder-ui.js','assets/control-web-builder.css','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','assets/navigation-hub.js','assets/navigation-hub.css','data/control-ia-delivery.json','data/control-ia-requirements.json'];
+const PUBLIC_ASSETS=['service-worker.js','index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/control-backup-review.js','assets/control-ai-studio-core.js','assets/control-ai-studio.js','assets/control-ai-studio.css','assets/control-web-builder.js','assets/control-web-builder-ui.js','assets/control-web-builder.css','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','assets/navigation-hub.js','assets/navigation-hub.css','data/control-ia-delivery.json','data/control-ia-requirements.json'];
 const hash=data=>createHash('sha256').update(data).digest('hex');
 async function verifyPublishedFiles(){
  const expected=new Map(PUBLIC_ASSETS.map(path=>[path,hash(readFileSync(resolve(root,path)))]));
@@ -814,6 +814,36 @@ try{
   }
  }
 
+
+ // Real personal AI Studio flow: the upload is synthetic and never leaves this browser.
+ await js("location.hash='#/control/aistudio'");
+ await ready(()=>js("!!document.querySelector('#as-import-form')&&!!document.querySelector('[data-as-tab=agents]')"),12000)();
+ assert.match(await js("document.querySelector('.as-heading h1').textContent"),/Comptes IA/);
+ assert.ok(await js("!!document.querySelector('.shell-sidebar a[href='#/control/aistudio'])"),'AI Studio must be a visible navigation destination');
+ await js("(()=>{const data=[{id:'smoke-1',title:'Décisions UX du projet',current_node:'final',mapping:{first:{parent:null,message:{author:{role:'user'},content:{parts:['La version mobile est prioritaire.']},create_time:1}},final:{parent:'first',message:{author:{role:'assistant'},content:{parts:['Préserver la navigation.']},create_time:2}}}}];const dt=new DataTransfer();dt.items.add(new File([JSON.stringify(data)],'conversations.json',{type:'application/json'}));document.querySelector('#as-provider').value='chatgpt';document.querySelector('#as-file').files=dt.files;document.querySelector('#as-import-form').requestSubmit()})()");
+ await ready(()=>js("!!document.querySelector('[data-as-action=confirm-import]')"),10000)();
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')||'null')"),null,'Import preview must not mutate stored data');
+ await js("document.querySelector('[data-as-action=confirm-import]').click()");
+ await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')||'{}').imports?.length===1"),6000)();
+ assert.match(await js("document.querySelector('.as-record strong').textContent"),/Décisions UX/);
+ await js("document.querySelector('[data-as-create-memory]').click()");
+ await ready(()=>js("!!document.querySelector('#as-memory-form')"),5000)();
+ await js("(()=>{document.querySelector('#as-memory-title').value='Priorité mobile';document.querySelector('#as-memory-content').value='Prioriser la navigation mobile et la clarté.';document.querySelector('#as-memory-project').value='general';document.querySelector('#as-memory-form').requestSubmit()})()");
+ await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).memories?.length===1"),6000)();
+ await js("document.querySelector('[data-as-tab=agents]').click()");
+ await ready(()=>js("!!document.querySelector('#as-agent-form')"),6000)();
+ await js("(()=>{document.querySelector('#as-agent-name').value='Mon assistant UX';document.querySelector('#as-agent-instructions').value='Conseiller en design responsive';document.querySelector('[name=agent-memory]').checked=true;document.querySelector('#as-agent-form').requestSubmit()})()");
+ await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents?.length===1"),6000)();
+ assert.match(await js("document.querySelector('.as-agent-toolbar h2').textContent"),/assistant UX/);
+ assert.equal(await js("document.querySelector('#as-chat-message').disabled"),true,'No simulated answer or paid inference without optional local model load');
+ const approvedContext=await js("(()=>{const s=JSON.parse(localStorage.getItem('control-ai-studio-v1'));return window.CONTROL_AI_STUDIO_CORE.context(s,s.agents[0])})()");
+ assert.match(approvedContext,/Prioriser la navigation mobile/);
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('.control-whats-new')"),6000)();
+ await js("location.hash='#/control/aistudio'");
+ await ready(()=>js("!!document.querySelector('.as-agent-list')"),6000)();
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents.length"),1);
+ log('AI Studio imported ChatGPT preview, approved memory, created persistent agent and never activated a paid or remote model');
 
  // Account gate is not the same as personal CONTROL: public Cloud must remain disabled.
  // We test the actual app.html and public config, not merely assert file contents in Node.
