@@ -31,8 +31,8 @@ Deux raccourcis explicites sont ajoutés à « Accès directs » sur l'accueil :
 | Ordre | Chantier | Livrable concret | Condition de recette |
 |---|---|---|---|
 | S1 — Livrée | Sauvegardes Studio IA | Sauvegarde unifiée avec Studio, restauration contrôlée et anciens fichiers préservés | Tests Node, Chromium, quatre magasins, conflits, retour arrière |
-| S2 — Prochaine | Reprise fiable et sécurité des données locales | Essais supplémentaires de restauration chiffrée et simulation d'échec sur le quatrième magasin, revue des limites de taille et des doublons | Aucun écrasement silencieux, messages d'erreur actionnables, rétrocompatibilité |
-| S3 | UX/UI et découverte des fonctions | Élaguer les menus redondants, privilégier les accès directs aux projets, messages et agents | Parcours fréquents mesurés sur 320/390/1440 px et au clavier ; vérification physique mobile restant à réaliser |
+| S2 — Livrée | Reprise fiable et sécurité des données locales | Essais supplémentaires de restauration chiffrée et simulation d'échec sur le quatrième magasin, revue des limites de taille et des doublons | Aucun écrasement silencieux, messages d'erreur actionnables, rétrocompatibilité |
+| S3 — En cours | UX/UI et découverte des fonctions | Élaguer les menus redondants, privilégier les accès directs aux projets, messages et agents | Parcours fréquents mesurés sur 320/390/1440 px et au clavier ; vérification physique mobile restant à réaliser |
 | S4 | Fiabilité des agents et mémoires | Sources traçables, sélection de mémoire révisable, limites de contexte visibles, meilleure gestion des discussions | La révocation agit sur les prochains prompts, aucune fuite de mémoire d'un autre projet |
 | S5 — Bloquée | Comptes CONTROL Cloud | Deux vrais comptes Auth indépendants, JWT/RLS A/B, cycles de vie des sessions, révocation, suppression | 8/8 prérequis prouvés et approbation explicite ; ne pas réactiver Supabase ou les inscriptions avant |
 | S6 — Bloquée | Connexions IA officielles | OAuth uniquement pour les fournisseurs et permissions réellement disponibles | Session authentifiée, scopes limités, déconnexion/révocation, aucune fausse récupération d'historique |

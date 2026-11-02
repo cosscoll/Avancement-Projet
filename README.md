@@ -1,3 +1,10 @@
+## Sprint CONTROL — sécurité des sauvegardes et accès directs (2 novembre 2026)
+
+- La sauvegarde unifiée à **quatre espaces** peut être chiffrée AES-GCM avec une phrase de passe. Les métadonnées cryptographiques sont contrôlées avant déchiffrement, les fichiers altérés et mots de passe incorrects sont refusés, et les champs de mot de passe sont vidés après la soumission.
+- Sur l'accueil, deux nouveaux raccourcis : **Mes agents IA** et **Sauvegarder mes données**. La recherche d'outils présente la création d'agents locaux sans import obligatoire.
+- Preuves : [642/642 tests Node](https://github.com/cosscoll/Avancement-Projet/actions/runs/41428061296), [Chromium](https://github.com/cosscoll/Avancement-Projet/actions/runs/41428061267), [GitHub Pages](https://github.com/cosscoll/Avancement-Projet/actions/runs/41428061271). Les tests Chromium incluent le chiffrement d'une sauvegarde avec agents et mémoires ; le contrôle des clics directs est ajouté ensuite.
+- Cloud `enabled:false`, aucune intégration IA externe, aucune automatisation, aucune consommation API payante.
+
 ## Statut vérifié — 2 novembre 2026
 
 **CONTROL personnel :** disponible sur [GitHub Pages](https://cosscoll.github.io/Avancement-Projet/). Le Studio « Comptes IA & agents » gère localement des mémoires approuvées, des assistants modifiables, leurs fils de discussion et des conversations exportées facultativement. **Aucun compte ChatGPT, Claude ou Gemini n'est connecté** ; aucune récupération native de leurs historiques. L'IA locale est expérimentale et ne se charge qu'après action de l'utilisateur.

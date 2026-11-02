@@ -922,6 +922,19 @@ try{
  await js("delete window.__cryptoBackup");
  log('Encrypted unified backup includes Studio IA: wrong password refused, preview, cancel and restore verified');
 
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('.shell-feature-aside a[href=\"#/control/aistudio\"]')"),6500)();
+ const shortcutCount=await js("document.querySelectorAll('.shell-feature-aside a[href=\"#/control/aistudio\"],.shell-feature-aside a[href=\"#/control/backup\"]').length");
+ assert.equal(shortcutCount,2,'Both new homepage shortcuts must be visible');
+ await js("document.querySelector('.shell-feature-aside a[href=\"#/control/aistudio\"]').click()");
+ await ready(()=>js("location.hash==='#/control/aistudio'&&!!document.querySelector('.as-provider-grid')"),7000)();
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('.shell-feature-aside a[href=\"#/control/backup\"]')"),6500)();
+ await js("document.querySelector('.shell-feature-aside a[href=\"#/control/backup\"]').click()");
+ await ready(()=>js("location.hash==='#/control/backup'&&!!document.querySelector('#export-data')"),7000)();
+ log('Homepage agent and backup shortcuts open the correct real app screens in Chromium');
+
+
 
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('.control-whats-new')"),6000)();
