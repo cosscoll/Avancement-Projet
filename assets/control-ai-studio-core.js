@@ -141,6 +141,23 @@ function editAgent(state,id,fields){
  if(memories.some(ref=>!state.memories.some(m=>m.id===ref&&(m.projectId==='general'||m.projectId===old.projectId))))throw Error('Mémoire hors du projet : modification refusée.');
  return {...old,name:name.trim(),instructions:instructions.trim(),conversationIds:sources,memoryIds:memories,configVersion:Math.max(1,Number(old.configVersion)||1)+1,updatedAt:new Date().toISOString()};
 }
+
+function renameThread(state,agentId,threadId,name){
+ const a=list(state?.agents).find(x=>x.id===agentId);
+ if(!a)throw Error('Assistant introuvable.');
+ if(!a.threads?.some(t=>t.id===threadId))throw Error('Discussion introuvable.');
+ if(typeof name!=='string'||!name.trim()||name.trim().length>80)throw Error('Nom de discussion requis (80 caractères maximum).');
+ const next=name.trim();
+ if(a.threads.some(t=>t.id!==threadId&&t.name.toLocaleLowerCase('fr')===next.toLocaleLowerCase('fr')))throw Error('Une discussion porte déjà ce nom.');
+ return {...a,threads:a.threads.map(t=>t.id===threadId?{...t,name:next}:t)};
+}
+function deleteThread(state,agentId,threadId){
+ const a=list(state?.agents).find(x=>x.id===agentId);
+ if(!a)throw Error('Assistant introuvable.');
+ if(!a.threads?.some(t=>t.id===threadId))throw Error('Discussion introuvable.');
+ if(a.threads.length<=1)throw Error('Conserve au moins une discussion par assistant.');
+ return {...a,threads:a.threads.filter(t=>t.id!==threadId)};
+}
 function contextReport(state,ag){
  if(!isObj(state)||!isObj(ag))throw Error('Assistant ou données indisponibles.');
  const memories=list(ag.memoryIds).map(id=>list(state.memories).find(m=>m.id===id)).filter(m=>m&&(m.projectId==='general'||m.projectId===ag.projectId));
@@ -217,5 +234,5 @@ function backupComparison(previous,next){
  const countThreads=s=>list(s.agents).reduce((sum,a)=>sum+list(a.threads).length,0);
  return {before:{imports:list(before.imports).length,memories:list(before.memories).length,agents:list(before.agents).length,threads:countThreads(before)},after:{imports:next.imports.length,memories:next.memories.length,agents:next.agents.length,threads:countThreads(next)}};
 }
-window.CONTROL_AI_STUDIO_CORE=Object.freeze({KEY,read,write,parse,importRows,memory,agent,editMemory,editAgent,context,contextReport,empty,parseBackup,backupComparison,validateBackupState});
+window.CONTROL_AI_STUDIO_CORE=Object.freeze({KEY,read,write,parse,importRows,memory,agent,editMemory,editAgent,renameThread,deleteThread,context,contextReport,empty,parseBackup,backupComparison,validateBackupState});
 })();

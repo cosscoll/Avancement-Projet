@@ -1,3 +1,10 @@
+## Sprint — discussions des agents locaux (2 novembre 2026)
+
+- Renommage et suppression contrôlée de chaque discussion, sans altérer les autres fils et sources de l'agent. Confirmation obligatoire et impossibilité de supprimer la dernière discussion.
+- Correction du cas où `selectedThread` pouvait pointer sur un ancien fil après changement, avec refus explicite en cas de fil manquant. Les noms numérotés de nouveaux fils évitent les doublons.
+- Regroupement mobile des actions avancées dans « Gérer le fil », avec contrôle à 320 px.
+- Cloud et intégrations ChatGPT/Claude/Gemini toujours désactivés.
+
 ### Complément de recette : révocation pendant une génération (2 novembre 2026)
 
 Modifier un agent annule désormais également une génération locale engagée. Recette Chromium avec moteur `Worker` simulé, sans téléchargement : deux réponses tardives sont injectées après une correction d'instructions puis une révocation de mémoire. Elles doivent être refusées et ne pas réapparaître dans les conversations enregistrées. La simulation ne vaut pas test de qualité d'un modèle réel.

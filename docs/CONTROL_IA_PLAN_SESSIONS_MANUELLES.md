@@ -1,3 +1,7 @@
+### Sprint S4 — gestion des discussions (2 novembre 2026)
+
+Amélioration des discussions des agents : renommage sans perte de messages, suppression confirmée d'un fil uniquement, interdiction de supprimer le dernier fil et sélection toujours mise à jour après une opération. Le menu « Gérer le fil » regroupe les actions destructives ; les contrôles de largeur 320 px et le parcours Chromium sont inclus dans la recette. Aucune API IA, connexion Cloud ni automatisation n'a été activée.
+
 # CONTROL — Plan des sessions de développement manuelles
 
 **Date :** 2 novembre 2026. **Branche de livraison :** `main` du dépôt `cosscoll/Avancement-Projet`.

@@ -192,3 +192,42 @@ test('revoking memory or editing agent invalidates pending model answers',()=>{
  assert.match(ui,/m\.requestId===requestId&&pending/);
  assert.match(ui,/function stop\(\)\{\+\+requestId;worker\?\.terminate\(\)/);
 });
+
+test('renameThread preserves messages and project-scoped sources, refusing duplicate and invalid names',()=>{
+ const s=fresh(),a=x.agent(s,{name:'UX',instructions:'Aider',projectId:'ucp'});
+ a.threads[0].messages.push({role:'user',content:'Décision UX conservée'});
+ a.threads.push({id:'thr-second',name:'Deuxième discussion',messages:[{role:'assistant',content:'Autre échange'}]});
+ s.agents.push(a);
+ const changed=x.renameThread(s,a.id,a.threads[0].id,'  Audit mobile  ');
+ assert.equal(changed.threads[0].name,'Audit mobile');
+ assert.equal(changed.threads[0].messages[0].content,'Décision UX conservée');
+ assert.equal(changed.threads[1].name,'Deuxième discussion');
+ assert.equal(changed.projectId,'ucp');
+ assert.equal(a.threads[0].name,'Première discussion');
+ assert.throws(()=>x.renameThread(s,a.id,a.threads[0].id,' DEUXIÈME DISCUSSION '),/déjà ce nom/);
+ assert.throws(()=>x.renameThread(s,a.id,a.threads[0].id,'  '),/Nom de discussion/);
+ assert.throws(()=>x.renameThread(s,a.id,'unknown','Nom'),/introuvable/);
+ assert.throws(()=>x.renameThread(s,'missing',a.threads[0].id,'Nom'),/Assistant introuvable/);
+});
+test('deleteThread removes only the selected thread and refuses deleting last remaining one',()=>{
+ const s=fresh(),a=x.agent(s,{name:'UX',instructions:'Aider',projectId:'ucp'});
+ a.threads.push({id:'thr-keep',name:'À conserver',messages:[{role:'user',content:'IMPORTANT-CONSERVER'}]});
+ s.agents.push(a);
+ const changed=x.deleteThread(s,a.id,a.threads[0].id);
+ assert.equal(changed.threads.length,1);
+ assert.equal(changed.threads[0].messages[0].content,'IMPORTANT-CONSERVER');
+ assert.equal(a.threads.length,2);
+ s.agents[0]=changed;
+ assert.throws(()=>x.deleteThread(s,a.id,'thr-keep'),/au moins une discussion/);
+ assert.throws(()=>x.deleteThread(s,a.id,'missing'),/introuvable/);
+ assert.throws(()=>x.deleteThread(s,'unknown','thr-keep'),/Assistant introuvable/);
+});
+test('thread management is bounded, guarded, keyboard-accessible and small-screen responsive',()=>{
+ const ui=fs.readFileSync(new URL('../assets/control-ai-studio.js',import.meta.url),'utf8');
+ const css=fs.readFileSync(new URL('../assets/control-ai-studio.css',import.meta.url),'utf8');
+ assert.match(ui,/id="as-thread-rename-form"/);assert.match(ui,/data-as-action="delete-thread"/);
+ assert.match(ui,/core\.renameThread\(/);assert.match(ui,/core\.deleteThread\(/);
+ assert.match(ui,/selectedThread=updated\.threads\[0\]\.id/);
+ assert.match(ui,/if\(thread&&thread\.id!==selectedThread\)selectedThread=thread\.id/);
+ assert.match(css,/@media\(max-width:600px\)[\s\S]*\.as-chatbar\{display:grid/);
+});

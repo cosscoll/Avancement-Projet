@@ -155,3 +155,20 @@
 .as-context-preview-inner{display:grid;gap:10px;margin-top:10px}
 .as-context-preview-inner p{font-size:12px;line-height:1.55;margin:0;color:#52677c}
 .as-context-preview-inner pre{font:11px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;word-break:break-word;overflow:auto;max-height:240px;padding:12px;border-radius:10px;background:#fff;border:1px solid #dde6ed;margin:0}
+
+.as-thread-manage{min-width:min(100%,150px);border:1px solid #d8e2ef;border-radius:11px;background:#fff;padding:8px 10px}
+.as-thread-manage summary{cursor:pointer;min-height:29px;display:flex;align-items:center;color:#345886;font-weight:750;font-size:12px}
+.as-thread-manage-inner{display:grid;gap:10px;padding-top:11px;min-width:0}
+.as-thread-manage-inner form{display:grid;gap:8px}
+.as-thread-manage-inner label{font-size:12px;font-weight:700}
+.as-thread-manage-inner input{min-width:0;width:100%;max-width:100%;font-size:14px}
+.as-thread-manage-inner button{min-height:40px;white-space:normal}
+.as-thread-manage-inner p{font-size:11px;color:#596c85;line-height:1.5;margin:0}
+.as-thread-manage summary:focus-visible{outline:2px solid #315a93;outline-offset:3px}
+@media(max-width:600px){
+ .as-chatbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch}
+ .as-chatbar>label{grid-column:1 / -1;min-width:0}
+ .as-chatbar>label select{width:100%;max-width:100%;min-width:0}
+ .as-chatbar>button,.as-chatbar>details{min-width:0;max-width:100%;width:100%}
+ .as-thread-manage{padding:7px 9px}
+}

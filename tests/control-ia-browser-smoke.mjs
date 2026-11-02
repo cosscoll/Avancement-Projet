@@ -841,6 +841,27 @@ try{
  await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents?.length===1"),6000)();
  assert.match(await js("document.querySelector('.as-agent-toolbar h2').textContent"),/assistant UX/);
  assert.equal(await js("document.querySelector('#as-chat-message').disabled"),true,'No simulated answer or paid inference without optional local model load');
+
+  const firstThread=await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].threads[0].id");
+  await js("document.querySelector('[data-as-action=new-thread]').click()");
+  await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].threads.length===2"),6000)();
+  await js("document.querySelector('.as-thread-manage').open=true");
+  await js("(()=>{document.querySelector('#as-thread-name').value='Décisions mobiles';document.querySelector('#as-thread-rename-form').requestSubmit()})()");
+  await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].threads[1].name==='Décisions mobiles'"),6000)();
+  assert.match(await js("document.querySelector('#as-thread').textContent"),/Décisions mobiles/);
+  await command('Emulation.setDeviceMetricsOverride',{width:320,height:700,deviceScaleFactor:2,mobile:true});
+  await delay(250);
+  const studioNarrow=await js("({width:window.innerWidth,scroll:document.documentElement.scrollWidth,rename:!!document.querySelector('.as-thread-manage'),visible:!!document.querySelector('#as-thread')})");
+  assert.equal(studioNarrow.rename,true);assert.equal(studioNarrow.visible,true);
+  assert.ok(studioNarrow.scroll<=studioNarrow.width+4,'320px Studio thread overflow: '+JSON.stringify(studioNarrow));
+  await command('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false});
+  await js("(()=>{const prev=window.confirm;window.confirm=()=>false;try{document.querySelector('[data-as-action=delete-thread]').click()}finally{window.confirm=prev}})()");
+  assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].threads.length"),2);
+  await js("(()=>{const prev=window.confirm;window.confirm=()=>true;try{document.querySelector('[data-as-action=delete-thread]').click()}finally{window.confirm=prev}})()");
+  assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].threads.length"),1);
+  assert.equal(await js("document.querySelector('#as-thread').value"),firstThread);
+  assert.equal(await js("document.querySelector('[data-as-action=delete-thread]').disabled"),true);
+  log('AI Studio can rename and safely delete discussion, retain valid selection and fit 320px');
  const approvedContext=await js("(()=>{const s=JSON.parse(localStorage.getItem('control-ai-studio-v1'));return window.CONTROL_AI_STUDIO_CORE.context(s,s.agents[0])})()");
  assert.match(approvedContext,/Prioriser la navigation mobile/);
 
