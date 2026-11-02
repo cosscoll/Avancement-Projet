@@ -7,17 +7,19 @@ const BUCKETS=Object.freeze([
  ['websites','Sites et brouillons'],['messages','Messages locaux'],
  ['expenses','Dépenses déclarées'],['income','Revenus déclarés']
 ]);
-const storeKeys=Object.freeze(['control-command-v1','control-hub-v2','control-automations-v1']);
+const storeKeys=Object.freeze(['control-command-v1','control-hub-v2','control-automations-v1','control-ai-studio-v1']);
 const safeObject=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 function amount(v){return Array.isArray(v)?v.length:0}
 function list(data){
  const command=safeObject(data?.command)?data.command:{};
  const hub=safeObject(data?.hub)?data.hub:{};
  const automations=safeObject(data?.automations)?data.automations:{};
+ const studio=safeObject(data?.studio)?data.studio:{};
  const result=BUCKETS.map(([key,label])=>({key,label,after:amount(command[key])}));
  const projectCount=safeObject(hub.projects)?Object.keys(hub.projects).length:amount(hub.projects);
  const automationCount=amount(automations.entries)||amount(automations.automations)||amount(automations.drafts);
  result.push({key:'projects',label:'Fiches projets locales',after:projectCount});
+ for(const [bucket,label] of [['imports','Conversations du Studio IA'],['memories','Mémoires du Studio IA'],['agents','Agents du Studio IA']])result.push({key:'studio-'+bucket,label,after:amount(studio[bucket])});
  result.push({key:'automations',label:'Brouillons de programmation',after:automationCount});
  return result;
 }
@@ -51,10 +53,15 @@ function compare(next,current){
  if(!safeObject(next)||!safeObject(next.command)||!safeObject(next.hub)||!safeObject(next.automations))throw Error('Structure de sauvegarde incomplète.');
  const previous=safeObject(current)?current:{};
  const before=new Map(list(previous).map(x=>[x.key,x.after]));
- const changes=list(next).map(x=>{
+ const keepStudio=Object.hasOwn(next,'studio')?next:{...next,studio:previous.studio};
+ const changes=list(keepStudio).map(x=>{
   const oldCount=before.get(x.key)||0;
   if(BUCKETS.some(b=>b[0]===x.key)){
    return {...x,before:oldCount,...compareRecords(next.command[x.key],previous.command?.[x.key])};
+  }
+  if(x.key.startsWith('studio-')){
+   const field=x.key.slice('studio-'.length);
+   return {...x,before:oldCount,...compareRecords(keepStudio.studio?.[field],previous.studio?.[field])};
   }
   // Hub/project settings and automation schema vary between CONTROL versions:
   // counts are estimates, never fabricate record-level certainty for these sources.
@@ -64,13 +71,13 @@ function compare(next,current){
  const modified=changes.filter(x=>x.modified>0);
  const uncertain=changes.filter(x=>x.uncertain);
  return Object.freeze({
-  changes,losses,modified,uncertain,
+  changes,losses,modified,uncertain,studioPreservedFromLegacy:!Object.hasOwn(next,'studio'),
   totalBefore:changes.reduce((n,x)=>n+x.before,0),
   totalAfter:changes.reduce((n,x)=>n+x.after,0),
   totalRemoved:changes.reduce((n,x)=>n+x.removed,0),
   totalModified:changes.reduce((n,x)=>n+(x.modified||0),0),
   affected:changes.filter(x=>x.before!==x.after||x.modified>0||x.uncertain).length,
-  note:'Le résultat contient uniquement des nombres. Les catégories sans identifiants stables peuvent avoir des modifications non mesurables. Les trois magasins locaux sont remplacés.'
+  note:'Le résultat contient uniquement des nombres. Les catégories sans identifiants stables peuvent avoir des modifications non mesurables. Les anciens fichiers conservent le Studio IA existant.'
  });
 }
 function snapshot(storage){

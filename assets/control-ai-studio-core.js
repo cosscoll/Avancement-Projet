@@ -208,5 +208,5 @@ function backupComparison(previous,next){
  const countThreads=s=>list(s.agents).reduce((sum,a)=>sum+list(a.threads).length,0);
  return {before:{imports:list(before.imports).length,memories:list(before.memories).length,agents:list(before.agents).length,threads:countThreads(before)},after:{imports:next.imports.length,memories:next.memories.length,agents:next.agents.length,threads:countThreads(next)}};
 }
-window.CONTROL_AI_STUDIO_CORE=Object.freeze({KEY,read,write,parse,importRows,memory,agent,editMemory,editAgent,context,empty,parseBackup,backupComparison});
+window.CONTROL_AI_STUDIO_CORE=Object.freeze({KEY,read,write,parse,importRows,memory,agent,editMemory,editAgent,context,empty,parseBackup,backupComparison,validateBackupState});
 })();

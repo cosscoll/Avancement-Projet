@@ -569,7 +569,8 @@ function settings(){$('#main').innerHTML=view('Règles et sécurité','Protectio
 }
 // Never silently replace an unreadable source with {} during backup.
 function readBackupStore(key){const raw=localStorage.getItem(key);if(raw===null)return {};const parsed=JSON.parse(raw);if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw Error('Invalid backup source');return parsed}
-function backupStorageIssues(){const issues=[];for(const [key,label] of [[KEY,'Centre de commande'],[HUB,'Espaces et projets'],[AUTOS,'Automatisations']]){try{readBackupStore(key)}catch{issues.push({key,label})}}return issues}
+function backupStorageIssues(){const issues=[];for(const [key,label] of [[KEY,'Centre de commande'],[HUB,'Espaces et projets'],[AUTOS,'Automatisations'],[STUDIO,'Studio IA : agents et mémoires']]){try{readBackupStore(key)}catch{issues.push({key,label})}}return issues}
+const STUDIO='control-ai-studio-v1';
 const getStorage=readBackupStore;
 function downloadRawStorage(key,label){try{const raw=localStorage.getItem(key);if(raw===null)throw Error('Empty storage');const url=URL.createObjectURL(new Blob([raw],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='CONTROL-brut-'+label+'-'+new Date().toISOString().slice(0,10)+'.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Copie brute téléchargée : elle peut contenir des données sensibles.')}catch{toast('Récupération impossible. Vérifie les permissions du navigateur.')}}
 const toB64=u8=>{let s='';for(const b of u8)s+=String.fromCharCode(b);return btoa(s)};
@@ -586,6 +587,10 @@ async function unpack(data,pw){if(data?.format==='control-v2-plain')return data.
 function validateBackupData(data){
  const obj=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
  if(!obj(data)||!obj(data.command)||!obj(data.hub)||!obj(data.automations))return false;
+ if(Object.hasOwn(data,'studio')){
+  try{if(!window.CONTROL_AI_STUDIO_CORE?.validateBackupState)throw Error('Studio validator missing');window.CONTROL_AI_STUDIO_CORE.validateBackupState(data.studio)}
+  catch{return false}
+ }
  const command=data.command;
  if(!Array.isArray(command.actions)||!Array.isArray(command.missions))return false;
  for(const key of ['actions','missions','events','meetings','expenses','income','decisions','websites','messages']){
@@ -611,19 +616,20 @@ function prepareBackupExport(){
  // The active editor state must still represent the latest committed command store.
  if(original[0]!==localLastLoadedRaw)throw Error('Des actions ou missions ont changé dans un autre onglet. Recharge CONTROL avant de sauvegarder.');
  const data={command:JSON.parse(JSON.stringify(db)),hub:readBackupStore(HUB),automations:readBackupStore(AUTOS)};
+ if(original[3]!==null)data.studio=readBackupStore(STUDIO);
  if(!reviewer.unchanged(localStorage,original))throw Error('Les données ont changé pendant la préparation. Relance la sauvegarde.');
  if(!validateBackupData(data))throw Error('Données locales incomplètes : export refusé.');
  return {data,original};
 }
 function backup(){
  const brokenStores=backupStorageIssues();
- const recovery=brokenStores.filter(x=>x.key!==KEY).map(x=>'<p role="alert">Attention : les données de « '+h(x.label)+' » sont illisibles. L’export normal est bloqué pour éviter un fichier incomplet. '+btn('Télécharger la copie brute','download-raw:'+(x.key===HUB?'hub':'automations'))+'</p>').join('');
+ const recovery=brokenStores.filter(x=>x.key!==KEY).map(x=>'<p role="alert">Attention : les données de « '+h(x.label)+' » sont illisibles. L’export normal est bloqué pour éviter un fichier incomplet. '+btn('Télécharger la copie brute','download-raw:'+(x.key===HUB?'hub':x.key===AUTOS?'automations':'studio'))+'</p>').join('');
  $('#main').innerHTML=view('Sauvegarde et récupération','Protéger les données de CONTROL et changer d’appareil',note('Le stockage local peut disparaître lors d’un nettoyage du navigateur. Télécharge une sauvegarde régulière. Le fichier contient éventuellement des liens vers des espaces privés : utilise un mot de passe si tu le transfères.')+recovery+
- box('Exporter les informations','<p class="muted">Exporte les projets, les actions et les brouillons d’automatisations. <strong>Attention : les agents, les mémoires et les discussions du Studio IA ne sont pas inclus.</strong> Pour les protéger, ouvre <a href="#/control/aistudio">Comptes IA &amp; agents</a> et utilise « Sauvegarder ou récupérer mes agents et mémoires ». Les conversations des comptes ChatGPT, Claude et Gemini ne sont pas synchronisées. Si un autre onglet modifie les données pendant la préparation ou le chiffrement, l’export est annulé : recharge CONTROL et recommence.</p><form id="export-data">'+field('Mot de passe de chiffrement facultatif (12 caractères minimum)','password','','password','autocomplete="new-password"')+'<button class="primary">Télécharger ma sauvegarde</button></form>')+
- box('Importer une sauvegarde','<p class="muted">La première étape vérifie le fichier <strong>sans modifier les données</strong>. Compare les quantités, puis décide séparément si les trois espaces de stockage doivent être remplacés. Cette restauration ne touche pas aux agents et mémoires du Studio IA.</p>'+(localStoreCorrupt?'<p role="alert">Le stockage actuel n’est pas lisible. Tu peux télécharger les données brutes sans les modifier, puis restaurer un fichier valide.</p>'+btn('Télécharger les données brutes','download-corrupt'):'')+'<form id="import-data"><label>Fichier JSON<input class="field" name="file" type="file" required accept=".json,application/json"></label>'+field('Mot de passe du fichier','password','','password')+'<button type="submit">Examiner la sauvegarde</button></form><p class="muted" id="import-status" role="status" aria-live="polite"></p><section class="backup-restore-preview" id="import-preview" aria-label="Aperçu de restauration" hidden><div id="import-comparison"></div><div class="backup-restore-actions"><button type="button" class="primary" id="import-apply">Appliquer la restauration</button><button type="button" id="import-cancel">Annuler</button></div></section>'));
+ box('Exporter les informations','<p class="muted">Exporte en un fichier les projets, actions, brouillons d’automatisations <strong>et les agents, mémoires et discussions locaux du Studio IA lorsqu’ils existent</strong>. La sauvegarde peut être chiffrée avec un mot de passe. Elle ne récupère pas les conversations natives des comptes ChatGPT, Claude et Gemini. Si un autre onglet modifie les données pendant la préparation ou le chiffrement, l’export est annulé : recharge CONTROL et recommence.</p><form id="export-data">'+field('Mot de passe de chiffrement facultatif (12 caractères minimum)','password','','password','autocomplete="new-password"')+'<button class="primary">Télécharger ma sauvegarde</button></form>')+
+ box('Importer une sauvegarde','<p class="muted">La première étape vérifie le fichier <strong>sans modifier les données</strong>. Compare les quantités, puis confirme le remplacement des espaces contenus dans la sauvegarde. <strong>Les anciens fichiers sans Studio IA laissent tes agents et mémoires actuels intacts.</strong></p>'+(localStoreCorrupt?'<p role="alert">Le stockage actuel n’est pas lisible. Tu peux télécharger les données brutes sans les modifier, puis restaurer un fichier valide.</p>'+btn('Télécharger les données brutes','download-corrupt'):'')+'<form id="import-data"><label>Fichier JSON<input class="field" name="file" type="file" required accept=".json,application/json"></label>'+field('Mot de passe du fichier','password','','password')+'<button type="submit">Examiner la sauvegarde</button></form><p class="muted" id="import-status" role="status" aria-live="polite"></p><section class="backup-restore-preview" id="import-preview" aria-label="Aperçu de restauration" hidden><div id="import-comparison"></div><div class="backup-restore-actions"><button type="button" class="primary" id="import-apply">Appliquer la restauration</button><button type="button" id="import-cancel">Annuler</button></div></section>'));
  registerForm('#export-data',async f=>{if(localStoreCorrupt)return toast('Export normal bloqué : utilise « Télécharger les données brutes » avant une restauration.');if(backupStorageIssues().length)return toast('Export bloqué : un espace local est illisible. Télécharge sa copie brute et restaure une sauvegarde valide.');const pw=String(f.get('password')||'');if(pw&&pw.length<12)return toast('12 caractères minimum ou champ vide.');let exportData;try{exportData=prepareBackupExport()}catch(error){return toast(String(error.message||'Sauvegarde impossible.'))}try{const data=await pack(exportData.data,pw);if(!window.CONTROL_BACKUP_REVIEW.unchanged(localStorage,exportData.original))return toast('Des données ont changé pendant le chiffrement : sauvegarde annulée. Relance la vérification.');const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='CONTROL-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Fichier téléchargé : conserve-le dans un emplacement sûr.')}catch{toast('Sauvegarde impossible sur ce navigateur.')}});
  $('#main [data-act="download-corrupt"]')?.addEventListener('click',()=>{try{const raw=localStorage.getItem(KEY);if(raw===null)throw Error('Données non accessibles');const url=URL.createObjectURL(new Blob([raw],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='CONTROL-donnees-brutes-'+new Date().toISOString().slice(0,10)+'.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Copie brute téléchargée. Elle peut contenir des informations sensibles.')}catch{toast('Récupération brute impossible dans ce navigateur.')}});
- for(const [key,name] of [[HUB,'hub'],[AUTOS,'automations']])$('#main [data-act="download-raw:'+name+'"]')?.addEventListener('click',()=>downloadRawStorage(key,name));
+ for(const [key,name] of [[HUB,'hub'],[AUTOS,'automations'],[STUDIO,'studio']])$('#main [data-act="download-raw:'+name+'"]')?.addEventListener('click',()=>downloadRawStorage(key,name));
  const restore=window.CONTROL_BACKUP_REVIEW;
  let pending=null;
  const preview=$('#import-preview'),comparison=$('#import-comparison'),message=$('#import-status');
@@ -637,7 +643,7 @@ function backup(){
    '<div class="backup-diff-scroll" tabindex="0" role="region" aria-label="Comparaison détaillée des sauvegardes"><table class="backup-diff-table"><thead><tr><th>Type</th><th>Actuel</th><th>Fichier</th><th>Ajouts</th><th>Retraits</th><th>Modifiés</th></tr></thead><tbody>'+body+'</tbody></table></div>'+
    (review.losses.length||review.modified.length?'<p role="alert" class="notice"><strong>Attention :</strong> '+review.losses.length+' catégorie(s) avec suppressions, '+review.modified.length+' avec modifications identifiées. La restauration écrasera ces informations locales.</p>':'')+
    (review.uncertain.length?'<p class="muted">Comparaison incomplète pour '+review.uncertain.length+' catégorie(s) sans identifiants uniques ou au format ancien. Des changements peuvent ne pas apparaître.</p>':'')+
-   '<p class="muted">Les nombres ne révèlent aucun contenu privé. Les trois magasins locaux sont remplacés, pas fusionnés. Conserve une copie des données actuelles avant de restaurer.</p>';
+   '<p class="muted">Les nombres ne révèlent aucun contenu privé. Les espaces présents dans le fichier sont remplacés, pas fusionnés. Les anciennes sauvegardes sans Studio IA le laissent intact. Conserve une copie avant de restaurer.</p>';
   preview.hidden=false;
  };
  $('#import-cancel').onclick=()=>{resetPreview();message.textContent='Import annulé. Aucune donnée modifiée.'};
@@ -653,7 +659,7 @@ function backup(){
    const original=restore.snapshot(localStorage);
    const corrupt=backupStorageIssues();
    const current=key=>{try{return readBackupStore(key)}catch{return{}}};
-   const existing={command:current(KEY),hub:current(HUB),automations:current(AUTOS)};
+   const existing={command:current(KEY),hub:current(HUB),automations:current(AUTOS),studio:current(STUDIO)};
    const report=restore.compare(data,existing);
    pending={data,original};
    renderReview(report);
@@ -668,13 +674,15 @@ function backup(){
   const staged=pending;
   if(!staged){message.textContent='Examine d’abord le fichier de sauvegarde.';return}
   if(!restore.unchanged(localStorage,staged.original)){resetPreview();message.textContent='Des données locales ont changé depuis la vérification : relance la comparaison avant toute restauration.';return}
-  if(!confirm('Remplacer maintenant les trois espaces de données CONTROL par le contenu du fichier vérifié ? Cette action écrasera les données actuelles.'))return;
+  if(!confirm('Remplacer maintenant les données CONTROL présentes dans ce fichier vérifié ? Les anciens fichiers conservent le Studio IA actuel. Cette action écrase les espaces concernés.'))return;
   if(!restore.unchanged(localStorage,staged.original)){resetPreview();message.textContent='Les données ont changé pendant la confirmation. Recommence la vérification.';return}
   let rollbackUncertain=false;
   const old=restore.storeKeys.map((key,i)=>[key,staged.original[i]]);
   const written=new Map();
   try{
-   for(const [key,value] of [[KEY,staged.data.command],[HUB,staged.data.hub],[AUTOS,staged.data.automations]]){
+   const entries=[[KEY,staged.data.command],[HUB,staged.data.hub],[AUTOS,staged.data.automations]];
+   if(Object.hasOwn(staged.data,'studio'))entries.push([STUDIO,staged.data.studio]);
+   for(const [key,value] of entries){
     // Refuse an intervening edit before each store is replaced.
     if(!restore.unchanged(localStorage,staged.original.map((raw,i)=>written.has(restore.storeKeys[i])?written.get(restore.storeKeys[i]):raw)))throw Error('Concurrent restore edit');
     const serialized=JSON.stringify(value);

@@ -142,3 +142,9 @@ test('Studio preview is separate from confirm and general CONTROL backup explici
  assert.match(center,/les agents, les mémoires et les discussions du Studio IA ne sont pas inclus/);
  assert.match(center,/href="#\/control\/aistudio"/);
 });
+
+test('validated studio backup state may be included in unified CONTROL export',()=>{
+ const s=fresh();assert.equal(x.validateBackupState(s),s);
+ const bad={...s,agents:[{id:'agt-bad',name:'Bad',instructions:'Role',projectId:'general',conversationIds:[],memoryIds:['foreign'],threads:[]}]};
+ assert.throws(()=>x.validateBackupState(bad));
+});

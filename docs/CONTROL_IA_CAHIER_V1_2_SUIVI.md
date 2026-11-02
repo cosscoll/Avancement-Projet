@@ -1,3 +1,11 @@
+## Sprint — sauvegarde unifiée du Studio IA, rétrocompatibilité (2 novembre 2026)
+
+Le périmètre de la sauvegarde générale CONTROL est étendu au quatrième magasin `control-ai-studio-v1`, lorsqu'il existe. Les nouvelles sauvegardes (chiffrées AES-GCM si l'utilisateur définit un mot de passe, sinon JSON clair) transportent les agents locaux, mémoires, discussions et conversations importées. Le stockage Studio est vérifié avant export, chaque magasin est contrôlé contre les changements entre onglets avant téléchargement et après chiffrement.
+
+La comparaison et le consentement à la restauration montrent des totaux Studio sans dévoiler le contenu. Les anciennes sauvegardes à trois espaces restent acceptées et laissent le Studio IA existant intact. L'échec d'un remplacement amorce le mécanisme de retour arrière déjà présent, sans prétendre garantir une transaction atomique multi-onglets.
+
+Le panneau de sauvegarde indépendante du Studio reste disponible comme outil de récupération. Aucune synchronisation fournisseur ni activation Cloud.
+
 ## Sprint — récupération indépendante du Studio IA (2 novembre 2026)
 
 **Risque évité :** les conversations locales, mémoires et agents de `control-ai-studio-v1` étaient absents de la sauvegarde générale de CONTROL. La sauvegarde globale existante reste volontairement sur trois magasins pour protéger ses anciens exports ; un encart avertit désormais clairement de ce manque avec un accès direct au Studio.

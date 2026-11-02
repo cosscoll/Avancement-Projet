@@ -885,6 +885,13 @@ try{
  await ready(()=>js("!!document.querySelector('.as-agent-toolbar')&&!document.querySelector('[data-as-action=confirm-studio-restore]')&&JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents.length===1"),6000)();
  assert.match(await js("document.querySelector('[data-as-status]').textContent"),/restaurée/);
  log('AI Studio backup preview, cancellation and confirmed safe restoration succeeded');
+ await js("location.hash='#/control/backup'");
+ await ready(()=>js("!!document.querySelector('#export-data')"),6000)();
+ assert.match(await js("document.querySelector('#main').textContent"),/agents, mémoires et discussions locaux/);
+ assert.match(await js("document.querySelector('#main').textContent"),/anciens fichiers sans Studio IA/);
+ await js("location.hash='#/control/aistudio'");
+ await ready(()=>js("!!document.querySelector('.as-provider-grid')"),6000)();
+ log('Unified backup disclosure includes Studio IA, while legacy backups retain existing agent data');
 
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('.control-whats-new')"),6000)();

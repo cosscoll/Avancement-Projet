@@ -23,6 +23,7 @@ test('the review shows counts only and warns when imported items would be lost',
  assert.deepEqual(result.losses.map(x=>x.key),['actions','websites']);
  assert.ok(result.totalBefore>result.totalAfter);
  assert.match(result.note,/uniquement des nombres/);
+ assert.equal(result.studioPreservedFromLegacy,true);
  assert.equal(JSON.stringify(result).includes('a0'),false,'comparison must not expose private records');
 });
 test('untrusted backup is never executed and lacks account permissions',()=>{
@@ -117,8 +118,27 @@ test('diff table exposes redacted counts and accessible horizontal scrolling',()
  assert.match(css,/\.backup-diff-scroll\{overflow-x:auto/);
 });
 
-test('general backup must expose that AI Studio requires its own separate backup',()=>{
+test('unified CONTROL backup includes Studio IA and keeps legacy backups compatible',()=>{
  const center=readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
- assert.match(center,/Studio IA ne sont pas inclus/);
- assert.match(center,/href="#\/control\/aistudio"/);
+ assert.match(center,/data.studio=readBackupStore\(STUDIO\)/);
+ assert.match(center,/if\(Object.hasOwn\(staged.data,'studio'\)\)entries.push/);
+ assert.match(center,/anciens fichiers sans Studio IA/);
+});
+test('backwards-compatible comparison never claims lost agents when an old backup has no Studio section',()=>{
+ const current={...fixture(1,0),studio:{version:1,imports:[],memories:[{id:'mem-1'}],agents:[{id:'agt-1'}]}};
+ const legacy=fixture(2,0);
+ const report=review.compare(legacy,current);
+ assert.equal(report.studioPreservedFromLegacy,true);
+ assert.equal(report.changes.find(x=>x.key==='studio-agents').removed,0);
+ assert.equal(report.changes.find(x=>x.key==='studio-memories').before,1);
+ assert.equal(report.changes.find(x=>x.key==='studio-memories').after,1);
+});
+test('new unified backup compares changed Studio memories by stable id without exposing content',()=>{
+ const previous={...fixture(),studio:{version:1,imports:[],memories:[{id:'mem-1',content:'Confidentiel ancien'}],agents:[]}};
+ const next={...fixture(),studio:{version:1,imports:[],memories:[{id:'mem-1',content:'Confidentiel nouveau'}],agents:[]}};
+ const report=review.compare(next,previous);
+ assert.equal(report.studioPreservedFromLegacy,false);
+ const line=report.changes.find(x=>x.key==='studio-memories');
+ assert.equal(line.before,1);assert.equal(line.modified,1);
+ assert.ok(!JSON.stringify(report).includes('Confidentiel'));
 });

@@ -106,3 +106,18 @@ test('unchanged snapshot still produces a normal downloaded backup',async()=>{
  assert.equal(clicks,1);
  assert.match(notices.join(' '),/Fichier téléchargé/);
 });
+
+test('unified export includes the existing Studio IA snapshot and checks concurrent changes',()=>{
+ const h=harness();const studio={version:1,imports:[],memories:[],agents:[]};
+ h.store.set('control-ai-studio-v1',JSON.stringify(studio));
+ const actual=h.make()();
+ assert.equal(actual.data.studio.version,1);
+ assert.equal(actual.original.length,4);
+ assert.ok(reviewer.unchanged(h.storage,actual.original));
+ h.store.set('control-ai-studio-v1',JSON.stringify({...studio,memories:[{id:'changed'}]}));
+ assert.equal(reviewer.unchanged(h.storage,actual.original),false);
+});
+test('legacy exports without Studio data omit the section so they cannot erase existing agents',()=>{
+ const h=harness();const b=h.make()();
+ assert.equal(Object.hasOwn(b.data,'studio'),false);
+});
