@@ -47,3 +47,19 @@ test('site builder is accessible from collapsed homepage discovery without addin
  assert.match(panel,/Personnaliser un modèle, vérifier son contenu/);
  assert.match(home,/\.control-whats-new-links\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
 });
+
+test('homepage provides direct access to agent studio and full backup without searching menus',()=>{
+ const quickStart=home.indexOf('class="clarity-shortcuts shell-feature-aside"');
+ const ends=home.indexOf('</div></section>',quickStart);
+ assert.ok(quickStart>0&&ends>quickStart);
+ const shortcuts=home.slice(quickStart,ends);
+ for(const target of ['href="#/control/aistudio"','href="#/control/backup"'])assert.ok(shortcuts.includes(target),target);
+ assert.match(shortcuts,/Mes agents IA/);
+ assert.match(shortcuts,/Sauvegarder mes données/);
+ assert.match(shortcuts,/Protéger mes projets et mes agents/);
+});
+test('AI feature search describes local agents and official connection status, not mandatory imports',()=>{
+ const nav=readFileSync('assets/navigation-hub.js','utf8');
+ assert.match(nav,/Créer un assistant local, gérer mes mémoires et consulter les connexions IA/);
+ assert.match(nav,/Sauvegarder projets, agents, mémoires et restaurer un fichier chiffré/);
+});

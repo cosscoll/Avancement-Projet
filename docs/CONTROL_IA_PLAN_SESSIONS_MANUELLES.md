@@ -20,6 +20,12 @@ Ce plan organise des interventions **déclenchées dans la conversation**. Il ne
 - Tester réellement les quatre magasins, dont les agents et mémoires, avec chiffrement AES-GCM, mot de passe incorrect, données altérées, fichier ancien sans Studio et annulation.
 - Garder `config/cloud.json.enabled=false`, aucune API distante ou automatisation activée.
 
+### Sprint S3 — première simplification du tableau de bord (2 novembre 2026)
+
+Deux raccourcis explicites sont ajoutés à « Accès directs » sur l'accueil : **Mes agents IA** et **Sauvegarder mes données**. Les descriptions du moteur de recherche sont révisées pour présenter la création d'agents sans import comme parcours principal et la sauvegarde unifiée avec mémoires. Ces raccourcis ne lancent aucune action et n'établissent aucune connexion externe.
+
+**À vérifier sur appareil réel :** lisibilité tactile et hauteur du panneau à 320/390 px ; le parcours Chromium automatisé mesure le débordement mais pas la qualité perçue.
+
 ## Sessions prioritaires
 
 | Ordre | Chantier | Livrable concret | Condition de recette |

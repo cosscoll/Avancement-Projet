@@ -21,7 +21,7 @@ const FEATURES=[
  {id:'decisions',title:'Historique des décisions',hint:'Retrouver les choix et versions du projet',category:'manage',keywords:'retrouver decision choix memoire historique arbitrage decisions',personal:'#/control/memory',cloud:'tools:memory'},
  {id:'command',title:'Commander Claude et Gemini',hint:'Préparer des missions multi-IA',category:'ai',keywords:'multi ia pilote agent anthropic google prompt',personal:'#/control/command',cloud:'command'},
  {id:'lab',title:'Laboratoire IA',hint:'Préparer, comparer et vérifier des résultats',category:'ai',keywords:'test brief audit json html création',personal:'#/control/lab',cloud:'lab'},
- {id:'aistudio',title:'Comptes IA & agents personnalisés',hint:'Importer les conversations, organiser les mémoires et créer un assistant',category:'ai',keywords:'chatgpt claude gemini agent assistant memoire historique conversation importer archive exporter',personal:'#/control/aistudio',cloud:null},
+ {id:'aistudio',title:'Comptes IA & agents personnalisés',hint:'Créer un assistant local, gérer mes mémoires et consulter les connexions IA',category:'ai',keywords:'chatgpt claude gemini agent assistant memoire historique conversation connexion connecter comptes creer sans import archive exporter',personal:'#/control/aistudio',cloud:null},
  {id:'localai',title:'Discuter avec CONTROL IA',hint:'Assistant local et réponses',category:'ai',keywords:'chat discussion modèle conversation générative',personal:'#/control/localai',cloud:null},
  {id:'webbuilder',title:'Créer un site web',hint:'Éditer un modèle, voir l’aperçu et exporter un site',category:'ai',keywords:'site web creer construire design generer template html css portfolio artisan landing constructeur',personal:'#/control/webbuilder',cloud:null},
  {id:'catalog',title:'Bibliothèque d’outils IA',hint:'Découvrir les outils et kits pratiques',category:'ai',keywords:'catalogue annuaire moteur 3d IA kits formation',personal:'#/control/catalog',cloud:'catalog'},
@@ -29,7 +29,7 @@ const FEATURES=[
  {id:'deploy',title:'Mettre un site en ligne',hint:'Guides de publication et déploiement',category:'publish',keywords:'publier deployer mettre en ligne projet heberger site web github pages vercel netlify',personal:'#/control/deploy',cloud:'deploy'},
  {id:'activity',title:'Activité GitHub et tests',hint:'Suivi des dépôts et preuves publiques',category:'publish',keywords:'ci publication actions commits',personal:'#/control/activity',cloud:null},
  {id:'budget',title:'Budget et quotas',hint:'Consulter les dépenses renseignées',category:'account',keywords:'prix limite forfait argent coût finances',personal:'#/control/budget',cloud:'tools:budget'},
- {id:'backup',title:'Sauvegarder mes données',hint:'Exporter et protéger mes données',category:'account',keywords:'exporter json sauvegarde chiffrer restaurer fichier',personal:'#/control/backup',cloud:'account'},
+ {id:'backup',title:'Sauvegarder mes données',hint:'Sauvegarder projets, agents, mémoires et restaurer un fichier chiffré',category:'account',keywords:'exporter json sauvegarde chiffrer restaurer fichier',personal:'#/control/backup',cloud:'account'},
  {id:'settings',title:'Paramètres et confidentialité',hint:'Règles, comptes et sécurité',category:'account',keywords:'préférences profil connexion se déconnecter reglages configuration modifier',personal:'#/control/settings',cloud:'account'}
 ];
 const PROJECT_SECTIONS=[
