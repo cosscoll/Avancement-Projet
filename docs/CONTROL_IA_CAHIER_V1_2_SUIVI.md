@@ -1,3 +1,11 @@
+## Sprint de développement — édition des agents et mémoire (2 novembre 2026)
+
+**Livré dans CONTROL personnel / V69 :** correction de mémoires approuvées avec versionnement (identifiant et périmètre conservés), modification du nom et des instructions d'un agent, affectation ou révocation de plusieurs mémoires et conversations sources, création d'agent sans importer de fichier, maintien de ses discussions existantes. Les mémoires d'un autre projet sont rejetées lors de l'édition ; les données restent locales. Le parcours de navigation et les modifications ont été ajoutés aux recettes Chromium ; tests de cœur fonctionnel : Node.js.
+
+**Critères concernés :** `EXT-AGT-AC1`, `EXT-AGT-AC2`, `EXT-AGT-AC3` (progrès local seulement). Leur statut global reste **non vérifié** tant que l'authentification CONTROL et l'isolation de deux comptes réels, les autorisations fournisseurs et les scénarios multi-appareils n'ont pas été validés. Aucune activation OAuth, aucune dépense API, aucun agent planifié.
+
+**À développer ensuite :** socle Auth Cloud A/B sur base isolée, sessions et suppression de compte, gestion des clients OAuth officiellement compatibles, puis API de conversation consentie ; l'accès natif aux anciens historiques reste subordonné aux API réellement offertes.
+
 ## Connexions directes aux comptes IA — priorité UX du 2 novembre 2026
 
 **Demande utilisateur :** ne pas demander d'archives à importer pour utiliser le studio ; proposer une véritable connexion officielle de ChatGPT, Claude et Gemini. L'import manuel n'est plus le parcours principal et demeure seulement un recours facultatif.

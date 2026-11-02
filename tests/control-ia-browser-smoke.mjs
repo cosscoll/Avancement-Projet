@@ -878,6 +878,8 @@ try{
  await js("document.querySelector('[data-as-tab=agents]').click()");
  await ready(()=>js("!!document.querySelector('.as-agent-list')"),6000)();
  assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents.length"),1);
+ const returnedAgent=await js("(()=>{const s=JSON.parse(localStorage.getItem('control-ai-studio-v1'));return {name:s.agents[0].name,version:s.agents[0].configVersion,sources:s.agents[0].conversationIds.length,memoryVersion:s.memories[0].version}})()");
+ assert.deepEqual(returnedAgent,{name:'Assistant UX révisé',version:3,sources:2,memoryVersion:2},'Edited agents and versioned memories must persist after navigation');
  log('AI Studio imported ChatGPT preview, approved memory, created persistent agent and never activated a paid or remote model');
 
  // Account gate is not the same as personal CONTROL: public Cloud must remain disabled.
