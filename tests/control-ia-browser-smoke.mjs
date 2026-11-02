@@ -841,6 +841,8 @@ try{
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('.control-whats-new')"),6000)();
  await js("location.hash='#/control/aistudio'");
+ await ready(()=>js("!!document.querySelector('#as-import-form')"),6000)();
+ await js("document.querySelector('[data-as-tab=agents]').click()");
  await ready(()=>js("!!document.querySelector('.as-agent-list')"),6000)();
  assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents.length"),1);
  log('AI Studio imported ChatGPT preview, approved memory, created persistent agent and never activated a paid or remote model');
