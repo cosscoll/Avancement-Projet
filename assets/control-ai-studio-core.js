@@ -112,13 +112,34 @@ function memory(state,{title,content,conversationId='',projectId='general'}){
  if(!clean(title,100).trim()||!clean(content,1600).trim())throw Error('Renseigne un titre et un contenu de mémoire.');
  if(conversationId&&!state.imports.some(c=>c.id===conversationId))throw Error('Conversation source introuvable.');
  const id='mem-'+hash(String(Date.now())+Math.random()+title);
- return {id,title:clean(title.trim(),100),content:clean(content.trim(),1600),conversationId,projectId:clean(projectId,100),createdAt:new Date().toISOString()};
+ return {id,title:clean(title.trim(),100),content:clean(content.trim(),1600),conversationId,projectId:clean(projectId,100),createdAt:new Date().toISOString(),version:1};
 }
 function agent(state,{name,instructions,projectId='general',conversationIds=[],memoryIds=[]}){
  if(!String(name||'').trim()||!String(instructions||'').trim())throw Error('Nom et instructions requis.');
  const sources=[...new Set(conversationIds)].filter(id=>state.imports.some(x=>x.id===id));
  const memories=[...new Set(memoryIds)].filter(id=>state.memories.some(x=>x.id===id&&(x.projectId==='general'||x.projectId===projectId)));
- return {id:'agt-'+hash(Date.now()+'-'+Math.random()+'-'+name),name:clean(name.trim(),90),instructions:clean(instructions.trim(),1300),projectId:clean(projectId,100),conversationIds:sources,memoryIds:memories,threads:[{id:'thr-'+hash(Date.now()+'-'+Math.random()),name:'Première discussion',messages:[]}],createdAt:new Date().toISOString()};
+ return {id:'agt-'+hash(Date.now()+'-'+Math.random()+'-'+name),name:clean(name.trim(),90),instructions:clean(instructions.trim(),1300),projectId:clean(projectId,100),conversationIds:sources,memoryIds:memories,threads:[{id:'thr-'+hash(Date.now()+'-'+Math.random()),name:'Première discussion',messages:[]}],createdAt:new Date().toISOString(),configVersion:1};
+}
+
+function editMemory(state,id,fields){
+ const old=state.memories.find(m=>m.id===id);
+ if(!old)throw Error('Mémoire introuvable.');
+ const {title,content}=fields||{};
+ if(typeof title!=='string'||!title.trim()||title.length>100)throw Error('Titre requis (100 caractères maximum).');
+ if(typeof content!=='string'||!content.trim()||content.length>1600)throw Error('Contenu requis (1 600 caractères maximum).');
+ return {...old,title:title.trim(),content:content.trim(),version:Math.max(1,Number(old.version)||1)+1,updatedAt:new Date().toISOString()};
+}
+function editAgent(state,id,fields){
+ const old=state.agents.find(a=>a.id===id);
+ if(!old)throw Error('Assistant introuvable.');
+ const {name,instructions,conversationIds,memoryIds}=fields||{};
+ if(typeof name!=='string'||!name.trim()||name.length>90)throw Error('Nom requis (90 caractères maximum).');
+ if(typeof instructions!=='string'||!instructions.trim()||instructions.length>1300)throw Error('Instructions requises (1 300 caractères maximum).');
+ if(!Array.isArray(conversationIds)||!Array.isArray(memoryIds)||conversationIds.length>30||memoryIds.length>50)throw Error('Sélection de sources invalide.');
+ const sources=[...new Set(conversationIds)],memories=[...new Set(memoryIds)];
+ if(sources.some(ref=>!state.imports.some(c=>c.id===ref)))throw Error('Conversation source inconnue.');
+ if(memories.some(ref=>!state.memories.some(m=>m.id===ref&&(m.projectId==='general'||m.projectId===old.projectId))))throw Error('Mémoire hors du projet : modification refusée.');
+ return {...old,name:name.trim(),instructions:instructions.trim(),conversationIds:sources,memoryIds:memories,configVersion:Math.max(1,Number(old.configVersion)||1)+1,updatedAt:new Date().toISOString()};
 }
 function context(state,ag){
  const allowed=ag.memoryIds.map(id=>state.memories.find(m=>m.id===id)).filter(x=>x&&(x.projectId==='general'||x.projectId===ag.projectId));
@@ -128,5 +149,5 @@ function context(state,ag){
  for(const c of sources)result+='\nSource importée en lecture seule ('+c.provider+', '+clean(c.title,60)+') : '+c.messages.slice(-2).map(x=>x.role+' : '+clean(x.content,140)).join(' | ')+'\n';
  return result.slice(0,1800);
 }
-window.CONTROL_AI_STUDIO_CORE=Object.freeze({KEY,read,write,parse,importRows,memory,agent,context,empty});
+window.CONTROL_AI_STUDIO_CORE=Object.freeze({KEY,read,write,parse,importRows,memory,agent,editMemory,editAgent,context,empty});
 })();
