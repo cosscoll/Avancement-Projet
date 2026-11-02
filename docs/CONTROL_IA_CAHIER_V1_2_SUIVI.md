@@ -1,3 +1,17 @@
+## Connexions directes aux comptes IA — priorité UX du 2 novembre 2026
+
+**Demande utilisateur :** ne pas demander d'archives à importer pour utiliser le studio ; proposer une véritable connexion officielle de ChatGPT, Claude et Gemini. L'import manuel n'est plus le parcours principal et demeure seulement un recours facultatif.
+
+**Première livraison UX :** la page `#/control/aistudio` ouvre désormais l'onglet « Connexions IA », montre les trois fournisseurs, le statut réel « Non connecté » et les modalités officielles ; les agents locaux sont accessibles sans archive. [Commit UX](https://github.com/cosscoll/Avancement-Projet/commit/0423703c4d206832fbe1babce908448f3c049386).
+
+**Contrat fonctionnel à réaliser après l'identité CONTROL :** OAuth/OIDC officiel uniquement lorsqu'un client et des autorisations compatibles sont enregistrés, contrôle PKCE/state/nonce et vérification du callback, stockage de jetons hors GitHub Pages et hors données publiques, gestion des scopes, liste de connexions réellement vérifiées, déconnexion et révocation testées. Aucune simulation de connexion, aucun mot de passe/cookie Claude.ai, aucune récupération de conversations privées via scraping.
+
+**Limitations non contournables :** Sign in with ChatGPT ne fournit pas les anciennes conversations/mémoires ; les abonnements Claude.ai ne sont pas déléguables directement à un site tiers ; Google OAuth pour Gemini API ne donne pas l'ancien historique de Gemini Apps. Les futures conversations créées à l'intérieur de CONTROL pourront être stockées par CONTROL si les API officielles, le consentement et les limites de coûts sont validés.
+
+**État :** conception et écran UX réalisés ; **0 compte réellement lié**, **0 autorisation OAuth active**, **0 ancienne conversation synchronisée**. Le cahier conserve ses 10 nouveaux critères EXT non vérifiés, Cloud `enabled:false`, aucune dépense ni quota Work/Codex autorisé.
+
+Sources officielles : https://developers.openai.com/siwc/website · https://code.claude.com/docs/en/legal-and-compliance · https://ai.google.dev/gemini-api/docs/oauth.
+
 # CONTROL IA — Suivi du cahier V1.2 (index public, contenu privé)
 
 **Mise à jour : 23 octobre 2026.** Ce fichier est uniquement un **suivi public expurgé**. Le cahier des charges fonctionnel et technique V1.2 intégral, conservant la V1.1 et ses annexes, se trouve en bibliothèque personnelle privée :
