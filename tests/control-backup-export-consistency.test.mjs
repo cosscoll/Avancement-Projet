@@ -79,7 +79,7 @@ test('a change during asynchronous encryption cancels download before creating a
  let run=null,downloads=0,blobs=0;
  const notices=[];
  const reviewer={unchanged:()=>false};
- const factory=new Function('registerForm','localStoreCorrupt','backupStorageIssues','toast','pack','prepareBackupExport','window','localStorage','Blob','document','URL','setTimeout','Date',handler);
+ const factory=new Function('registerForm','localStoreCorrupt','backupStorageIssues','toast','pack','prepareBackupExport','window','localStorage','Blob','document','URL','setTimeout','Date','const $=()=>null;\n'+handler);
  factory((selector,fn)=>{assert.equal(selector,'#export-data');run=fn},false,()=>[],x=>notices.push(x),
   async()=>({format:'control-v2-aes-gcm'}),()=>({data:{command:{}},original:[null,null,null]}),
   {CONTROL_BACKUP_REVIEW:reviewer},{},
@@ -97,7 +97,7 @@ test('unchanged snapshot still produces a normal downloaded backup',async()=>{
  const handler=source.slice(source.indexOf("registerForm('#export-data'"),source.indexOf("$('#main [data-act=\"download-corrupt\"]')"));
  let run=null,clicks=0,blobs=0;
  const notices=[];
- new Function('registerForm','localStoreCorrupt','backupStorageIssues','toast','pack','prepareBackupExport','window','localStorage','Blob','document','URL','setTimeout','Date',handler)(
+ new Function('registerForm','localStoreCorrupt','backupStorageIssues','toast','pack','prepareBackupExport','window','localStorage','Blob','document','URL','setTimeout','Date','const $=()=>null;\n'+handler)(
   (_,fn)=>{run=fn},false,()=>[],x=>notices.push(x),async()=>({format:'control-v2-plain'}),
   ()=>({data:{command:{actions:[]}},original:[null,null,null]}),
   {CONTROL_BACKUP_REVIEW:{unchanged:()=>true}},{},
