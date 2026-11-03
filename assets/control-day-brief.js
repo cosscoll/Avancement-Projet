@@ -10,7 +10,7 @@ function validDay(text){
  return Number.isFinite(d.getTime())&&d.toISOString().slice(0,10)===text;
 }
 function summarize(raw,now=new Date()){
- const empty={status:'empty',open:0,overdue:0,today:0,review:0,items:[]};
+ const empty={status:'empty',open:0,overdue:0,urgent:0,today:0,review:0,items:[]};
  if(raw===null||raw===undefined||raw==='')return empty;
  let data;
  try{data=typeof raw==='string'?JSON.parse(raw):raw;}catch{return {...empty,status:'invalid'};}
@@ -19,7 +19,7 @@ function summarize(raw,now=new Date()){
  const current=localDay(date);
  const actions=Array.isArray(data.actions)?data.actions:[];
  const missions=Array.isArray(data.missions)?data.missions:[];
- const items=[];let overdue=0,today=0,review=0,open=0;
+ const items=[];let overdue=0,urgent=0,today=0,review=0,open=0;
  for(const action of actions){
   if(!action||typeof action!=='object'||Array.isArray(action)||action.status==='done'||action.status==='cancelled')continue;
   if(typeof action.title!=='string'||!action.title.trim())continue;
@@ -27,6 +27,7 @@ function summarize(raw,now=new Date()){
   const due=validDay(action.due)?action.due:'';
   const late=Boolean(due&&due<current),isToday=due===current;
   if(late)overdue++;
+  if(late||action.priority==='Critique')urgent++;
   if(isToday)today++;
   const critical=action.priority==='Critique',high=action.priority==='Haute';
   const rank=late?0:isToday?1:critical?3:high?4:due?6:5;
@@ -39,7 +40,7 @@ function summarize(raw,now=new Date()){
   items.push({kind:'mission',id:typeof mission.id==='string'?mission.id:'',title:mission.title.trim().slice(0,180),project:typeof mission.project==='string'?mission.project:'',label:'Résultat à vérifier',rank:2,due:''});
  }
  items.sort((a,b)=>a.rank-b.rank||a.due.localeCompare(b.due)||a.title.localeCompare(b.title,'fr'));
- return {status:'ready',open,overdue,today,review,items:items.slice(0,3)};
+ return {status:'ready',open,overdue,urgent,today,review,items:items.slice(0,3)};
 }
 function render(raw,projectNames={},now){
  const data=summarize(raw,now);
