@@ -26,6 +26,13 @@ body.control-shell-v3.control-simple-workspace .shell-ui-version{border:0!import
 .control-workspace-mainnav a[aria-current=page]{background:#e7eef6!important;color:#233e5f!important;font-weight:790}
 body.control-shell-v3.control-simple-workspace .control-head .head-actions{gap:8px;margin:0}
 body.control-shell-v3.control-simple-workspace .control-head .head-tools{display:none!important}
+body.control-shell-v3.control-simple-workspace .control-head .control-quick-task{
+ display:inline-flex;align-items:center;justify-content:center;min-height:39px;padding:9px 12px;
+ background:#233f62!important;color:#fff!important;border:1px solid #233f62!important;border-radius:9px!important;
+ white-space:nowrap;text-decoration:none!important;font-size:12px!important;font-weight:750!important;
+}
+body.control-shell-v3.control-simple-workspace .control-head .control-quick-task:hover{background:#345a83!important}
+
 body.control-shell-v3.control-simple-workspace .control-head .head-search{
  min-height:39px!important;padding:8px 12px!important;color:#2e4b6a!important;border:1px solid #dce5ee!important;border-radius:9px!important;
  background:#fff!important;font-size:12px!important;font-weight:690!important;box-shadow:none!important
@@ -126,12 +133,16 @@ body.control-shell-v3.control-simple-workspace>.wrap>.quiet{display:none!importa
  body.control-shell-v3.control-simple-workspace .control-head .head-search{min-width:41px;padding:10px!important;font-size:0!important;min-height:42px!important}
  body.control-shell-v3.control-simple-workspace .control-head .head-search::before{content:"⌕";display:inline-block;font-size:22px;line-height:19px}
  body.control-shell-v3.control-simple-workspace .control-head .head-search kbd{display:none}
+ body.control-shell-v3.control-simple-workspace .control-head .control-quick-task{min-height:42px!important;padding:9px 10px!important;font-size:11px!important}
  body.control-shell-v3.control-simple-workspace .control-location{padding:11px 0 0!important}
  body.control-shell-v3.control-simple-workspace>.wrap>main#main{padding:16px 0 25px!important}
 }
 @media(max-width:420px){
  body.control-shell-v3.control-simple-workspace>.wrap{padding:0 11px 70px!important}
  body.control-shell-v3.control-simple-workspace .control-head .logo{font-size:16px!important}
+ body.control-shell-v3.control-simple-workspace .control-head .control-quick-task{min-width:42px;font-size:0!important}
+ body.control-shell-v3.control-simple-workspace .control-head .control-quick-task::before{content:"+";font-size:22px;line-height:1}
+
  body.control-shell-v3.control-simple-workspace .shell-ui-version{font-size:8px!important}
  body.control-shell-v3.control-simple-workspace #main>.toprow h1{font-size:25px!important}
  body.control-shell-v3.control-simple-workspace #main .shell-project-navigation{padding:12px!important}
