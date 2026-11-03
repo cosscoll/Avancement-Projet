@@ -192,6 +192,10 @@ try{
  assert.equal(innerShell.nav,4,'Only four primary navigation choices on inner screens');
  assert.equal(innerShell.body,true);
  assert.equal(innerShell.selected,'page');
+ await js("document.querySelector('.control-quick-task').click()");
+ await ready(()=>js("location.hash==='#/control/inbox/new'&&!!document.querySelector('#new-action input[name=title]')"),7000)();
+ assert.equal(await js("document.activeElement?.getAttribute('name')"),'title');
+ log('CONTROL 07: direct create-task shortcut opens and focuses the existing form');
  await js("location.hash='#/projects'");
  await ready(()=>js("!!document.querySelector('.control-home-v6--projects #cards')"),7000)();
  assert.equal(await js("document.querySelector('#control-home-projects').open"),true);
