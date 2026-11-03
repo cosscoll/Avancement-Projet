@@ -191,3 +191,8 @@
 .as-thread-results-empty{font-size:12px;color:#61738b;margin:0}
 .as-chat .as-found-message{border:2px solid #476fa6;background:#eff5fd;scroll-margin:15px}
 @media(max-width:600px){.as-thread-search{padding:12px}.as-thread-search-controls{display:grid;grid-template-columns:minmax(0,1fr) auto}.as-thread-results{max-height:260px}.as-thread-hit{padding:11px}}
+
+/* Compose without loading a model; protect unsent messages in the current tab. */
+.as-draft-note,.as-draft-tip{font-size:11px;line-height:1.5;color:#5c6c82;margin:7px 0 10px}
+.as-draft-tip{color:#335c89}
+@media(max-width:600px){#as-chat-message{min-height:100px;font-size:16px}.as-draft-note,.as-draft-tip{font-size:12px}}

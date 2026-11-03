@@ -273,3 +273,18 @@ test('agent local search UI displays counts, escapes content and jumps to the ma
  assert.match(css,/\.as-thread-hit/);
  assert.match(css,/\.as-chat \.as-found-message/);
 });
+
+test('agent drafts remain local to a tab and thread, and are cleared only after a saved question',()=>{
+ const ui=fs.readFileSync(new URL('../assets/control-ai-studio.js',import.meta.url),'utf8');
+ assert.match(ui,/const DRAFT_PREFIX='control-ai-studio-draft-v1:'/);
+ assert.match(ui,/window\.sessionStorage/);
+ assert.match(ui,/draftField\.oninput=\(\)=>/);
+ assert.match(ui,/saveDraft\(current\.id,thread\.id,draftField\.value\)/);
+ assert.match(ui,/esc\(readDraft\(current\.id,thread\.id\)\)/);
+ assert.match(ui,/clearDraft\(a\.id,t\.id\)/);
+ assert.match(ui,/clearDraft\(a\.id,selectedThread\)/);
+ assert.match(ui,/clearStudioDrafts\(\)/);
+ assert.match(ui,/Non inclus dans les sauvegardes/);
+ assert.match(ui,/Tu peux écrire maintenant/);
+ assert.doesNotMatch(ui,/id="as-chat-message"[^>]*disabled/);
+});

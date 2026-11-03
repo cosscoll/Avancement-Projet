@@ -840,10 +840,35 @@ try{
  await js("(()=>{document.querySelector('#as-agent-name').value='Mon assistant UX';document.querySelector('#as-agent-instructions').value='Conseiller en design responsive';document.querySelector('[name=agent-memory]').checked=true;document.querySelector('#as-agent-form').requestSubmit()})()");
  await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents?.length===1"),6000)();
  assert.match(await js("document.querySelector('.as-agent-toolbar h2').textContent"),/assistant UX/);
- assert.equal(await js("document.querySelector('#as-chat-message').disabled"),true,'No simulated answer or paid inference without optional local model load');
+ assert.equal(await js("document.querySelector('#as-chat-message').disabled"),false,'Can compose a draft before optional model download');
+ assert.equal(await js("document.querySelector('#as-chat-form button[type=submit]').disabled"),true,'Sending still requires manual local model load');
+
+
+  // Unsent text must survive navigation and reload, without touching agent data.
+  await js("(()=>{const f=document.querySelector('#as-chat-message');f.value='Brouillon temporaire de chantier';f.dispatchEvent(new Event('input',{bubbles:true}))})()");
+  assert.match(await js("(()=>{const a=JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0];return sessionStorage.getItem('control-ai-studio-draft-v1:'+a.id+':'+a.threads[0].id)})()"),/Brouillon temporaire/);
+  assert.equal(await js("JSON.stringify(JSON.parse(localStorage.getItem('control-ai-studio-v1'))).includes('Brouillon temporaire')"),false);
+  await js("location.hash='#/'");
+  await ready(()=>js("!!document.querySelector('.shell-dashboard')"),7000)();
+  await js("location.hash='#/control/aistudio'");
+  await ready(()=>js("!!document.querySelector('[data-as-tab=agents]')"),7000)();
+  await js("document.querySelector('[data-as-tab=agents]').click()");
+  await ready(()=>js("!!document.querySelector('#as-chat-message')"),7000)();
+  assert.equal(await js("document.querySelector('#as-chat-message').value"),'Brouillon temporaire de chantier');
+  await command('Page.reload',{ignoreCache:true});
+  await ready(()=>js("!!document.querySelector('[data-as-tab=agents]')"),16000)();
+  await js("document.querySelector('[data-as-tab=agents]').click()");
+  await ready(()=>js("!!document.querySelector('#as-chat-message')"),7000)();
+  assert.equal(await js("document.querySelector('#as-chat-message').value"),'Brouillon temporaire de chantier');
 
   const firstThread=await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].threads[0].id");
   await js("document.querySelector('[data-as-action=new-thread]').click()");
+  assert.equal(await js("document.querySelector('#as-chat-message').value"),'');
+  await js("(()=>{const f=document.querySelector('#as-chat-message');f.value='Brouillon indépendant du second fil';f.dispatchEvent(new Event('input',{bubbles:true}))})()");
+  await js("(()=>{const id=JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].threads[0].id;const f=document.querySelector('#as-thread');f.value=id;f.dispatchEvent(new Event('change',{bubbles:true}))})()");
+  assert.equal(await js("document.querySelector('#as-chat-message').value"),'Brouillon temporaire de chantier');
+  await js("(()=>{const id=JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].threads[1].id;const f=document.querySelector('#as-thread');f.value=id;f.dispatchEvent(new Event('change',{bubbles:true}))})()");
+  assert.equal(await js("document.querySelector('#as-chat-message').value"),'Brouillon indépendant du second fil');
   await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].threads.length===2"),6000)();
   await js("document.querySelector('.as-thread-manage').open=true");
   await js("(()=>{document.querySelector('#as-thread-name').value='Décisions mobiles';document.querySelector('#as-thread-rename-form').requestSubmit()})()");
@@ -861,6 +886,10 @@ try{
   assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].threads.length"),1);
   assert.equal(await js("document.querySelector('#as-thread').value"),firstThread);
   assert.equal(await js("document.querySelector('[data-as-action=delete-thread]').disabled"),true);
+  assert.equal(await js("document.querySelector('#as-chat-message').value"),'Brouillon temporaire de chantier');
+  await js("(()=>{const f=document.querySelector('#as-chat-message');f.value='';f.dispatchEvent(new Event('input',{bubbles:true}))})()");
+  assert.equal(await js("document.querySelector('#as-chat-message').value"),'');
+  log('Agent drafts survive navigation, reload and thread switching without being sent');
   log('AI Studio can rename and safely delete discussion, retain valid selection and fit 320px');
   // Synthetic conversations and searches remain inside this isolated browser.
   await js("window.__studioSearchSnapshot=localStorage.getItem('control-ai-studio-v1')");
@@ -1026,8 +1055,9 @@ try{
  await js("(()=>{window.__origWorker=window.Worker;window.Worker=class{constructor(){this.last=null;this.terminated=false;window.__fakeWorker=this}postMessage(p){if(p.action==='load')queueMicrotask(()=>this.onmessage?.({data:{type:'ready'}}));if(p.action==='generate')this.last=p}terminate(){this.terminated=true}}})()");
  await js("document.querySelector('[data-as-action=load-model]').click()");
  await ready(()=>js("!!document.querySelector('#as-chat-message:not(:disabled)')"),6000)();
- await js("(()=>{document.querySelector('#as-chat-message').value='Question de test';document.querySelector('#as-chat-form').requestSubmit()})()");
+ await js("(()=>{const f=document.querySelector('#as-chat-message');f.value='Question de test';f.dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('#as-chat-form').requestSubmit()})()");
  await ready(()=>js("!!window.__fakeWorker?.last&&window.__fakeWorker.last.action==='generate'"),6000)();
+ assert.equal(await js("(()=>{const a=JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0];return sessionStorage.getItem('control-ai-studio-draft-v1:'+a.id+':'+a.threads[0].id)})()"),null,'Saved question must clear its unsent draft');
  assert.match(await js("window.__fakeWorker.last.context"),/Nouvelle directive UX/);
  await js("window.__oldWorker=window.__fakeWorker");
  await js("document.querySelector('[data-as-action=toggle-agent-edit]').click()");
