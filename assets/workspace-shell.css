@@ -244,7 +244,7 @@ body.control-shell-v3 .control-home-v4 .control-v4-pulse{order:1;display:grid;gr
 .control-home-v4 .control-v4-metric-copy small{font-size:11px;line-height:1.4;color:#586f84}
 .control-home-v4 .control-v4-metric-arrow{margin-left:auto;align-self:flex-start;font-size:16px;color:#95a9bd}
 body.control-shell-v3 .control-home-v4 .shell-feature-grid{order:2;grid-template-columns:minmax(0,1.3fr) minmax(315px,1fr);gap:13px;margin:0 0 25px}
-body.control-shell-v3 .control-home-v4 .shell-feature-primary{min-height:405px;padding:31px 34px;border-radius:19px;background:linear-gradient(135deg,#132d47 4%,#184874 64%,#2865a5 100%);position:relative;overflow:hidden;isolation:isolate}
+body.control-shell-v3 .control-home-v4 .shell-feature-primary{min-height:315px;padding:27px 31px;border-radius:19px;background:linear-gradient(135deg,#132d47 4%,#184874 64%,#2865a5 100%);position:relative;overflow:hidden;isolation:isolate}
 body.control-shell-v3 .control-home-v4 .shell-feature-primary::before{display:block!important;content:"";position:absolute;right:-115px;top:-80px;width:320px;height:320px;border-radius:50%;border:1px solid #8bb8e55e;background:radial-gradient(circle,#8bb8e519 0,transparent 66%);pointer-events:none}
 body.control-shell-v3 .control-home-v4 .shell-feature-primary::after{display:block!important;content:"05";font:800 200px/1 system-ui;letter-spacing:-18px;color:#ffffff10;position:absolute;right:-10px;bottom:-43px;width:auto;height:auto;border:0;border-radius:0;pointer-events:none}
 .control-home-v4 .control-v4-hero-text{position:relative;z-index:2;max-width:460px}
@@ -267,7 +267,7 @@ body.control-shell-v3 .control-home-v4 .shell-feature-aside{background:#eef3f9;b
 .control-home-v4 .control-v4-actions-title>span{font-size:10px;font-weight:850;color:#4e7da8;letter-spacing:1.6px}
 .control-home-v4 .control-v4-actions-title h2{font-size:20px!important;text-transform:none!important;letter-spacing:-.6px!important;color:#183a56!important;margin:6px 0 4px!important}
 .control-home-v4 .control-v4-actions-title p{margin:0;font-size:12px;color:#6b7c8e}
-body.control-shell-v3 .control-home-v4 .shell-action{flex:none;min-height:100px!important;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:8px!important;background:#fff!important;border:1px solid #d5e2ed!important;border-radius:13px!important;padding:15px 14px!important;box-shadow:0 4px 13px #1433530b!important}
+body.control-shell-v3 .control-home-v4 .shell-action{flex:none;min-height:86px!important;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:8px!important;background:#fff!important;border:1px solid #d5e2ed!important;border-radius:13px!important;padding:15px 14px!important;box-shadow:0 4px 13px #1433530b!important}
 body.control-shell-v3 .control-home-v4 .shell-action:hover{border-color:#6396c8!important;transform:translateY(-2px)}
 .control-home-v4 .shell-action-glyph{border-radius:9px;width:34px;height:34px;background:#dae8f9!important;color:#2862a5!important;flex:0 0 34px}
 .control-home-v4 .control-v4-action-attention .shell-action-glyph{background:#fff0dc!important;color:#b26a23!important}
@@ -294,10 +294,10 @@ body.control-shell-v3 .control-home-v4 .shell-dashboard-section{order:3;border-t
  .control-home-v4 .control-v4-metric-copy strong{font-size:24px}
  .control-home-v4 .control-v4-metric-copy small{font-size:10px}
  .control-home-v4 .control-v4-metric-arrow{display:none}
- body.control-shell-v3 .control-home-v4 .shell-feature-primary{min-height:325px;padding:23px 21px}
+ body.control-shell-v3 .control-home-v4 .shell-feature-primary{min-height:285px;padding:23px 21px}
  body.control-shell-v3 .control-home-v4 .shell-feature-primary h2{font-size:clamp(36px,10vw,49px)}
  body.control-shell-v3 .control-home-v4 .shell-feature-aside{grid-template-columns:repeat(2,minmax(0,1fr));padding:12px;gap:8px}
- body.control-shell-v3 .control-home-v4 .shell-action{min-height:103px!important;padding:11px!important}
+ body.control-shell-v3 .control-home-v4 .shell-action{min-height:86px!important;padding:11px!important}
  body.control-shell-v3 .control-home-v4 .shell-action small{display:block!important;font-size:10px}
 }
 @media(max-width:390px){
