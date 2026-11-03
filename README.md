@@ -1,3 +1,13 @@
+## 3 novembre 2026 — CONTROL 05 : priorités d'un entrepreneur et cahier des charges TPE
+
+**Modifications sur `main` :** l'accueil personnel affiche désormais les actions en retard, celles prévues aujourd'hui et les missions à vérifier à partir des enregistrements locaux existants, avec les trois éléments les plus importants, un raccourci direct vers « Créer une tâche » et un état vide explicite. Les titres du tableau de bord et de la navigation ont été simplifiés. Les données malformées affichent un avertissement plutôt que des chiffres artificiels ; les titres de tâches sont échappés dans l'interface.
+
+**Périmètre exact :** cette vue ne lit pas Gmail, les notifications privées des IA, les comptes des salariés ni une base Cloud. Aucune connexion ni automatisation n'a été activée, et aucune donnée existante n'a été migrée.
+
+**Cahier des charges priorisé :** [CONTROL — parcours entrepreneur/TPE, sécurité, collaboration, CRM léger, intégrations et assistants](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md). Ajout d'un test Node dédié au calcul des priorités, aux dates, aux données invalides et à l'échappement HTML. Cache PWA passé à `v73` pour inclure les nouvelles ressources.
+
+**Recette :** le commit de code ne vaut pas encore validation d'une utilisation réelle en équipe : accès Cloud, authentification multi-utilisateurs et intégrations restent bloqués tant que les contrôles de sécurité correspondants n'ont pas réussi. Les résultats CI et la version déployée doivent être vérifiés séparément.
+
 ## 3 novembre 2026 — CONTROL 04 : refonte visible de l'accueil
 
 **Livraison réelle sur `main` :** refonte perceptible immédiatement de la page d'accueil personnelle, et non seulement un ajout interne. Le bandeau passe de « Interface V3 » à **« Vue 04 · Nouveau »**. La nouvelle présentation comprend une typographie et une hiérarchie revues, un grand panneau de recherche bleu foncé, une grille de cinq raccourcis distincts, un bloc « Reprendre mon travail » et trois indicateurs calculés depuis les données *locales* (projets accessibles, actions à traiter, agents créés sur cet appareil). Si les données sont illisibles, le compteur affiche « — » sans annoncer de faux chiffres.
