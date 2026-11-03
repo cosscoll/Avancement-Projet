@@ -103,24 +103,146 @@ function manager(){
  $('#main [data-act="brief"]')?.addEventListener('click',async()=>{const k=subject(),ps=k?[k]:ctx.projects.filter(p=>p.repo||openProject(p.id).reports).slice(0,12).map(p=>p.id);let data='CONTEXTE DE PILOTAGE — '+(k?pname(k):'Tous les projets')+'\n\n'+db.globalRules+'\n\n'+ps.map(pid=>pname(pid)+'\n'+contextEvidence(pid).join('\n')).join('\n\n')+'\n\nAnalyse les faits, distingue les preuves et les incertitudes, identifie les conflits et propose les 3 prochaines priorités. Ne prétends pas pouvoir lire les autres IA.';await copy(data)});
 }
 async function copy(s){try{await navigator.clipboard.writeText(s);toast('Copié. Tu peux le coller dans ton IA.')}catch{toast('Copie refusée par le navigateur. Ouvre CONTROL en HTTPS.')}} 
-function intake(){const current=new Date(),now=[current.getFullYear(),String(current.getMonth()+1).padStart(2,'0'),String(current.getDate()).padStart(2,'0')].join('-'),actions=db.actions.filter(x=>x&&typeof x.title==='string'&&x.title.trim()&&x.status!=='done'&&x.status!=='cancelled'),reviews=db.missions.filter(x=>x&&x.status==='review'&&typeof x.title==='string'&&x.title.trim()),overdue=actions.filter(x=>x.due&&x.due<now).length;
- const cards=[...actions.map(x=>({kind:'action',id:x.id,project:x.project,title:x.title,sub:(x.due?'Pour le '+date(x.due)+' · ':'')+'Priorité '+x.priority,level:x.priority==='Critique'?'critical':x.due&&x.due<now?'critical':'normal'})),...reviews.map(x=>({kind:'mission',id:x.id,project:x.project,title:'Mission à vérifier : '+x.title,sub:'Retour attendu de '+x.provider,level:'review'}))].sort((a,b)=>({critical:0,review:1,normal:2}[a.level]-{critical:0,review:1,normal:2}[b.level]));
- let content='<div class="dash-stats">'+[['À traiter',cards.length],['En retard',overdue],['Missions à vérifier',reviews.length]].map(([n,v])=>'<div class="stat"><strong>'+v+'</strong><span>'+n+'</span></div>').join('')+'</div>'+note('Les alertes ci-dessous proviennent de tâches renseignées dans CONTROL. Les messages privés Gmail, les notifications des IA et les tâches non connectées ne sont pas synchronisés.')+
- box('Boîte de réception',cards.length?cards.map(a=>'<div class="inbox-item"><div><span class="chip '+(a.level==='critical'?'warn':'')+'">'+h(pname(a.project))+'</span><strong>'+h(a.title)+'</strong><small>'+h(a.sub)+'</small></div><div class="actions">'+(a.kind==='action'?btn('Terminer','done:'+a.id):'<a class="button" href="#/control/missions">Vérifier</a>')+'</div></div>').join(''):'<p class="empty">Aucune action enregistrée en attente. Cela ne signifie pas que les applications externes n’ont aucune notification.</p>')+
- box('Ajouter une action','<form id="new-action">'+field('Action','title','','text','required maxlength="180"')+selectProject('')+'<div class="formgrid"><label>Priorité<select name="priority" class="field">'+options(['Normale','Haute','Critique'],'Normale')+'</select></label>'+field('Échéance','due','','date')+'</div>'+field('Lien de référence (facultatif)','url','','url')+'<button class="primary">Ajouter</button></form>')+
- box('Accès aux sources externes','<p class="muted">Les messages Gmail, notifications ChatGPT et calendriers privés ne sont pas récupérés directement dans CONTROL. Ouvre les applications pour vérifier leurs alertes.</p><div class="actions">'+href('https://mail.google.com/mail/u/0/#inbox','Gmail')+href('https://calendar.google.com/calendar/u/0/r/','Google Agenda')+href('https://chatgpt.com/scheduled','ChatGPT · Planifiées')+'</div>')+
- box('Blocages remontés par les derniers sprints','<div id="inbox-sprint-status"><p class="muted">Chargement des rapports publics…</p></div>')+
- box('Alertes des références publiques','<p class="muted">Ces informations proviennent de relevés précédents, pas d’une surveillance en temps réel.</p>'+ctx.projects.filter(p=>p.alerts?.length).slice(0,6).map(p=>'<details><summary>'+h(p.name)+' · '+p.alerts.length+' point(s) de vigilance</summary><p>'+p.alerts.map(a=>h(a.title)).join('<br>')+'</p><a href="#/project/'+encodeURIComponent(p.id)+'/pilot" class="button">Ouvrir le projet</a></details>').join(''));
- $('#main').innerHTML=view('À traiter','Actions, validations et échéances centralisées',content);
- registerForm('#new-action',(f)=>{const title=String(f.get('title')||'').trim();if(!title)return;const url=String(f.get('url')||'').trim();if(url&&!safe(url))return toast('Lien HTTPS requis.');if(!commitLocal(()=>db.actions.push({id:id(),project:String(f.get('project')||''),title,priority:String(f.get('priority')||'Normale'),status:'todo',due:String(f.get('due')||''),url,at:new Date().toISOString()})))return;intake();toast('Action enregistrée localement.')});
- if(route().page==='inbox'&&route().param==='new'){
+let inboxFilter='active',inboxSearch='';
+function intake(){
+ const workflow=window.CONTROL_TASKS;
+ if(!workflow){$('#main').innerHTML=view('À traiter','Vos actions',note('Le module de tâches ne s’est pas chargé. Actualisez CONTROL ; aucune donnée n’a été modifiée.'));return;}
+ const today=workflow.localDay();
+ const actions=db.actions.filter(x=>x&&typeof x.title==='string'&&x.title.trim()&&x.status!=='cancelled');
+ const missions=db.missions.filter(x=>x&&x.status==='review'&&typeof x.title==='string'&&x.title.trim());
+ const pending=actions.filter(x=>x.status!=='done');
+ const overdue=pending.filter(x=>workflow.category(x,today)==='overdue').length;
+ const items=workflow.sort([
+  ...actions.map(x=>({...x,kind:'action'})),
+  ...missions.map(x=>({...x,kind:'mission'}))
+ ],today);
+ const rows=items.map(a=>{
+  const status=a.kind==='mission'?'review':workflow.category(a,today);
+  const projectName=pname(a.project);
+  const dueLabel=a.due&&workflow.validDue(a.due)?' · Pour le '+date(a.due):'';
+  const description=a.kind==='mission'?'Mission IA : résultat à vérifier · '+(a.provider||'Fournisseur non précisé'):
+   (a.status==='done'?'Terminée':a.status==='doing'?'En cours':'À faire')+
+   ' · Priorité '+(a.priority||'Normale')+dueLabel;
+  const tag=a.kind==='mission'?'À vérifier':status==='overdue'?'En retard':status==='today'?"Aujourd’hui":status==='done'?'Terminée':a.priority==='Critique'?'Critique':a.priority==='Haute'?'Haute':'À traiter';
+  let controls='';
+  if(a.kind==='mission')controls='<a class="button" href="#/control/missions">Vérifier la mission</a>';
+  else {
+   // Preserve a legacy project value during edits, including if its catalog entry was removed.
+   const selected=a.project||'';
+   const missingProject=selected&&!ctx.projects.some(p=>p.id===selected)?'<option value="'+h(selected)+'" selected>Projet enregistré (non listé)</option>':'';
+   const projectOptions='<label>Projet<select class="field" name="project"><option value="">Sans projet</option>'+missingProject+
+     ctx.projects.map(p=>'<option value="'+h(p.id)+'" '+(selected===p.id?'selected':'')+'>'+h(p.name)+'</option>').join('')+'</select></label>';
+   controls='<div class="control-task-actions">'+(a.status==='done'?btn('Rouvrir','reopen:'+a.id):btn('Terminer','done:'+a.id,'control-task-complete'))+
+    '<details class="control-task-edit"><summary>Modifier</summary><form data-task-edit="'+h(a.id)+'" class="control-task-edit-form">'+
+    field('Intitulé','title',a.title,'text','required maxlength="180"')+
+    projectOptions+
+    '<div class="formgrid"><label>Priorité<select class="field" name="priority">'+options(['Normale','Haute','Critique'],a.priority||'Normale')+'</select></label>'+
+    '<label>Statut<select class="field" name="status"><option value="todo" '+(a.status!=='doing'&&a.status!=='done'?'selected':'')+'>À faire</option><option value="doing" '+(a.status==='doing'?'selected':'')+'>En cours</option><option value="done" '+(a.status==='done'?'selected':'')+'>Terminée</option></select></label></div>'+
+    field('Échéance','due',a.due&&workflow.validDue(a.due)?a.due:'','date')+
+    field('Lien de référence (facultatif)','url',a.url||'','url','maxlength="2000"')+
+    '<button type="submit" class="primary">Enregistrer les modifications</button></form></details></div>';
+  }
+  const search=workflow.searchText([a.title,projectName,description,a.provider||''].join(' '));
+  return '<div class="inbox-item control-task-row" data-task-kind="'+h(a.kind)+'" data-task-status="'+h(status)+'" data-task-search="'+h(search)+'">'+
+   '<div class="control-task-summary"><div class="control-task-text"><span class="control-task-tag '+(status==='overdue'?'control-task-tag-late':'')+'">'+h(tag)+'</span>'+
+   '<strong>'+h(a.title)+'</strong><small>'+h(projectName)+' · '+h(description)+'</small>'+
+   (a.kind==='action'&&safe(a.url)?href(a.url,'Ouvrir la référence','control-task-reference'):'')+
+   '</div>'+controls+'</div></div>';
+ }).join('');
+ let content='<div class="dash-stats">'+[['Actions ouvertes',pending.length],['En retard',overdue],['Missions à vérifier',missions.length]].map(([n,v])=>'<div class="stat"><strong>'+v+'</strong><span>'+n+'</span></div>').join('')+'</div>'+
+ note('Données enregistrées uniquement dans ce navigateur. Gmail, les autres IA et les tâches de votre équipe ne sont pas synchronisés.')+
+ box('Mes tâches et validations','<div class="control-task-toolbar"><label>Rechercher une tâche<input id="control-task-search" class="field" type="search" autocomplete="off" placeholder="Nom de la tâche, projet…" maxlength="180" value="'+h(inboxSearch)+'"></label>'+
+ '<label>Afficher<select id="control-task-filter" class="field">'+
+ [['active','En attente'],['overdue','En retard'],['today',"Aujourd’hui"],['review','À vérifier'],['done','Terminées']].map(([v,t])=>'<option value="'+v+'" '+(v===inboxFilter?'selected':'')+'>'+t+'</option>').join('')+
+ '</select></label></div><p id="control-task-visible" class="control-task-visible" role="status" aria-live="polite"></p>'+
+ '<div id="control-task-list" class="control-task-list">'+rows+'</div><p class="control-task-none" id="control-task-none" hidden>Aucune tâche ne correspond à votre recherche ou au filtre choisi.</p>')+
+ '<details class="panel shell-progressive-form control-task-create" id="task-create" '+(route().param==='new'?'open':'')+'><summary><strong>+ Créer une tâche</strong><small>Ajoutez une action et, si besoin, son échéance</small></summary><div class="shell-progressive-body"><form id="new-action">'+
+ field('Action','title','','text','required maxlength="180"')+selectProject('')+
+ '<div class="formgrid"><label>Priorité<select name="priority" class="field">'+options(['Normale','Haute','Critique'],'Normale')+'</select></label>'+field('Échéance','due','','date')+'</div>'+
+ field('Lien de référence (facultatif)','url','','url','maxlength="2000"')+
+ '<button class="primary">Ajouter la tâche</button></form></div></details>'+
+ '<details class="panel shell-progressive-form control-task-externals"><summary><strong>Sources externes et alertes publiques</strong><small>Informations secondaires, non synchronisées</small></summary><div class="shell-progressive-body">'+
+ '<p class="muted">Les messages Gmail et les notifications privées des IA ne sont pas récupérés par CONTROL.</p><div class="actions">'+
+ href('https://mail.google.com/mail/u/0/#inbox','Gmail')+href('https://calendar.google.com/calendar/u/0/r/','Google Agenda')+
+ href('https://chatgpt.com/scheduled','ChatGPT · Planifiées')+'</div>'+
+ '<h3>Blocages des derniers sprints publics</h3><div id="inbox-sprint-status"><p class="muted">Ouvrez cette section pour consulter les références datées.</p></div>'+
+ '<h3>Alertes des références publiques</h3><p class="muted">Ces éléments proviennent d’anciens relevés, pas d’un suivi en temps réel.</p>'+
+ ctx.projects.filter(p=>p.alerts?.length).slice(0,6).map(p=>'<details><summary>'+h(p.name)+' · '+p.alerts.length+' point(s) de vigilance</summary><p>'+p.alerts.map(a=>h(a.title)).join('<br>')+'</p><a href="#/project/'+encodeURIComponent(p.id)+'/pilot" class="button">Ouvrir le projet</a></details>').join('')+
+ '</div></details>';
+ $('#main').innerHTML=view('À traiter','Retrouvez, modifiez et terminez vos tâches enregistrées',content);
+ const applyFilter=()=>{
+  inboxSearch=$('#control-task-search')?.value||'';
+  inboxFilter=$('#control-task-filter')?.value||'active';
+  const query=workflow.searchText(inboxSearch);
+  let count=0;
+  $('#main').querySelectorAll('.control-task-row').forEach(row=>{
+   const kind=row.dataset.taskKind,status=row.dataset.taskStatus;
+   const eligible=inboxFilter==='active'?(status!=='done'):
+    inboxFilter==='review'?kind==='mission':
+    inboxFilter==='done'?status==='done':status===inboxFilter;
+   const show=eligible&&(!query||row.dataset.taskSearch.includes(query));
+   row.hidden=!show;if(show)count++;
+  });
+  $('#control-task-visible').textContent=count+' résultat'+(count>1?'s':'')+' dans ce filtre';
+  $('#control-task-none').hidden=count!==0;
+ };
+ $('#control-task-search').oninput=applyFilter;
+ $('#control-task-filter').onchange=applyFilter;
+ applyFilter();
+ registerForm('#new-action',f=>{
+  const title=String(f.get('title')||'').trim();
+  const url=String(f.get('url')||'').trim();
+  const data=workflow.validateEdit({title,project:String(f.get('project')||''),priority:String(f.get('priority')||'Normale'),status:'todo',due:String(f.get('due')||''),url},['',...ctx.projects.map(p=>p.id)]);
+  if(!data.ok){toast(data.error);return;}
+  if(!commitLocal(()=>db.actions.push({id:id(),...data.task,at:new Date().toISOString()})))return;
+  intake();toast('Tâche enregistrée sur cet appareil.');
+ });
+ $('#main').querySelectorAll('form[data-task-edit]').forEach(form=>{
+  form.onsubmit=e=>{
+   e.preventDefault();const task=db.actions.find(a=>String(a?.id)===form.dataset.taskEdit);
+   if(!task)return toast('Tâche introuvable. Recharge CONTROL.');
+   const fd=new FormData(form);
+   const input=Object.fromEntries(['title','priority','status','due','project','url'].map(k=>[k,fd.get(k)]));
+   const allowed=['',...ctx.projects.map(p=>p.id),...(task.project?[task.project]:[])];
+   const validation=workflow.validateEdit(input,allowed);
+   if(!validation.ok)return toast(validation.error);
+   if(!commitLocal(()=>{
+    const previous=task.status;
+    Object.assign(task,validation.task,{updatedAt:new Date().toISOString()});
+    if(task.status==='done'&&previous!=='done')task.closedAt=new Date().toISOString();
+    if(task.status!=='done')delete task.closedAt;
+   }))return;
+   intake();toast('Modifications enregistrées sur cet appareil.');
+  };
+ });
+ $('#main').querySelectorAll('[data-act^="done:"],[data-act^="reopen:"]').forEach(button=>{
+  button.onclick=()=>{
+   const value=String(button.dataset.act||'');
+   const reopening=value.startsWith('reopen:');
+   const task=db.actions.find(a=>String(a?.id)===value.slice(reopening?7:5));
+   if(!task)return toast('Tâche introuvable. Recharge CONTROL.');
+   if(!commitLocal(()=>{
+    task.status=reopening?'todo':'done';
+    task.updatedAt=new Date().toISOString();
+    if(reopening)delete task.closedAt;else task.closedAt=task.updatedAt;
+   }))return;
+   intake();toast(reopening?'Tâche rouverte.':'Tâche terminée sur cet appareil.');
+  };
+ });
+ if(route().param==='new'){
   const titleField=$('#new-action input[name="title"]');
   titleField?.scrollIntoView?.({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?'instant':'smooth',block:'center'});
   titleField?.focus?.({preventScroll:true});
  }
- paintSprints('#inbox-sprint-status',true);fetchSprints().then(()=>paintSprints('#inbox-sprint-status',true)).catch(()=>{});
- $('#main').querySelectorAll('[data-act^="done:"]').forEach(b=>b.onclick=()=>{const a=db.actions.find(x=>x.id===b.dataset.act.slice(5));if(a){if(commitLocal(()=>{a.status='done';a.closedAt=new Date().toISOString()}))intake()}});
+ const externalPanel=$('#main').querySelector('.control-task-externals');
+ if(externalPanel)externalPanel.addEventListener('toggle',()=>{
+  if(!externalPanel.open||externalPanel.dataset.loaded)return;
+  externalPanel.dataset.loaded='true';
+  paintSprints('#inbox-sprint-status',true);
+  fetchSprints().then(()=>paintSprints('#inbox-sprint-status',true)).catch(()=>{});
+ });
 }
+
 function missions(){const cards=db.missions.slice().reverse(),counts=['todo','doing','review','done'].map(s=>db.missions.filter(x=>x.status===s).length);
  let content='<div class="dash-stats">'+['À lancer','En cours','À vérifier','Terminé'].map((s,i)=>'<div class="stat"><strong>'+counts[i]+'</strong><span>'+s+'</span></div>').join('')+'</div>'+
  note('CONTROL prépare les consignes et permet de suivre leur exécution. Les fournisseurs externes ne reçoivent aucune mission automatiquement depuis ce site public. Les résultats doivent être rapportés et vérifiés.')+
