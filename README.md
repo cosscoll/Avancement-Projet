@@ -4,7 +4,7 @@
 
 **Sécurité des actions locales :** les modifications conservent la vérification des conflits entre onglets ; dates, priorités, statuts, projets et liens HTTPS sont validés. Sans succès d'enregistrement, l'application ne confirme pas l'action. Les données externes ne sont pas présentées comme synchronisées.
 
-**Recette et limites :** tests de règles dans `tests/control-task-workflow.test.mjs` et de liens directs dans `tests/control-day-brief.test.mjs` ; syntaxe vérifiée séparément. Cache PWA `v75`. Aucun compte Cloud, collaboration multi-utilisateurs, service tiers payant ni automatisation activé. [Cahier des charges TPE et état livré](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md).
+**Recette et limites :** tests de règles dans `tests/control-task-workflow.test.mjs` et de liens directs dans `tests/control-day-brief.test.mjs` ; syntaxe vérifiée séparément. Cache PWA `v76`. Aucun compte Cloud, collaboration multi-utilisateurs, service tiers payant ni automatisation activé. [Cahier des charges TPE et état livré](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md).
 
 ## 3 novembre 2026 — CONTROL 05 : priorités d'un entrepreneur et cahier des charges TPE
 
