@@ -1,3 +1,13 @@
+## 3 novembre 2026 — CONTROL 04 : refonte visible de l'accueil
+
+**Livraison réelle sur `main` :** refonte perceptible immédiatement de la page d'accueil personnelle, et non seulement un ajout interne. Le bandeau passe de « Interface V3 » à **« Vue 04 · Nouveau »**. La nouvelle présentation comprend une typographie et une hiérarchie revues, un grand panneau de recherche bleu foncé, une grille de cinq raccourcis distincts, un bloc « Reprendre mon travail » et trois indicateurs calculés depuis les données *locales* (projets accessibles, actions à traiter, agents créés sur cet appareil). Si les données sont illisibles, le compteur affiche « — » sans annoncer de faux chiffres.
+
+**Éléments préservés :** toutes les routes des outils, la recherche de projet, la création d'espace, le panneau des nouveautés et les anciennes sauvegardes. Aucune donnée utilisateur modifiée lors de l'ouverture du tableau de bord. Aucun Cloud, IA externe, automatisation ou dépense n'a été activé.
+
+**Preuves de recette :** 659 tests Node réussis sur 659 : https://github.com/cosscoll/Avancement-Projet/actions/runs/41646604316. Chromium sur la **version publique déployée**, rendu CONTROL 04, clic sur agents et vues 320/390 px : https://github.com/cosscoll/Avancement-Projet/actions/runs/41646671611. Déploiement GitHub Pages du code : https://github.com/cosscoll/Avancement-Projet/actions/runs/41646603054. Cache hors ligne porté en `v72` pour invalider la présentation ancienne ; en cas de PWA déjà ouverte, utiliser la notification de mise à jour ou recharger.
+
+**Prochaines limites à traiter :** tests manuels sur un téléphone réel et poursuite de la refonte visuelle des écrans intérieurs, sans présenter les connexions externes comme actives.
+
 ## CONTROL — Brouillons sécurisés des agents, 3 novembre 2026
 
 Un message peut désormais être rédigé sans charger les ~180 Mo du modèle IA expérimental. La saisie non envoyée est conservée par agent et par discussion dans l'onglet ouvert, même après rechargement ; l'envoi reste bloqué tant que le modèle n'est pas chargé. Les brouillons ne sont pas synchronisés ni inclus dans les sauvegardes. Cache PWA `v71`, tests Node et Chromium ajoutés. Les services Cloud et connexions externes restent désactivés.
