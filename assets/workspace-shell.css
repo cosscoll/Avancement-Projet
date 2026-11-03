@@ -220,3 +220,91 @@ body.cloud-shell-v3 .shell-side-footer>button{margin-top:10px}
 .control-external-change button{flex:0 0 auto;min-height:42px!important;padding:9px 14px!important;border:1px solid #795221!important;border-radius:9px!important;background:#684821!important;color:#fff!important;font-size:12px!important;font-weight:780!important}
 .control-external-change button:focus-visible{outline:3px solid #2563eb;outline-offset:3px}
 @media(max-width:640px){.control-external-change{flex-direction:column;align-items:stretch;gap:11px;padding:12px}.control-external-change button{width:100%}}
+
+/* CONTROL 04 — deliberately visible rework of the personal landing page.
+   All styles are scoped: cloud workspace and inner project screens stay intact. */
+body.control-shell-v3 .control-home-v4{--v4-ink:#12283e;--v4-blue:#296cbe;--v4-lime:#d8ff8a}
+body.control-shell-v3 .control-home-v4 .shell-dashboard-top{align-items:center;margin:0 0 19px}
+.control-home-v4 .control-v4-edition{display:inline-flex;align-items:center;gap:9px;font-size:10px;letter-spacing:1.5px;font-weight:850;color:#34669d;text-transform:uppercase}
+.control-home-v4 .control-v4-edition em{font-style:normal;background:#16344e;color:#fff;padding:5px 7px;border-radius:5px;letter-spacing:0}
+body.control-shell-v3 .control-home-v4 .shell-dashboard-top h1{font-size:clamp(33px,3.55vw,53px);letter-spacing:-2.45px;line-height:1.06;margin:12px 0 10px;font-weight:840;color:#132c45}
+.control-home-v4 .shell-dashboard-top h1 span{color:#397ac2}
+.control-home-v4 .shell-dashboard-top p{max-width:560px;font-size:13px;line-height:1.55;color:#60738a}
+body.control-shell-v3 .control-home-v4 #add-project{background:#d8ff8a!important;border:1px solid #b7d97b!important;color:#18344a!important;border-radius:12px;box-shadow:0 4px 0 #aacd72;white-space:nowrap}
+body.control-shell-v3 .control-home-v4 #add-project:hover{background:#cafd6d!important}
+body.control-shell-v3 .control-home-v4 .control-v4-pulse{order:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:3px 0 17px}
+.control-home-v4 .control-v4-metric{display:flex;align-items:center;gap:13px;min-width:0;min-height:98px;border:1px solid #d4e1ed;border-radius:16px;background:#fff;padding:16px 17px;box-shadow:0 3px 12px #173d6010;transition:transform .16s,border-color .16s}
+.control-home-v4 .control-v4-metric:hover{transform:translateY(-2px);border-color:#74a5d6}
+.control-home-v4 .control-v4-metric:focus-visible{outline:3px solid #2674d0;outline-offset:3px}
+.control-home-v4 .control-v4-metric-icon{width:45px;height:45px;flex:0 0 45px;display:grid;place-items:center;border-radius:12px;font-size:24px;background:#dfeaf7;color:#1b5799}
+.control-home-v4 .control-v4-metric:nth-child(2) .control-v4-metric-icon{background:#fff0da;color:#9b662e}
+.control-home-v4 .control-v4-metric:nth-child(3) .control-v4-metric-icon{background:#e5f4ed;color:#287858}
+.control-home-v4 .control-v4-metric-copy{display:flex;flex-direction:column;gap:2px;min-width:0}
+.control-home-v4 .control-v4-metric-copy strong{font-size:30px;font-weight:820;line-height:1;color:#152f48;font-variant-numeric:tabular-nums}
+.control-home-v4 .control-v4-metric-copy small{font-size:11px;line-height:1.4;color:#586f84}
+.control-home-v4 .control-v4-metric-arrow{margin-left:auto;align-self:flex-start;font-size:16px;color:#95a9bd}
+body.control-shell-v3 .control-home-v4 .shell-feature-grid{order:2;grid-template-columns:minmax(0,1.3fr) minmax(315px,1fr);gap:13px;margin:0 0 25px}
+body.control-shell-v3 .control-home-v4 .shell-feature-primary{min-height:405px;padding:31px 34px;border-radius:19px;background:linear-gradient(135deg,#132d47 4%,#184874 64%,#2865a5 100%);position:relative;overflow:hidden;isolation:isolate}
+body.control-shell-v3 .control-home-v4 .shell-feature-primary::before{display:block!important;content:"";position:absolute;right:-115px;top:-80px;width:320px;height:320px;border-radius:50%;border:1px solid #8bb8e55e;background:radial-gradient(circle,#8bb8e519 0,transparent 66%);pointer-events:none}
+body.control-shell-v3 .control-home-v4 .shell-feature-primary::after{display:block!important;content:"04";font:800 200px/1 system-ui;letter-spacing:-18px;color:#ffffff10;position:absolute;right:-10px;bottom:-43px;width:auto;height:auto;border:0;border-radius:0;pointer-events:none}
+.control-home-v4 .control-v4-hero-text{position:relative;z-index:2;max-width:460px}
+.control-home-v4 .shell-feature-primary .shell-feature-tag{font-size:11px;color:#baf1e2;letter-spacing:1.7px}
+body.control-shell-v3 .control-home-v4 .shell-feature-primary h2{font-family:Inter,system-ui,sans-serif!important;font-weight:830;font-size:clamp(37px,4vw,60px);letter-spacing:-2.4px;line-height:1.03;margin:23px 0 17px;color:#fff}
+.control-home-v4 .shell-feature-primary h2 span{color:#d8ff8a}
+.control-home-v4 .shell-feature-primary p{max-width:355px;font-size:14px;color:#c8dfef;line-height:1.6}
+body.control-shell-v3 .control-home-v4 .shell-quick-find{width:100%;max-width:560px}
+.control-home-v4 .shell-quick-find label{font-size:12px;color:#dbedff}
+.control-home-v4 .shell-quick-row{padding:4px 4px 4px 0;background:#fff;border-radius:12px;box-shadow:0 8px 26px #0b24415c}
+body.control-shell-v3 .control-home-v4 .shell-quick-row input{color:#213950;min-width:0;background:#fff!important;border:0!important;box-shadow:none!important;border-radius:11px}
+body.control-shell-v3 .control-home-v4 .shell-quick-row button{background:#d8ff8a!important;border:1px solid #d8ff8a!important;color:#143653!important;min-height:45px!important;font-weight:800}
+.control-home-v4 .shell-quick-find small{display:block;margin-top:12px;color:#b8cfe3;font-size:11px}
+.control-home-v4 .control-v4-hero-decoration{position:absolute;inset:0;z-index:0;pointer-events:none}
+.control-home-v4 .control-v4-hero-decoration i{position:absolute;border:1px solid #98caf54d;border-radius:50%;width:155px;height:155px;right:38px;top:28px}
+.control-home-v4 .control-v4-hero-decoration i:nth-child(2){width:245px;height:245px;right:-5px;top:-20px}
+.control-home-v4 .control-v4-hero-decoration i:nth-child(3){width:340px;height:340px;right:-55px;top:-68px}
+body.control-shell-v3 .control-home-v4 .shell-feature-aside{background:#eef3f9;border:1px solid #d8e5f3;border-radius:19px;padding:20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-content:start}
+.control-home-v4 .control-v4-actions-title{grid-column:1/-1;padding:3px 2px 9px}
+.control-home-v4 .control-v4-actions-title>span{font-size:10px;font-weight:850;color:#4e7da8;letter-spacing:1.6px}
+.control-home-v4 .control-v4-actions-title h2{font-size:20px!important;text-transform:none!important;letter-spacing:-.6px!important;color:#183a56!important;margin:6px 0 4px!important}
+.control-home-v4 .control-v4-actions-title p{margin:0;font-size:12px;color:#6b7c8e}
+body.control-shell-v3 .control-home-v4 .shell-action{flex:none;min-height:100px!important;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:8px!important;background:#fff!important;border:1px solid #d5e2ed!important;border-radius:13px!important;padding:15px 14px!important;box-shadow:0 4px 13px #1433530b!important}
+body.control-shell-v3 .control-home-v4 .shell-action:hover{border-color:#6396c8!important;transform:translateY(-2px)}
+.control-home-v4 .shell-action-glyph{border-radius:9px;width:34px;height:34px;background:#dae8f9!important;color:#2862a5!important;flex:0 0 34px}
+.control-home-v4 .control-v4-action-attention .shell-action-glyph{background:#fff0dc!important;color:#b26a23!important}
+.control-home-v4 .control-v4-action-agent .shell-action-glyph{background:#e8e3fb!important;color:#6858ad!important}
+.control-home-v4 .control-v4-action-backup .shell-action-glyph{background:#e0f2e9!important;color:#278461!important}
+.control-home-v4 .shell-action strong{font-size:13px!important;color:#244057}
+body.control-shell-v3 .control-home-v4 .shell-action small{display:block!important;color:#667c91!important;font-size:11px;line-height:1.35}
+body.control-shell-v3 .control-home-v4 .shell-dashboard-section{order:3;border-top:1px solid #d8e2ec;padding-top:21px}
+.control-home-v4 .clarity-listhead h2{font-size:24px!important}
+.control-home-v4 .control-v4-project-intro{font-size:12px;color:#647a8f;margin:0 0 7px}
+@media(max-width:1090px){
+ body.control-shell-v3 .control-home-v4 .shell-feature-grid{grid-template-columns:1fr}
+ body.control-shell-v3 .control-home-v4 .shell-feature-primary{min-height:315px}
+ body.control-shell-v3 .control-home-v4 .shell-feature-aside{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .control-home-v4 .control-v4-actions-title{grid-column:1/-1}
+}
+@media(max-width:700px){
+ body.control-shell-v3 .control-home-v4 .shell-dashboard-top{display:flex;flex-direction:column;align-items:flex-start;gap:13px}
+ body.control-shell-v3 .control-home-v4 .shell-dashboard-top h1{font-size:clamp(30px,8.3vw,39px);letter-spacing:-1.6px}
+ body.control-shell-v3 .control-home-v4 #add-project{align-self:flex-start}
+ body.control-shell-v3 .control-home-v4 .control-v4-pulse{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:0 0 13px}
+ .control-home-v4 .control-v4-metric{min-height:108px;padding:11px 9px;align-items:flex-start;flex-direction:column;gap:7px}
+ .control-home-v4 .control-v4-metric-icon{width:31px;height:31px;flex:0 0 31px;font-size:18px}
+ .control-home-v4 .control-v4-metric-copy strong{font-size:24px}
+ .control-home-v4 .control-v4-metric-copy small{font-size:10px}
+ .control-home-v4 .control-v4-metric-arrow{display:none}
+ body.control-shell-v3 .control-home-v4 .shell-feature-primary{min-height:325px;padding:23px 21px}
+ body.control-shell-v3 .control-home-v4 .shell-feature-primary h2{font-size:clamp(36px,10vw,49px)}
+ body.control-shell-v3 .control-home-v4 .shell-feature-aside{grid-template-columns:repeat(2,minmax(0,1fr));padding:12px;gap:8px}
+ body.control-shell-v3 .control-home-v4 .shell-action{min-height:103px!important;padding:11px!important}
+ body.control-shell-v3 .control-home-v4 .shell-action small{display:block!important;font-size:10px}
+}
+@media(max-width:390px){
+ .control-home-v4 .control-v4-metric{padding:9px 7px}
+ .control-home-v4 .control-v4-metric-copy strong{font-size:21px}
+ .control-home-v4 .control-v4-metric-copy small{font-size:9px}
+ body.control-shell-v3 .control-home-v4 .shell-quick-row{display:flex;flex-wrap:wrap;padding:6px}
+ body.control-shell-v3 .control-home-v4 .shell-quick-row input{flex:1 1 100%;min-height:42px}
+ body.control-shell-v3 .control-home-v4 .shell-quick-row button{flex:1;justify-content:center}
+}

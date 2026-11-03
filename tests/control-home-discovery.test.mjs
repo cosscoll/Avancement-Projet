@@ -36,8 +36,8 @@ test('new homepage links are mobile responsive and keyboard reachable',()=>{
  assert.match(home,/\.control-whats-new-links a:focus-visible/);
 });
 test('new PWA version invalidates stale offline home cache',()=>{
- assert.match(offline,/CACHE_SHELL='control-shell-v71'/);
- assert.match(offline,/CACHE_PUBLIC='control-public-data-v71'/);
+ assert.match(offline,/CACHE_SHELL='control-shell-v72'/);
+ assert.match(offline,/CACHE_PUBLIC='control-public-data-v72'/);
  assert.match(offline,/fetch\(request,\{cache:'no-cache'\}\)/);
  assert.match(offline,/await self\.clients\.claim\(\)/);
 });
@@ -62,4 +62,16 @@ test('AI feature search describes local agents and official connection status, n
  const nav=readFileSync('assets/navigation-hub.js','utf8');
  assert.match(nav,/Créer un assistant local, gérer mes mémoires et consulter les connexions IA/);
  assert.match(nav,/Sauvegarder projets, agents, mémoires et restaurer un fichier chiffré/);
+});
+
+test('CONTROL 04 homepage shows visibly redesigned hero, truthful local stats and direct routes',()=>{
+ assert.match(home,/control-home-v4/);
+ assert.match(home,/NOUVELLE VUE D’ENSEMBLE/);
+ assert.match(home,/Tout votre travail/);
+ assert.match(home,/control-v4-pulse/);
+ assert.match(home,/const openActions=metric\('control-command-v1'/);
+ assert.match(home,/const localAgents=metric\('control-ai-studio-v1'/);
+ assert.match(home,/Choisir une action/);
+ assert.match(home,/VUE 04 · NOUVEAU/);
+ for(const path of ['#\/control\/inbox','#\/control\/aistudio','#\/control\/backup'])assert.ok(home.includes(path));
 });

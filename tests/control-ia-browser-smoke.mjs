@@ -157,6 +157,14 @@ try{
  await js("document.querySelector('.control-whats-new-links a[href=\"#/control/goals\"]').click()");
  await ready(()=>js("!!document.querySelector('#goal-request')"),9000)();
  log('visible homepage links to working goal planner, sourced search and decision memory; Cloud status truthful');
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('.control-home-v4 .control-v4-pulse')"),6000)();
+ assert.equal(await js("document.querySelectorAll('.control-v4-metric').length"),3);
+ assert.match(await js("document.querySelector('.control-home-v4 h1').textContent"),/Tout votre travail/);
+ assert.equal(await js("!!document.querySelector('.control-home-v4 .control-v4-action-agent')"),true);
+ assert.equal(await js("!!document.querySelector('.control-home-v4 .shell-quick-find')"),true);
+ log('CONTROL 04 visual dashboard, local metrics and primary navigation are rendered in Chromium');
+
  await js("location.hash='#/control/localai'");
  await ready(()=>js("!!document.querySelector('[data-control-operator]')"),9000)();
 
