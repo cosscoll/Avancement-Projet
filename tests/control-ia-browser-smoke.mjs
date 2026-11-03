@@ -164,6 +164,7 @@ try{
 
  // Home project navigation reveals real project cards, preserving search and creation.
  await js("document.querySelector('#control-home-nav-projects').click()");
+ await ready(()=>js("location.hash==='#/projects'&&document.querySelector('#control-home-projects')?.open===true"),8000)();
  assert.equal(await js("document.querySelector('#control-home-projects').open"),true);
  assert.equal(await js("!!document.querySelector('#cards')"),true);
  assert.equal(await js("!!document.querySelector('#add-project')"),true);
@@ -513,6 +514,7 @@ try{
  assert.ok(desktop.cardWidth>=400&&desktop.cardWidth<=840&&desktop.hasBrand&&desktop.hasAsk&&desktop.hasPriorities,'Desktop home must use the compact mockup layout: '+JSON.stringify(desktop));
  assert.ok(desktop.overflow<=desktop.width+4,'Desktop homepage must not overflow: '+JSON.stringify(desktop));
  await js("document.querySelector('#control-home-nav-projects').click()");
+ await ready(()=>js("location.hash==='#/projects'&&document.querySelector('#control-home-projects')?.open===true"),8000)();
  assert.equal(await js("document.querySelector('#control-home-projects').open"),true);
  log('1440px desktop uses centered CONTROL mockup and reveals the real projects on demand');
  // Project discovery should tolerate accents and reordered terms while retaining the right route.
@@ -558,6 +560,7 @@ try{
  // UX regression: the project list is available on demand, and advanced
  // project sections remain accessible when opened explicitly.
  await js("document.querySelector('#control-home-nav-projects').click()");
+ await ready(()=>js("location.hash==='#/projects'&&document.querySelector('#control-home-projects')?.open===true"),8000)();
  assert.equal(await js("document.querySelector('#control-home-projects').open"),true);
  await js("document.querySelector('#add-project').click()");
  await ready(()=>js("!document.querySelector('#add-box').classList.contains('hidden')"),8000)();
@@ -724,6 +727,7 @@ try{
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('.shell-projects-list a.card')"),8000)();
  await js("document.querySelector('#control-home-nav-projects').click()");
+ await ready(()=>js("location.hash==='#/projects'&&document.querySelector('#control-home-projects')?.open===true"),8000)();
  assert.equal(await js("document.querySelector('#control-home-projects').open"),true);
  await js("document.querySelector('.shell-projects-list a.card').click()");
  await ready(()=>js("!!document.querySelector('.shell-project-more')"),8000)();
