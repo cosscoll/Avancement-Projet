@@ -1,3 +1,7 @@
+### Sprint PWA — mise à jour contrôlée (3 novembre 2026)
+
+Bascule des caches publics PWA `v69 → v70` pour que les installations existantes téléchargent une nouvelle coque de l'application. La page signale un nouveau service worker avec « Actualiser » et « Plus tard » ; le rechargement n'est **jamais automatique** et demande confirmation pour éviter de perdre un formulaire. Le premier enregistrement PWA ne montre pas un faux avis de mise à jour. Les données personnelles locales ne sont jamais écrites dans les caches publics. Les tests sont effectués sur Chromium et sur des événements worker simulés ; validation sur téléphone Android réel encore nécessaire.
+
 ### Sprint S5 — recherche locale dans les discussions (3 novembre 2026)
 
 La recherche du Studio IA parcourt les noms et messages locaux des agents, sans lire les archives importées non approuvées ni contacter un fournisseur externe. Elle retrouve un fil dans n'importe quel agent, affiche le total exact et ouvre le message correspondant. Une limite de 20 résultats affichés reste explicite. La recherche accepte les accents et traite toutes les valeurs utilisateur comme du texte échappé. Le contrôle de largeur mobile à 320 px et le parcours Chromium font partie de la recette.

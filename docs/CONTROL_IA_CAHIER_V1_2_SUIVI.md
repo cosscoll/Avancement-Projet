@@ -1,3 +1,10 @@
+## Sprint CONTROL — PWA et synchronisation de version (3 novembre 2026)
+
+- Invalidation de la coque PWA `control-shell-v70` et des données publiques `control-public-data-v70` après changement du Studio IA.
+- Introduction d'une notification visible et accessible lorsqu'un nouveau service worker prend le contrôle, avec rechargement volontaire et confirmation préalable ; aucune saisie non enregistrée n'est jetée automatiquement.
+- Tests : première installation sans faux avis, mise à jour signalée, refus de rechargement, et contrôle de largeur du composant mobile. Les tests natifs et Chromium doivent valider le nouveau cache.
+- Pas de synchronisation Cloud, d'activation d'automatisation ni de dépense.
+
 ## Sprint — recherche transversale dans les discussions (3 novembre 2026)
 
 - Ajout d'une recherche locale sur les titres et messages des fils de tous les assistants Studio, avec résultat par discussion, extrait court, provenance projet/agent et accès direct au message correspondant.

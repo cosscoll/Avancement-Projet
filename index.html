@@ -35,6 +35,14 @@
 .control-whats-new-status span{color:#8593a4;font-size:11px}
 .control-whats-new-status strong{color:#374a63}
 @media(max-width:640px){.control-whats-new{padding:14px 13px;margin:10px 0 18px}.control-whats-new-heading{align-items:flex-start;flex-direction:column;gap:5px}.control-whats-new-links{grid-template-columns:1fr;gap:7px}.control-whats-new-links a{min-height:0;padding:10px 12px;gap:2px}.control-whats-new-links span{font-size:12px}.control-whats-new-more{margin-top:1px}}
+#control-pwa-update[hidden]{display:none!important}
+#control-pwa-update{position:fixed;z-index:1100;right:16px;bottom:calc(82px + env(safe-area-inset-bottom,0px));left:auto;width:min(430px,calc(100% - 32px));padding:14px;background:#fff;color:#1c3049;border:1px solid #b8cee8;box-shadow:0 12px 36px #1228443b;border-radius:15px;display:grid;gap:12px}
+#control-pwa-update strong{display:block;font-size:14px;margin-bottom:5px}
+#control-pwa-update small{display:block;font-size:12px;line-height:1.5;color:#546c89}
+.control-pwa-update-actions{display:flex;gap:9px}
+.control-pwa-update-actions button{min-height:44px;border-radius:10px;padding:8px 14px;border:1px solid #c8d5e5;background:#f2f5f9;color:#274a75;font-weight:700}
+#control-pwa-update-now{background:#23578c;color:white;border-color:#23578c}
+@media(max-width:390px){#control-pwa-update{bottom:calc(74px + env(safe-area-inset-bottom,0px));right:10px;width:calc(100% - 20px);padding:12px}.control-pwa-update-actions button{flex:1}}
 </style><link rel="stylesheet" href="assets/workspace-shell.css">
 <link rel="stylesheet" href="assets/control-ai-studio.css">
  <link rel="stylesheet" href="assets/control-web-builder.css"></head><body class="control-shell-v3">
@@ -359,4 +367,4 @@ $('#control-external-reload').onclick=()=>{
 };
 window.addEventListener('hashchange',render);document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{if(b.dataset.go==='home')location.hash='#/';if(b.dataset.go==='settings')location.hash='#/settings';if(b.dataset.go==='automations')location.hash='#/automations';if(['inbox','manager','tools'].includes(b.dataset.go))location.hash='#/control/'+b.dataset.go;if(b.dataset.go==='current'){if(active)go(active,tab);else location.hash='#/'}});window.CONTROL_HUB_STORAGE={commit:commitHub,canWrite:()=>!hubCorrupt};window.CONTROL_NAVIGATION?.setAdapter({mode:'personal',getActiveProject:()=>active?projects.find(p=>p.id===active):null,getProjects:()=>projects,isAvailable:()=>true});window.CONTROL_HELP?.setAdapter({mode:'personal',isAuthenticated:()=>true,getSummary:()=>({projects:projects.length,current:active?projects.find(p=>p.id===active)?.name:'',openActions:JSON.parse(localStorage.getItem('control-command-v1')||'{}').actions?.filter(x=>x.status!=='done')?.length||0,missions:JSON.parse(localStorage.getItem('control-command-v1')||'{}').missions?.length||0})});init();
 })();
-</script><script defer src="assets/pwa.js"></script></body></html>
+</script><aside id="control-pwa-update" hidden role="status" aria-live="polite" aria-label="Mise à jour de CONTROL"><div><strong>Nouvelle version de CONTROL disponible</strong><small>Actualise pour utiliser les nouvelles fonctions. Tes données locales restent sur cet appareil, mais toute saisie non enregistrée peut être perdue.</small></div><div class="control-pwa-update-actions"><button type="button" id="control-pwa-update-now">Actualiser</button><button type="button" id="control-pwa-update-later">Plus tard</button></div></aside><script defer src="assets/pwa.js"></script></body></html>

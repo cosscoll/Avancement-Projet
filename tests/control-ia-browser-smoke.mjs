@@ -891,6 +891,11 @@ try{
   await js("document.querySelector('[data-as-action=clear-thread-search]').click()");
   assert.equal(await js("document.querySelector('.as-thread-hit')===null"),true,'Clearing query hides results');
   log('AI Studio search finds messages across agents, opens matched thread, and fits 320px');
+  assert.equal(await js("!!document.querySelector('#control-pwa-update[hidden]')"),true,'New PWA should not display an update without an actual worker change');
+  assert.ok(await js("!!document.querySelector('#control-pwa-update-now')"));
+  assert.ok(await js("!!document.querySelector('#control-pwa-update-later')"));
+  log('PWA update notice is available but does not auto-refresh an unsaved form');
+
   // Reset ONLY the synthetic search fixture so subsequent historical acceptance
   // checks still use the single original agent and its real source associations.
   await js("(()=>{localStorage.setItem('control-ai-studio-v1',window.__studioSearchSnapshot);delete window.__studioSearchSnapshot;location.hash='#/'})()");
