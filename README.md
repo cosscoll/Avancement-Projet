@@ -1,3 +1,13 @@
+## 3 novembre 2026 — CONTROL 07 : cohérence visuelle de toute l'application personnelle
+
+**Livraison sur `main` :** la charte de l'accueil CONTROL 06 (blanc, bleu foncé, contenu centré et quatre destinations visibles) s'applique maintenant aux **écrans internes** de l'application personnelle. L'ancienne barre latérale sombre et l'ancien pied de page mobile n'apparaissent plus lors du passage vers « À traiter », un projet, « Équipe », « Assistants » ou les autres outils. Un en-tête compact remplace ces menus ; sur mobile, les quatre destinations restent visibles en bas de l'écran.
+
+**Navigation métier :** « Projets » ouvre désormais `#/projects`, véritable vue dédiée à la recherche et à la reprise de projets (sans les compteurs ni le bloc de demande de l'accueil). Dans un projet, les sections principales s'appellent « Mes IA », « Conversations », « Suivi » et « Documents & liens » ; les sept fonctions secondaires sont repliées tant qu'elles ne sont pas nécessaires. Un bouton **+ Tâche** permet d'ouvrir directement le formulaire de création sans passer par le moteur de recherche.
+
+**Précautions :** les contenus de tâches, missions, projets et assistants n'ont pas été supprimés ni migrés. Ce changement concerne la navigation et la présentation, **pas** une activation du Cloud, de la collaboration ni des connecteurs IA. Les réglages et les parcours secondaires restent accessibles.
+
+**Recette :** `tests/control-workspace-v7.test.mjs` couvre la structure, les liens et les protections. La recette navigateur `tests/control-ia-browser-smoke.mjs` a été adaptée pour vérifier la transition entre les pages, le formulaire de tâche, les projets et la navigation fixe mobile. Cache PWA v78. Ces tests doivent encore réussir sur la version réellement déployée avant de qualifier le rendu de validé.
+
 ## 3 novembre 2026 — CONTROL 06 : accueil conforme à la maquette entrepreneur
 
 **Changement visuel réel sur `main` :** suppression, sur l'accueil personnel seulement, de l'ancienne grande bannière bleue, des cinq tuiles et du rail latéral sombre. La page est désormais centrée, sobre et compacte : logo CONTROL et « Mon entreprise », « Bonjour. », trois statistiques issues de données locales (urgences / à faire / en attente), zone « Demander à CONTROL », trois priorités cliquables et quatre destinations Accueil / Projets / Équipe / Assistants. Le bandeau secondaire « Mes projets » est replié par défaut mais s'ouvre depuis la navigation, avec conservation de la recherche et des formulaires de création. Les outils avancés restent accessibles dans un volet dédié. Le reste de l'application n'a pas été remplacé par une maquette statique.
