@@ -478,16 +478,18 @@ try{
  await js("location.hash="+JSON.stringify(beforeFinderHash));
  await ready(()=>js("!!document.querySelector('.control-delivery-focus')"),8000)();
  log('320px finder finds visio by intent and opens its destination without mobile overflow');
- // Desktop contract: this must now be an actual workspace with a persistent
- // navigation rail and a project-first dashboard, not a centered card grid.
+ // Desktop contract: the approved mockup is a centered compact surface, not the
+ // old dark navigation rail and giant editorial hero.
  await command('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false});
  await js("location.hash='#/'");
- await ready(()=>js("!!document.querySelector('#main .shell-dashboard .shell-feature-primary')"),8000)();
- const desktop=await js("(()=>{const rail=document.querySelector('.shell-sidebar'),main=document.querySelector('#main'),dashboard=document.querySelector('.shell-dashboard'),projects=dashboard?.querySelector('.shell-dashboard-section'),news=dashboard?.querySelector('.control-whats-new'),hero=dashboard?.querySelector('.shell-feature-primary');return {width:innerWidth,overflow:document.documentElement.scrollWidth,railWidth:rail?.getBoundingClientRect().width,railVisible:rail&&getComputedStyle(rail).display!=='none',mainLeft:main?.getBoundingClientRect().left,heroBackground:hero?getComputedStyle(hero).backgroundColor:'',projectsY:projects?.getBoundingClientRect().top,newsY:news?.getBoundingClientRect().top,links:document.querySelectorAll('.shell-side-link').length}})()");
- assert.ok(desktop.railVisible&&desktop.railWidth>=245&&desktop.mainLeft>=260,'Desktop must have real fixed sidebar with separate workspace: '+JSON.stringify(desktop));
- assert.ok(desktop.heroBackground!=='rgb(255, 255, 255)'&&desktop.projectsY<desktop.newsY,'Projects must appear above the announcements in a non-white editorial dashboard: '+JSON.stringify(desktop));
- assert.ok(desktop.links>=7&&desktop.overflow<=desktop.width+4,'Desktop navigation or page overflows: '+JSON.stringify(desktop));
- log('1440px desktop has persistent dark navigation, separate content canvas and project-first layout');
+ await ready(()=>js("!!document.querySelector('#main .control-home-v6 .control-home-v6-stats')"),8000)();
+ const desktop=await js("(()=>{const rail=document.querySelector('.shell-sidebar'),main=document.querySelector('#main'),card=document.querySelector('.control-home-v6'),brand=card?.querySelector('.control-home-v6-brand'),ask=card?.querySelector('.control-home-v6-ask'),priorities=card?.querySelector('.control-home-v6-priorities');return {width:innerWidth,overflow:document.documentElement.scrollWidth,railHidden:rail&&getComputedStyle(rail).display==='none',cardWidth:card?.getBoundingClientRect().width,mainLeft:main?.getBoundingClientRect().left,hasBrand:!!brand,hasAsk:!!ask,hasPriorities:!!priorities}})()");
+ assert.equal(desktop.railHidden,true,'The old sidebar must be hidden on the approved homepage: '+JSON.stringify(desktop));
+ assert.ok(desktop.cardWidth>=400&&desktop.cardWidth<=840&&desktop.hasBrand&&desktop.hasAsk&&desktop.hasPriorities,'Desktop home must use the compact mockup layout: '+JSON.stringify(desktop));
+ assert.ok(desktop.overflow<=desktop.width+4,'Desktop homepage must not overflow: '+JSON.stringify(desktop));
+ await js("document.querySelector('#control-home-nav-projects').click()");
+ assert.equal(await js("document.querySelector('#control-home-projects').open"),true);
+ log('1440px desktop uses centered CONTROL mockup and reveals the real projects on demand');
  // Project discovery should tolerate accents and reordered terms while retaining the right route.
  await js("(()=>{const field=document.querySelector('#search');field.value='ifsi revisions';field.dispatchEvent(new Event('input',{bubbles:true}))})()");
  await ready(()=>js("document.querySelectorAll('#cards a.card').length===1"),8000)();
@@ -687,7 +689,7 @@ try{
 
 
  await js("location.hash='#/'");
- await ready(()=>js("!!document.querySelector('.shell-dashboard')"),8000)();
+ await ready(()=>js("!!document.querySelector('.control-home-v6')"),8000)();
  await command('Emulation.setDeviceMetricsOverride',{width:320,height:700,deviceScaleFactor:2,mobile:true});
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('.shell-projects-list a.card')"),8000)();
@@ -725,7 +727,7 @@ try{
  // The personal project store must never be overwritten after a corrupted read.
  await js("(()=>{const raw=localStorage.getItem('control-hub-v2');sessionStorage.setItem('control-smoke-hub-before',raw===null?'__ABSENT__':raw);localStorage.setItem('control-hub-v2','{invalid-hub');location.hash='#/'})()");
  await command('Page.reload',{ignoreCache:false});
- await ready(()=>js("!!document.querySelector('.shell-dashboard')&&!!document.querySelector('#main [role=alert]')"),16000)();
+ await ready(()=>js("!!document.querySelector('.control-home-v6')&&!!document.querySelector('#main [role=alert]')"),16000)();
  const hubWarn=await js("document.querySelector('#main [role=alert]')?.textContent||''");
  assert.match(hubWarn,/données locales des projets sont illisibles/);
  await js("document.querySelector('#add-project').click()");
@@ -735,7 +737,7 @@ try{
  assert.ok(!(await js("document.querySelector('#cards')?.textContent?.includes('Projet qui ne doit pas exister')")),'Unsaved project must not appear');
  await js("(()=>{const previous=sessionStorage.getItem('control-smoke-hub-before');if(previous==='__ABSENT__')localStorage.removeItem('control-hub-v2');else localStorage.setItem('control-hub-v2',previous);sessionStorage.removeItem('control-smoke-hub-before');location.hash='#/'})()");
  await command('Page.reload',{ignoreCache:false});
- await ready(()=>js("!!document.querySelector('.shell-dashboard')&&!document.querySelector('#main [role=alert]')"),16000)();
+ await ready(()=>js("!!document.querySelector('.control-home-v6')&&!document.querySelector('#main [role=alert]')"),16000)();
  log('project hub refuses overwriting corrupt JSON and restores normal operation after recovery');
 
  // The local automation register is not an execution system; malformed data must remain untouched.
@@ -749,7 +751,7 @@ try{
  assert.equal(await js("location.hash"),'#/automations/Claude','Draft creation must be refused while storage is corrupt');
  await js("(()=>{const previous=sessionStorage.getItem('control-smoke-autos-before');if(previous==='__ABSENT__')localStorage.removeItem('control-automations-v1');else localStorage.setItem('control-automations-v1',previous);sessionStorage.removeItem('control-smoke-autos-before');location.hash='#/'})()");
  await command('Page.reload',{ignoreCache:false});
- await ready(()=>js("!!document.querySelector('.shell-dashboard')"),16000)();
+ await ready(()=>js("!!document.querySelector('.control-home-v6')"),16000)();
  log('corrupt automation drafts block new entries without enabling scheduled tasks');
 
  // A new encrypted or plain backup must be inspected before any local overwrite.
@@ -886,7 +888,7 @@ try{
   assert.match(await js("(()=>{const a=JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0];return sessionStorage.getItem('control-ai-studio-draft-v1:'+a.id+':'+a.threads[0].id)})()"),/Brouillon temporaire/);
   assert.equal(await js("JSON.stringify(JSON.parse(localStorage.getItem('control-ai-studio-v1'))).includes('Brouillon temporaire')"),false);
   await js("location.hash='#/'");
-  await ready(()=>js("!!document.querySelector('.shell-dashboard')"),7000)();
+  await ready(()=>js("!!document.querySelector('.control-home-v6')"),7000)();
   await js("location.hash='#/control/aistudio'");
   await ready(()=>js("!!document.querySelector('[data-as-tab=agents]')"),7000)();
   await js("document.querySelector('[data-as-tab=agents]').click()");
@@ -947,7 +949,7 @@ try{
   // Synthetic conversations and searches remain inside this isolated browser.
   await js("window.__studioSearchSnapshot=localStorage.getItem('control-ai-studio-v1')");
   await js("(()=>{const s=JSON.parse(localStorage.getItem('control-ai-studio-v1'));s.agents[0].threads[0].messages=[{role:'user',content:'La décision stratégique mobile est validée'},{role:'assistant',content:'Le plan responsive est confirmé'}];s.agents.push({id:'agt-second-test',name:'Assistant Référencement',projectId:'general',instructions:'Auditer',conversationIds:[],memoryIds:[],configVersion:1,threads:[{id:'thr-search-test',name:'Projet SEO',messages:[{role:'user',content:'Mieux référencer le site sur les moteurs'}]}]});localStorage.setItem('control-ai-studio-v1',JSON.stringify(s));location.hash='#/'})()");
-  await ready(()=>js("!!document.querySelector('.shell-dashboard')"),7000)();
+  await ready(()=>js("!!document.querySelector('.control-home-v6')"),7000)();
   await js("location.hash='#/control/aistudio'");
   await ready(()=>js("!!document.querySelector('[data-as-tab=agents]')"),7000)();
   await js("document.querySelector('[data-as-tab=agents]').click()");
@@ -981,7 +983,7 @@ try{
   // Reset ONLY the synthetic search fixture so subsequent historical acceptance
   // checks still use the single original agent and its real source associations.
   await js("(()=>{localStorage.setItem('control-ai-studio-v1',window.__studioSearchSnapshot);delete window.__studioSearchSnapshot;location.hash='#/'})()");
-  await ready(()=>js("!!document.querySelector('.shell-dashboard')"),7000)();
+  await ready(()=>js("!!document.querySelector('.control-home-v6')"),7000)();
   await js("location.hash='#/control/aistudio'");
   await ready(()=>js("!!document.querySelector('[data-as-tab=agents]')"),7000)();
   await js("document.querySelector('[data-as-tab=agents]').click()");
@@ -1082,21 +1084,22 @@ try{
  log('Encrypted unified backup includes Studio IA: wrong password refused, preview, cancel and restore verified');
 
  await js("location.hash='#/'");
- await ready(()=>js("!!document.querySelector('.shell-feature-aside a[href=\"#/control/aistudio\"]')"),6500)();
- const shortcutCount=await js("document.querySelectorAll('.shell-feature-aside a[href=\"#/control/aistudio\"],.shell-feature-aside a[href=\"#/control/backup\"]').length");
- assert.equal(shortcutCount,2,'Both new homepage shortcuts must be visible');
- await js("document.querySelector('.shell-feature-aside a[href=\"#/control/aistudio\"]').click()");
+ await ready(()=>js("!!document.querySelector('.control-home-v6-tabs a[href=\"#/control/aistudio\"]')"),6500)();
+ const shortcutCount=await js("document.querySelectorAll('.control-home-v6-tabs a[href=\"#/control/aistudio\"],.control-home-v6-advanced a[href=\"#/control/backup\"]').length");
+ assert.equal(shortcutCount,2,'Assistants and backup must remain reachable from the new compact homepage');
+ await js("document.querySelector('.control-home-v6-tabs a[href=\"#/control/aistudio\"]').click()");
  await ready(()=>js("location.hash==='#/control/aistudio'&&!!document.querySelector('.as-provider-grid')"),7000)();
  await js("location.hash='#/'");
- await ready(()=>js("!!document.querySelector('.shell-feature-aside a[href=\"#/control/backup\"]')"),6500)();
- await js("document.querySelector('.shell-feature-aside a[href=\"#/control/backup\"]').click()");
+ await ready(()=>js("!!document.querySelector('.control-home-v6-advanced a[href=\"#/control/backup\"]')"),6500)();
+ await js("document.querySelector('.control-home-v6-advanced').open=true");
+ await js("document.querySelector('.control-home-v6-advanced a[href=\"#/control/backup\"]').click()");
  await ready(()=>js("location.hash==='#/control/backup'&&!!document.querySelector('#export-data')"),7000)();
  log('Homepage agent and backup shortcuts open the correct real app screens in Chromium');
 
 
 
  await js("location.hash='#/'");
- await ready(()=>js("!!document.querySelector('.control-whats-new')"),6000)();
+ await ready(()=>js("!!document.querySelector('.control-home-v6')"),6000)();
  await js("location.hash='#/control/aistudio'");
  await ready(()=>js("!!document.querySelector('.as-provider-grid')"),6000)();
  await js("document.querySelector('[data-as-tab=agents]').click()");
