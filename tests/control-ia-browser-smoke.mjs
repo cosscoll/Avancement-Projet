@@ -459,7 +459,7 @@ try{
  // The new universal finder must be operable with touch-sized controls,
  // and project-independent keywords must lead directly to a real destination.
  const beforeFinderHash=await js("location.hash");
- await js("document.querySelector('.control-nav-mobile-trigger[data-control-nav-open]').click()");
+ await js("document.querySelector('.control-head [data-control-nav-open]').click()");
  await ready(()=>js("document.querySelector('.control-finder')?.hidden===false"),8000)();
  assert.equal(await js("document.querySelector('.control-finder-search input')?.type"),'search');
  await js("(()=>{const input=document.querySelector('.control-finder-search input');input.value='visio';input.dispatchEvent(new Event('input',{bubbles:true}))})()");
@@ -470,7 +470,7 @@ try{
  await js("document.querySelector('[data-finder-id=meetings]').click()");
  await ready(()=>js("location.hash==='#/control/meetings'"),8000)();
  assert.equal(await js("document.querySelector('.control-finder').hidden"),true);
- await js("document.querySelector('.control-nav-mobile-trigger[data-control-nav-open]').click()");
+ await js("document.querySelector('.control-head [data-control-nav-open]').click()");
  await ready(()=>js("document.querySelector('.control-finder')?.hidden===false"),8000)();
  assert.equal(await js("!!document.querySelector('.control-finder-recents [data-finder-id=meetings]')"),true,
   'Recently opened visio must be available without searching again');
@@ -491,6 +491,7 @@ try{
  assert.equal(await js("document.querySelector('#control-home-projects').open"),true);
  log('1440px desktop uses centered CONTROL mockup and reveals the real projects on demand');
  // Project discovery should tolerate accents and reordered terms while retaining the right route.
+ await js("document.querySelector('#control-home-nav-projects').click()");
  await js("(()=>{const field=document.querySelector('#search');field.value='ifsi revisions';field.dispatchEvent(new Event('input',{bubbles:true}))})()");
  await ready(()=>js("document.querySelectorAll('#cards a.card').length===1"),8000)();
  assert.equal(await js("document.querySelector('#cards a.card strong')?.textContent"),'Révisions IFSI');
@@ -529,8 +530,10 @@ try{
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('#shell-quick-query')"),8000)();
  log('desktop direct task request opens action editor and saves no data until confirmation');
- // UX regression: new project opens close to its action, with an explicit
- // cancel path, and advanced project sections are visible on desktop.
+ // UX regression: the project list is available on demand, and advanced
+ // project sections remain accessible when opened explicitly.
+ await js("document.querySelector('#control-home-nav-projects').click()");
+ assert.equal(await js("document.querySelector('#control-home-projects').open"),true);
  await js("document.querySelector('#add-project').click()");
  await ready(()=>js("!document.querySelector('#add-box').classList.contains('hidden')"),8000)();
  assert.equal(await js("document.querySelector('#add-project').getAttribute('aria-expanded')"),'true');
@@ -540,7 +543,9 @@ try{
  await ready(()=>js("document.querySelector('.shell-project-navigation')!==null"),8000)();
  const projectNav=await js("({advanced:document.querySelectorAll('.shell-project-more .clarity-advanced [data-tab]').length,open:document.querySelector('.shell-project-more')?.open,computed:getComputedStyle(document.querySelector('.shell-project-more .clarity-advanced')).display})");
  assert.equal(projectNav.advanced,7,'Personal project still has 7 advanced sections');
- assert.ok(projectNav.open&&projectNav.computed!=='none','Desktop advanced project sections must be visible');
+ assert.ok(!projectNav.open&&projectNav.computed==='none','Secondary project sections should remain collapsed until requested');
+ await js("document.querySelector('.shell-project-more>summary').click()");
+ assert.equal(await js("document.querySelector('.shell-project-more').open"),true);
  await js("document.querySelector('.shell-project-navigation [data-tab=meetings]').click()");
  await ready(()=>js("location.hash.endsWith('/meetings')"),8000)();
  await js("document.querySelector('[data-control-nav-category=project]').click()");
