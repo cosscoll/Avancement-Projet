@@ -1,0 +1,26 @@
+/* CONTROL daily focus: readable, compact, accessible on desktop and phone. */
+.control-home-v4 .control-day-brief{margin:0 0 18px;padding:20px 22px;background:#fff;border:1px solid #d5e2ed;border-radius:18px;box-shadow:0 3px 12px #173d6010;color:#213b52}
+.control-day-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.control-day-eyebrow{display:block;font-size:10px;letter-spacing:1.3px;font-weight:800;color:#366a9b}
+.control-home-v4 .control-day-header h2{margin:5px 0 4px!important;font-size:23px!important;line-height:1.2!important;letter-spacing:-.6px;color:#17334f}
+.control-day-header p{margin:0!important;font-size:12px;color:#60778a}
+.control-home-v4 .control-day-new{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;min-height:43px;padding:10px 14px;background:#183c60;color:white;border-radius:10px;font-size:12px;font-weight:800}
+.control-home-v4 .control-day-new:hover{background:#245989}
+.control-day-counts{display:flex;gap:8px;margin:16px 0 12px;flex-wrap:wrap}
+.control-day-count{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#f1f6fa;border:1px solid #e2edf5;border-radius:9px}
+.control-day-count strong{font-size:20px;font-weight:800;line-height:1;color:#1e466e;font-variant-numeric:tabular-nums}
+.control-day-count small{font-size:11px;color:#4f677e}
+.control-day-list{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.control-day-list li{margin:0;min-width:0}
+.control-day-list a{display:flex;align-items:center;gap:15px;min-width:0;border:1px solid #e2e9ef;border-radius:10px;padding:11px 13px;background:#fbfcfe}
+.control-day-list a:hover{background:#f1f7fc;border-color:#aec7de}
+.control-day-item-text{display:flex;flex:1;min-width:0;flex-direction:column;gap:2px}
+.control-day-item-text strong{font-size:13px;overflow-wrap:anywhere;color:#223c55}
+.control-day-item-text small{font-size:11px;color:#6b7d91}
+.control-day-item-label{flex:0 0 auto;font-size:11px;font-weight:750;color:#295d91}
+.control-day-empty{display:flex;flex-direction:column;gap:4px;margin:0;padding:12px 14px;border:1px solid #e0ebf4;border-radius:10px;background:#f6f9fc;font-size:12px;line-height:1.55;color:#526980}
+.control-day-empty strong{color:#243c54}
+.control-day-footer{margin-top:13px;display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap;font-size:11px;color:#657b8d}
+.control-day-footer a{font-weight:800;color:#265b90;text-decoration:underline;text-underline-offset:3px}
+.control-day-brief a:focus-visible{outline:3px solid #296cbe;outline-offset:3px}
+@media(max-width:620px){.control-home-v4 .control-day-brief{padding:15px;margin:0 0 14px}.control-day-header{flex-direction:column;gap:11px}.control-home-v4 .control-day-new{width:100%}.control-day-counts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.control-day-count{flex-direction:column;align-items:flex-start;padding:9px;gap:3px}.control-day-count strong{font-size:19px}.control-day-count small{font-size:10px}.control-day-list a{align-items:flex-start;flex-wrap:wrap;gap:6px}.control-day-item-label{order:2;width:100%}.control-day-footer{align-items:flex-start;flex-direction:column}}
