@@ -19,6 +19,16 @@ _Mise à jour : 3 novembre 2026 · version de travail 1.0 · ciblage indépendan
 **Tests prévus dans le dépôt :** \`tests/control-task-workflow.test.mjs\` couvre règles de dates, priorisation, modifications et restrictions de liens. \`tests/control-day-brief.test.mjs\` inclut la liaison directe accueil → tâche. **La vérification du parcours public et les tests physiques ne peuvent pas être déduits de la seule présence du code.**
 
 
+## Correction de la maquette d'accueil — CONTROL 06 (3 novembre 2026)
+
+**Décision :** la précédente page CONTROL 04/05 était fonctionnellement enrichie mais visuellement non conforme à la maquette validée. CONTROL 06 remplace sa composition, au lieu d'ajouter une nouvelle couche de fonctionnalités.
+
+**Écran cible effectivement codé sur `main` :** interface blanche et épurée centrée, en-tête CONTROL / Mon entreprise, Bonjour, trois compteurs d'activité locale, bloc Demander à CONTROL, trois tâches prioritaires et quatre destinations principales Accueil / Projets / Équipe / Assistants. Les projets sont accessibles via un panneau replié et le bouton Projets. Les outils techniques restent dans les rubriques secondaires. Le rail sombre et le grand héros bleu ne doivent plus apparaître **sur l'accueil**.
+
+**Contraintes de vérité :** aucun chiffre fictif, aucun assistant connecté annoncé à tort, aucune équipe fictive. « Demander à CONTROL » continue d'utiliser le moteur de recherche de fonctions existant ; « Équipe » ouvre un écran de disponibilité honnête tant que la collaboration sécurisée n'est pas activée.
+
+**Recette obligatoire :** vérifier sur la version réellement déployée les sections DOM, les paramètres 320/390/1440 px, le masquage du menu latéral sur l'accueil, l'absence de débordement, l'accès à chaque destination, la création d'un projet et la conservation des sauvegardes. Tester l'application extérieure à l'accueil pour éviter de casser les autres écrans. Tests dédiés : `tests/control-home-v6.test.mjs` et adaptation du smoke Chromium `tests/control-ia-browser-smoke.mjs`. Cache PWA v77.
+
 ## Décision produit
 
 **Promesse** : « Je sais ce qui est important, je retrouve le contexte et je délègue sans perdre le contrôle. »
