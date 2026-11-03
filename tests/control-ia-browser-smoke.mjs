@@ -693,6 +693,8 @@ try{
  await command('Emulation.setDeviceMetricsOverride',{width:320,height:700,deviceScaleFactor:2,mobile:true});
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('.shell-projects-list a.card')"),8000)();
+ await js("document.querySelector('#control-home-nav-projects').click()");
+ assert.equal(await js("document.querySelector('#control-home-projects').open"),true);
  await js("document.querySelector('.shell-projects-list a.card').click()");
  await ready(()=>js("!!document.querySelector('.shell-project-more')"),8000)();
  const mobileProject=await js("({width:innerWidth,scroll:document.documentElement.scrollWidth,open:document.querySelector('.shell-project-more').open,display:getComputedStyle(document.querySelector('.shell-project-more .clarity-advanced')).display})");
