@@ -29,6 +29,22 @@ _Mise à jour : 3 novembre 2026 · version de travail 1.0 · ciblage indépendan
 
 **Recette obligatoire :** vérifier sur la version réellement déployée les sections DOM, les paramètres 320/390/1440 px, le masquage du menu latéral sur l'accueil, l'absence de débordement, l'accès à chaque destination, la création d'un projet et la conservation des sauvegardes. Tester l'application extérieure à l'accueil pour éviter de casser les autres écrans. Tests dédiés : `tests/control-home-v6.test.mjs` et adaptation du smoke Chromium `tests/control-ia-browser-smoke.mjs`. Cache PWA v77.
 
+## CONTROL 07 — Application homogène et navigation lisible (3 novembre 2026)
+
+**Objectif :** faire correspondre les écrans de travail à la maquette d'accueil, plutôt que présenter deux interfaces différentes selon la page.
+
+**Changements réalisés dans l'application personnelle :**
+- Menu latéral sombre remplacé, sur les écrans internes, par un en-tête compact et les quatre entrées Accueil / Projets / Équipe / Assistants ; navigation fixe en bas sur petit écran.
+- Les fonctions de recherche restent accessibles dans l'en-tête, avec un bouton direct « + Tâche » menant au formulaire existant.
+- `#/projects` ouvre désormais une vue projets dédiée : recherche et reprise de projets, sans les compteurs et le panneau d'assistance de l'accueil. La création et le suivi continuent d'utiliser les enregistrements existants.
+- Les pages « À traiter », les espaces projets et les outils IA partagent une base graphique blanche, bleu foncé, surfaces lisibles et contrôles adaptés au mobile ; les interfaces métier et leurs données sont conservées.
+- Dans un projet : Mes IA, Conversations, Suivi, Documents & liens. Les fonctions secondaires sont repliées par défaut, sauf lorsqu'une fonction avancée est sélectionnée.
+- La page Équipe reste informative et verrouillée tant que l'authentification et les permissions ne sont pas sûres. Pas d'illusion de collaboration opérationnelle.
+
+**Tests de non-régression ajoutés/adaptés :** `tests/control-workspace-v7.test.mjs` ; recette Chromium `tests/control-ia-browser-smoke.mjs` sur parcours Projets, Équipe, création de tâche et navigation fixe mobile. Une recette mobile réelle doit contrôler l'absence de défilement horizontal et la lisibilité du bas de page derrière la navigation.
+
+**Reste à faire :** vérifier la publication GitHub Pages, une vraie recette navigateur visuelle, les comptes A/B et les règles de sécurité Cloud, la synchronisation multi-appareils et les connecteurs métiers. **Aucun changement de Cloud, d'automatisation ni de quota payant.**
+
 ## Décision produit
 
 **Promesse** : « Je sais ce qui est important, je retrouve le contexte et je délègue sans perdre le contrôle. »
