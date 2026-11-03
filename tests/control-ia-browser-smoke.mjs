@@ -147,42 +147,52 @@ try{
 
  // The home screen must show new capabilities without requiring hidden tool navigation.
  await js("location.hash='#/'");
- await ready(()=>js("!!document.querySelector('.control-whats-new')"),9000)();
- const visibleHome=await js("({heading:document.querySelector('.control-whats-new h2')?.textContent||'',links:[...document.querySelectorAll('.control-whats-new-links a')].map(a=>({href:a.getAttribute('href'),title:a.textContent})),cloud:document.querySelector('.control-whats-new-status')?.textContent||''})");
- assert.match(visibleHome.heading,/nouvelles fonctions/i);
- for(const target of ['#/control/goals','#/control/search','#/control/memory'])
-  assert.ok(visibleHome.links.some(x=>x.href===target),'New feature link missing from homepage: '+target);
- assert.match(visibleHome.cloud,/pas encore activée/,'Home must not claim live CONTROL Cloud accounts');
- assert.ok(await js("!!document.querySelector('.control-whats-new-status a[href=\"app.html\"]')"),'Visible Cloud status should link to truthful setup page');
- await js("document.querySelector('.control-whats-new-links a[href=\"#/control/goals\"]').click()");
- await ready(()=>js("!!document.querySelector('#goal-request')"),9000)();
- log('visible homepage links to working goal planner, sourced search and decision memory; Cloud status truthful');
  await js("location.hash='#/'");
- await ready(()=>js("!!document.querySelector('.control-home-v4 .control-v4-pulse')"),6000)();
- assert.equal(await js("document.querySelectorAll('.control-v4-metric').length"),3);
- assert.match(await js("document.querySelector('.control-home-v4 h1').textContent"),/Tout votre travail/);
- assert.equal(await js("!!document.querySelector('.control-home-v4 .control-v4-action-agent')"),true);
- assert.equal(await js("!!document.querySelector('.control-home-v4 .shell-quick-find')"),true);
- log('CONTROL 04 visual dashboard, local metrics and primary navigation are rendered in Chromium');
+ await ready(()=>js("!!document.querySelector('.control-home-v6 .control-home-v6-stats')"),9000)();
+ const businessHome=await js("({title:document.querySelector('.control-home-v6 h1')?.textContent||'',brand:document.querySelector('.control-home-v6-brand')?.textContent||'',metrics:document.querySelectorAll('.control-home-v6-stat').length,ask:!!document.querySelector('.control-home-v6-ask #shell-quick-find'),priority:!!document.querySelector('.control-home-v6-priorities'),tabs:document.querySelectorAll('.control-home-v6-tabs > a, .control-home-v6-tabs > button').length,sidebar:getComputedStyle(document.querySelector('.shell-sidebar')).display,projects:document.querySelector('#control-home-projects')?.open,provenance:document.querySelector('.control-home-v6-provenance')?.textContent||'',legacyHero:!!document.querySelector('.shell-feature-primary')})");
+ assert.match(businessHome.title,/Bonjour/);
+ assert.match(businessHome.brand,/CONTROL.*Mon entreprise/s);
+ assert.equal(businessHome.metrics,3);
+ assert.equal(businessHome.ask,true);
+ assert.equal(businessHome.priority,true);
+ assert.equal(businessHome.tabs,4);
+ assert.equal(businessHome.sidebar,'none');
+ assert.equal(businessHome.projects,false);
+ assert.equal(businessHome.legacyHero,false);
+ assert.match(businessHome.provenance,/sur cet appareil/);
+ log('CONTROL 06 home matches approved compact entrepreneur structure, not old blue hero');
 
- // Visible redesign must be functional at the two common Android viewport widths.
+ // Home project navigation reveals real project cards, preserving search and creation.
+ await js("document.querySelector('#control-home-nav-projects').click()");
+ assert.equal(await js("document.querySelector('#control-home-projects').open"),true);
+ assert.equal(await js("!!document.querySelector('#cards')"),true);
+ assert.equal(await js("!!document.querySelector('#add-project')"),true);
+ await js("location.hash='#/control/goals'");
+ await ready(()=>js("!!document.querySelector('#goal-request')"),9000)();
+ log('goal planner remains accessible after the homepage redesign');
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('.control-home-v6')"),7000)();
+
+ // Verify at the two common small Android widths; no offscreen overflow.
  for(const width of [390,320]){
   await command('Emulation.setDeviceMetricsOverride',{width,height:740,deviceScaleFactor:2,mobile:true});
-  await delay(200);
-  const view=await js("({inner:innerWidth,scroll:document.documentElement.scrollWidth,hero:!!document.querySelector('.control-home-v4 .shell-feature-primary'),metrics:document.querySelectorAll('.control-v4-metric').length,actions:document.querySelectorAll('.control-home-v4 .shell-action').length})");
-  assert.equal(view.hero,true);
+  await delay(220);
+  const view=await js("({inner:innerWidth,scroll:document.documentElement.scrollWidth,metrics:document.querySelectorAll('.control-home-v6-stat').length,tabs:document.querySelectorAll('.control-home-v6-tabs>a,.control-home-v6-tabs>button').length,oldNav:getComputedStyle(document.querySelector('.mobilefoot')).display})");
   assert.equal(view.metrics,3);
-  assert.equal(view.actions,5);
-  assert.ok(view.scroll<=view.inner+4,'CONTROL 04 mobile horizontal overflow at '+width+': '+JSON.stringify(view));
+  assert.equal(view.tabs,4);
+  assert.equal(view.oldNav,'none');
+  assert.ok(view.scroll<=view.inner+4,'CONTROL 06 mobile horizontal overflow at '+width+': '+JSON.stringify(view));
  }
  await command('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false});
- await js("document.querySelector('.control-v4-metric[href=\"#/control/aistudio\"]').click()");
+ await js("document.querySelector('.control-home-v6-tabs a[href=\"#/control/team\"]').click()");
+ await ready(()=>js("document.querySelector('#main h1')?.textContent==='Équipe'"),7000)();
+ assert.match(await js("document.querySelector('#main').textContent"),/pas encore activée/);
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('.control-home-v6-tabs a[href=\"#/control/aistudio\"]')"),7000)();
+ await js("document.querySelector('.control-home-v6-tabs a[href=\"#/control/aistudio\"]').click()");
  await ready(()=>js("!!document.querySelector('[data-as-tab=agents]')"),7000)();
  assert.equal(await js("location.hash"),'#/control/aistudio');
- await js("location.hash='#/'");
- await ready(()=>js("!!document.querySelector('.control-home-v4')"),7000)();
- log('CONTROL 04 has responsive 320/390px navigation and real direct agent destination');
-
+ log('CONTROL 06 responsive homepage and four destinations verified in Chromium');
 
  await js("location.hash='#/control/localai'");
  await ready(()=>js("!!document.querySelector('[data-control-operator]')"),9000)();
