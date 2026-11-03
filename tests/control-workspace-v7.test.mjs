@@ -73,6 +73,13 @@ test('Core task and agent modules remain wired, no Cloud activation',()=>{
  assert.ok(Object.values(config.launchChecks).every(value=>value===false));
 });
 
+test('One-click local task creation is available without opening technical menus',()=>{
+ assert.match(html,/class="control-quick-task" href="#\/control\/inbox\/new"/);
+ assert.match(html,/aria-label="Créer une tâche"/);
+ assert.match(css,/control-head \.control-quick-task/);
+ assert.match(command,/route\(\)\.param==='new'/);
+});
+
 test('Latest offline shell version includes workspace stylesheet',()=>{
  assert.match(worker,/control-shell-v78/);
  assert.match(worker,/control-public-data-v78/);
