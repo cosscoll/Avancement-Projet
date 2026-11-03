@@ -1,6 +1,24 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
 _Mise à jour : 3 novembre 2026 · version de travail 1.0 · ciblage indépendants et équipes de 2 à 10 personnes_
 
+
+## Sprint suivant — parcours de tâches opérationnel (3 novembre 2026)
+
+**Livré sur \`main\` dans l'application personnelle :**
+- Rechercher des tâches par intitulé et projet, sans autre outil ni connexion.
+- Filtrer En attente / En retard / Aujourd'hui / À vérifier / Terminées.
+- Modifier directement l'intitulé, le projet, la priorité, l'échéance, le statut et le lien de référence.
+- Marquer terminé et rouvrir ; les champs historiques et autres enregistrements sont conservés.
+- Accéder à une tâche précise depuis les trois priorités de l'accueil via un lien local, qui ouvre le formulaire correspondant.
+- Réduire la densité de l'écran par des formulaires repliables et un volet « Sources externes » secondaire.
+- Refuser les dates impossibles, les liens non HTTPS ou sensibles, les priorités et statuts inconnus, et les projets non reconnus sans effacer les anciennes références.
+- Utiliser l'enregistrement local transactionnel existant, y compris l'annulation en mémoire si la persistance échoue et la détection de modification inter-onglets.
+
+**Non livré :** assignation à un salarié, gestion de clients, rappels multi-appareils, synchronisation Cloud, accès aux emails privés, contrôle automatique des IA, traitement hors navigateur. Ces fonctions exigent les étapes de sécurité P0.
+
+**Tests prévus dans le dépôt :** \`tests/control-task-workflow.test.mjs\` couvre règles de dates, priorisation, modifications et restrictions de liens. \`tests/control-day-brief.test.mjs\` inclut la liaison directe accueil → tâche. **La vérification du parcours public et les tests physiques ne peuvent pas être déduits de la seule présence du code.**
+
+
 ## Décision produit
 
 **Promesse** : « Je sais ce qui est important, je retrouve le contexte et je délègue sans perdre le contrôle. »
