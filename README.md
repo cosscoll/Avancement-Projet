@@ -1,3 +1,11 @@
+## 3 novembre 2026 — CONTROL : tâches modifiables et parcours quotidien simplifié
+
+**Sur `main` :** l'écran **À traiter** dispose maintenant d'une recherche, de filtres, d'un formulaire d'édition par tâche, des actions Terminer/Rouvrir et de liens directs depuis les priorités du tableau de bord. La création est repliable ; les sources externes secondaires n'encombrent plus l'écran. Les anciennes données locales ne sont pas migrées ni supprimées.
+
+**Sécurité des actions locales :** les modifications conservent la vérification des conflits entre onglets ; dates, priorités, statuts, projets et liens HTTPS sont validés. Sans succès d'enregistrement, l'application ne confirme pas l'action. Les données externes ne sont pas présentées comme synchronisées.
+
+**Recette et limites :** tests de règles dans `tests/control-task-workflow.test.mjs` et de liens directs dans `tests/control-day-brief.test.mjs` ; syntaxe vérifiée séparément. Cache PWA `v75`. Aucun compte Cloud, collaboration multi-utilisateurs, service tiers payant ni automatisation activé. [Cahier des charges TPE et état livré](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md).
+
 ## 3 novembre 2026 — CONTROL 05 : priorités d'un entrepreneur et cahier des charges TPE
 
 **Modifications sur `main` :** l'accueil personnel affiche désormais les actions en retard, celles prévues aujourd'hui et les missions à vérifier à partir des enregistrements locaux existants, avec les trois éléments les plus importants, un raccourci direct vers « Créer une tâche » et un état vide explicite. Les titres du tableau de bord et de la navigation ont été simplifiés. Les données malformées affichent un avertissement plutôt que des chiffres artificiels ; les titres de tâches sont échappés dans l'interface.
