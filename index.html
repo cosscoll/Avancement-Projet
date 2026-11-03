@@ -174,7 +174,7 @@ function home(){
  '</section>'+
  '<nav class="control-home-v6-tabs" aria-label="Navigation principale">'+
  '<a href="#/" '+(!projectsView?'aria-current="page"':'')+'><span class="control-home-v6-tab-icon">'+icon('home')+'</span>Accueil</a>'+
- '<button type="button" id="control-home-nav-projects" '+(projectsView?'aria-current="page"':'')+'><span class="control-home-v6-tab-icon">'+icon('folder')+'</span>Projets</button>'+
+ '<a id="control-home-nav-projects" href="#/projects" '+(projectsView?'aria-current="page"':'')+'><span class="control-home-v6-tab-icon">'+icon('folder')+'</span>Projets</a>'+
  '<a href="#/control/team"><span class="control-home-v6-tab-icon">'+icon('users')+'</span>Équipe</a>'+
  '<a href="#/control/aistudio"><span class="control-home-v6-tab-icon">'+icon('assistant')+'</span>Assistants</a>'+
  '</nav>'+
@@ -211,11 +211,6 @@ function home(){
  };
  draw();$('#search').oninput=draw;
  if(projectsView)$('#control-home-projects').open=true;
- $('#control-home-nav-projects').onclick=()=>{
-  const details=$('#control-home-projects');
-  details.open=true;
-  details.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?'instant':'smooth',block:'start'});
- };
  $('#more-projects').onclick=()=>{showAllProjects=!showAllProjects;draw()};
  const quickFind=$('#shell-quick-find');
  quickFind.onsubmit=e=>{
