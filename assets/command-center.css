@@ -93,3 +93,5 @@ header.control-head{flex-wrap:wrap;gap:10px}
  .control-task-edit-form>.formgrid{grid-template-columns:1fr}
  .control-task-edit-form button{width:100%}
 }
+
+.control-task-highlight{background:#f5faff;border-left:4px solid #2c70b6!important;padding:14px!important;border-radius:10px;scroll-margin-top:90px}
