@@ -70,3 +70,16 @@ test('home markup wires working destinations and explicit offline provenance',()
  assert.match(html,/VUE DE MON ACTIVITÉ <em>05<\/em>/);
  assert.match(html,/Les applications externes ne sont pas encore synchronisées/);
 });
+
+
+test('task priority links use encoded identifiers, while missing IDs have safe fallback',()=>{
+ const day=new Date(2026,10,3,12);
+ const raw={actions:[
+  {id:'a/b & ?',title:'Contacter un client',status:'todo',due:'2026-11-02'},
+  {title:'Une autre tâche',status:'todo',due:'2026-11-03'}
+ ]};
+ const html=render(raw,{},day);
+ assert.match(html,/href="#\/control\/inbox\?task=a%2Fb%20%26%20%3F"/);
+ assert.match(html,/href="#\/control\/inbox"/);
+ assert.ok(!html.includes('href="javascript:'));
+});
