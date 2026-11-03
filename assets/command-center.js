@@ -119,7 +119,7 @@ function intake(){
  const rows=items.map(a=>{
   const status=a.kind==='mission'?'review':workflow.category(a,today);
   const projectName=pname(a.project);
-  const dueLabel=a.due&&workflow.validDue(a.due)?' · Pour le '+date(a.due):'';
+  const dueLabel=a.due&&workflow.validDue(a.due)?' · Pour le '+a.due.slice(8,10)+'/'+a.due.slice(5,7)+'/'+a.due.slice(0,4):'';
   const description=a.kind==='mission'?'Mission IA : résultat à vérifier · '+(a.provider||'Fournisseur non précisé'):
    (a.status==='done'?'Terminée':a.status==='doing'?'En cours':'À faire')+
    ' · Priorité '+(a.priority||'Normale')+dueLabel;
