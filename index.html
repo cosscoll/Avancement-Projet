@@ -46,7 +46,8 @@
 @media(max-width:390px){#control-pwa-update{bottom:calc(74px + env(safe-area-inset-bottom,0px));right:10px;width:calc(100% - 20px);padding:12px}.control-pwa-update-actions button{flex:1}}
 </style><link rel="stylesheet" href="assets/workspace-shell.css">
 <link rel="stylesheet" href="assets/control-ai-studio.css">
- <link rel="stylesheet" href="assets/control-web-builder.css"></head><body class="control-shell-v3">
+ <link rel="stylesheet" href="assets/control-web-builder.css">
+<link rel="stylesheet" href="assets/control-home-v6.css"></head><body class="control-shell-v3">
 <aside class="shell-sidebar" aria-label="Navigation permanente">
  <a href="#/" class="shell-brand"><span class="shell-brand-mark">◈</span><span>CONTROL<span class="shell-brand-sub">ESPACE DE TRAVAIL</span></span></a>
  <nav aria-label="Menu latéral">
@@ -114,49 +115,85 @@ function routePart(value){try{return decodeURIComponent(value)}catch{return null
 function route(){const s=location.hash.slice(1);const m=s.match(/^\/project\/([^/]+)(?:\/([^/?#]+))?/);return m?{id:routePart(m[1]),tab:m[2]||'ai'}:{id:null,tab:s==='/settings'?'settings':'home'}}
 function home(){
  active=null;
- // Source-grounded counters; corrupted local records are displayed as unknown,
- // never as an invented zero or as a claim of cross-device synchronization.
- const metric=(key,compute)=>{
-  try{const raw=localStorage.getItem(key);if(raw===null)return '0';const value=JSON.parse(raw);if(!value||typeof value!=='object'||Array.isArray(value))return '—';const result=compute(value);return Number.isInteger(result)&&result>=0?String(result):'—'}catch{return '—'}
+ document.body.classList.add('control-simple-home');
+ const icon=(name)=>{
+  const paths={
+   bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/>',
+   profile:'<circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/>',
+   home:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/><path d="M9 21v-8h6v8"/>',
+   folder:'<path d="M3 7V5a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/>',
+   users:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2"/><path d="M17 5a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 5v1"/>',
+   assistant:'<rect x="4" y="7" width="16" height="13" rx="3"/><path d="M12 7V3M9 3h6M8.5 13h.01M15.5 13h.01M9 17h6"/>',
+   sparkle:'<path d="m12 2 2.1 7.9L22 12l-7.9 2.1L12 22l-2.1-7.9L2 12l7.9-2.1Z"/>',
+   circle:'<circle cx="12" cy="12" r="9"/>'
+  };
+  return '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(paths[name]||paths.circle)+'</svg>';
  };
- const openActions=metric('control-command-v1',data=>Array.isArray(data.actions)?data.actions.filter(a=>a&&typeof a.title==='string'&&a.title.trim()&&a.status!=='done'&&a.status!=='cancelled').length:(data.actions===undefined?0:NaN));
- const localAgents=metric('control-ai-studio-v1',data=>Array.isArray(data.agents)?data.agents.length:0);
- const briefHtml=(()=>{
-  try{
-   const names={};
-   for(const project of projects)names[project.id]=nameOf(project);
-   return window.CONTROL_DAY_BRIEF?.render(localStorage.getItem('control-command-v1'),names)||'';
-  }catch{return '<section class="control-day-brief" role="alert"><h2>Priorités indisponibles</h2><p>Le navigateur ne permet pas de lire les tâches enregistrées ici. Vérifiez les paramètres de stockage de cet appareil.</p></section>';}
- })();
+ let day;
+ try{day=window.CONTROL_DAY_BRIEF?.summarize(localStorage.getItem('control-command-v1'))||{status:'invalid',open:0,urgent:0,review:0,items:[]};}
+ catch{day={status:'invalid',open:0,urgent:0,review:0,items:[]};}
+ const invalid=day.status==='invalid';
+ const counter=n=>invalid?'—':String(Number.isInteger(n)&&n>=0?n:0);
+ const projectName=key=>projects.find(p=>p.id===key)?.name||'Sans projet associé';
+ const list=(invalid
+  ?'<div class="control-home-v6-empty" role="alert"><strong>Les priorités ne sont pas disponibles.</strong>Les données locales sont illisibles. Ouvrez « À traiter » pour examiner la situation sans effacer vos données.</div>'
+  :(day.items||[]).length
+   ?'<div class="control-home-v6-priority-list">'+day.items.map(item=>{
+     const href=item.kind==='mission'?'#/control/missions':item.id?'#/control/inbox?task='+encodeURIComponent(item.id):'#/control/inbox';
+     return '<a class="control-home-v6-priority-row" href="'+href+'"><span class="control-home-v6-priority-icon">'+icon('circle')+'</span>'+
+      '<span class="control-home-v6-priority-copy"><strong>'+esc(item.title)+'</strong><small>'+esc(projectName(item.project))+' · '+esc(item.label)+'</small></span>'+
+      '<span class="control-home-v6-chevron" aria-hidden="true">›</span></a>';
+   }).join('')+'</div>'
+   :'<div class="control-home-v6-empty"><strong>Aucune tâche en attente dans CONTROL.</strong>Créez votre première tâche pour voir vos priorités ici. Les applications externes ne sont pas synchronisées.</div>');
  const search='<input id="search" class="field search" type="search" aria-label="Rechercher un projet" placeholder="Rechercher un projet…" autocomplete="off">';
- $('#main').innerHTML=hubWarning()+'<div class="shell-dashboard control-home-v4">'+
- '<div class="shell-dashboard-top"><div><span class="control-v4-edition">VUE DE MON ACTIVITÉ <em>05</em></span><h1>Vos projets.<br><span>Vos priorités.</span></h1><p>Retrouvez vos tâches et projets enregistrés dans CONTROL. Les applications externes ne sont pas encore synchronisées.</p></div><button id="add-project" class="primary">+ Nouveau projet</button></div>'+
- '<section class="control-v4-pulse" aria-label="Aperçu de mon activité locale">'+
- '<a class="control-v4-metric" href="#/"><span class="control-v4-metric-icon">▦</span><span class="control-v4-metric-copy"><strong>'+projects.length+'</strong><small>Projets accessibles</small></span><span class="control-v4-metric-arrow">↗</span></a>'+
- '<a class="control-v4-metric" href="#/control/inbox"><span class="control-v4-metric-icon">✓</span><span class="control-v4-metric-copy"><strong>'+openActions+'</strong><small>Actions locales à traiter</small></span><span class="control-v4-metric-arrow">↗</span></a>'+
- '<a class="control-v4-metric" href="#/control/aistudio"><span class="control-v4-metric-icon">✧</span><span class="control-v4-metric-copy"><strong>'+localAgents+'</strong><small>Agents IA sur cet appareil</small></span><span class="control-v4-metric-arrow">↗</span></a>'+
+ $('#main').innerHTML=hubWarning()+
+ '<div class="control-home-v6" aria-label="Accueil CONTROL, mon activité">'+
+ '<header class="control-home-v6-header">'+
+ '<a class="control-home-v6-brand" href="#/"><strong>CONTROL</strong><small>Mon entreprise</small></a>'+
+ '<div class="control-home-v6-top-actions"><a href="#/control/inbox" aria-label="Voir mes tâches et alertes" title="À traiter">'+icon('bell')+'</a>'+
+ '<a href="#/settings" aria-label="Paramètres de mon espace" title="Paramètres">'+icon('profile')+'</a></div></header>'+
+ '<section class="control-home-v6-welcome"><h1>Bonjour.</h1><p>Voici ce qui mérite votre attention aujourd’hui.</p></section>'+
+ '<section class="control-home-v6-stats" aria-label="Indicateurs calculés sur cet appareil">'+
+ '<a class="control-home-v6-stat" href="#/control/inbox"><strong>'+counter(day.urgent)+'</strong><small>Urgences</small></a>'+
+ '<a class="control-home-v6-stat" href="#/control/inbox"><strong>'+counter(day.open)+'</strong><small>À faire</small></a>'+
+ '<a class="control-home-v6-stat" href="#/control/missions"><strong>'+counter(day.review)+'</strong><small>En attente</small></a>'+
  '</section>'+
- briefHtml+
- '<section class="shell-feature-grid" aria-label="Actions principales">'+
- '<article class="shell-feature-primary"><div class="control-v4-hero-text"><span class="shell-feature-tag">VOTRE POINT DE DÉPART</span><h2>Un besoin ?<br><span>Une action.</span></h2><p>Recherchez une fonction ou un projet. CONTROL vous indique où commencer, sans lancer d’action automatiquement.</p></div><form id="shell-quick-find" class="shell-quick-find" role="search"><label for="shell-quick-query">Rechercher une fonction ou un projet</label><div class="shell-quick-row"><input id="shell-quick-query" type="search" maxlength="180" autocomplete="off" placeholder="Ex. créer une tâche, retrouver un projet…" aria-label="Votre besoin dans CONTROL"><button type="submit">Trouver <span aria-hidden="true">→</span></button></div><small>Recherche locale · Aucune action lancée sans votre choix</small></form><div class="control-v4-hero-decoration" aria-hidden="true"><i></i><i></i><i></i></div></article>'+
- '<div class="clarity-shortcuts shell-feature-aside"><div class="control-v4-actions-title"><span>ACCÈS IMMÉDIAT</span><h2>Choisir une action</h2><p>Vos fonctions essentielles, sans parcourir les menus.</p></div>'+
- '<a class="shell-action control-v4-action-attention" href="#/control/inbox"><span class="shell-action-glyph">✓</span><span><strong>Mes actions à traiter</strong><small>Ce qui demande votre attention</small></span></a>'+
- '<a class="shell-action control-v4-action-pilot" href="#/control/manager"><span class="shell-action-glyph">◈</span><span><strong>Faire le point</strong><small>Voir l’état de vos projets</small></span></a>'+
- '<a class="shell-action control-v4-action-mission" href="#/control/missions"><span class="shell-action-glyph">◇</span><span><strong>Suivre mes missions</strong><small>Consulter les résultats IA renseignés</small></span></a>'+
- '<a class="shell-action control-v4-action-agent" href="#/control/aistudio"><span class="shell-action-glyph">✧</span><span><strong>Mes assistants IA</strong><small>Créer et organiser des assistants locaux</small></span></a>'+
- '<a class="shell-action control-v4-action-backup" href="#/control/backup"><span class="shell-action-glyph">▣</span><span><strong>Sauvegarder mes données</strong><small>Protéger mes projets et mes agents</small></span></a>'+
- '</div></section>'+
- '<details class="control-whats-new" aria-label="Nouveautés CONTROL disponibles"><summary class="control-whats-new-toggle">Explorer les nouveautés et les fonctions récentes <span aria-hidden="true">⌄</span></summary><div class="control-whats-new-inner">'+
- '<div class="control-whats-new-heading"><div><div class="control-whats-new-kicker">NOUVEAUTÉS DISPONIBLES</div><h2>Découvrez les fonctions CONTROL</h2><p>Fonctions testées et accessibles dès maintenant sur cet appareil.</p></div><a class="control-whats-new-more" href="#/control/manager">Centre de pilotage →</a></div>'+
- '<nav class="control-whats-new-links" aria-label="Fonctions récentes">'+
- '<a href="#/control/goals"><strong>Planifier un objectif</strong><span>Créer un plan, puis valider chaque tâche séparément →</span></a>'+
- '<a href="#/control/webbuilder"><strong>Créer un site web</strong><span>Personnaliser un modèle, vérifier son contenu et exporter les fichiers →</span></a>'+
- '<a href="#/control/search"><strong>Recherche par projet</strong><span>Retrouver tâches, décisions et sources →</span></a>'+
- '<a href="#/control/memory"><strong>Mémoire des décisions</strong><span>Corriger une décision et suivre ses versions →</span></a>'+
- '</nav><div class="control-whats-new-status"><span aria-hidden="true">●</span><strong>CONTROL Cloud :</strong> infrastructure créée, connexion multi-utilisateurs pas encore activée. Le travail reste enregistré localement sur cet appareil. <a href="app.html" style="color:#284a80;text-decoration:underline;text-underline-offset:3px;font-weight:700">Voir l’état de CONTROL Cloud →</a></div></div></details>'+
- '<section class="clarity-projects shell-dashboard-section"><div class="toprow clarity-listhead"><div><span class="shell-dashboard-eyebrow">REPRENDRE MON TRAVAIL</span><h2>Vos projets <span class="clarity-count">'+projects.length+'</span></h2><p class="control-v4-project-intro">Ouvrez un projet pour retrouver ses conversations, ressources et actions.</p></div></div><div class="shell-project-toolbar">'+search+'<span id="project-search-status" class="shell-project-count" role="status" aria-live="polite"></span></div><div id="cards" class="grid clarity-cards shell-projects-list"></div><div class="clarity-more"><button type="button" id="more-projects" hidden>Afficher tous les projets</button></div></section>'+
- '<details class="clarity-helpnote"><summary>Comment retrouver les conversations de mes IA ?</summary><p>CONTROL ouvre les projets ChatGPT et Claude depuis leurs liens officiels. Les conversations privées ne sont pas importées automatiquement dans ce site.</p></details>'+
- '<section id="add-box" class="panel shell-create-form hidden"><div class="shell-create-header"><div><span class="shell-dashboard-eyebrow">NOUVEL ESPACE</span><h2>Créer un projet</h2><p class="muted">Donnez-lui un nom. Vous pourrez ajouter vos IA et vos ressources ensuite.</p></div><button type="button" id="cancel-add-project" aria-label="Fermer le formulaire">✕</button></div><form id="new-project"><label>Nom du projet<input class="field" name="name" required maxlength="90" placeholder="Ex. Mon nouveau projet"></label><label>Lien du projet ChatGPT (facultatif)<input name="url" class="field" type="url" placeholder="https://chatgpt.com/g/g-p-…"></label><button class="primary">Créer l’espace</button></form></section></div>';
+ '<section class="control-home-v6-ask" aria-labelledby="control-home-ask-title">'+
+ '<h2 id="control-home-ask-title" class="control-home-v6-ask-title"><span>'+icon('sparkle')+'</span>Demander à CONTROL</h2>'+
+ '<p>Que voulez-vous faire aujourd’hui ?</p>'+
+ '<form id="shell-quick-find" role="search"><label for="shell-quick-query">Décrivez votre besoin</label>'+
+ '<input id="shell-quick-query" type="search" maxlength="180" autocomplete="off" placeholder="Ex. Préparer mes relances clients" aria-label="Demander à CONTROL de trouver une fonction">'+
+ '<button type="submit">Préparer cette action <span aria-hidden="true">→</span></button></form>'+
+ '<p class="control-home-v6-ask-hint">CONTROL vous oriente vers les fonctions disponibles. Cette recherche ne lance pas d’assistant IA connecté ni d’action externe.</p></section>'+
+ '<section class="control-home-v6-priorities" aria-labelledby="control-home-priorities-title">'+
+ '<div class="control-home-v6-section-title"><h2 id="control-home-priorities-title">À traiter en priorité</h2><a href="#/control/inbox">Tout afficher</a></div>'+
+ list+'<p class="control-home-v6-provenance">Priorités calculées uniquement à partir des tâches et missions enregistrées sur cet appareil.</p>'+
+ '</section>'+
+ '<nav class="control-home-v6-tabs" aria-label="Navigation principale">'+
+ '<a href="#/" aria-current="page"><span class="control-home-v6-tab-icon">'+icon('home')+'</span>Accueil</a>'+
+ '<button type="button" id="control-home-nav-projects"><span class="control-home-v6-tab-icon">'+icon('folder')+'</span>Projets</button>'+
+ '<a href="#/control/team"><span class="control-home-v6-tab-icon">'+icon('users')+'</span>Équipe</a>'+
+ '<a href="#/control/aistudio"><span class="control-home-v6-tab-icon">'+icon('assistant')+'</span>Assistants</a>'+
+ '</nav>'+
+ '<details id="control-home-projects" class="control-home-v6-projects">'+
+ '<summary>Voir mes projets ('+projects.length+')</summary>'+
+ '<div class="control-home-v6-project-head"><p>Retrouvez vos espaces de travail et vos conversations associées.</p>'+
+ '<button id="add-project" class="primary" type="button">+ Nouveau projet</button></div>'+
+ '<div class="shell-project-toolbar">'+search+'<span id="project-search-status" class="shell-project-count" role="status" aria-live="polite"></span></div>'+
+ '<div id="cards" class="grid clarity-cards shell-projects-list"></div>'+
+ '<div class="clarity-more"><button type="button" id="more-projects" hidden>Afficher tous les projets</button></div>'+
+ '<section id="add-box" class="panel shell-create-form hidden"><div class="shell-create-header"><div><span class="shell-dashboard-eyebrow">NOUVEL ESPACE</span>'+
+ '<h2>Créer un projet</h2><p class="muted">Donnez-lui un nom. Vous pourrez ajouter vos IA et vos ressources ensuite.</p></div>'+
+ '<button type="button" id="cancel-add-project" aria-label="Fermer le formulaire">✕</button></div>'+
+ '<form id="new-project"><label>Nom du projet<input class="field" name="name" required maxlength="90" placeholder="Ex. Mon nouveau projet"></label>'+
+ '<label>Lien du projet ChatGPT (facultatif)<input name="url" class="field" type="url" placeholder="https://chatgpt.com/g/g-p-…"></label>'+
+ '<button class="primary">Créer l’espace</button></form></section>'+
+ '</details>'+
+ '<details class="control-home-v6-advanced"><summary>Outils et fonctions supplémentaires</summary>'+
+ '<div class="control-home-v6-secondary"><a href="#/control/manager">Bilan des projets</a>'+
+ '<a href="#/control/search">Recherche avancée</a><a href="#/control/backup">Sauvegarde</a>'+
+ '<a href="#/control/tools">Tous les outils</a></div><small>Les informations des autres plateformes ne sont pas synchronisées automatiquement.</small></details>'+
+ '</div>';
  const projectSearchKey=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
  const draw=()=>{
   const q=projectSearchKey($('#search').value).trim();
@@ -170,6 +207,11 @@ function home(){
   const more=$('#more-projects');more.hidden=Boolean(q)||visible.length<=6;more.textContent=showAllProjects?'Afficher moins de projets':'Afficher tous les projets ('+visible.length+')';
  };
  draw();$('#search').oninput=draw;
+ $('#control-home-nav-projects').onclick=()=>{
+  const details=$('#control-home-projects');
+  details.open=true;
+  details.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?'instant':'smooth',block:'start'});
+ };
  $('#more-projects').onclick=()=>{showAllProjects=!showAllProjects;draw()};
  const quickFind=$('#shell-quick-find');
  quickFind.onsubmit=e=>{
@@ -191,7 +233,7 @@ function home(){
  };
  $('#cancel-add-project').onclick=()=>{if(!addBox.classList.contains('hidden'))addButton.click()};
  $('#new-project').onsubmit=e=>{e.preventDefault();if(hubCorrupt)return persist();const fd=new FormData(e.target),name=String(fd.get('name')).trim(),url=String(fd.get('url')).trim();if(!name)return;if(url&&!chatHost(url)){notify('Utilise un lien ChatGPT valide.');return}const id='custom-'+(globalThis.crypto?.randomUUID?.()||Date.now());const p={id,name,symbol:name.slice(0,2).toUpperCase(),category:'Projet personnalisé'};const previous=Array.isArray(state.custom)?state.custom.slice():[];state.custom=[...previous,p];scoped(id).projectUrl=url;if(!persist()){state.custom=previous;delete state[id];notify('Projet non créé : impossible d’enregistrer sur cet appareil. Libère de l’espace ou vérifie les paramètres du navigateur.');return}projects.push(p);go(id)};
- if(location.hash==='#/new-project')addButton.click();
+ if(location.hash==='#/new-project'){$('#control-home-projects').open=true;addButton.click();}
 }
 function workspace(p,t){
  active=p.id;tab=t;
@@ -332,6 +374,7 @@ function connections(p,d,el){
 }
 function settings(){active=null;$('#main').innerHTML='<a class="back" href="#/">← Mes projets</a><h1>Connexions</h1><section class="panel"><h2>Fonctionnement</h2><p>CONTROL centralise les liens de tes projets, tes discussions et tes ressources. Les conversations restent ouvertes dans leur application d’origine. Pour les modifier sans quitter CONTROL, une infrastructure authentifiée et les API officielles seraient nécessaires.</p><div class="notice">Aucune clé API n’est demandée ni stockée. Aucune dépense n’est engagée.</div></section><section class="panel"><h2>Accès rapides</h2><div class="links">'+external('https://chatgpt.com/','ChatGPT · Projets')+external('https://chatgpt.com/codex','Codex')+external('https://drive.google.com/','Google Drive')+'</div></section>'}
 function render(){
+ document.body.classList.remove('control-simple-home');
  // CONTROL uses the same #main across screens: release delegated handlers and camera/microphone when leaving.
  const workspaceRoot=document.querySelector('#main');
  window.CONTROL_VISIOS?.unmount?.(workspaceRoot);
