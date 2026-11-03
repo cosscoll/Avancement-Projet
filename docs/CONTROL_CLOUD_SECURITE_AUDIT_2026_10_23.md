@@ -67,3 +67,13 @@ Utiliser le lanceur existant `tests/control-cloud-real-auth-e2e.mjs` sur **deux 
 Ne pas déduire de la configuration observée une autorisation d'ouvrir les inscriptions. **Le verrou `enabled:false` doit rester en place.**
 
 **Impact sur le cahier V1.2 :** infrastructure confirmée et prérequis de sécurité inspectés en lecture seule ; **0/4 critères de la capacité CONTROL-ACCOUNT acceptés à ce stade**, sans promotion artificielle.
+
+## Vérification complémentaire en lecture seule — 3 novembre 2026
+
+Le projet Supabase **CONTROL Cloud** indépendant est actuellement signalé **`INACTIVE`** par les métadonnées du connecteur. Cette observation est postérieure au statut `ACTIVE_HEALTHY` du 23 octobre ; elle le remplace pour la disponibilité actuelle. Le projet IAgile Academy reste hors périmètre.
+
+**Aucune remise en service ni interrogation SQL de la base inactive n'a été effectuée.** Aucun compte A/B ou JWT réel n'a été créé ou interrogé. Le verrou `config/cloud.json.enabled=false` et les huit contrôles `launchChecks=false` restent inchangés.
+
+Le frontal `assets/cloud-app.js` exige déjà la validation explicite des huit contrôles, la référence du projet indépendant et une clé publique admissible avant d'initialiser le SDK ; cette vérification statique ne valide pas la sécurité du serveur. Les tests PostgREST avec deux comptes et le cycle de vie des sessions doivent être réalisés sur une instance activée et autorisée avant toute ouverture publique.
+
+**Décision : Cloud toujours non commercialisable.** Ne pas lancer de migrations ni de reprise automatique, et ne pas afficher « comptes multi-utilisateurs disponibles » sur le site.
