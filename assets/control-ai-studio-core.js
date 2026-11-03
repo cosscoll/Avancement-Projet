@@ -142,6 +142,35 @@ function editAgent(state,id,fields){
  return {...old,name:name.trim(),instructions:instructions.trim(),conversationIds:sources,memoryIds:memories,configVersion:Math.max(1,Number(old.configVersion)||1)+1,updatedAt:new Date().toISOString()};
 }
 
+
+/* Search only agent discussion titles and locally stored messages, never remote
+   provider accounts, imported conversation archives, or unapproved memories.
+   One result per thread; totals include matches past the display limit. */
+function searchThreads(state,query,limit=20){
+ const normalize=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr');
+ const term=normalize(String(query??'').trim().slice(0,100));
+ if(term.length<2)return {total:0,results:[],needsMore:true};
+ const max=Number.isInteger(limit)?Math.max(1,Math.min(50,limit)):20;
+ const results=[];let total=0;
+ for(const agent of list(state?.agents)){
+  if(!isObj(agent))continue;
+  for(const thread of list(agent.threads)){
+   if(!isObj(thread))continue;
+   const messages=list(thread.messages);
+   const messageIndex=messages.findIndex(m=>isObj(m)&&normalize(m.content).includes(term));
+   if(messageIndex<0&&!normalize(thread.name).includes(term))continue;
+   total++;
+   if(results.length>=max)continue;
+   const value=messageIndex>=0?String(messages[messageIndex].content||''):String(thread.name||'');
+   const location=normalize(value).indexOf(term);
+   const start=Math.max(0,location-35);
+   const excerpt=(start?'…':'')+value.slice(start,start+150)+(value.length>start+150?'…':'');
+   results.push({agentId:agent.id,agentName:clean(agent.name,90),projectId:agent.projectId,
+    threadId:thread.id,threadName:clean(thread.name,100),excerpt:clean(excerpt,154),messageIndex});
+  }
+ }
+ return {total,results,needsMore:false};
+}
 function renameThread(state,agentId,threadId,name){
  const a=list(state?.agents).find(x=>x.id===agentId);
  if(!a)throw Error('Assistant introuvable.');
@@ -234,5 +263,5 @@ function backupComparison(previous,next){
  const countThreads=s=>list(s.agents).reduce((sum,a)=>sum+list(a.threads).length,0);
  return {before:{imports:list(before.imports).length,memories:list(before.memories).length,agents:list(before.agents).length,threads:countThreads(before)},after:{imports:next.imports.length,memories:next.memories.length,agents:next.agents.length,threads:countThreads(next)}};
 }
-window.CONTROL_AI_STUDIO_CORE=Object.freeze({KEY,read,write,parse,importRows,memory,agent,editMemory,editAgent,renameThread,deleteThread,context,contextReport,empty,parseBackup,backupComparison,validateBackupState});
+window.CONTROL_AI_STUDIO_CORE=Object.freeze({KEY,read,write,parse,importRows,memory,agent,editMemory,editAgent,renameThread,deleteThread,searchThreads,context,contextReport,empty,parseBackup,backupComparison,validateBackupState});
 })();

@@ -1,3 +1,10 @@
+## Sprint — recherche transversale dans les discussions (3 novembre 2026)
+
+- Ajout d'une recherche locale sur les titres et messages des fils de tous les assistants Studio, avec résultat par discussion, extrait court, provenance projet/agent et accès direct au message correspondant.
+- Comparaison insensible aux accents et à la casse ; aucune archive importée brute ni mémoire d'autre projet recherchée implicitement ; aucun appel réseau ni modèle distant.
+- Définition d'une limite d'affichage de 20 résultats avec décompte total et contrôles mobiles 320 px ; contenu échappé avant insertion dans le DOM.
+- Les droits de connexion officielle ChatGPT/Claude/Gemini et le Cloud demeurent non opérationnels.
+
 ## Sprint — discussions des agents locaux (2 novembre 2026)
 
 - Renommage et suppression contrôlée de chaque discussion, sans altérer les autres fils et sources de l'agent. Confirmation obligatoire et impossibilité de supprimer la dernière discussion.

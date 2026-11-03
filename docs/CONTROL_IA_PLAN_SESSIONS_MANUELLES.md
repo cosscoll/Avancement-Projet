@@ -1,3 +1,7 @@
+### Sprint S5 — recherche locale dans les discussions (3 novembre 2026)
+
+La recherche du Studio IA parcourt les noms et messages locaux des agents, sans lire les archives importées non approuvées ni contacter un fournisseur externe. Elle retrouve un fil dans n'importe quel agent, affiche le total exact et ouvre le message correspondant. Une limite de 20 résultats affichés reste explicite. La recherche accepte les accents et traite toutes les valeurs utilisateur comme du texte échappé. Le contrôle de largeur mobile à 320 px et le parcours Chromium font partie de la recette.
+
 ### Sprint S4 — gestion des discussions (2 novembre 2026)
 
 Amélioration des discussions des agents : renommage sans perte de messages, suppression confirmée d'un fil uniquement, interdiction de supprimer le dernier fil et sélection toujours mise à jour après une opération. Le menu « Gérer le fil » regroupe les actions destructives ; les contrôles de largeur 320 px et le parcours Chromium sont inclus dans la recette. Aucune API IA, connexion Cloud ni automatisation n'a été activée.

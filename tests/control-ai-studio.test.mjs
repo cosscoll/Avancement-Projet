@@ -231,3 +231,45 @@ test('thread management is bounded, guarded, keyboard-accessible and small-scree
  assert.match(ui,/if\(thread&&thread\.id!==selectedThread\)selectedThread=thread\.id/);
  assert.match(css,/@media\(max-width:600px\)[\s\S]*\.as-chatbar\{display:grid/);
 });
+
+test('searchThreads finds discussion titles and messages across agents with accent-insensitive matching',()=>{
+ const s=fresh(),first=x.agent(s,{name:'Support',instructions:'Aider',projectId:'ucp'}),second=x.agent(s,{name:'Marketing',instructions:'Aider',projectId:'iagile'});
+ first.threads[0].name='Chantier façade';first.threads[0].messages=[{role:'user',content:'Notre devis est prêt pour demain'}];
+ second.threads[0].name='Clients';second.threads[0].messages=[{role:'assistant',content:'Un devis structuré avec les prix'}];
+ s.agents.push(first,second);
+ const byName=x.searchThreads(s,' facade ');
+ assert.equal(byName.total,1);assert.equal(byName.results[0].threadId,first.threads[0].id);assert.equal(byName.results[0].messageIndex,-1);
+ const byContent=x.searchThreads(s,'DEVIS');
+ assert.equal(byContent.total,2);assert.equal(byContent.results[0].agentId,first.id);
+ assert.equal(byContent.results[0].messageIndex,0);
+ assert.equal(byContent.results[1].projectId,'iagile');
+ assert.equal(x.searchThreads(s,' d ').needsMore,true);
+ assert.equal(x.searchThreads(s,'inconnu').total,0);
+});
+test('searchThreads reports total even beyond display limit, uses safe plain text and excludes imported archives',()=>{
+ const s=fresh();
+ const a=x.agent(s,{name:'Agent',instructions:'Aider',projectId:'ucp'});
+ a.threads=[];
+ for(let i=0;i<8;i++)a.threads.push({id:'thr-'+i,name:'Discussion '+i,messages:[{role:'user',content:'Décision <img src=x onerror=alert(1)> numéro '+i}]});
+ s.agents.push(a);
+ s.imports.push({id:'imp-hidden',provider:'chatgpt',title:'Ce fichier ne doit pas sortir',messages:[{role:'user',content:'MOT-SECRET'}]});
+ const result=x.searchThreads(s,'decision',3);
+ assert.equal(result.total,8);assert.equal(result.results.length,3);
+ assert.equal(result.results[0].messageIndex,0);
+ assert.match(result.results[0].excerpt,/<img/);
+ assert.equal(x.searchThreads(s,'MOT-SECRET').total,0);
+ assert.equal(x.searchThreads(s,'<img').total,8);
+ assert.equal(x.searchThreads(s,'decision',1000).results.length,8);
+});
+test('agent local search UI displays counts, escapes content and jumps to the matched message',()=>{
+ const ui=fs.readFileSync(new URL('../assets/control-ai-studio.js',import.meta.url),'utf8');
+ const css=fs.readFileSync(new URL('../assets/control-ai-studio.css',import.meta.url),'utf8');
+ assert.match(ui,/id="as-thread-search-input"/);
+ assert.match(ui,/core\.searchThreads\(db,threadQuery\)/);
+ assert.match(ui,/esc\(hit\.excerpt\)/);
+ assert.match(ui,/data-as-jump-message/);
+ assert.match(ui,/selectedAgent=agent\.id;selectedThread=thread\.id/);
+ assert.match(ui,/data-as-message-index/);
+ assert.match(css,/\.as-thread-hit/);
+ assert.match(css,/\.as-chat \.as-found-message/);
+});

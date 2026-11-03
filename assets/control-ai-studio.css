@@ -172,3 +172,22 @@
  .as-chatbar>button,.as-chatbar>details{min-width:0;max-width:100%;width:100%}
  .as-thread-manage{padding:7px 9px}
 }
+
+/* Search is opt-in, local-only and deliberately kept outside the agent sidebar. */
+.as-thread-search{border:1px solid #dce5ee;background:#fff;border-radius:16px;padding:16px;display:grid;gap:11px;min-width:0}
+.as-thread-search-title strong{display:block;font-size:14px;color:#243d5e}
+.as-thread-search-title small{display:block;font-size:12px;color:#61738b;margin-top:4px}
+.as-sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important}
+.as-thread-search-controls{display:flex;gap:8px;align-items:center}
+.as-thread-search-controls input{width:100%;max-width:100%;min-width:0;min-height:44px;flex:1;padding:10px 13px;border:1px solid #cad8e8;border-radius:11px;font-size:14px}
+.as-thread-search-controls button{min-height:44px;padding:9px 13px;flex:0 0 auto}
+.as-thread-results{display:grid;gap:7px;max-height:360px;overflow-y:auto;overscroll-behavior:contain}
+.as-thread-results-count{font-size:12px;color:#566d89;margin:2px 0 6px}
+.as-thread-hit{text-align:left;border:1px solid #dce5f0!important;border-radius:10px;background:#f7faff!important;padding:11px 13px;display:grid;gap:3px;min-height:60px;min-width:0}
+.as-thread-hit strong{font-size:13px;white-space:normal;overflow-wrap:anywhere;color:#214a7b}
+.as-thread-hit small{font-size:11px;color:#5c6e86}
+.as-thread-hit span{font-size:12px;color:#3e526e;overflow-wrap:anywhere}
+.as-thread-hit:hover,.as-thread-hit:focus-visible{background:#eaf1fb!important;border-color:#b5cce9!important}
+.as-thread-results-empty{font-size:12px;color:#61738b;margin:0}
+.as-chat .as-found-message{border:2px solid #476fa6;background:#eff5fd;scroll-margin:15px}
+@media(max-width:600px){.as-thread-search{padding:12px}.as-thread-search-controls{display:grid;grid-template-columns:minmax(0,1fr) auto}.as-thread-results{max-height:260px}.as-thread-hit{padding:11px}}

@@ -862,6 +862,35 @@ try{
   assert.equal(await js("document.querySelector('#as-thread').value"),firstThread);
   assert.equal(await js("document.querySelector('[data-as-action=delete-thread]').disabled"),true);
   log('AI Studio can rename and safely delete discussion, retain valid selection and fit 320px');
+  // Synthetic conversations and searches remain inside this isolated browser.
+  await js("(()=>{const s=JSON.parse(localStorage.getItem('control-ai-studio-v1'));s.agents[0].threads[0].messages=[{role:'user',content:'La décision stratégique mobile est validée'},{role:'assistant',content:'Le plan responsive est confirmé'}];s.agents.push({id:'agt-second-test',name:'Assistant Référencement',projectId:'general',instructions:'Auditer',conversationIds:[],memoryIds:[],configVersion:1,threads:[{id:'thr-search-test',name:'Projet SEO',messages:[{role:'user',content:'Mieux référencer le site sur les moteurs'}]}]});localStorage.setItem('control-ai-studio-v1',JSON.stringify(s));location.hash='#/'})()");
+  await ready(()=>js("!!document.querySelector('.shell-dashboard')"),7000)();
+  await js("location.hash='#/control/aistudio'");
+  await ready(()=>js("!!document.querySelector('[data-as-tab=agents]')"),7000)();
+  await js("document.querySelector('[data-as-tab=agents]').click()");
+  await ready(()=>js("!!document.querySelector('#as-thread-search-input')"),7000)();
+  await js("(()=>{const i=document.querySelector('#as-thread-search-input');i.value='decision';i.dispatchEvent(new Event('input',{bubbles:true}))})()");
+  await ready(()=>js("!!document.querySelector('.as-thread-hit')"),6000)();
+  assert.match(await js("document.querySelector('.as-thread-results-count').textContent"),/1 discussion/);
+  assert.match(await js("document.querySelector('.as-thread-hit').textContent"),/mobile/);
+  await js("document.querySelector('.as-thread-hit').click()");
+  assert.equal(await js("document.querySelectorAll('.as-found-message').length"),1);
+  assert.match(await js("document.querySelector('.as-found-message').textContent"),/stratégique mobile/);
+  await js("(()=>{const i=document.querySelector('#as-thread-search-input');i.value='referencer';i.dispatchEvent(new Event('input',{bubbles:true}))})()");
+  await ready(()=>js("!!document.querySelector('.as-thread-hit')"),6000)();
+  await js("document.querySelector('.as-thread-hit').click()");
+  assert.match(await js("document.querySelector('.as-agent-toolbar h2').textContent"),/Référencement/);
+  assert.equal(await js("document.querySelector('#as-thread').value"),'thr-search-test');
+  await command('Emulation.setDeviceMetricsOverride',{width:320,height:700,deviceScaleFactor:2,mobile:true});
+  await delay(250);
+  const searchedMobile=await js("({width:innerWidth,scroll:document.documentElement.scrollWidth,search:!!document.querySelector('#as-thread-search-input')})");
+  assert.equal(searchedMobile.search,true);
+  assert.ok(searchedMobile.scroll<=searchedMobile.width+4,'Thread search overflow at 320px: '+JSON.stringify(searchedMobile));
+  await command('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false});
+  await js("document.querySelector('[data-as-action=clear-thread-search]').click()");
+  assert.equal(await js("document.querySelector('.as-thread-hit')===null"),true,'Clearing query hides results');
+  log('AI Studio search finds messages across agents, opens matched thread, and fits 320px');
+
  const approvedContext=await js("(()=>{const s=JSON.parse(localStorage.getItem('control-ai-studio-v1'));return window.CONTROL_AI_STUDIO_CORE.context(s,s.agents[0])})()");
  assert.match(approvedContext,/Prioriser la navigation mobile/);
 
