@@ -66,9 +66,9 @@ test('home markup wires working destinations and explicit offline provenance',()
  const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
  assert.match(html,/assets\/control-day-brief\.js/);
  assert.match(html,/assets\/control-day-brief\.css/);
- assert.match(html,/briefHtml\+/);
- assert.match(html,/VUE DE MON ACTIVITÉ <em>05<\/em>/);
- assert.match(html,/Les applications externes ne sont pas encore synchronisées/);
+ assert.match(html,/CONTROL_DAY_BRIEF\?\.summarize/);
+ assert.match(html,/control-home-v6/);
+ assert.match(html,/applications externes ne sont pas synchronisées/);
 });
 
 
