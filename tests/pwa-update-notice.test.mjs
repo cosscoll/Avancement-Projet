@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const pwa=readFileSync(new URL('../assets/pwa.js',import.meta.url),'utf8');
 const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
-function create(){
+function create(initialController=1){
  const events=new Map(),swEvents={},registrationEvents={},stateEvents={};
  const banner={hidden:true},actions={},nodes={
   'control-pwa-update':banner,
@@ -16,7 +16,7 @@ function create(){
   addEventListener:(type,fn)=>registrationEvents[type]=fn,
   update:async()=>{}
  };
- let reloads=0,permits=true,controllers=1,registers=0;
+ let reloads=0,permits=true,controllers=initialController,registers=0;
  const serviceWorker={
   get controller(){return controllers?{}:null},
   addEventListener:(type,fn)=>swEvents[type]=fn,
@@ -48,7 +48,7 @@ test('a worker upgrade is announced without automatically reloading or discardin
  assert.equal(x.reloads,1,'reloading requires an explicit click and confirmation');
 });
 test('first-ever PWA installation does not display a false update warning',async()=>{
- const x=create();x.setController(0);
+ const x=create(0);
  await x.events.get('load')();
  await Promise.resolve();await Promise.resolve();
  x.swEvents.controllerchange();
