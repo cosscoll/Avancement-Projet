@@ -246,7 +246,7 @@ body.control-shell-v3 .control-home-v4 .control-v4-pulse{order:1;display:grid;gr
 body.control-shell-v3 .control-home-v4 .shell-feature-grid{order:2;grid-template-columns:minmax(0,1.3fr) minmax(315px,1fr);gap:13px;margin:0 0 25px}
 body.control-shell-v3 .control-home-v4 .shell-feature-primary{min-height:405px;padding:31px 34px;border-radius:19px;background:linear-gradient(135deg,#132d47 4%,#184874 64%,#2865a5 100%);position:relative;overflow:hidden;isolation:isolate}
 body.control-shell-v3 .control-home-v4 .shell-feature-primary::before{display:block!important;content:"";position:absolute;right:-115px;top:-80px;width:320px;height:320px;border-radius:50%;border:1px solid #8bb8e55e;background:radial-gradient(circle,#8bb8e519 0,transparent 66%);pointer-events:none}
-body.control-shell-v3 .control-home-v4 .shell-feature-primary::after{display:block!important;content:"04";font:800 200px/1 system-ui;letter-spacing:-18px;color:#ffffff10;position:absolute;right:-10px;bottom:-43px;width:auto;height:auto;border:0;border-radius:0;pointer-events:none}
+body.control-shell-v3 .control-home-v4 .shell-feature-primary::after{display:block!important;content:"05";font:800 200px/1 system-ui;letter-spacing:-18px;color:#ffffff10;position:absolute;right:-10px;bottom:-43px;width:auto;height:auto;border:0;border-radius:0;pointer-events:none}
 .control-home-v4 .control-v4-hero-text{position:relative;z-index:2;max-width:460px}
 .control-home-v4 .shell-feature-primary .shell-feature-tag{font-size:11px;color:#baf1e2;letter-spacing:1.7px}
 body.control-shell-v3 .control-home-v4 .shell-feature-primary h2{font-family:Inter,system-ui,sans-serif!important;font-weight:830;font-size:clamp(37px,4vw,60px);letter-spacing:-2.4px;line-height:1.03;margin:23px 0 17px;color:#fff}
