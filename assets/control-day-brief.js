@@ -31,12 +31,12 @@ function summarize(raw,now=new Date()){
   const critical=action.priority==='Critique',high=action.priority==='Haute';
   const rank=late?0:isToday?1:critical?3:high?4:due?6:5;
   const label=late?'En retard · '+due.split('-').reverse().join('/'):isToday?"Aujourd’hui":critical?'Priorité critique':high?'Priorité haute':due?'Pour le '+due.split('-').reverse().join('/'): 'À planifier';
-  items.push({kind:'action',title:action.title.trim().slice(0,180),project:typeof action.project==='string'?action.project:'',label,rank,due});
+  items.push({kind:'action',id:typeof action.id==='string'?action.id:'',title:action.title.trim().slice(0,180),project:typeof action.project==='string'?action.project:'',label,rank,due});
  }
  for(const mission of missions){
   if(!mission||typeof mission!=='object'||Array.isArray(mission)||mission.status!=='review'||typeof mission.title!=='string'||!mission.title.trim())continue;
   review++;
-  items.push({kind:'mission',title:mission.title.trim().slice(0,180),project:typeof mission.project==='string'?mission.project:'',label:'Résultat à vérifier',rank:2,due:''});
+  items.push({kind:'mission',id:typeof mission.id==='string'?mission.id:'',title:mission.title.trim().slice(0,180),project:typeof mission.project==='string'?mission.project:'',label:'Résultat à vérifier',rank:2,due:''});
  }
  items.sort((a,b)=>a.rank-b.rank||a.due.localeCompare(b.due)||a.title.localeCompare(b.title,'fr'));
  return {status:'ready',open,overdue,today,review,items:items.slice(0,3)};
@@ -52,7 +52,7 @@ function render(raw,projectNames={},now){
  else if(!data.items.length)list='<div class="control-day-empty"><strong>Aucune tâche enregistrée en attente ici.</strong><span>Ajoutez une première action pour afficher vos priorités. Les tâches des applications externes ne sont pas incluses.</span></div>';
  else list='<ol class="control-day-list">'+data.items.map(item=>{
   const project=projectNames&&typeof projectNames[item.project]==='string'?projectNames[item.project]:'Sans projet associé';
-  const dest=item.kind==='mission'?'#/control/missions':'#/control/inbox';
+  const dest=item.kind==='mission'?'#/control/missions':item.id?'#/control/inbox?task='+encodeURIComponent(item.id):'#/control/inbox';
   return '<li><a href="'+dest+'"><span class="control-day-item-text"><strong>'+escapeHtml(item.title)+'</strong><small>'+escapeHtml(project)+'</small></span><span class="control-day-item-label">'+escapeHtml(item.label)+'</span><span aria-hidden="true">→</span></a></li>';
  }).join('')+'</ol>';
  return '<section class="control-day-brief" aria-labelledby="control-day-title"><div class="control-day-header"><div><span class="control-day-eyebrow">MON ACTIVITÉ · DONNÉES LOCALES</span><h2 id="control-day-title">À ne pas oublier</h2><p>Vos prochaines actions, selon les tâches et missions renseignées dans CONTROL.</p></div><a class="control-day-new" href="#/control/inbox/new">+ Créer une tâche</a></div>'+counts+list+
