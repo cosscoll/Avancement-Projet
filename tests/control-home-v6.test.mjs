@@ -53,7 +53,7 @@ test('No fabricated zeros for unreadable local data',()=>{
 test('Homepage has four functioning navigation destinations, tools kept accessible',()=>{
  for(const dest of ['href="#/"','id="control-home-nav-projects"','href="#/control/team"','href="#/control/aistudio"'])
   assert.ok(html.includes(dest),dest);
- assert.match(html,/details\.open=true/);
+ assert.match(html,/if\(projectsView\)\$\('#control-home-projects'\)\.open=true/);
  assert.match(html,/id="cards"/);
  assert.match(html,/id="new-project"/);
  assert.match(html,/id="shell-quick-find"/);
