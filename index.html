@@ -119,7 +119,7 @@ function home(){
  const metric=(key,compute)=>{
   try{const raw=localStorage.getItem(key);if(raw===null)return '0';const value=JSON.parse(raw);if(!value||typeof value!=='object'||Array.isArray(value))return '—';const result=compute(value);return Number.isInteger(result)&&result>=0?String(result):'—'}catch{return '—'}
  };
- const openActions=metric('control-command-v1',data=>Array.isArray(data.actions)?data.actions.filter(a=>a&&a.status!=='done'&&a.status!=='cancelled').length:0);
+ const openActions=metric('control-command-v1',data=>Array.isArray(data.actions)?data.actions.filter(a=>a&&typeof a.title==='string'&&a.title.trim()&&a.status!=='done'&&a.status!=='cancelled').length:0);
  const localAgents=metric('control-ai-studio-v1',data=>Array.isArray(data.agents)?data.agents.length:0);
  const briefHtml=(()=>{
   try{
