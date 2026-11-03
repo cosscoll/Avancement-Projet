@@ -13,7 +13,7 @@
   },
   "lastObservedBackendStatus": {
     "value": "INACTIVE",
-    "date": "2026-11-02",
-    "observation": "Projet Supabase CONTROL Cloud consulté en lecture seule ; ne pas interpréter comme un contrôle en temps réel."
+    "date": "2026-11-03",
+    "observation": "Le projet CONTROL Cloud a été vérifié en lecture seule via son connecteur : INACTIVE. Aucun redémarrage, migration, connexion utilisateur ou activation publique."
   }
 }
