@@ -165,6 +165,25 @@ try{
  assert.equal(await js("!!document.querySelector('.control-home-v4 .shell-quick-find')"),true);
  log('CONTROL 04 visual dashboard, local metrics and primary navigation are rendered in Chromium');
 
+ // Visible redesign must be functional at the two common Android viewport widths.
+ for(const width of [390,320]){
+  await command('Emulation.setDeviceMetricsOverride',{width,height:740,deviceScaleFactor:2,mobile:true});
+  await delay(200);
+  const view=await js("({inner:innerWidth,scroll:document.documentElement.scrollWidth,hero:!!document.querySelector('.control-home-v4 .shell-feature-primary'),metrics:document.querySelectorAll('.control-v4-metric').length,actions:document.querySelectorAll('.control-home-v4 .shell-action').length})");
+  assert.equal(view.hero,true);
+  assert.equal(view.metrics,3);
+  assert.equal(view.actions,5);
+  assert.ok(view.scroll<=view.inner+4,'CONTROL 04 mobile horizontal overflow at '+width+': '+JSON.stringify(view));
+ }
+ await command('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false});
+ await js("document.querySelector('.control-v4-metric[href=\"#/control/aistudio\"]').click()");
+ await ready(()=>js("!!document.querySelector('[data-as-tab=agents]')"),7000)();
+ assert.equal(await js("location.hash"),'#/control/aistudio');
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('.control-home-v4')"),7000)();
+ log('CONTROL 04 has responsive 320/390px navigation and real direct agent destination');
+
+
  await js("location.hash='#/control/localai'");
  await ready(()=>js("!!document.querySelector('[data-control-operator]')"),9000)();
 
