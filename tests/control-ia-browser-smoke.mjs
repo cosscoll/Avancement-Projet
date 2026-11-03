@@ -863,6 +863,7 @@ try{
   assert.equal(await js("document.querySelector('[data-as-action=delete-thread]').disabled"),true);
   log('AI Studio can rename and safely delete discussion, retain valid selection and fit 320px');
   // Synthetic conversations and searches remain inside this isolated browser.
+  await js("window.__studioSearchSnapshot=localStorage.getItem('control-ai-studio-v1')");
   await js("(()=>{const s=JSON.parse(localStorage.getItem('control-ai-studio-v1'));s.agents[0].threads[0].messages=[{role:'user',content:'La décision stratégique mobile est validée'},{role:'assistant',content:'Le plan responsive est confirmé'}];s.agents.push({id:'agt-second-test',name:'Assistant Référencement',projectId:'general',instructions:'Auditer',conversationIds:[],memoryIds:[],configVersion:1,threads:[{id:'thr-search-test',name:'Projet SEO',messages:[{role:'user',content:'Mieux référencer le site sur les moteurs'}]}]});localStorage.setItem('control-ai-studio-v1',JSON.stringify(s));location.hash='#/'})()");
   await ready(()=>js("!!document.querySelector('.shell-dashboard')"),7000)();
   await js("location.hash='#/control/aistudio'");
@@ -890,6 +891,16 @@ try{
   await js("document.querySelector('[data-as-action=clear-thread-search]').click()");
   assert.equal(await js("document.querySelector('.as-thread-hit')===null"),true,'Clearing query hides results');
   log('AI Studio search finds messages across agents, opens matched thread, and fits 320px');
+  // Reset ONLY the synthetic search fixture so subsequent historical acceptance
+  // checks still use the single original agent and its real source associations.
+  await js("(()=>{localStorage.setItem('control-ai-studio-v1',window.__studioSearchSnapshot);delete window.__studioSearchSnapshot;location.hash='#/'})()");
+  await ready(()=>js("!!document.querySelector('.shell-dashboard')"),7000)();
+  await js("location.hash='#/control/aistudio'");
+  await ready(()=>js("!!document.querySelector('[data-as-tab=agents]')"),7000)();
+  await js("document.querySelector('[data-as-tab=agents]').click()");
+  await ready(()=>js("!!document.querySelector('.as-agent-toolbar')"),6000)();
+  assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents.length"),1);
+
 
  const approvedContext=await js("(()=>{const s=JSON.parse(localStorage.getItem('control-ai-studio-v1'));return window.CONTROL_AI_STUDIO_CORE.context(s,s.agents[0])})()");
  assert.match(approvedContext,/Prioriser la navigation mobile/);
