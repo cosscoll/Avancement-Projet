@@ -260,6 +260,17 @@ function intake(){
  });
 }
 
+function team(){
+ const content=note('La collaboration multi-utilisateurs de CONTROL n’est pas encore activée. Cette page n’affiche pas de salariés connectés et ne partage aucune donnée privée.')+
+ '<section class="panel"><h2>Votre futur espace Équipe</h2>'+
+ '<p>CONTROL pourra permettre de répartir les tâches, attribuer les responsabilités, consulter les blocages et valider les travaux lorsque les comptes sécurisés seront disponibles.</p>'+
+ '<div class="actions"><a class="button primary" href="#/control/inbox">Gérer mes tâches locales</a>'+
+ '<a class="button" href="app.html">État des comptes CONTROL Cloud</a></div></section>'+
+ '<section class="panel"><h2>Avant d’inviter des collaborateurs</h2>'+
+ '<p>La séparation entre les comptes, les permissions et la synchronisation doivent être testées avec deux utilisateurs réels. Aucune invitation ne peut être envoyée depuis cette version personnelle.</p></section>';
+ $('#main').innerHTML=view('Équipe','Collaboration en préparation · aucune invitation active',content);
+}
+
 function missions(){const cards=db.missions.slice().reverse(),counts=['todo','doing','review','done'].map(s=>db.missions.filter(x=>x.status===s).length);
  let content='<div class="dash-stats">'+['À lancer','En cours','À vérifier','Terminé'].map((s,i)=>'<div class="stat"><strong>'+counts[i]+'</strong><span>'+s+'</span></div>').join('')+'</div>'+
  note('CONTROL prépare les consignes et permet de suivre leur exécution. Les fournisseurs externes ne reçoivent aucune mission automatiquement depuis ce site public. Les résultats doivent être rapportés et vérifiés.')+
@@ -1075,6 +1086,6 @@ function paintSprints(selector,onlyBlockers=false){const out=$(selector);if(!out
  const n=Object.keys(sprintLoaded).length;if(n<SPRINT_IDS.length)out.innerHTML+=tiny((SPRINT_IDS.length-n)+' source(s) non vérifiée(s), information potentiellement partielle.');
  out.innerHTML+=tiny('Ces données sont des journaux GitHub, pas un suivi en direct de ChatGPT. Le statut en ligne nécessite une preuve de recette réelle.');
 }
-function render(input){ctx=input||ctx;init();try{const today=window.CONTROL_TASKS?.localDay()||new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a&&typeof a.title==='string'&&a.title.trim()&&a.status!=='done'&&a.status!=='cancelled'&&window.CONTROL_TASKS?.category(a,today)==='overdue').length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,tools,aistudio,webbuilder,meetings,command,localai,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,goals,budget,backup,settings,search};(pages[page]||manager)()}
+function render(input){ctx=input||ctx;init();try{const today=window.CONTROL_TASKS?.localDay()||new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a&&typeof a.title==='string'&&a.title.trim()&&a.status!=='done'&&a.status!=='cancelled'&&window.CONTROL_TASKS?.category(a,today)==='overdue').length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,team,tools,aistudio,webbuilder,meetings,command,localai,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,goals,budget,backup,settings,search};(pages[page]||manager)()}
 window.CONTROL_CENTER={render};
 })();
