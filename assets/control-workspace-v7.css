@@ -135,3 +135,17 @@ body.control-shell-v3.control-simple-workspace>.wrap>.quiet{display:none!importa
 @media(prefers-reduced-motion:reduce){
  body.control-shell-v3.control-simple-workspace *{transition:none!important;animation-duration:.01ms!important}
 }
+
+/* Projects tab is a real focused landing, not just the homepage drawer. */
+body.control-shell-v3.control-simple-home .control-home-v6--projects .control-home-v6-stats,
+body.control-shell-v3.control-simple-home .control-home-v6--projects .control-home-v6-ask,
+body.control-shell-v3.control-simple-home .control-home-v6--projects .control-home-v6-priorities{display:none!important}
+body.control-shell-v3.control-simple-home .control-home-v6--projects .control-home-v6-projects{margin:8px 0 0!important;padding:0!important;border-top:0!important}
+body.control-shell-v3.control-simple-home .control-home-v6--projects .control-home-v6-projects>summary{display:none}
+body.control-shell-v3.control-simple-home .control-home-v6--projects .control-home-v6-project-head{margin-top:5px;margin-bottom:13px}
+body.control-shell-v3.control-simple-home .control-home-v6--projects .control-home-v6-projects .shell-projects-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+body.control-shell-v3.control-simple-home .control-home-v6--projects #search{width:100%;max-width:100%}
+body.control-shell-v3.control-simple-home .control-home-v6-tabs button[aria-current=page]{color:#223e5e!important;background:#edf3f8!important;font-weight:750}
+@media(max-width:580px){
+ body.control-shell-v3.control-simple-home .control-home-v6--projects .control-home-v6-projects .shell-projects-list{grid-template-columns:1fr!important}
+}
