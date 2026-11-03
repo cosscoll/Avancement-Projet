@@ -1,0 +1,137 @@
+/* CONTROL — Compact workspace shell.
+   Inner personal routes inherit the approved white/navy entrepreneur visual language.
+   Cloud and legacy.html remain unchanged. */
+body.control-shell-v3.control-simple-workspace{background:#f6f8fb!important;color:#172335}
+body.control-shell-v3.control-simple-workspace .shell-sidebar,
+body.control-shell-v3.control-simple-workspace .mobilefoot,
+body.control-shell-v3.control-simple-workspace .control-nav-mobile-trigger{display:none!important}
+body.control-shell-v3.control-simple-workspace>.wrap{width:min(100%,1080px)!important;max-width:1080px!important;margin:0 auto!important;padding:0 24px 72px!important;min-height:100vh;background:transparent!important}
+body.control-shell-v3.control-simple-workspace>.wrap>header.control-head{
+ margin:0!important;padding:20px 2px 14px!important;position:relative!important;top:auto!important;z-index:20!important;
+ min-height:0!important;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;
+ background:transparent!important;border-bottom:1px solid #e3e9f0!important;backdrop-filter:none!important;box-shadow:none!important
+}
+body.control-shell-v3.control-simple-workspace .control-head .logo{
+ display:flex;align-items:center;gap:5px;min-width:0;font-size:18px!important;font-weight:850!important;letter-spacing:-.7px!important;color:#18263b!important;
+}
+body.control-shell-v3.control-simple-workspace .control-head .logo>span:first-child{font-size:19px;color:#355477}
+body.control-shell-v3.control-simple-workspace .shell-ui-version{border:0!important;background:#edf1f5!important;color:#63748a!important;border-radius:6px!important;font-size:9px!important;letter-spacing:.5px!important}
+.control-workspace-mainnav{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-left:auto}
+.control-workspace-mainnav a{
+ display:inline-flex;align-items:center;justify-content:center;min-height:39px;padding:9px 12px;white-space:nowrap;
+ font-size:12px;font-weight:670;border-radius:9px;color:#65778a!important;text-decoration:none!important;transition:background .16s,color .16s;
+}
+.control-workspace-mainnav a:hover{background:#eef2f6!important;color:#243b55!important}
+.control-workspace-mainnav a[aria-current=page]{background:#e7eef6!important;color:#233e5f!important;font-weight:790}
+body.control-shell-v3.control-simple-workspace .control-head .head-actions{gap:8px;margin:0}
+body.control-shell-v3.control-simple-workspace .control-head .head-tools{display:none!important}
+body.control-shell-v3.control-simple-workspace .control-head .head-search{
+ min-height:39px!important;padding:8px 12px!important;color:#2e4b6a!important;border:1px solid #dce5ee!important;border-radius:9px!important;
+ background:#fff!important;font-size:12px!important;font-weight:690!important;box-shadow:none!important
+}
+body.control-shell-v3.control-simple-workspace .control-head .head-search kbd{font-size:10px}
+body.control-shell-v3.control-simple-workspace .control-location{
+ display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 auto!important;padding:14px 2px 0!important;
+ max-width:100%!important;font-size:11px!important;color:#78899b
+}
+body.control-shell-v3.control-simple-workspace .control-location strong{font-size:11px;color:#41576f;font-weight:690}
+body.control-shell-v3.control-simple-workspace .control-location a{color:#375c82!important;text-decoration:underline;text-underline-offset:3px}
+body.control-shell-v3.control-simple-workspace>.wrap>main#main{max-width:100%!important;min-width:0;margin:0 auto!important;padding:20px 0 28px!important}
+body.control-shell-v3.control-simple-workspace #main>.toprow{padding:8px 0 13px;margin:0 0 17px;align-items:center}
+body.control-shell-v3.control-simple-workspace #main>.toprow h1{font-size:clamp(24px,3vw,32px)!important;color:#17283c!important;font-weight:780!important;line-height:1.18!important;letter-spacing:-.8px!important;margin:6px 0!important}
+body.control-shell-v3.control-simple-workspace #main>.toprow p{font-size:12px!important;color:#69798a!important;line-height:1.5}
+body.control-shell-v3.control-simple-workspace #main>.toprow .quiet{font-size:10px!important;letter-spacing:1px;color:#698098}
+body.control-shell-v3.control-simple-workspace #main>.back{display:inline-flex!important;min-height:36px;align-items:center;font-size:12px;font-weight:710;color:#345e89;margin:0 0 9px}
+body.control-shell-v3.control-simple-workspace #main>.panel,
+body.control-shell-v3.control-simple-workspace #main>.clarity-work-nav,
+body.control-shell-v3.control-simple-workspace #main .panel{
+ border:1px solid #e4eaf0!important;background:#fff!important;border-radius:14px!important;
+ box-shadow:0 2px 12px rgba(26,47,73,.025)!important;color:#293d54
+}
+body.control-shell-v3.control-simple-workspace #main .panel h2{color:#1e344c;font-size:16px!important;font-weight:760!important;letter-spacing:-.3px}
+body.control-shell-v3.control-simple-workspace #main .muted{color:#68798c}
+body.control-shell-v3.control-simple-workspace #main .stat{
+ min-height:94px!important;padding:16px 18px!important;border:1px solid #e8edf2!important;border-radius:12px!important;
+ background:#fff!important;box-shadow:none!important
+}
+body.control-shell-v3.control-simple-workspace #main .stat strong{color:#1b344f;font-size:27px}
+body.control-shell-v3.control-simple-workspace #main .stat span{color:#60768b;font-size:11px}
+body.control-shell-v3.control-simple-workspace #main .notice{
+ border-radius:11px!important;background:#f0f5fa!important;color:#426078!important;border:1px solid #dfe8f1!important;
+ font-size:12px!important;line-height:1.6!important;padding:13px 16px!important
+}
+body.control-shell-v3.control-simple-workspace #main .field{
+ border:1px solid #d9e2ec!important;border-radius:9px!important;background:#fff!important;color:#243e56!important;
+ min-height:42px;font-size:13px
+}
+body.control-shell-v3.control-simple-workspace #main .primary,
+body.control-shell-v3.control-simple-workspace #main button.primary,
+body.control-shell-v3.control-simple-workspace #main a.primary{
+ background:#233f62!important;color:#fff!important;border:1px solid #233f62!important;border-radius:9px!important;
+ box-shadow:none!important;font-size:12px!important;font-weight:730!important
+}
+body.control-shell-v3.control-simple-workspace #main a:focus-visible,
+body.control-shell-v3.control-simple-workspace #main button:focus-visible,
+body.control-shell-v3.control-simple-workspace .control-workspace-mainnav a:focus-visible{
+ outline:3px solid #3876b9!important;outline-offset:3px!important
+}
+body.control-shell-v3.control-simple-workspace #main .shell-project-navigation{
+ padding:16px!important;margin:16px 0 20px!important;border:1px solid #e4eaf0!important;
+ border-radius:14px!important;background:#fff!important;box-shadow:none!important
+}
+body.control-shell-v3.control-simple-workspace #main .shell-project-label{font-size:10px!important;color:#7a8a9c}
+body.control-shell-v3.control-simple-workspace #main .shell-project-navigation .tabs{gap:7px}
+body.control-shell-v3.control-simple-workspace #main .shell-project-navigation .tabs button{
+ min-height:43px!important;background:#f4f6f8!important;color:#46617b!important;border:1px solid #e7ecf1!important;
+ border-radius:9px!important;font-size:11px!important;font-weight:670!important
+}
+body.control-shell-v3.control-simple-workspace #main .shell-project-navigation .tabs button[aria-selected=true]{
+ background:#e4edf6!important;color:#1e3e63!important;border-color:#b9cee3!important
+}
+body.control-shell-v3.control-simple-workspace #main .shell-project-more>summary{color:#5e7891;font-size:12px}
+body.control-shell-v3.control-simple-workspace #main .control-wayfinding{
+ background:#f1f5f9!important;border:1px solid #e3ebf3!important;color:#48627d!important;border-radius:10px!important;
+ box-shadow:none!important;font-size:11px!important
+}
+body.control-shell-v3.control-simple-workspace #main .control-task-row{padding:13px 0!important}
+body.control-shell-v3.control-simple-workspace #main .control-task-tag{
+ border-radius:6px!important;background:#edf2f7!important;color:#46627d!important;font-size:10px!important
+}
+body.control-shell-v3.control-simple-workspace #main .control-task-tag-late{background:#fff1e4!important;color:#925121!important}
+body.control-shell-v3.control-simple-workspace #main .control-task-toolbar{gap:10px}
+body.control-shell-v3.control-simple-workspace #main .control-task-create{margin-top:14px}
+body.control-shell-v3.control-simple-workspace #main .as-heading,
+body.control-shell-v3.control-simple-workspace #main .as-provider-grid{max-width:100%}
+body.control-shell-v3.control-simple-workspace #main [role=tablist]{max-width:100%}
+body.control-shell-v3.control-simple-workspace #main .actions{flex-wrap:wrap}
+body.control-shell-v3.control-simple-workspace #main .grid{min-width:0}
+body.control-shell-v3.control-simple-workspace #main .grid>*{min-width:0}
+body.control-shell-v3.control-simple-workspace .control-simple-footer{
+ display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding:16px 2px;
+ color:#7a8999;font-size:10.5px;line-height:1.5
+}
+.control-simple-footer a{color:#3e6387!important;text-decoration:underline!important;text-underline-offset:3px}
+body.control-shell-v3.control-simple-workspace>.wrap>.quiet{display:none!important}
+@media(max-width:800px){
+ body.control-shell-v3.control-simple-workspace>.wrap{padding:0 17px 75px!important}
+ body.control-shell-v3.control-simple-workspace>.wrap>header.control-head{gap:11px;padding:16px 0 13px!important}
+ .control-workspace-mainnav{order:3;width:100%;margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px}
+ .control-workspace-mainnav a{font-size:11px;min-height:42px;padding:9px 3px!important}
+ body.control-shell-v3.control-simple-workspace .control-head .head-search{min-width:41px;padding:10px!important;font-size:0!important}
+ body.control-shell-v3.control-simple-workspace .control-head .head-search kbd{display:none}
+ body.control-shell-v3.control-simple-workspace .control-location{padding:11px 0 0!important}
+ body.control-shell-v3.control-simple-workspace>.wrap>main#main{padding:16px 0 25px!important}
+}
+@media(max-width:420px){
+ body.control-shell-v3.control-simple-workspace>.wrap{padding:0 11px 70px!important}
+ body.control-shell-v3.control-simple-workspace .control-head .logo{font-size:16px!important}
+ body.control-shell-v3.control-simple-workspace .shell-ui-version{font-size:8px!important}
+ body.control-shell-v3.control-simple-workspace #main>.toprow h1{font-size:25px!important}
+ body.control-shell-v3.control-simple-workspace #main .shell-project-navigation{padding:12px!important}
+ body.control-shell-v3.control-simple-workspace #main .shell-project-navigation .tabs,
+ body.control-shell-v3.control-simple-workspace #main .shell-project-more .clarity-advanced{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ body.control-shell-v3.control-simple-workspace #main .panel{padding:15px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ body.control-shell-v3.control-simple-workspace *{transition:none!important;animation-duration:.01ms!important}
+}
