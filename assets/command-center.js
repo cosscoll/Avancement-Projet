@@ -143,7 +143,7 @@ function intake(){
     '<button type="submit" class="primary">Enregistrer les modifications</button></form></details></div>';
   }
   const search=workflow.searchText([a.title,projectName,description,a.provider||''].join(' '));
-  return '<div class="inbox-item control-task-row" data-task-kind="'+h(a.kind)+'" data-task-status="'+h(status)+'" data-task-search="'+h(search)+'">'+
+  return '<div class="inbox-item control-task-row" data-task-id="'+h(a.id||'')+'" data-task-kind="'+h(a.kind)+'" data-task-status="'+h(status)+'" data-task-search="'+h(search)+'">'+
    '<div class="control-task-summary"><div class="control-task-text"><span class="control-task-tag '+(status==='overdue'?'control-task-tag-late':'')+'">'+h(tag)+'</span>'+
    '<strong>'+h(a.title)+'</strong><small>'+h(projectName)+' · '+h(description)+'</small>'+
    (a.kind==='action'&&safe(a.url)?href(a.url,'Ouvrir la référence','control-task-reference'):'')+
@@ -189,6 +189,23 @@ function intake(){
  $('#control-task-search').oninput=applyFilter;
  $('#control-task-filter').onchange=applyFilter;
  applyFilter();
+ // Dashboard priority deep links select exactly the requested task without changing its data.
+ const deepTask=new URLSearchParams(location.hash.split('?')[1]||'').get('task');
+ if(deepTask){
+  const target=[...$('#main').querySelectorAll('.control-task-row[data-task-id]')].find(row=>row.dataset.taskId===deepTask&&row.dataset.taskKind==='action');
+  if(target){
+   const shouldShowDone=target.dataset.taskStatus==='done';
+   inboxFilter=shouldShowDone?'done':'active';
+   inboxSearch='';
+   $('#control-task-search').value='';
+   $('#control-task-filter').value=inboxFilter;
+   applyFilter();
+   target.classList.add('control-task-highlight');
+   const details=target.querySelector('.control-task-edit');
+   if(details)details.open=true;
+   target.scrollIntoView?.({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?'instant':'smooth',block:'center'});
+  }
+ }
  registerForm('#new-action',f=>{
   const title=String(f.get('title')||'').trim();
   const url=String(f.get('url')||'').trim();
