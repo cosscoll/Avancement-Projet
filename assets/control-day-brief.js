@@ -15,7 +15,7 @@ function summarize(raw,now=new Date()){
  let data;
  try{data=typeof raw==='string'?JSON.parse(raw):raw;}catch{return {...empty,status:'invalid'};}
  if(!data||typeof data!=='object'||Array.isArray(data)||data.actions!==undefined&&!Array.isArray(data.actions)||data.missions!==undefined&&!Array.isArray(data.missions))return {...empty,status:'invalid'};
- const date=now instanceof Date&&Number.isFinite(now.getTime())?now:new Date();
+ const date=now&&typeof now.getTime==='function'&&Number.isFinite(now.getTime())?now:new Date();
  const current=localDay(date);
  const actions=Array.isArray(data.actions)?data.actions:[];
  const missions=Array.isArray(data.missions)?data.missions:[];
