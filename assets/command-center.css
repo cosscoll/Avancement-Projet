@@ -54,3 +54,42 @@ header.control-head{flex-wrap:wrap;gap:10px}
 .backup-diff-table{min-width:580px}
 .backup-diff-table td:nth-child(n+4){font-variant-numeric:tabular-nums}
 .backup-diff-scroll:focus-visible{outline:3px solid #4c83b9}
+
+
+/* CONTROL — TPE task inbox. Edit in place without crowding the first viewport. */
+.control-task-toolbar{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(180px,.65fr);gap:12px;margin:12px 0}
+.control-task-toolbar label{display:flex;flex-direction:column;gap:6px;min-width:0;font-size:12px;font-weight:750;color:#31485f}
+.control-task-toolbar .field{width:100%;min-width:0;min-height:44px}
+.control-task-visible{color:#61758a;font-size:12px;margin:6px 0 13px}
+.control-task-list .control-task-row{display:block;margin:0;padding:15px 0;border-bottom:1px solid #e7edf3}
+.control-task-list .control-task-row[hidden],.control-task-none[hidden]{display:none!important}
+.control-task-summary{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.control-task-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.control-task-text strong{margin:0;font-size:14px;line-height:1.42;color:#203b54}
+.control-task-text small{color:#5d7085;line-height:1.5;font-size:12px}
+.control-task-tag{display:inline-flex;align-items:center;align-self:flex-start;border-radius:30px;padding:3px 10px;background:#edf3fa;color:#355c83;font-size:11px;font-weight:750}
+.control-task-tag-late{color:#89421b;background:#fff0e4}
+.control-task-reference{color:#285d95;font-size:12px;text-decoration:underline;text-underline-offset:3px;align-self:flex-start}
+.control-task-actions{min-width:125px;display:flex;align-items:flex-end;flex-direction:column;gap:7px}
+.control-task-actions>button{font-size:12px;padding:8px 11px;min-height:40px}
+.control-task-actions>.control-task-complete{background:#193f62;color:#fff;border-color:#193f62}
+.control-task-edit{width:min(470px,80vw);border:1px solid #d8e4ef;border-radius:10px;background:#f8fbfd}
+.control-task-edit>summary{list-style:revert;cursor:pointer;padding:9px 13px;color:#284e72;font-size:12px;font-weight:750}
+.control-task-edit>summary:focus-visible{outline:3px solid #3c7ebc;outline-offset:2px}
+.control-task-edit[open]{box-shadow:0 3px 12px #173d6020}
+.control-task-edit-form{display:grid;gap:10px;padding:12px;border-top:1px solid #d9e4ed}
+.control-task-edit-form>label,.control-task-edit-form>.formgrid>label{display:grid;gap:5px;font-size:12px;font-weight:690;color:#365169}
+.control-task-edit-form .field{min-width:0;width:100%;max-width:100%;font-size:13px}
+.control-task-edit-form button{min-height:44px}
+.control-task-none{padding:14px;border:1px dashed #ccd9e5;border-radius:10px;color:#536a7f;font-size:13px}
+.control-task-create{margin-top:18px}
+.control-task-externals{margin-top:14px}
+.control-task-externals .shell-progressive-body h3{font-size:14px;color:#38516a}
+@media(max-width:700px){
+ .control-task-toolbar{grid-template-columns:1fr}
+ .control-task-summary{flex-direction:column;gap:10px}
+ .control-task-actions{width:100%;min-width:0;display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start}
+ .control-task-edit{width:100%}
+ .control-task-edit-form>.formgrid{grid-template-columns:1fr}
+ .control-task-edit-form button{width:100%}
+}
