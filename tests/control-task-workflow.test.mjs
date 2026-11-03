@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
-const ctx={module:{exports:{}}};
+const ctx={module:{exports:{}},URL};
 runInNewContext(readFileSync(new URL('../assets/control-task-workflow.js',import.meta.url),'utf8'),ctx);
 const task=ctx.module.exports;
 const day='2026-11-03';
