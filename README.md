@@ -1,3 +1,11 @@
+## 3 novembre 2026 — CONTROL 06 : accueil conforme à la maquette entrepreneur
+
+**Changement visuel réel sur `main` :** suppression, sur l'accueil personnel seulement, de l'ancienne grande bannière bleue, des cinq tuiles et du rail latéral sombre. La page est désormais centrée, sobre et compacte : logo CONTROL et « Mon entreprise », « Bonjour. », trois statistiques issues de données locales (urgences / à faire / en attente), zone « Demander à CONTROL », trois priorités cliquables et quatre destinations Accueil / Projets / Équipe / Assistants. Le bandeau secondaire « Mes projets » est replié par défaut mais s'ouvre depuis la navigation, avec conservation de la recherche et des formulaires de création. Les outils avancés restent accessibles dans un volet dédié. Le reste de l'application n'a pas été remplacé par une maquette statique.
+
+**Honnêteté produit :** « Demander à CONTROL » ouvre le moteur de recherche de fonctionnalités existant : ce n'est pas encore une exécution par un agent IA relié aux services externes. Le bouton Équipe ouvre une page expliquant que les comptes collaboratifs sont en préparation ; aucune invitation n'est envoyée. Les trois indicateurs proviennent uniquement des données présentes dans le navigateur et affichent « — » si elles sont illisibles. Aucune donnée fictive du modèle n'est injectée.
+
+**Contrôles ajoutés :** `tests/control-home-v6.test.mjs` et adaptation de la recette Chromium publique `tests/control-ia-browser-smoke.mjs` pour la nouvelle structure, l'ouverture des projets, le responsive 320/390 px, les assistants et la sauvegarde. Cache PWA `v77`. Une réussite du code ne vaut pas preuve visuelle de déploiement tant que la recette sur la version publique n'a pas tourné.
+
 ## 3 novembre 2026 — CONTROL : tâches modifiables et parcours quotidien simplifié
 
 **Sur `main` :** l'écran **À traiter** dispose maintenant d'une recherche, de filtres, d'un formulaire d'édition par tâche, des actions Terminer/Rouvrir et de liens directs depuis les priorités du tableau de bord. La création est repliable ; les sources externes secondaires n'encombrent plus l'écran. Les anciennes données locales ne sont pas migrées ni supprimées.
