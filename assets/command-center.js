@@ -33,7 +33,7 @@ function commitLocal(change){
 }
 function toast(m){const e=$('#toast');if(e){e.textContent=m;e.classList.remove('hidden');setTimeout(()=>e.classList.add('hidden'),4200)}}
 function cap(s,n=320){s=String(s||'');return s.length>n?s.slice(0,n)+'…':s}
-function view(title,subtitle,content,extra=''){return (localStoreCorrupt?'<div role="alert" class="notice"><strong>Stockage local illisible.</strong> Les modifications sont bloquées pour éviter d’écraser les données précédentes. <a href="#/control/backup">Récupérer les données brutes ou restaurer une sauvegarde</a>.</div>':'')+'<div class="toprow"><div><div class="quiet">CONTROL / CENTRE DE COMMANDE</div><h1>'+h(title)+'</h1><p class="muted">'+h(subtitle)+'</p></div>'+extra+'</div>'+content}
+function view(title,subtitle,content,extra=''){return (localStoreCorrupt?'<div role="alert" class="notice"><strong>Stockage local illisible.</strong> Les modifications sont bloquées pour éviter d’écraser les données précédentes. <a href="#/control/backup">Récupérer les données brutes ou restaurer une sauvegarde</a>.</div>':'')+'<div class="toprow"><div><div class="quiet">MON ESPACE · CONTROL</div><h1>'+h(title)+'</h1><p class="muted">'+h(subtitle)+'</p></div>'+extra+'</div>'+content}
 const note=(s)=>'<div class="notice">'+s+'</div>';
 const box=(title,content)=>'<section class="panel"><h2>'+h(title)+'</h2>'+content+'</section>';
 const tiny=(s)=>'<p class="muted">'+h(s)+'</p>';
