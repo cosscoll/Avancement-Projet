@@ -6,7 +6,7 @@
 
 **Précautions :** les contenus de tâches, missions, projets et assistants n'ont pas été supprimés ni migrés. Ce changement concerne la navigation et la présentation, **pas** une activation du Cloud, de la collaboration ni des connecteurs IA. Les réglages et les parcours secondaires restent accessibles.
 
-**Recette :** `tests/control-workspace-v7.test.mjs` couvre la structure, les liens et les protections. La recette navigateur `tests/control-ia-browser-smoke.mjs` a été adaptée pour vérifier la transition entre les pages, le formulaire de tâche, les projets et la navigation fixe mobile. Cache PWA v78. Ces tests doivent encore réussir sur la version réellement déployée avant de qualifier le rendu de validé.
+**Recette :** `tests/control-workspace-v7.test.mjs` couvre la structure, les liens et les protections. La recette navigateur `tests/control-ia-browser-smoke.mjs` a été adaptée pour vérifier la transition entre les pages, le formulaire de tâche, les projets et la navigation fixe mobile. Cache PWA v79. Ces tests doivent encore réussir sur la version réellement déployée avant de qualifier le rendu de validé.
 
 ## 3 novembre 2026 — CONTROL 06 : accueil conforme à la maquette entrepreneur
 
