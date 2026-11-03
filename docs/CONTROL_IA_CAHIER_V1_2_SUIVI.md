@@ -1,3 +1,11 @@
+## Sprint — brouillons de discussion par agent (3 novembre 2026)
+
+**Livré sur `main` :** les utilisateurs peuvent saisir un message avant de charger volontairement le modèle IA local ; le bouton d'envoi reste inactif sans modèle. Chaque brouillon est conservé dans le `sessionStorage` du navigateur, isolé par identifiant d'agent et de fil. Il survit aux changements de discussion, à la navigation dans CONTROL et à un rechargement du même onglet. Un refus du stockage de session est signalé ; une copie en mémoire reste possible tant que l'écran est monté.
+
+**Protection des données :** les brouillons ne sont ni transmis à un service externe, ni inscrits dans les échanges enregistrés avant envoi, ni inclus dans les sauvegardes. Après écriture réussie de la question dans un fil, son brouillon est supprimé. La suppression confirmée d'un agent ou d'une discussion efface ses brouillons ; la restauration du Studio vide les brouillons temporaires pour éviter de mélanger les états. Un test Chromium vérifie aussi l'absence de fuite d'un brouillon entre deux agents.
+
+**PWA :** caches publics portés en `v71` pour diffuser cette amélioration aux installations existantes, avec l'avis de mise à jour volontaire déjà disponible. Les tests Chromium couvrent actualisation, navigation, fil distinct, agent distinct, suppression et envoi avec moteur local simulé. Les tests sur téléphone physique et sur une véritable inférence du modèle de ~180 Mo restent à effectuer. Aucun Cloud, OAuth, appel API payant ou automatisation n'a été activé.
+
 ## Sprint CONTROL — PWA et synchronisation de version (3 novembre 2026)
 
 - Invalidation de la coque PWA `control-shell-v70` et des données publiques `control-public-data-v70` après changement du Studio IA.

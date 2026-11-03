@@ -1,3 +1,7 @@
+## CONTROL — Brouillons sécurisés des agents, 3 novembre 2026
+
+Un message peut désormais être rédigé sans charger les ~180 Mo du modèle IA expérimental. La saisie non envoyée est conservée par agent et par discussion dans l'onglet ouvert, même après rechargement ; l'envoi reste bloqué tant que le modèle n'est pas chargé. Les brouillons ne sont pas synchronisés ni inclus dans les sauvegardes. Cache PWA `v71`, tests Node et Chromium ajoutés. Les services Cloud et connexions externes restent désactivés.
+
 ## Sprint CONTROL — sécurité des sauvegardes et accès directs (2 novembre 2026)
 
 - La sauvegarde unifiée à **quatre espaces** peut être chiffrée AES-GCM avec une phrase de passe. Les métadonnées cryptographiques sont contrôlées avant déchiffrement, les fichiers altérés et mots de passe incorrects sont refusés, et les champs de mot de passe sont vidés après la soumission.
