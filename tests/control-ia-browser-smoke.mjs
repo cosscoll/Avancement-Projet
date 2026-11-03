@@ -890,6 +890,22 @@ try{
   await js("(()=>{const f=document.querySelector('#as-chat-message');f.value='';f.dispatchEvent(new Event('input',{bubbles:true}))})()");
   assert.equal(await js("document.querySelector('#as-chat-message').value"),'');
   log('Agent drafts survive navigation, reload and thread switching without being sent');
+
+  // A second assistant's unsent text must never appear in the first assistant.
+  await js("(()=>{document.querySelector('#as-agent-name').value='Agent second projet';document.querySelector('#as-agent-instructions').value='Tester les brouillons indépendants';document.querySelector('#as-agent-form').requestSubmit()})()");
+  await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents.length===2"),6000)();
+  await js("(()=>{const f=document.querySelector('#as-chat-message');f.value='Brouillon privé du deuxième agent';f.dispatchEvent(new Event('input',{bubbles:true}))})()");
+  const secondAgentDraft=await js("(()=>{const a=JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[1];return 'control-ai-studio-draft-v1:'+a.id+':'+a.threads[0].id})()");
+  assert.match(await js("sessionStorage.getItem("+JSON.stringify(secondAgentDraft)+")"),/deuxième agent/);
+  await js("document.querySelectorAll('[data-as-open-agent]')[0].click()");
+  assert.equal(await js("document.querySelector('#as-chat-message').value"),'','Other agent cannot see a private draft');
+  await js("document.querySelectorAll('[data-as-open-agent]')[1].click()");
+  assert.equal(await js("document.querySelector('#as-chat-message').value"),'Brouillon privé du deuxième agent');
+  await js("(()=>{const previous=window.confirm;window.confirm=()=>true;try{document.querySelector('[data-as-action=delete-agent]').click()}finally{window.confirm=previous}})()");
+  assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents.length"),1);
+  assert.equal(await js("sessionStorage.getItem("+JSON.stringify(secondAgentDraft)+")"),null,'Deleted agent must also remove its unsent drafts');
+  log('Scoped drafts never leak across assistants and are cleared on agent deletion');
+
   log('AI Studio can rename and safely delete discussion, retain valid selection and fit 320px');
   // Synthetic conversations and searches remain inside this isolated browser.
   await js("window.__studioSearchSnapshot=localStorage.getItem('control-ai-studio-v1')");
