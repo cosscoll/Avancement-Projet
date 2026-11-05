@@ -1079,7 +1079,8 @@ function backup(){
    const current=key=>{try{return readBackupStore(key)}catch{return{}}};
    const existing={command:current(KEY),hub:current(HUB),automations:current(AUTOS),studio:current(STUDIO)};
    const report=restore.compare(data,existing);
-   const integrity=window.CONTROL_DATA_AUDIT?.inspectBackup(data);
+   const baseCatalog=ctx.projects.filter(p=>p&&typeof p.id==='string'&&!p.id.startsWith('custom-'));
+   const integrity=window.CONTROL_DATA_AUDIT?.inspectBackup(data,{catalogProjects:baseCatalog});
    if(!integrity)throw Error('Module de vérification des sauvegardes indisponible.');
    pending={data,original,integrity,requiresIntegrityAcknowledgement:integrity.counts.errors+integrity.counts.warnings>0};
    renderReview(report,integrity);
