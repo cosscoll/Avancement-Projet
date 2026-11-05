@@ -202,7 +202,7 @@ test('backup preview is read-only and requires consent when anomalies are detect
  assert.match(backup,/id="import-integrity"/);
  assert.match(backup,/id="import-integrity-consent"/);
  assert.match(backup,/id="import-integrity-ack"/);
- assert.match(backup,/window\.CONTROL_DATA_AUDIT\?\.inspectBackup\(data\)/);
+ assert.match(backup,/window\.CONTROL_DATA_AUDIT\?\.inspectBackup\(data,\{catalogProjects:baseCatalog\}\)/);
  assert.match(backup,/pending=\{data,original,integrity,requiresIntegrityAcknowledgement:/);
  assert.match(backup,/if\(staged\.requiresIntegrityAcknowledgement&&!integrityAck\.checked\)/);
  assert.match(backup,/applyButton\.disabled=count>0/);
