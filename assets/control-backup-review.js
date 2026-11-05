@@ -17,8 +17,10 @@ function list(data){
  const studio=safeObject(data?.studio)?data.studio:{};
  const result=BUCKETS.map(([key,label])=>({key,label,after:amount(command[key])}));
  const projectCount=safeObject(hub.projects)?Object.keys(hub.projects).length:amount(hub.projects);
+ const customProjects=amount(hub.custom);
  const automationCount=amount(automations.entries)||amount(automations.automations)||amount(automations.drafts);
- result.push({key:'projects',label:'Fiches projets locales',after:projectCount});
+ result.push({key:'projects',label:'Espaces projets enregistrés',after:projectCount});
+ result.push({key:'custom-projects',label:'Projets personnalisés',after:customProjects});
  for(const [bucket,label] of [['imports','Conversations du Studio IA'],['memories','Mémoires du Studio IA'],['agents','Agents du Studio IA']])result.push({key:'studio-'+bucket,label,after:amount(studio[bucket])});
  result.push({key:'automations',label:'Brouillons de programmation',after:automationCount});
  return result;
@@ -58,6 +60,9 @@ function compare(next,current){
   const oldCount=before.get(x.key)||0;
   if(BUCKETS.some(b=>b[0]===x.key)){
    return {...x,before:oldCount,...compareRecords(next.command[x.key],previous.command?.[x.key])};
+  }
+  if(x.key==='custom-projects'){
+   return {...x,before:oldCount,...compareRecords(next.hub.custom,previous.hub?.custom)};
   }
   if(x.key.startsWith('studio-')){
    const field=x.key.slice('studio-'.length);
