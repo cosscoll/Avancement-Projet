@@ -3,7 +3,7 @@
 (()=>{'use strict';
 const BUCKETS=Object.freeze([
  ['actions','Actions'],['missions','Missions'],['events','Événements'],
- ['meetings','Visios'],['decisions','Décisions'],['goalPlans','Plans'],
+ ['meetings','Visios'],['decisions','Décisions'],['clients','Clients locaux'],['goalPlans','Plans'],
  ['websites','Sites et brouillons'],['messages','Messages locaux'],
  ['expenses','Dépenses déclarées'],['income','Revenus déclarés']
 ]);
