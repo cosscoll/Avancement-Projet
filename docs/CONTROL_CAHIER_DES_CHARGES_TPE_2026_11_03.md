@@ -1,6 +1,39 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 5 novembre 2026 · version de travail 1.1 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 5 novembre 2026 · version de travail 1.2 · ciblage indépendants et équipes de 2 à 10 personnes_
 
+
+## Sprint suivant — relation Clients ↔ Tâches réelle (5 novembre 2026)
+
+**Constat avant correction :** la fiche Client ouvrait le formulaire d'une tâche avec le projet présélectionné, mais l'enregistrement ne conservait **aucun identifiant client**. Ce lien seulement visuel ne permettait ni recherche fiable ni suivi des tâches client.
+
+**Développé sur \`main\` (MVP local, pas Cloud) :**
+- Une tâche peut porter \`clientId\` et référence **une fiche client existante** dans le même magasin local \`control-command-v1\`. Le projet rattaché doit correspondre à celui de la fiche ; une fiche « Sans projet » est autorisée sur tous les projets. Projet inconnu, identifiant client absent ou association incohérente : enregistrement refusé.
+- Depuis la fiche Client, « Créer une tâche » préremplit **le projet, le client et la prochaine étape** (si renseignée) ; rien n'est automatiquement créé tant que l'utilisateur ne valide pas le formulaire.
+- Le formulaire de création et celui de modification des tâches proposent un sélecteur Client. Changer le projet limite la liste aux fiches autorisées, et refuse un lien incohérent. Les tâches existantes **sans \`clientId\`** continuent de fonctionner.
+- La liste des tâches indique le client lié et inclut son nom dans la recherche locale. La recherche universelle retrouve également les tâches par nom de client, avec accès à la tâche précise.
+- La fiche Client expose les tâches effectivement liées, leur état et l'accès direct à chacune. « Voir toutes les tâches liées » ouvre la boîte de réception filtrée sur l'identifiant, **avec tâches en cours et terminées**.
+- Supprimer une fiche demande confirmation ; les tâches et projets sont conservés et seul le \`clientId\` correspondant est détaché. Déplacer une fiche entre projets demande confirmation avant de détacher les tâches devenues incompatibles.
+- Les créations, modifications et détachements passent tous par **\`commitLocal\`** : écriture transactionnelle, annulation en mémoire en cas de refus et détection de modification inter-onglets. Les sauvegardes existantes incluent le \`clientId\` sans nouvelle clé de stockage.
+- Les noms et intitulés sont affichés échappés. Les liens internes utilisent des ID encodés. Les données restent **uniquement sur cet appareil** et n'ont pas de synchronisation multi-utilisateurs.
+- Les styles suivent la charte « Simple & Humain » sur ordinateur et mobile, sans ajout au nombre de destinations principales. PWA **v82**.
+
+**Critères d'acceptation à vérifier dans le vrai navigateur :**
+1. Créer une fiche Client et une tâche à partir de sa prochaine étape ; vérifier l'identifiant client dans la tâche, sa présence sur la fiche, et l'absence de création automatique.
+2. Créer une autre fiche sur un autre projet ; vérifier l'impossibilité de rattacher la tâche à cette fiche, y compris après changement de projet.
+3. Terminer une tâche, puis « Voir toutes les tâches liées » : vérifier que les tâches terminées restent visibles.
+4. Modifier l'organisation cliente pour la déplacer vers un autre projet ; vérifier que les tâches détachées sont conservées sans client, uniquement après confirmation.
+5. Supprimer une fiche ; vérifier que ses tâches restent, sont dissociées et que les tâches des autres clients ne changent pas.
+6. Recharger, ouvrir deux onglets, exporter et restaurer une sauvegarde : vérifier la conservation de \`clientId\` et le refus d'écrasement concurrent.
+7. Tester à 320/390/1440 px, au clavier, hors ligne, avec données malformées, et vérifier les noms contenant des caractères HTML.
+8. Vérifier que **ni l'équipe, ni Gmail, ni Claude/ChatGPT/Gemini ne sont présentés comme synchronisés**.
+
+**Tests ajoutés :** \`tests/control-clients.test.mjs\` — validation des associations et filtres, préremplissage, recherche, maintien des tâches après suppression/déplacement, absence de connexion réseau, cache. Vérifications JS ciblées exécutées ; recette Playwright/Chromium en conditions réelles et diffusion GitHub Pages encore à confirmer. Aucun quota limité, service externe, automatisation ni Cloud activé.
+
+### Décisions de conception à conserver
+- La référence canonique dans la tâche est \`clientId\`, pas une copie du nom du client ; renommer le client ne doit pas casser les liens.
+- Un client peut suivre plusieurs projets à terme, mais la version locale n'autorise actuellement **qu'un seul projet** (ou aucune association). Le modèle multi-projets sera conçu en phase Cloud après les rôles et permissions.
+- Les « prochaines étapes » sont des intentions ; seules les tâches explicitement enregistrées sont comptées comme actions. Ne pas annoncer de relance envoyée ou de mission IA réalisée à partir d'un simple lien.
+- Priorité P0 toujours bloquante pour le SaaS multi-utilisateurs : authentification, RLS et révocation vérifiées avec deux vrais comptes sur un projet Cloud indépendant, avant toute activation publique.
 
 ## Avancement du cahier des charges — 5 novembre 2026
 
