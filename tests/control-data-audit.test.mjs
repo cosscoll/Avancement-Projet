@@ -191,7 +191,7 @@ test('audit page is reachable from backup, security settings and home',()=>{
  assert.match(command,/control\/inbox\?task=/);
  assert.match(command,/data-act="rerun-audit"/);
  assert.match(css,/@media\(max-width:420px\)/);
- assert.match(sw,/control-shell-v85/);
+ assert.match(sw,/control-shell-v86/);
  assert.equal((sw.match(/assets\/control-data-audit\.js/g)||[]).length,2);
  assert.equal((sw.match(/assets\/control-data-audit\.css/g)||[]).length,2);
  const cfg=JSON.parse(read('config/cloud.json'));
