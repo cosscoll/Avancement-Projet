@@ -1,6 +1,41 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 3 novembre 2026 · version de travail 1.0 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 5 novembre 2026 · version de travail 1.1 · ciblage indépendants et équipes de 2 à 10 personnes_
 
+
+## Avancement du cahier des charges — 5 novembre 2026
+
+**Sprint livré : première version de « Clients » (P1), sans Cloud.**
+
+**Problème résolu :** un indépendant doit pouvoir retrouver ses organisations clientes, identifier leur projet associé et la prochaine démarche, sans passer par plusieurs logiciels.
+
+**Disponible sur `main` :**
+- `#/control/clients` — créer une fiche d'organisation ou de client non confidentielle, lui attribuer un statut **Prospect / En cours / Terminé**, associer un projet et déclarer une prochaine étape avec échéance.
+- Rechercher et filtrer les fiches par texte, statut et projet, y compris les accents ; modifier et supprimer une fiche après confirmation.
+- Depuis la fiche, ouvrir le projet et **préparer une nouvelle tâche** avec le projet présélectionné. La création de tâche est manuelle et conserve les règles existantes.
+- Depuis un projet, accéder directement à ses clients associés ; depuis les outils supplémentaires et le centre de pilotage, ouvrir toutes les fiches.
+- Recherche globale : les fiches associées à un projet connu sont indexées localement avec la prochaine étape et un lien vers Clients.
+- Sauvegarde : le contenu `clients` est inclus dans l'état local `control-command-v1` et apparaît explicitement dans la comparaison avant restauration.
+- Les dates impossibles, noms ou statuts invalides, projets inconnus, liens non HTTPS, identifiants dans les URL et paramètres secrets sont refusés.
+- Les modifications utilisent `commitLocal` : refus si le stockage est illisible, a changé dans un autre onglet ou n'accepte pas l'écriture. Le contenu HTML saisi est échappé à l'affichage.
+- Charte « Simple & Humain » conservée ; formulaire de création repliable si des fiches existent, responsive mobile. **Aucune activation Cloud, synchronisation ni notification.**
+
+**Limites assumées :** il ne s'agit **pas** encore d'un CRM partagé. Les informations restent en local sur l'appareil. Ne pas y inscrire de coordonnées personnelles, pièces commerciales privées ou secrets. Une prochaine étape déclarée ne crée aucune tâche ni rappel tant que l'utilisateur ne clique pas pour en créer une. Une fiche sans projet reste consultable dans Clients, mais n'entre pas dans la recherche globale filtrée par projet. Les champs de coordonnées nécessiteront l'authentification, les permissions par organisation et un stockage serveur sécurisé.
+
+**Vérifications :** `tests/control-clients.test.mjs` (données et dates, recherche, statuts, intégrations, sécurité et cache), `assets/control-clients.js` (règles pures) ; `tests/control-backup-review.test.mjs` vérifie la visibilité des fiches dans un aperçu de restauration. Cache PWA v81. Les tests exécutés hors navigateur doivent être distingués des tests utilisateur et de la publication réelle.
+
+### Périmètre prioritaire après ce sprint
+
+| Priorité | Capacité | Situation vérifiée dans le dépôt | Prochaine condition réelle |
+| --- | --- | --- | --- |
+| P0 | Tâches et suivi local | Fonctionnel en version personnelle ; tests ciblés présents | Recette navigateur, sauvegarde et restauration réelles sur mobile |
+| P0 | Accès Cloud et séparation des comptes | **Bloqué/désactivé** ; 8 critères de lancement non validés | Projet CONTROL actif, deux comptes Auth A/B, preuve RLS/JWT et révocation de session, validation expresse |
+| P1 | Clients légers | **MVP local livré**, sans coordonnées privées | Tests d'usage ; modèle serveur, droits et liens avec tâches multi-utilisateurs |
+| P1 | Agents et mémoires | Studio d'import manuel et assistants locaux expérimentaux | Permissions par projet, sources révisables, exécution réelle seulement après autorisations officielles |
+| P1 | Connecteurs Gmail/Agenda/Drive | Aucun fournisseur privé autorisé dans l'application personnelle | Choisir un premier flux officiel, OAuth scopes minimaux, déconnexion et audit |
+| P1 | Collaborateurs et validation | Pages préparatoires, aucun partage opérationnel | Cloud testé puis invitations, rôles, commentaires et audit |
+| P2 | Automatisations | **Non activées** conformément à l'interdiction actuelle | Accord explicite ultérieur, simulation, plafonds, audit et arrêt |
+
+**Règle de livraison :** ne pas annoncer « terminé » ou « synchronisé » si seule une page ou une simulation existe. Les liens vers les services tiers ne suffisent pas à établir une connexion, et l'affichage de données locales ne prouve pas la collaboration inter-comptes.
 
 ## Sprint suivant — parcours de tâches opérationnel (3 novembre 2026)
 
