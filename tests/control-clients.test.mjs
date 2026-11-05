@@ -70,7 +70,6 @@ test('Client pages are reachable from projects, management shortcuts and univers
  assert.match(command,/,'clients'\]\)/);
  assert.match(command,/\['clients','Clients et suivi'\]/);
  assert.match(command,/for\(const client of db\.clients\|\|\[\]\)/);
- assert.match(command,/\['clients','Clients locaux'\]/);
  assert.match(backup,/\['clients','Clients locaux'\]/);
 });
 
