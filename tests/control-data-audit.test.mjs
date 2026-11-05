@@ -43,6 +43,43 @@ test('backup preflight reports broken client links without assuming a complete p
  assert.equal(JSON.stringify(file),original,'Backup preflight must be strictly read-only');
  assert.equal(JSON.stringify(audit).includes('Organisation privée'),false);
 });
+test('portable backup validates imported custom projects alongside the built-in catalog',()=>{
+ const pack={
+  hub:{custom:[{id:'custom-11',name:'Projet local importé'}]},
+  command:{
+   clients:[{id:'c',name:'Entreprise test',project:'custom-11'}],
+   actions:[
+    {id:'a1',title:'Tâche du projet personnalisé',project:'custom-11',clientId:'c'},
+    {id:'a2',title:'Tâche catalogue',project:'core-project'},
+    {id:'a3',title:'Ancien projet inexistant',project:'lost-project'}
+   ]
+  }
+ };
+ const before=JSON.stringify(pack);
+ const known=[{id:'core-project',name:'Projet de référence'}];
+ const report=ctx.module.exports.inspectBackup(pack,{catalogProjects:known});
+ assert.equal(report.summary.projects,2);
+ assert.equal(report.issues.filter(x=>x.code==='orphan_project').length,1);
+ assert.equal(report.issues.find(x=>x.code==='orphan_project').id,'a3');
+ assert.equal(report.issues.some(x=>x.code==='cross_project_client'),false);
+ assert.equal(JSON.stringify(pack),before,'Audit must not rewrite imported projects or local references');
+ const unverified=ctx.module.exports.inspectBackup(pack);
+ assert.equal(unverified.issues.some(x=>x.code==='orphan_project'),false,
+  'When the catalog is unavailable, do not invent missing-project findings');
+ const app=read('assets/command-center.js');
+ assert.match(app,/const baseCatalog=ctx\.projects\.filter\(p=>p&&typeof p\.id==='string'&&!p\.id\.startsWith\('custom-'\)\)/);
+ assert.match(app,/inspectBackup\(data,\{catalogProjects:baseCatalog\}\)/);
+});
+
+test('imported projects with repeated IDs are reported and do not silently overwrite others',()=>{
+ const pack={
+  hub:{custom:[{id:'core-project',name:'Duplicate ID from local device'}]},
+  command:{actions:[],clients:[]}
+ };
+ const result=ctx.module.exports.inspectBackup(pack,{catalogProjects:[{id:'core-project',name:'Base project'}]});
+ assert.ok(result.issues.some(x=>x.kind==='project'&&x.code==='duplicate_id'));
+});
+
 test('legacy backup without Clients works, malformed backups are refused',()=>{
  const legacy=ctx.module.exports.inspectBackup({command:{actions:[{id:'t1',title:'Historical task',status:'todo'}]}});
  assert.equal(legacy.status,'clean');
