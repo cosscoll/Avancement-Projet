@@ -1027,15 +1027,20 @@ function backup(){
  $('#main').innerHTML=view('Sauvegarde et récupération','Protéger les données de CONTROL et changer d’appareil',note('Le stockage local peut disparaître lors d’un nettoyage du navigateur. Télécharge une sauvegarde régulière. Le fichier contient éventuellement des liens vers des espaces privés : utilise un mot de passe si tu le transfères.')+recovery+
  box('État des données','<p class="muted">Avant une sauvegarde ou un partage, vérifiez les liens entre projets, clients et tâches. Le contrôle ne modifie rien.</p><a class="button" href="#/control/audit">Contrôler mes données</a>')+
  box('Exporter les informations','<p class="muted">Exporte en un fichier les projets, actions, brouillons d’automatisations <strong>et les agents, mémoires et discussions locaux du Studio IA lorsqu’ils existent</strong>. La sauvegarde peut être chiffrée avec un mot de passe. Elle ne récupère pas les conversations natives des comptes ChatGPT, Claude et Gemini. Si un autre onglet modifie les données pendant la préparation ou le chiffrement, l’export est annulé : recharge CONTROL et recommence.</p><form id="export-data">'+field('Mot de passe de chiffrement facultatif (12 caractères minimum)','password','','password','autocomplete="new-password"')+'<button class="primary">Télécharger ma sauvegarde</button></form>')+
- box('Importer une sauvegarde','<p class="muted">La première étape vérifie le fichier <strong>sans modifier les données</strong>. Compare les quantités, puis confirme le remplacement des espaces contenus dans la sauvegarde. <strong>Les anciens fichiers sans Studio IA laissent tes agents et mémoires actuels intacts.</strong></p>'+(localStoreCorrupt?'<p role="alert">Le stockage actuel n’est pas lisible. Tu peux télécharger les données brutes sans les modifier, puis restaurer un fichier valide.</p>'+btn('Télécharger les données brutes','download-corrupt'):'')+'<form id="import-data"><label>Fichier JSON<input class="field" name="file" type="file" required accept=".json,application/json"></label>'+field('Mot de passe du fichier','password','','password')+'<button type="submit">Examiner la sauvegarde</button></form><p class="muted" id="import-status" role="status" aria-live="polite"></p><section class="backup-restore-preview" id="import-preview" aria-label="Aperçu de restauration" hidden><div id="import-comparison"></div><div class="backup-restore-actions"><button type="button" class="primary" id="import-apply">Appliquer la restauration</button><button type="button" id="import-cancel">Annuler</button></div></section>'));
+ box('Importer une sauvegarde','<p class="muted">La première étape vérifie le fichier <strong>sans modifier les données</strong>. Compare les quantités, puis confirme le remplacement des espaces contenus dans la sauvegarde. <strong>Les anciens fichiers sans Studio IA laissent tes agents et mémoires actuels intacts.</strong></p>'+(localStoreCorrupt?'<p role="alert">Le stockage actuel n’est pas lisible. Tu peux télécharger les données brutes sans les modifier, puis restaurer un fichier valide.</p>'+btn('Télécharger les données brutes','download-corrupt'):'')+'<form id="import-data"><label>Fichier JSON<input class="field" name="file" type="file" required accept=".json,application/json"></label>'+field('Mot de passe du fichier','password','','password')+'<button type="submit">Examiner la sauvegarde</button></form><p class="muted" id="import-status" role="status" aria-live="polite"></p><section class="backup-restore-preview" id="import-preview" aria-label="Aperçu de restauration" hidden><div id="import-comparison"></div><div id="import-integrity" class="control-import-integrity" role="status" aria-live="polite"></div><label id="import-integrity-consent" class="control-import-consent" hidden><input id="import-integrity-ack" type="checkbox"> J’ai pris connaissance des anomalies dans cette sauvegarde et je choisis de poursuivre sans correction automatique.</label><div class="backup-restore-actions"><button type="button" class="primary" id="import-apply">Appliquer la restauration</button><button type="button" id="import-cancel">Annuler</button></div></section>'));
  registerForm('#export-data',async f=>{if(localStoreCorrupt)return toast('Export normal bloqué : utilise « Télécharger les données brutes » avant une restauration.');if(backupStorageIssues().length)return toast('Export bloqué : un espace local est illisible. Télécharge sa copie brute et restaure une sauvegarde valide.');const pw=String(f.get('password')||'');const pwInput=$('#export-data [name="password"]');if(pwInput)pwInput.value='';if(pw&&pw.length<12)return toast('12 caractères minimum ou champ vide.');let exportData;try{exportData=prepareBackupExport()}catch(error){return toast(String(error.message||'Sauvegarde impossible.'))}try{const data=await pack(exportData.data,pw);if(!window.CONTROL_BACKUP_REVIEW.unchanged(localStorage,exportData.original))return toast('Des données ont changé pendant le chiffrement : sauvegarde annulée. Relance la vérification.');const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='CONTROL-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Fichier téléchargé : conserve-le dans un emplacement sûr.')}catch{toast('Sauvegarde impossible sur ce navigateur.')}});
  $('#main [data-act="download-corrupt"]')?.addEventListener('click',()=>{try{const raw=localStorage.getItem(KEY);if(raw===null)throw Error('Données non accessibles');const url=URL.createObjectURL(new Blob([raw],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='CONTROL-donnees-brutes-'+new Date().toISOString().slice(0,10)+'.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Copie brute téléchargée. Elle peut contenir des informations sensibles.')}catch{toast('Récupération brute impossible dans ce navigateur.')}});
  for(const [key,name] of [[HUB,'hub'],[AUTOS,'automations'],[STUDIO,'studio']])$('#main [data-act="download-raw:'+name+'"]')?.addEventListener('click',()=>downloadRawStorage(key,name));
  const restore=window.CONTROL_BACKUP_REVIEW;
  let pending=null;
  const preview=$('#import-preview'),comparison=$('#import-comparison'),message=$('#import-status');
- const resetPreview=()=>{pending=null;preview.hidden=true;comparison.replaceChildren()};
- const renderReview=review=>{
+ const integrityBox=$('#import-integrity'),integrityConsent=$('#import-integrity-consent'),integrityAck=$('#import-integrity-ack'),applyButton=$('#import-apply');
+ const resetPreview=()=>{
+  pending=null;preview.hidden=true;comparison.replaceChildren();integrityBox.replaceChildren();
+  integrityConsent.hidden=true;integrityAck.checked=false;applyButton.disabled=false;
+ };
+ integrityAck.addEventListener('change',()=>{applyButton.disabled=!!pending?.requiresIntegrityAcknowledgement&&!integrityAck.checked});
+ const renderReview=(review,integrity)=>{
   const rows=review.changes.filter(x=>x.before||x.after);
   const n=v=>v===null?'Non déterminé':String(v);
   const body=rows.length?rows.map(x=>'<tr><th scope="row">'+h(x.label)+'</th><td>'+x.before+'</td><td>'+x.after+'</td><td>'+n(x.added)+'</td><td>'+n(x.removed)+'</td><td>'+n(x.modified)+'</td></tr>').join(''):
@@ -1045,6 +1050,17 @@ function backup(){
    (review.losses.length||review.modified.length?'<p role="alert" class="notice"><strong>Attention :</strong> '+review.losses.length+' catégorie(s) avec suppressions, '+review.modified.length+' avec modifications identifiées. La restauration écrasera ces informations locales.</p>':'')+
    (review.uncertain.length?'<p class="muted">Comparaison incomplète pour '+review.uncertain.length+' catégorie(s) sans identifiants uniques ou au format ancien. Des changements peuvent ne pas apparaître.</p>':'')+
    '<p class="muted">Les nombres ne révèlent aucun contenu privé. Les espaces présents dans le fichier sont remplacés, pas fusionnés. Les anciennes sauvegardes sans Studio IA le laissent intact. Conserve une copie avant de restaurer.</p>';
+  const count=integrity.counts.errors+integrity.counts.warnings;
+  const labels=integrity.issues.slice(0,8).map(row=>'<li>'+h(row.message)+'</li>').join('');
+  integrityBox.innerHTML='<h3>Contrôle de cohérence du fichier</h3>'+
+   '<p><strong>'+integrity.counts.errors+'</strong> erreur(s) · <strong>'+integrity.counts.warnings+'</strong> avertissement(s) sur les clients et tâches enregistrés.</p>'+
+   (count?'<div role="alert" class="notice"><strong>Ce fichier contient des anomalies.</strong> Les données ne seront pas corrigées automatiquement. Vérifie-les après restauration avec « État des données ».</div>'+
+    (labels?'<ul>'+labels+'</ul>':'')+(integrity.omitted||integrity.issues.length>8?'<p class="muted">+'+(count-Math.min(integrity.issues.length,8))+' autre(s) anomalie(s) non détaillée(s).</p>':''):
+    '<p class="muted">Aucune incohérence détectée dans les liens clients–tâches examinés.</p>')+
+   '<p class="muted">Le contrôle ne peut pas certifier l’existence de tous les projets externes ni vérifier les comptes et permissions Cloud. Aucune donnée privée n’est affichée dans ce résumé.</p>';
+  integrityConsent.hidden=count===0;
+  integrityAck.checked=false;
+  applyButton.disabled=count>0;
   preview.hidden=false;
  };
  $('#import-cancel').onclick=()=>{resetPreview();message.textContent='Import annulé. Aucune donnée modifiée.'};
@@ -1063,8 +1079,10 @@ function backup(){
    const current=key=>{try{return readBackupStore(key)}catch{return{}}};
    const existing={command:current(KEY),hub:current(HUB),automations:current(AUTOS),studio:current(STUDIO)};
    const report=restore.compare(data,existing);
-   pending={data,original};
-   renderReview(report);
+   const integrity=window.CONTROL_DATA_AUDIT?.inspectBackup(data);
+   if(!integrity)throw Error('Module de vérification des sauvegardes indisponible.');
+   pending={data,original,integrity,requiresIntegrityAcknowledgement:integrity.counts.errors+integrity.counts.warnings>0};
+   renderReview(report,integrity);
    if(corrupt.length)comparison.insertAdjacentHTML('afterbegin','<p role="alert" class="notice"><strong>Attention :</strong> '+corrupt.length+' espace(s) locaux sont illisibles. Leurs éléments actuels ne peuvent pas être dénombrés ; conserve leur copie brute avant la restauration.</p>');
    message.textContent='Sauvegarde déchiffrée et vérifiée. Examine les différences avant de confirmer.';
   }catch(error){
@@ -1075,6 +1093,10 @@ function backup(){
  $('#import-apply').onclick=()=>{
   const staged=pending;
   if(!staged){message.textContent='Examine d’abord le fichier de sauvegarde.';return}
+  if(staged.requiresIntegrityAcknowledgement&&!integrityAck.checked){
+   message.textContent='Confirme d’abord avoir pris connaissance des anomalies du fichier. Aucune donnée n’a été modifiée.';
+   return;
+  }
   if(!restore.unchanged(localStorage,staged.original)){resetPreview();message.textContent='Des données locales ont changé depuis la vérification : relance la comparaison avant toute restauration.';return}
   if(!confirm('Remplacer maintenant les données CONTROL présentes dans ce fichier vérifié ? Les anciens fichiers conservent le Studio IA actuel. Cette action écrase les espaces concernés.'))return;
   if(!restore.unchanged(localStorage,staged.original)){resetPreview();message.textContent='Les données ont changé pendant la confirmation. Recommence la vérification.';return}
