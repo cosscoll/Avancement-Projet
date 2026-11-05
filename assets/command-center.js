@@ -1046,7 +1046,7 @@ function backup(){
   pending=null;preview.hidden=true;comparison.replaceChildren();integrityBox.replaceChildren();
   integrityConsent.hidden=true;integrityAck.checked=false;applyButton.disabled=false;
  };
- integrityAck.addEventListener('change',()=>{applyButton.disabled=!!pending?.requiresIntegrityAcknowledgement&&!integrityAck.checked});
+ integrityAck.addEventListener('change',()=>{applyButton.disabled=!!pending?.integrity?.unrestorable||!!pending?.requiresIntegrityAcknowledgement&&!integrityAck.checked});
  const renderReview=(review,integrity)=>{
   const rows=review.changes.filter(x=>x.before||x.after);
   const n=v=>v===null?'Non déterminé':String(v);
@@ -1060,14 +1060,15 @@ function backup(){
   const count=integrity.counts.errors+integrity.counts.warnings;
   const labels=integrity.issues.slice(0,8).map(row=>'<li>'+h(row.message)+'</li>').join('');
   integrityBox.innerHTML='<h3>Contrôle de cohérence du fichier</h3>'+
-   '<p><strong>'+integrity.counts.errors+'</strong> erreur(s) · <strong>'+integrity.counts.warnings+'</strong> avertissement(s) sur les clients et tâches enregistrés.</p>'+
+   '<p><strong>'+integrity.counts.errors+'</strong> erreur(s) · <strong>'+integrity.counts.warnings+'</strong> avertissement(s) sur les projets, clients et tâches enregistrés.</p>'+
+   (integrity.unrestorable?'<div role="alert" class="notice"><strong>Restauration impossible :</strong> la liste des projets personnalisés est incomplète ou invalide. Corrige le fichier original ou utilise une autre sauvegarde. Aucun remplacement n’est autorisé.</div>':'')+
    (count?'<div role="alert" class="notice"><strong>Ce fichier contient des anomalies.</strong> Les données ne seront pas corrigées automatiquement. Vérifie-les après restauration avec « État des données ».</div>'+
     (labels?'<ul>'+labels+'</ul>':'')+(integrity.omitted||integrity.issues.length>8?'<p class="muted">+'+(count-Math.min(integrity.issues.length,8))+' autre(s) anomalie(s) non détaillée(s).</p>':''):
     '<p class="muted">Aucune incohérence détectée dans les liens clients–tâches examinés.</p>')+
    '<p class="muted">Le contrôle ne peut pas certifier l’existence de tous les projets externes ni vérifier les comptes et permissions Cloud. Aucune donnée privée n’est affichée dans ce résumé.</p>';
-  integrityConsent.hidden=count===0;
+  integrityConsent.hidden=count===0||integrity.unrestorable;
   integrityAck.checked=false;
-  applyButton.disabled=count>0;
+  applyButton.disabled=count>0||integrity.unrestorable;
   preview.hidden=false;
  };
  $('#import-cancel').onclick=()=>{resetPreview();message.textContent='Import annulé. Aucune donnée modifiée.'};
@@ -1101,6 +1102,7 @@ function backup(){
  $('#import-apply').onclick=()=>{
   const staged=pending;
   if(!staged){message.textContent='Examine d’abord le fichier de sauvegarde.';return}
+  if(staged.integrity.unrestorable){message.textContent='Restauration refusée : les projets personnalisés du fichier sont invalides. Aucune donnée modifiée.';return;}
   if(staged.requiresIntegrityAcknowledgement&&!integrityAck.checked){
    message.textContent='Confirme d’abord avoir pris connaissance des anomalies du fichier. Aucune donnée n’a été modifiée.';
    return;
