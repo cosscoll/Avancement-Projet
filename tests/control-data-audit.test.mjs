@@ -71,6 +71,18 @@ test('duplicate IDs, missing IDs and incomplete imported rows are not silently i
  assert.ok(result.issues.some(x=>x.code==='malformed'&&x.kind==='task'));
 });
 
+test('raw malformed legacy collections are reported instead of silently normalized away',()=>{
+ const result=inspect({projects:[{id:'p'}],clients:{broken:'not an array'},actions:'invalid shape'});
+ assert.equal(result.counts.errors,2);
+ assert.deepEqual(Array.from(result.issues,x=>x.code),['malformed_collection','malformed_collection']);
+ const command=read('assets/command-center.js');
+ const audit=command.slice(command.indexOf('function auditData(){'),command.indexOf('function settings(){'));
+ assert.match(audit,/localStorage\.getItem\(KEY\)/);
+ assert.match(audit,/Object\.hasOwn\(persisted,'clients'\)/);
+ assert.match(audit,/Object\.hasOwn\(persisted,'actions'\)/);
+ assert.ok(!audit.includes('localStorage.setItem('));
+});
+
 test('inspection never alters source records or returns private titles/names',()=>{
  const src=good(),before=JSON.stringify(src);
  const result=inspect(src);
