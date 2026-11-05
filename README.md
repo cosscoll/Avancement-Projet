@@ -1,3 +1,13 @@
+## 5 novembre 2026 — CONTROL 14 : fiabilité de l'aperçu des projets et restauration protégée
+
+**Correction livrée sur `main` :** les sauvegardes comptabilisent désormais les projets personnalisés tels que CONTROL les stocke réellement, dans `hub.custom`. L'aperçu détecte aussi les suppressions, remplacements d'identifiants ou modifications de projets à quantité constante, avec résultats anonymisés. Les anciens `hub.projects` restent lisibles comme espaces historiques distincts. Un catalogue de référence qui n'a pas été chargé n'est plus considéré par erreur comme une liste complète de projets inexistants.
+
+**Sécurité renforcée :** l'import d'un fichier avec une liste de projets personnalisés non valide est bloqué, même si l'utilisateur coche un avertissement. Les sauvegardes historiques ne contenant pas cette liste restent compatibles. La restauration reste manuelle, avec comparaison, protection des modifications inter-onglets et confirmation finale. Pas de Cloud ni d'automatisation activés.
+
+**Qualité :** 5 tests supplémentaires sur la comparaison des projets et tests de restauration non contournable. Les 51 contrôles ciblés de sauvegarde, intégrité et contrat d'accès préparatoire passent dans le banc JS ; la recette navigateur inclut désormais un scénario montrant le compteur de projets importés. Cache **PWA v89**. Les tests Chromium sur le site effectivement publié restent **non exécutés**.
+
+[Cahier des charges v1.6](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md) · [Contrat de sécurité avant multi-utilisateur](docs/CONTROL_SECURITY_AB_ACCEPTANCE_2026_11_05.md).
+
 ## 5 novembre 2026 — CONTROL 13 : session longue « transfert + sécurité »
 
 **Bloc 1 — sauvegardes portables (appliqué sur main) :** le contrôle d'import vérifie maintenant le catalogue des projets de CONTROL et les projets personnalisés du fichier, y compris les identifiants manquants, dupliqués et listes invalides. Il n'invente pas de projet manquant lorsque le catalogue est indisponible. Guide repliable de transfert manuel entre appareils depuis Sauvegardes. Aucune suppression automatique et aucune synchronisation implicite. PWA **v87**.
