@@ -10,7 +10,7 @@ _Mise à jour : 5 novembre 2026 · version de travail 1.5 · ciblage indépendan
 
 **Livré sur main :** l'aperçu d'import détecte les incohérences client–tâche et, lorsqu'un catalogue de projets connu est disponible, il vérifie également les références des projets du fichier. Les projets de base sont fournis par le catalogue CONTROL ; les projets personnels sont reconstruits à partir de la liste importée du Hub. Cette distinction évite les fausses alertes de projet manquant en l'absence de catalogue complet. Les références orphelines et identifiants dupliqués sont signalés sans écriture. Le formulaire de sauvegarde inclut un **guide repliable de transfert entre deux appareils** (export, déplacement du fichier, inspection avant remplacement, vérification après restauration). Le transfert reste manuel et remplace les données, sans fusion ni synchronisation automatique.
 
-**Preuves de code :** assets/control-data-audit.js, assets/command-center.js et tests/control-data-audit.test.mjs. PWA **v85**, ressources critiques précachées.
+**Preuves de code :** assets/control-data-audit.js, assets/command-center.js et tests/control-data-audit.test.mjs. PWA **v87**, ressources critiques précachées. Les projets personnalisés malformés ou sans identifiant sont aussi signalés et jamais supprimés silencieusement.
 
 ### Lot B — Préparer sérieusement les rôles et le partage
 
@@ -22,7 +22,7 @@ _Mise à jour : 5 novembre 2026 · version de travail 1.5 · ciblage indépendan
 
 ### Lot C — Vérifications et limites
 
-**31 contrôles ciblés réussis sur 31** lors de cette session, dont 26 tests de logique/contrat et 5 vérifications de syntaxe. Les anciens tests et la recette navigateur complète sur GitHub Pages ne sont pas considérés exécutés par cette vérification ciblée.
+**32 contrôles ciblés réussis sur 32** lors de cette session, dont 27 tests de logique/contrat et 5 vérifications de syntaxe. Les anciens tests et la recette navigateur complète sur GitHub Pages ne sont pas considérés exécutés par cette vérification ciblée.
 
 **Reste bloquant P0 :** projet Supabase indépendant actif et inventorié, vérification réelle des six tables et policies existantes, essais JWT/PostgREST avec comptes A/B, révocation, suppression/export de compte, tests sur deux appareils, et autorisation explicite de lancement. Les huit contrôles de config/cloud.json restent à false et Cloud demeure désactivé.
 
