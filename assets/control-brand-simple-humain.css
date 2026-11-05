@@ -1,0 +1,398 @@
+/* CONTROL — Identité 03 « Simple & Humain » — 05/11/2026
+   Visual tokens only: no changed routes, storage, forms or privileges.
+   Inherits the existing CONTROL 06/07 layout and all its responsive rules. */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+:root{
+ --control-orange:#F76A39;
+ --control-orange-deep:#C44922; /* Accessible white-on-orange CTA */
+ --control-orange-hover:#AE3C1D;
+ --control-peach:#FFCAA3;
+ --control-peach-soft:#FFF0E5;
+ --control-cream:#FFF8F2;
+ --control-paper:#FFFDFB;
+ --control-white:#FFFFFF;
+ --control-ink:#20252B;
+ --control-muted:#6D6763;
+ --control-line:#EDDED3;
+ --control-positive:#16834B;
+ --control-negative:#BB342B;
+ --control-info:#245DAD;
+ --control-focus:#AA431E;
+ --control-shadow:0 7px 26px rgba(92,54,30,.055);
+ --control-font:"Poppins","Avenir Next","Segoe UI",system-ui,sans-serif;
+ --shell-ink:var(--control-ink);
+ --shell-blue:var(--control-orange-deep);
+ --shell-paper:var(--control-cream);
+ --shell-line:var(--control-line);
+ --shell-muted:var(--control-muted);
+ --shell-amber:var(--control-peach);
+ --nav-ink:var(--control-ink);
+ --nav-mute:var(--control-muted);
+ --nav-line:var(--control-line);
+ --nav-surface:var(--control-white);
+ --nav-blue:var(--control-orange-deep);
+ --nav-tint:var(--control-peach-soft);
+ color-scheme:light;
+}
+/* Warm neutral foundation, used consistently across personal and Cloud shells. */
+body.control-shell-v3,body.cloud-shell-v3{
+ font-family:var(--control-font)!important;
+ color:var(--control-ink)!important;
+ background:var(--control-cream)!important;
+}
+body.control-shell-v3 button,
+body.control-shell-v3 input,
+body.control-shell-v3 textarea,
+body.control-shell-v3 select,
+body.cloud-shell-v3 button,
+body.cloud-shell-v3 input,
+body.cloud-shell-v3 textarea,
+body.cloud-shell-v3 select{font-family:inherit}
+body.control-shell-v3 ::selection,body.cloud-shell-v3 ::selection{background:var(--control-peach);color:var(--control-ink)}
+body.control-shell-v3 :is(a,button,input,select,textarea,summary):focus-visible,
+body.cloud-shell-v3 :is(a,button,input,select,textarea,summary):focus-visible{
+ outline:3px solid var(--control-focus)!important;
+ outline-offset:3px!important;
+}
+body.control-shell-v3 :is(h1,h2,h3,strong),
+body.cloud-shell-v3 :is(h1,h2,h3,strong){color:inherit}
+body.control-shell-v3 .panel,body.control-shell-v3 .card,
+body.cloud-shell-v3 .surface,body.cloud-shell-v3 .card{
+ background:var(--control-white);
+ border-color:var(--control-line);
+ box-shadow:var(--control-shadow);
+}
+body.control-shell-v3 .muted,body.cloud-shell-v3 .muted{color:var(--control-muted)}
+body.control-shell-v3 :is(input.field,textarea.field,select.field),
+body.cloud-shell-v3 :is(input,textarea,select){
+ border-color:var(--control-line);
+ background:var(--control-white);
+ color:var(--control-ink);
+}
+body.control-shell-v3 :is(input,textarea,select):focus,
+body.cloud-shell-v3 :is(input,textarea,select):focus{border-color:var(--control-orange-deep)}
+body.control-shell-v3 :is(.primary,button.primary,a.primary),
+body.cloud-shell-v3 :is(.primary,button.primary,a.primary){
+ background:var(--control-orange-deep)!important;
+ border-color:var(--control-orange-deep)!important;
+ color:white!important;
+ box-shadow:none!important;
+}
+body.control-shell-v3 :is(.primary,button.primary,a.primary):hover,
+body.cloud-shell-v3 :is(.primary,button.primary,a.primary):hover{
+ background:var(--control-orange-hover)!important;
+ border-color:var(--control-orange-hover)!important;
+}
+body.control-shell-v3 a:not(.card):not(.button):hover{color:var(--control-orange-deep)}
+/* Homepage: maintain exactly the same sections and working controls. */
+body.control-shell-v3.control-simple-home{
+ background:var(--control-cream)!important;
+ color:var(--control-ink)!important;
+}
+body.control-shell-v3.control-simple-home>.wrap{background:transparent!important}
+body.control-shell-v3 .control-home-v6{
+ --v6-ink:var(--control-ink);
+ --v6-muted:var(--control-muted);
+ --v6-border:var(--control-line);
+ --v6-soft:var(--control-cream);
+ --v6-blue:var(--control-orange-deep);
+ background:var(--control-paper);
+ border-color:var(--control-line);
+ color:var(--control-ink);
+ font-family:var(--control-font);
+ box-shadow:0 12px 42px rgba(95,52,20,.075);
+}
+.control-home-v6 .control-home-v6-header{border-bottom-color:var(--control-line)}
+.control-home-v6 .control-home-v6-brand{flex-direction:row;align-items:center;gap:11px}
+.control-home-v6 .control-brand-logo{display:block;width:37px;height:37px;flex:0 0 37px;object-fit:contain}
+.control-home-v6 .control-brand-copy{display:flex;flex-direction:column;gap:2px;min-width:0}
+body.control-shell-v3 .control-home-v6 .control-home-v6-brand strong{color:var(--control-ink)!important;font-weight:800;letter-spacing:-.6px}
+.control-home-v6 .control-home-v6-brand small{color:var(--control-muted)}
+.control-home-v6 .control-home-v6-top-actions a{
+ color:var(--control-ink);
+ background:#FFFDFB;
+ border-color:var(--control-line);
+}
+.control-home-v6 .control-home-v6-top-actions a:hover{background:var(--control-peach-soft);color:var(--control-orange-deep)}
+body.control-shell-v3 .control-home-v6 .control-home-v6-welcome h1{
+ color:var(--control-ink)!important;
+ font-weight:760!important;
+}
+.control-home-v6 .control-home-v6-welcome p{color:var(--control-muted)}
+.control-home-v6 .control-home-v6-stat{
+ background:linear-gradient(140deg,var(--control-paper),#FFF0E4);
+ border-color:var(--control-line);
+ box-shadow:0 2px 9px rgba(155,92,46,.035);
+}
+.control-home-v6 .control-home-v6-stat:hover{background:#FFEBD9;border-color:#E8B99F}
+.control-home-v6 .control-home-v6-stat strong{color:var(--control-ink);font-weight:780}
+.control-home-v6 .control-home-v6-stat small{color:var(--control-muted)}
+.control-home-v6 .control-home-v6-stat:nth-child(1) strong{color:var(--control-negative)}
+.control-home-v6 .control-home-v6-stat:nth-child(2) strong{color:var(--control-orange-deep)}
+.control-home-v6 .control-home-v6-stat:nth-child(3) strong{color:#865824}
+.control-home-v6 .control-home-v6-ask{
+ background:linear-gradient(112deg,#FFF4EC,#FFEEE0);
+ border-color:#F4D9C7;
+}
+.control-home-v6 .control-home-v6-ask-title,.control-home-v6 .control-home-v6-ask-title span{
+ color:var(--control-orange-deep)
+}
+.control-home-v6 .control-home-v6-ask>p,
+.control-home-v6 .control-home-v6-ask-hint{color:#655C57}
+body.control-shell-v3 .control-home-v6 #shell-quick-query{
+ background:white!important;
+ color:var(--control-ink)!important;
+ border-color:#E7CDBE!important;
+}
+body.control-shell-v3 .control-home-v6 #shell-quick-find button{
+ background:var(--control-orange-deep)!important;
+ border-color:var(--control-orange-deep)!important;
+ color:#fff!important;
+}
+body.control-shell-v3 .control-home-v6 #shell-quick-find button:hover{
+ background:var(--control-orange-hover)!important;
+ border-color:var(--control-orange-hover)!important;
+}
+.control-home-v6 .control-home-v6-section-title h2{color:var(--control-ink)!important}
+.control-home-v6 .control-home-v6-section-title a,.control-home-v6 .control-home-v6-secondary a{
+ color:var(--control-orange-deep);
+}
+.control-home-v6 .control-home-v6-priority-row{
+ background:#FFFDFC;
+ border-color:var(--control-line);
+}
+.control-home-v6 .control-home-v6-priority-row:hover{background:#FFF1E7;border-color:#ECC3AC}
+.control-home-v6 .control-home-v6-priority-icon{color:var(--control-orange-deep)}
+.control-home-v6 .control-home-v6-priority-copy strong{color:var(--control-ink)}
+.control-home-v6 .control-home-v6-priority-copy small,
+.control-home-v6 .control-home-v6-provenance,
+.control-home-v6 .control-home-v6-chevron{color:var(--control-muted)}
+.control-home-v6 .control-home-v6-empty{background:#FFFCF9;border-color:var(--control-line);color:var(--control-muted)}
+.control-home-v6 .control-home-v6-empty strong{color:var(--control-ink)}
+.control-home-v6 .control-home-v6-tabs{border-top-color:var(--control-line)}
+body.control-shell-v3 .control-home-v6 .control-home-v6-tabs a,
+body.control-shell-v3 .control-home-v6 .control-home-v6-tabs button{color:#786C64!important}
+body.control-shell-v3 .control-home-v6 .control-home-v6-tabs a[aria-current=page],
+body.control-shell-v3 .control-home-v6 .control-home-v6-tabs button[aria-current=page]{
+ background:#FFE8D7!important;
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .control-home-v6 .control-home-v6-tabs a:hover,
+body.control-shell-v3 .control-home-v6 .control-home-v6-tabs button:hover{
+ background:#FFF0E4!important;
+ color:var(--control-orange-deep)!important;
+}
+.control-home-v6 .control-home-v6-projects{border-top-color:var(--control-line)}
+.control-home-v6 .control-home-v6-projects>summary,
+.control-home-v6 .control-home-v6-advanced>summary{color:var(--control-ink)}
+.control-home-v6 .control-home-v6-project-head p{color:var(--control-muted)}
+body.control-shell-v3 .control-home-v6 #add-project{
+ background:#FFF1E7!important;
+ color:var(--control-orange-deep)!important;
+ border-color:#F1C9B2!important;
+}
+body.control-shell-v3 .control-home-v6 #add-project:hover{background:#FFE2CB!important}
+.control-home-v6 .shell-projects-list .card{
+ background:var(--control-white)!important;
+ border-color:var(--control-line)!important;
+}
+.control-home-v6 .shell-projects-list .card:hover{background:#FFF4EB!important;border-color:#EBB497!important}
+.control-home-v6 .shell-projects-list .card .badge{
+ background:#FFE7D3!important;
+ color:var(--control-orange-deep)!important;
+}
+/* All inner personal routes: preserve structure from CONTROL 07. */
+body.control-shell-v3.control-simple-workspace{
+ background:var(--control-cream)!important;
+ color:var(--control-ink)!important;
+}
+body.control-shell-v3.control-simple-workspace>.wrap{background:transparent!important}
+body.control-shell-v3.control-simple-workspace>.wrap>header.control-head{
+ border-bottom-color:var(--control-line)!important;
+}
+body.control-shell-v3.control-simple-workspace .control-head .logo{
+ color:var(--control-ink)!important;
+ font-weight:800!important;
+ font-family:var(--control-font);
+}
+body.control-shell-v3.control-simple-workspace .control-head .logo .control-brand-logo{
+ width:32px;height:32px;object-fit:contain;flex:0 0 32px;
+}
+body.control-shell-v3.control-simple-workspace .shell-ui-version{
+ background:#FFF0E5!important;color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3.control-simple-workspace .control-workspace-mainnav a{color:#74675F!important}
+body.control-shell-v3.control-simple-workspace .control-workspace-mainnav a:hover{
+ background:#FFF0E5!important;color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3.control-simple-workspace .control-workspace-mainnav a[aria-current=page]{
+ background:#FFE7D4!important;color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3.control-simple-workspace .control-head .control-quick-task{
+ background:var(--control-orange-deep)!important;
+ border-color:var(--control-orange-deep)!important;
+ color:white!important;
+}
+body.control-shell-v3.control-simple-workspace .control-head .control-quick-task:hover{
+ background:var(--control-orange-hover)!important;
+}
+body.control-shell-v3.control-simple-workspace .control-head .head-search{
+ color:var(--control-ink)!important;
+ background:#FFFDFC!important;
+ border-color:var(--control-line)!important;
+}
+body.control-shell-v3.control-simple-workspace .control-location,
+body.control-shell-v3.control-simple-workspace .control-location strong{color:#6B625B}
+body.control-shell-v3.control-simple-workspace .control-location a,
+body.control-shell-v3.control-simple-workspace #main>.back{color:var(--control-orange-deep)!important}
+body.control-shell-v3.control-simple-workspace #main>.toprow h1{color:var(--control-ink)!important}
+body.control-shell-v3.control-simple-workspace #main>.toprow p,
+body.control-shell-v3.control-simple-workspace #main .muted{color:var(--control-muted)!important}
+body.control-shell-v3.control-simple-workspace #main .panel,
+body.control-shell-v3.control-simple-workspace #main>.clarity-work-nav{
+ background:var(--control-white)!important;
+ border-color:var(--control-line)!important;
+ box-shadow:var(--control-shadow)!important;
+}
+body.control-shell-v3.control-simple-workspace #main .panel h2,
+body.control-shell-v3.control-simple-workspace #main h1{color:var(--control-ink)!important}
+body.control-shell-v3.control-simple-workspace #main .stat{
+ background:#FFFDFC!important;border-color:var(--control-line)!important;
+}
+body.control-shell-v3.control-simple-workspace #main .stat strong{color:var(--control-ink)!important}
+body.control-shell-v3.control-simple-workspace #main .stat span{color:var(--control-muted)}
+body.control-shell-v3.control-simple-workspace #main .notice,
+body.control-shell-v3.control-simple-workspace #main .control-wayfinding{
+ background:#FFF1E7!important;border-color:#F0D3BF!important;color:#674633!important;
+}
+body.control-shell-v3.control-simple-workspace #main .field{
+ background:#fff!important;border-color:var(--control-line)!important;color:var(--control-ink)!important;
+}
+body.control-shell-v3.control-simple-workspace #main :is(.primary,button.primary,a.primary){
+ background:var(--control-orange-deep)!important;
+ color:white!important;border-color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3.control-simple-workspace #main .shell-project-navigation{
+ background:var(--control-white)!important;border-color:var(--control-line)!important;
+}
+body.control-shell-v3.control-simple-workspace #main .shell-project-navigation .tabs button{
+ background:#FFF8F2!important;color:#6C5B50!important;border-color:var(--control-line)!important;
+}
+body.control-shell-v3.control-simple-workspace #main .shell-project-navigation .tabs button[aria-selected=true]{
+ background:#FFE5D3!important;color:var(--control-orange-deep)!important;border-color:#EEC3AA!important;
+}
+body.control-shell-v3.control-simple-workspace #main .shell-project-more>summary{color:var(--control-orange-deep)!important}
+body.control-shell-v3.control-simple-workspace #main .control-task-tag{
+ background:#FFF0E4!important;color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3.control-simple-workspace #main .control-task-tag-late{
+ background:#FCE5E1!important;color:var(--control-negative)!important;
+}
+/* Unified AI Studio: compatible with the existing account and agent logic. */
+body.control-shell-v3 .as-shell{
+ --as-ink:var(--control-ink);
+ --as-sub:var(--control-muted);
+ --as-line:var(--control-line);
+ --as-blue:var(--control-orange-deep);
+ color:var(--control-ink);
+}
+body.control-shell-v3 .as-heading h1{color:var(--control-ink)}
+body.control-shell-v3 .as-heading p,
+body.control-shell-v3 .as-card-head p{color:var(--control-muted)}
+body.control-shell-v3 :is(.as-kicker,.as-overline){color:var(--control-orange-deep)}
+body.control-shell-v3 .as-local-tag{
+ background:#FFE8D8;color:var(--control-orange-deep);
+}
+body.control-shell-v3 .as-notice,
+body.control-shell-v3 .as-preview,
+body.control-shell-v3 .as-thread-search{
+ background:#FFF4EC;border-color:#F2D7C6;color:#624C3C;
+}
+body.control-shell-v3 .as-steps{background:#FFF1E8}
+body.control-shell-v3 .as-steps button{color:#76685E}
+body.control-shell-v3 .as-steps button[aria-current=page]{
+ background:var(--control-white);
+ color:var(--control-orange-deep);
+ box-shadow:0 2px 7px rgba(130,68,26,.07)
+}
+body.control-shell-v3 :is(.as-card,.as-metrics>div,.as-connect-card,.as-agent-item,.as-thread-hit){
+ border-color:var(--control-line)!important;
+}
+body.control-shell-v3 :is(.as-card,.as-metrics>div,.as-connect-card){background:white;box-shadow:var(--control-shadow)}
+body.control-shell-v3 .as-card h2{color:var(--control-ink)}
+body.control-shell-v3 .as-card .as-primary{
+ background:var(--control-orange-deep)!important;
+ color:white!important;border-color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .as-card .as-primary:hover{background:var(--control-orange-hover)!important}
+body.control-shell-v3 .as-agent-item[aria-current=page]{
+ background:#FFF0E5!important;border-color:#F1C9B2!important;
+}
+body.control-shell-v3 .as-avatar{
+ background:var(--control-orange-deep);color:#fff;
+}
+body.control-shell-v3 .as-provider-icon,
+body.control-shell-v3 .as-connect-logo{
+ background:#FFE9DA;color:var(--control-orange-deep);
+}
+body.control-shell-v3 .as-count,
+body.control-shell-v3 .as-source{background:#FFF0E5;color:var(--control-orange-deep)}
+body.control-shell-v3 .as-chat .as-bubble.as-user{
+ background:#FFF0E5;border-color:#F4D3BE;
+}
+body.control-shell-v3 .as-thread-hit{
+ background:#FFFDFC!important;color:var(--control-ink)!important;
+}
+body.control-shell-v3 .as-thread-hit:hover{background:#FFF1E8!important;border-color:#EFC7AF!important}
+/* Existing cross-screen feature finder: one visual language, no data changes. */
+body.control-shell-v3 .control-finder-panel{
+ background:var(--control-paper);border-color:var(--control-line);color:var(--control-ink);
+}
+body.control-shell-v3 .control-finder-shade{background:rgba(48,34,26,.47)}
+body.control-shell-v3 .control-finder-heading h2{color:var(--control-ink)}
+body.control-shell-v3 .control-finder-eyebrow{color:var(--control-orange-deep)}
+body.control-shell-v3 .control-finder-search{
+ border-color:#E2BAA3;background:#fff;box-shadow:0 4px 18px rgba(126,72,37,.06)
+}
+body.control-shell-v3 .control-finder-search:focus-within{
+ border-color:var(--control-orange-deep);outline-color:#F4BEA1;
+}
+body.control-shell-v3 .control-finder-search span{color:var(--control-orange-deep)}
+body.control-shell-v3 .control-finder-categories{border-bottom-color:var(--control-line)}
+body.control-shell-v3 .control-finder-categories button{background:#FFF8F2;border-color:var(--control-line);color:#655B55}
+body.control-shell-v3 .control-finder-categories button.is-active{
+ background:var(--control-orange-deep);border-color:var(--control-orange-deep);color:white
+}
+body.control-shell-v3 .control-finder-recents{background:#FFF3EA;border-color:var(--control-line)}
+body.control-shell-v3 .control-finder-item{background:white!important;border-color:var(--control-line)!important;color:var(--control-ink)!important}
+body.control-shell-v3 .control-finder-item:hover{background:#FFF0E6!important;border-color:#EAB89B!important}
+body.control-shell-v3 .control-finder-symbol{background:#FFEBDD;color:var(--control-orange-deep)}
+body.control-shell-v3 .control-finder-foot{background:#FFF7F0;border-top-color:var(--control-line)}
+body.control-shell-v3 .control-finder-close{background:#FFF6EE!important;color:var(--control-ink)!important;border-color:var(--control-line)!important}
+/* The disabled/safe Cloud shell can share branding; don't change auth or its gates. */
+body.cloud-shell-v3{background:var(--control-cream)!important;color:var(--control-ink)!important}
+body.cloud-shell-v3 .header,
+body.cloud-shell-v3 .surface{border-color:var(--control-line);background:var(--control-paper)}
+body.cloud-shell-v3 .brand{color:var(--control-ink)}
+body.cloud-shell-v3 .mark{background:var(--control-orange-deep);color:#fff}
+body.cloud-shell-v3 .soft,body.cloud-shell-v3 .muted{color:var(--control-muted)}
+body.cloud-shell-v3 .pill,body.cloud-shell-v3 .badge{background:#FFEBDD;color:var(--control-orange-deep)}
+body.cloud-shell-v3 .hint{background:#FFF1E7;color:#624737;border-left-color:var(--control-orange-deep)}
+body.cloud-shell-v3 .cloud-release-gates li{background:#FFF8F2;border-color:var(--control-line)}
+body.cloud-shell-v3 .cloud-release-gates span{color:var(--control-orange-deep)}
+body.cloud-shell-v3 .cloud-backup-dialog{border-color:var(--control-line);color:var(--control-ink);background:var(--control-paper)}
+body.cloud-shell-v3 .cloud-backup-inspector{background:var(--control-cream);border-color:var(--control-line)}
+@media(max-width:800px){
+ body.control-shell-v3.control-simple-workspace .control-workspace-mainnav{
+  background:rgba(255,250,246,.98)!important;
+  border-top-color:var(--control-line)!important;
+ }
+ body.control-shell-v3.control-simple-home .control-home-v6-tabs{
+  background:var(--control-paper)!important;
+  border-top-color:var(--control-line)!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body.control-shell-v3 *,body.cloud-shell-v3 *{transition:none!important;animation-duration:.01ms!important}
+}
