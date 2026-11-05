@@ -1,3 +1,13 @@
+## 5 novembre 2026 — CONTROL 11 : contrôle de cohérence des données locales
+
+**P0 ajouté sur `main` :** `#/control/audit` analyse en lecture seule les liens entre projets, clients et tâches. Il signale les ID absents/en double, projets introuvables, associations client–tâche incohérentes, dates impossibles, statuts anciens et listes locales mal structurées. Chaque constat ouvre la fiche à vérifier ; **aucune donnée n'est corrigée ou supprimée automatiquement**. L'accès se fait depuis l'accueil, Sauvegardes et Règles et sécurité.
+
+**Transparence :** les messages n'incluent pas les noms de clients ni les intitulés des tâches. Les totaux restent exhaustifs, l'affichage est plafonné à 120 signalements. Le diagnostic inspecte les collections persistées avant leur normalisation à l'ouverture, pour ne pas cacher des données de sauvegarde malformées. La charte « Simple & Humain » et le modèle de stockage local sont inchangés.
+
+**Recette :** `tests/control-data-audit.test.mjs`, adaptation de `tests/control-ia-browser-smoke.mjs` et mise en cache PWA `v83`. Les contrôles ciblés ont été exécutés dans un environnement JS ; la recette visuelle et la publication sur GitHub Pages restent à vérifier séparément.
+
+[Cahier des charges v1.3](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md) · aucun service payant, automatisation, authentification ou Cloud activé.
+
 ## 5 novembre 2026 — CONTROL 10 : vrai lien Clients ↔ Tâches
 
 **Développement sur `main` :** les tâches peuvent désormais conserver l'identifiant d'une fiche client existante (et pas seulement le projet). Depuis Clients, « Créer une tâche » préremplit l'organisation, son projet et sa prochaine étape ; la tâche n'est créée qu'après validation. Depuis la fiche client, les tâches associées sont visibles, avec liens vers chacune et vue filtrée regroupant tâches actives et terminées. La recherche des tâches et la recherche universelle reconnaissent le client lié.
