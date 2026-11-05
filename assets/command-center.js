@@ -19,7 +19,7 @@ function sourceLink(project,provider){const x=openProject(project);return provid
 function availableAgents(){const ids=new Set(agents.map(a=>a.id));for(const p of ctx.projects){const d=openProject(p.id);for(const key of Object.keys(d.spaces||{}))ids.add(key);for(const key of (d.customProviders||[]))ids.add(key)}return [...ids]}
 function providerURL(project,provider){return safe(sourceLink(project,provider))||agents.find(x=>x.id===provider)?.url||''}
 function storage(){try{const raw=localStorage.getItem(KEY);if(raw===null){localStoreCorrupt=false;localLastLoadedRaw=null;return {}}const a=JSON.parse(raw);if(!a||typeof a!=='object'||Array.isArray(a))throw Error('Invalid local data');localStoreCorrupt=false;localLastLoadedRaw=raw;return a}catch{localStoreCorrupt=true;return{}}}
-function init(){db=Object.assign({version:1,actions:[],missions:[],events:[],expenses:[],decisions:[],goalPlans:[],websites:[],messages:[],globalRules:'Aucune dépense, abonnement, achat de crédits ou action engageante sans autorisation explicite. Ne pas utiliser de quotas partagés interdits par les consignes du projet. Ne pas publier de données sensibles. Vérifier les résultats avant de les annoncer terminés.',notifications:false},storage());for(const key of ['actions','missions','events','meetings','expenses','income','decisions','goalPlans','websites','messages'])if(!Array.isArray(db[key]))db[key]=[]}
+function init(){db=Object.assign({version:1,actions:[],missions:[],events:[],expenses:[],decisions:[],goalPlans:[],websites:[],messages:[],clients:[],globalRules:'Aucune dépense, abonnement, achat de crédits ou action engageante sans autorisation explicite. Ne pas utiliser de quotas partagés interdits par les consignes du projet. Ne pas publier de données sensibles. Vérifier les résultats avant de les annoncer terminés.',notifications:false},storage());for(const key of ['actions','missions','events','meetings','expenses','income','decisions','goalPlans','websites','messages','clients'])if(!Array.isArray(db[key]))db[key]=[]}
 function save(){if(localStoreCorrupt){toast('Stockage local illisible : restaure une sauvegarde avant toute modification.');return false}try{if(localStorage.getItem(KEY)!==localLastLoadedRaw){toast('Données modifiées dans un autre onglet : enregistrement annulé. Recharge CONTROL pour récupérer la dernière version.');return false}db.lastChanged=new Date().toISOString();const serialized=JSON.stringify(db);localStorage.setItem(KEY,serialized);localLastLoadedRaw=serialized;return true}catch{toast('Stockage indisponible ou plein. Effectue une sauvegarde.');return false}}
 // A local operation is confirmed only after durable storage has accepted the full state.
 // Roll back the in-memory changes too: rerendering an unpersisted state would mislead users.
@@ -257,6 +257,112 @@ function intake(){
   externalPanel.dataset.loaded='true';
   paintSprints('#inbox-sprint-status',true);
   fetchSprints().then(()=>paintSprints('#inbox-sprint-status',true)).catch(()=>{});
+ });
+}
+
+function clients(){
+ const clientTool=window.CONTROL_CLIENTS;
+ if(!clientTool){
+  $('#main').innerHTML=view('Clients','Fiches locales de suivi',note('Le module Clients ne s’est pas chargé. Actualisez CONTROL ; aucune donnée n’a été modifiée.'));
+  return;
+ }
+ const known=new Set(ctx.projects.map(p=>p.id));
+ const items=clientTool.sort(db.clients.filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string'&&x.name.trim()));
+ const scoped=new URLSearchParams(location.hash.split('?')[1]||'').get('project')||'';
+ const scopedValid=known.has(scoped)?scoped:'';
+ const optionsProject=(selected='')=>{
+  const missing=selected&&!known.has(selected)?'<option value="'+h(selected)+'" selected>Projet conservé (non listé)</option>':'';
+  return '<option value="">Sans projet</option>'+missing+ctx.projects.map(p=>'<option value="'+h(p.id)+'" '+(p.id===selected?'selected':'')+'>'+h(p.name)+'</option>').join('');
+ };
+ const form=(record=null)=>{
+  const r=record||{name:'',status:'Prospect',project:scopedValid,nextStep:'',nextDue:'',website:''};
+  const statuses=clientTool.statuses.map(s=>'<option value="'+h(s)+'" '+(s===r.status?'selected':'')+'>'+h(s)+'</option>').join('');
+  return '<form '+(record?'data-client-edit="'+h(record.id)+'"':'id="new-client"')+' class="control-client-form">'+
+   field('Client / organisation','name',r.name,'text','required maxlength="120" autocomplete="organization"')+
+   '<div class="formgrid"><label>Statut<select class="field" name="status">'+statuses+'</select></label>'+
+   '<label>Projet associé<select class="field" name="project">'+optionsProject(r.project||'')+'</select></label></div>'+
+   field('Prochaine étape (facultatif)','nextStep',r.nextStep||'','text','maxlength="180"')+
+   field('Date de prochaine étape','nextDue',clientTool.validDate(r.nextDue||'')?r.nextDue||'':'','date')+
+   field('Site public (facultatif)','website',r.website||'','url','maxlength="1500"')+
+   '<button type="submit" class="primary">'+(record?'Enregistrer les modifications':'Ajouter le client')+'</button></form>';
+ };
+ const rows=items.map(r=>{
+  const status=clientTool.statuses.includes(r.status)?r.status:'Statut inconnu';
+  const projectLabel=r.project?pname(r.project):'Sans projet';
+  const validDue=clientTool.validDate(r.nextDue||'')&&r.nextDue;
+  const dueLabel=validDue?' · '+r.nextDue.slice(8,10)+'/'+r.nextDue.slice(5,7)+'/'+r.nextDue.slice(0,4):'';
+  const permitted=known.has(r.project);
+  const actionHref='#/control/inbox/new'+(permitted?'?project='+encodeURIComponent(r.project):'');
+  const website=safe(r.website);
+  const search=clientTool.normalize([r.name,r.nextStep||'',projectLabel,status].join(' '));
+  return '<article class="control-client-row" data-client-id="'+h(r.id)+'" data-client-status="'+h(status)+'" data-client-project="'+h(r.project||'')+'" data-client-search="'+h(search)+'">'+
+   '<div class="control-client-info"><strong>'+h(r.name)+'</strong>'+
+   '<small>'+h(projectLabel)+' · '+h(status)+'</small>'+
+   (r.nextStep?'<p>Prochaine étape : '+h(r.nextStep)+h(dueLabel)+'</p>':'<p class="muted">Aucune prochaine étape renseignée.</p>')+
+   '<div class="actions"><a class="button" href="'+h(actionHref)+'">Créer une tâche</a>'+
+   (permitted?'<a class="button" href="#/project/'+encodeURIComponent(r.project)+'/pilot">Ouvrir le projet</a>':'')+
+   (website?href(website,'Site public'):'')+'</div></div>'+
+   '<div class="control-client-controls"><details class="control-client-edit"><summary>Modifier</summary>'+form(r)+'</details>'+
+   btn('Supprimer','client-delete:'+r.id,'control-client-delete')+'</div></article>';
+ }).join('');
+ const content=note('Fiches saisies uniquement sur cet appareil. Pour l’instant, utilisez des noms d’organisations ou des libellés non confidentiels : ne stockez pas de coordonnées personnelles, de devis privés ni de mots de passe.')+
+ '<div class="control-client-stats" aria-label="Clients enregistrés localement">'+
+ '<span><strong>'+items.length+'</strong> fiche(s)</span>'+
+ '<span><strong>'+items.filter(r=>r.status==='En cours').length+'</strong> en cours</span>'+
+ '<span><strong>'+items.filter(r=>r.nextStep&&r.status!=='Terminé').length+'</strong> prochaine(s) étape(s)</span></div>'+
+ '<section class="panel"><h2>Retrouver un client</h2><div class="control-client-toolbar">'+
+ '<label>Rechercher<input id="control-client-search" class="field" type="search" maxlength="120" placeholder="Organisation, projet, étape…" autocomplete="off"></label>'+
+ '<label>Statut<select id="control-client-filter" class="field"><option value="Tous">Tous</option>'+clientTool.statuses.map(s=>'<option value="'+h(s)+'">'+h(s)+'</option>').join('')+'</select></label>'+
+ '<label>Projet<select id="control-client-project" class="field"><option value="">Tous</option>'+ctx.projects.map(p=>'<option value="'+h(p.id)+'" '+(scopedValid===p.id?'selected':'')+'>'+h(p.name)+'</option>').join('')+'</select></label></div>'+
+ '<p id="control-client-count" role="status" aria-live="polite" class="muted"></p>'+
+ '<div id="control-client-list">'+rows+'</div><p id="control-client-empty" class="empty" hidden>Aucune fiche ne correspond aux filtres.</p></section>'+
+ '<details class="panel shell-progressive-form control-client-create" '+(!items.length?'open':'')+'><summary><strong>+ Ajouter un client</strong><small>Créer une fiche de suivi sans connexion externe</small></summary><div class="shell-progressive-body">'+form()+'</div></details>';
+ $('#main').innerHTML=view('Clients','Organisations, projets associés et prochaines étapes',content);
+ const filter=()=>{
+  const query=$('#control-client-search').value;
+  const status=$('#control-client-filter').value;
+  const project=$('#control-client-project').value;
+  let count=0;
+  $('#main').querySelectorAll('.control-client-row').forEach(row=>{
+   const show=(status==='Tous'||row.dataset.clientStatus===status)&&(!project||row.dataset.clientProject===project)&&
+      (!query||row.dataset.clientSearch.includes(clientTool.normalize(query)));
+   row.hidden=!show;if(show)count++;
+  });
+  $('#control-client-count').textContent=count+' fiche'+(count>1?'s':'')+' affichée'+(count>1?'s':'');
+  $('#control-client-empty').hidden=count!==0;
+ };
+ for(const selector of ['#control-client-search','#control-client-filter','#control-client-project']){
+  const element=$(selector);
+  element.addEventListener(selector.includes('search')?'input':'change',filter);
+ }
+ filter();
+ const read=form=>Object.fromEntries(['name','status','project','nextStep','nextDue','website'].map(key=>[key,new FormData(form).get(key)]));
+ const editAllowed=record=>['',...ctx.projects.map(p=>p.id),...(record?.project?[record.project]:[])];
+ registerForm('#new-client',(_,form)=>{
+  const result=clientTool.validate(read(form),editAllowed(null));
+  if(!result.ok)return toast(result.error);
+  if(!commitLocal(()=>db.clients.push({id:id(),...result.client,createdAt:new Date().toISOString()})))return;
+  clients();toast('Client enregistré uniquement sur cet appareil.');
+ });
+ $('#main').querySelectorAll('form[data-client-edit]').forEach(form=>{
+  form.onsubmit=e=>{
+   e.preventDefault();
+   const record=db.clients.find(x=>x?.id===form.dataset.clientEdit);
+   if(!record)return toast('Fiche introuvable. Rechargez CONTROL.');
+   const result=clientTool.validate(read(form),editAllowed(record));
+   if(!result.ok)return toast(result.error);
+   if(!commitLocal(()=>Object.assign(record,result.client,{updatedAt:new Date().toISOString()})))return;
+   clients();toast('Fiche mise à jour sur cet appareil.');
+  };
+ });
+ $('#main').querySelectorAll('[data-act^="client-delete:"]').forEach(button=>{
+  button.onclick=()=>{
+   const item=db.clients.find(x=>x?.id===button.dataset.act.slice('client-delete:'.length));
+   if(!item)return toast('Client introuvable. Rechargez CONTROL.');
+   if(!confirm('Supprimer définitivement cette fiche locale ? Cette action ne supprime aucun projet ni aucune tâche.'))return;
+   if(!commitLocal(()=>{db.clients=db.clients.filter(x=>x.id!==item.id)}))return;
+   clients();toast('Fiche locale supprimée.');
+  };
  });
 }
 
@@ -1086,6 +1192,6 @@ function paintSprints(selector,onlyBlockers=false){const out=$(selector);if(!out
  const n=Object.keys(sprintLoaded).length;if(n<SPRINT_IDS.length)out.innerHTML+=tiny((SPRINT_IDS.length-n)+' source(s) non vérifiée(s), information potentiellement partielle.');
  out.innerHTML+=tiny('Ces données sont des journaux GitHub, pas un suivi en direct de ChatGPT. Le statut en ligne nécessite une preuve de recette réelle.');
 }
-function render(input){ctx=input||ctx;init();try{const today=window.CONTROL_TASKS?.localDay()||new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a&&typeof a.title==='string'&&a.title.trim()&&a.status!=='done'&&a.status!=='cancelled'&&window.CONTROL_TASKS?.category(a,today)==='overdue').length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,team,tools,aistudio,webbuilder,meetings,command,localai,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,goals,budget,backup,settings,search};(pages[page]||manager)()}
+function render(input){ctx=input||ctx;init();try{const today=window.CONTROL_TASKS?.localDay()||new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a&&typeof a.title==='string'&&a.title.trim()&&a.status!=='done'&&a.status!=='cancelled'&&window.CONTROL_TASKS?.category(a,today)==='overdue').length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,team,clients,tools,aistudio,webbuilder,meetings,command,localai,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,goals,budget,backup,settings,search};(pages[page]||manager)()}
 window.CONTROL_CENTER={render};
 })();
