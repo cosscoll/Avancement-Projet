@@ -96,7 +96,7 @@ function manager(){
  '<section class="panel"><div class="sectionhead"><h2>Derniers sprints publics</h2>'+btn('Actualiser','refresh-sprints')+'</div><div id="sprint-overview"><p class="muted">Chargement des rapports enregistrés sur GitHub…</p></div></section>'+
  '<section class="panel"><div class="sectionhead"><h2>Chef de projet central</h2>'+tag('Sources vérifiables')+'</div><label>Périmètre<select id="c-project" class="field">'+options+'</select></label><div class="messages" id="c-messages">'+(db.messages.length?db.messages.slice(-12).map(m=>'<div class="pilot-message '+(m.role==='user'?'pilot-user':'pilot-answer')+'"><span class="muted">'+h(m.role==='user'?'Vous':'CONTROL · synthèse locale')+' · '+date(m.at)+'</span><p>'+h(m.text)+'</p></div>').join(''):'<p class="empty">Demande « Où en sont mes projets ? » ou « Quelles sont les prochaines priorités ? ».</p>')+'</div>'+
  '<form id="c-ask"><label>Question<input class="field" name="question" required maxlength="900" placeholder="Où en est UCP sur chaque IA ?"></label><div class="actions"><button class="primary">Interroger CONTROL</button>'+btn('Préparer un briefing ChatGPT','brief')+href('https://chatgpt.com/','Ouvrir ChatGPT')+'</div></form></section>'+
- box('Accès rapide', '<div class="quicktiles">'+[['localai','CONTROL IA locale'],['command','Commander Claude & Gemini'],['inbox','À traiter'],['missions','Missions multi-IA'],['activity','Activité GitHub'],['calendar','Calendrier'],['library','Bibliothèque'],['budget','Coûts et quotas'],['memory','Mémoire et décisions'],['goals','Planifier un objectif'],['backup','Sauvegardes'],['settings','Règles et sécurité']].map(([url,label])=>'<a href="#/control/'+url+'" class="quicktile">'+h(label)+' →</a>').join('')+'</div>');
+ box('Accès rapide', '<div class="quicktiles">'+[['clients','Clients et suivi'],['localai','CONTROL IA locale'],['command','Commander Claude & Gemini'],['inbox','À traiter'],['missions','Missions multi-IA'],['activity','Activité GitHub'],['calendar','Calendrier'],['library','Bibliothèque'],['budget','Coûts et quotas'],['memory','Mémoire et décisions'],['goals','Planifier un objectif'],['backup','Sauvegardes'],['settings','Règles et sécurité']].map(([url,label])=>'<a href="#/control/'+url+'" class="quicktile">'+h(label)+' →</a>').join('')+'</div>');
  $('#main').innerHTML=view('CONTROL IA','Centre de pilotage et de synthèse de tous tes projets',content);
  registerForm('#c-ask',(f)=>{const q=String(f.get('question')||'').trim(),pid=subject();if(!q)return;if(!commitLocal(()=>{db.messages.push({id:id(),role:'user',text:q,project:pid,at:new Date().toISOString()},{id:id(),role:'assistant',text:reply(q,pid),project:pid,at:new Date().toISOString()});db.messages=db.messages.slice(-80)}))return;manager();$('#c-project').value=pid});
  paintSprints('#sprint-overview');fetchSprints().then(()=>paintSprints('#sprint-overview')).catch(()=>{});$('#main [data-act="refresh-sprints"]')?.addEventListener('click',()=>fetchSprints(true).then(()=>paintSprints('#sprint-overview')));
@@ -108,6 +108,8 @@ function intake(){
  const workflow=window.CONTROL_TASKS;
  if(!workflow){$('#main').innerHTML=view('À traiter','Vos actions',note('Le module de tâches ne s’est pas chargé. Actualisez CONTROL ; aucune donnée n’a été modifiée.'));return;}
  const today=workflow.localDay();
+ const requestProject=new URLSearchParams(location.hash.split('?')[1]||'').get('project')||'';
+ const createProject=ctx.projects.some(p=>p.id===requestProject)?requestProject:'';
  const actions=db.actions.filter(x=>x&&typeof x.title==='string'&&x.title.trim()&&x.status!=='cancelled');
  const missions=db.missions.filter(x=>x&&x.status==='review'&&typeof x.title==='string'&&x.title.trim());
  const pending=actions.filter(x=>x.status!=='done');
@@ -157,7 +159,7 @@ function intake(){
  '</select></label></div><p id="control-task-visible" class="control-task-visible" role="status" aria-live="polite"></p>'+
  '<div id="control-task-list" class="control-task-list">'+rows+'</div><p class="control-task-none" id="control-task-none" hidden>Aucune tâche ne correspond à votre recherche ou au filtre choisi.</p>')+
  '<details class="panel shell-progressive-form control-task-create" id="task-create" '+(route().param==='new'?'open':'')+'><summary><strong>+ Créer une tâche</strong><small>Ajoutez une action et, si besoin, son échéance</small></summary><div class="shell-progressive-body"><form id="new-action">'+
- field('Action','title','','text','required maxlength="180"')+selectProject('')+
+ field('Action','title','','text','required maxlength="180"')+selectProject(createProject)+
  '<div class="formgrid"><label>Priorité<select name="priority" class="field">'+options(['Normale','Haute','Critique'],'Normale')+'</select></label>'+field('Échéance','due','','date')+'</div>'+
  field('Lien de référence (facultatif)','url','','url','maxlength="2000"')+
  '<button class="primary">Ajouter la tâche</button></form></div></details>'+
@@ -1130,6 +1132,12 @@ function searchResults(scope='',query=''){
   return date(value)+(age>90*86400000?' · à revalider':' · date déclarée');
  };
  for(const p of ctx.projects)add(p.id,'Projet',p.name,'Fiche de projet · '+(p.status||'état non vérifié'),'#/project/'+encodeURIComponent(p.id)+'/pilot',p.short||'');
+ for(const client of db.clients||[]){
+  if(!client||typeof client.name!=='string')continue;
+  add(client.project,'Client',client.name,
+   'Fiche locale · '+(client.status||'à vérifier')+' · prochaine étape : '+(client.nextStep||'non renseignée'),
+   '#/control/clients?project='+encodeURIComponent(client.project),client.nextStep||'');
+ }
  for(const action of db.actions||[])add(action.project,'Action',action.title,'Action locale · '+(action.status||'état inconnu')+' · '+freshness(action.at||action.due),'#/control/inbox',action.priority||'');
  for(const mission of db.missions||[])add(mission.project,'Mission',mission.title,'Mission déclarée · '+(mission.provider||'IA non renseignée')+' · '+(mission.status||'statut non vérifié'),'#/control/missions');
  for(const event of db.events||[])add(event.project,'Événement',event.title,'Calendrier local · '+(event.date||'date non renseignée'),'#/control/calendar');
