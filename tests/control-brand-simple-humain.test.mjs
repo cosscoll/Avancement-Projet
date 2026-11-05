@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const read=(path)=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
 const css=read('assets/control-brand-simple-humain.css');
+const homeCss=read('assets/control-home-v6.css');
+const workspaceCss=read('assets/control-workspace-v7.css');
 const html=read('index.html');
 const cloud=read('app.html');
 const sw=read('service-worker.js');
@@ -27,7 +29,8 @@ test('The last stylesheet applies to the homepage and internal workspace without
  assert.match(css,/body\.control-shell-v3\.control-simple-workspace/);
  for(const component of ['.control-home-v6-stat','.control-home-v6-ask','.control-home-v6-priority-row','.control-workspace-mainnav','.shell-project-navigation','.control-finder-panel','.as-steps','.as-agent-item'])
   assert.ok(css.includes(component),'Unstyled essential component '+component);
- assert.match(css,/grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
+ assert.match(homeCss,/grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
+ assert.match(workspaceCss,/grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
  assert.match(html,/id="shell-quick-find"/);
  assert.match(html,/id="control-home-nav-projects" href="#\/projects"/);
  assert.match(html,/href="#\/control\/inbox\/new"/);
