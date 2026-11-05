@@ -68,7 +68,7 @@ test('portable backup validates imported custom projects alongside the built-in 
   'When the catalog is unavailable, do not invent missing-project findings');
  const app=read('assets/command-center.js');
  assert.match(app,/const baseCatalog=ctx\.projects\.filter\(p=>p&&typeof p\.id==='string'&&!p\.id\.startsWith\('custom-'\)\)/);
- assert.match(app,/inspectBackup\(data,\{catalogProjects:baseCatalog\}\)/);
+ assert.match(app,/inspectBackup\(data,baseCatalog\.length\?\{catalogProjects:baseCatalog\}:\{\}\)/);
 });
 
 test('imported projects with repeated IDs are reported and do not silently overwrite others',()=>{
