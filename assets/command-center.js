@@ -898,7 +898,18 @@ function auditData(){
   $('#main').innerHTML=view('État des données','Vérification locale',note('Le module de diagnostic n’est pas chargé. Rechargez CONTROL. Aucune donnée n’a été modifiée.'));
   return;
  }
- const report=engine.inspect({projects:ctx.projects,clients:db.clients,actions:db.actions});
+ // Inspect persisted data rather than only arrays normalized during init().
+ // Legacy/corrupted collection shapes must not be hidden from this read-only check.
+ let persisted=db;
+ try{
+  const raw=localStorage.getItem(KEY);
+  if(raw!==null){const parsed=JSON.parse(raw);if(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))persisted=parsed;}
+ }catch{/* The storage-corruption notice is rendered separately. */}
+ const report=engine.inspect({
+  projects:ctx.projects,
+  clients:Object.hasOwn(persisted,'clients')?persisted.clients:db.clients,
+  actions:Object.hasOwn(persisted,'actions')?persisted.actions:db.actions
+ });
  const issueLink=row=>{
   if(row.kind==='task'&&row.id)return '#/control/inbox?task='+encodeURIComponent(row.id);
   if(row.kind==='client'&&row.id)return '#/control/clients?client='+encodeURIComponent(row.id);
