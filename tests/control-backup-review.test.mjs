@@ -26,6 +26,62 @@ test('the review shows counts only and warns when imported items would be lost',
  assert.equal(result.studioPreservedFromLegacy,true);
  assert.equal(JSON.stringify(result).includes('a0'),false,'comparison must not expose private records');
 });
+test('modern custom projects are counted as projects and project changes are not hidden',()=>{
+ const before=fixture(),after=fixture();
+ before.hub.custom=[{id:'custom-a',name:'Projet entreprise privé',links:[{url:'https://secret.example'}]},{id:'custom-b',name:'Autre'}];
+ after.hub.custom=[{id:'custom-a',name:'Projet renommé',links:[{url:'https://secret.example'}]}];
+ const result=review.compare(after,before),row=result.changes.find(x=>x.key==='custom-projects');
+ assert.equal(row.before,2);
+ assert.equal(row.after,1);
+ assert.equal(row.removed,1);
+ assert.equal(row.added,0);
+ assert.equal(row.modified,1);
+ assert.ok(result.losses.some(x=>x.key==='custom-projects'));
+ assert.ok(result.modified.some(x=>x.key==='custom-projects'));
+ assert.equal(JSON.stringify(result).includes('Projet entreprise privé'),false);
+ assert.equal(JSON.stringify(result).includes('https://secret.example'),false);
+ assert.equal(JSON.stringify(result).includes('custom-a'),false);
+});
+test('portable projects with same counts and different IDs are flagged as replacements',()=>{
+ const before=fixture(),after=fixture();
+ before.hub.custom=[{id:'custom-old',name:'Dossier personnel'}];
+ after.hub.custom=[{id:'custom-new',name:'Dossier personnel'}];
+ const row=review.compare(after,before).changes.find(x=>x.key==='custom-projects');
+ assert.equal(row.before,1);
+ assert.equal(row.after,1);
+ assert.equal(row.added,1);
+ assert.equal(row.removed,1);
+ assert.equal(row.modified,0);
+});
+test('reordered personalized projects are not falsely reported as edited',()=>{
+ const before=fixture(),after=fixture();
+ before.hub.custom=[{id:'one',name:'Premier'},{id:'two',name:'Second'}];
+ after.hub.custom=[{name:'Second',id:'two'},{name:'Premier',id:'one'}];
+ const row=review.compare(after,before).changes.find(x=>x.key==='custom-projects');
+ assert.equal(row.modified,0);
+ assert.equal(row.removed,0);
+ assert.equal(row.added,0);
+});
+test('legacy project maps stay counted without claiming precise record differences',()=>{
+ const before=fixture(),after=fixture();
+ after.hub.projects={a:{id:'a'},b:{id:'b'},c:{id:'c'}};
+ const report=review.compare(after,before);
+ const legacy=report.changes.find(x=>x.key==='projects');
+ const modern=report.changes.find(x=>x.key==='custom-projects');
+ assert.equal(legacy.before,2);
+ assert.equal(legacy.after,3);
+ assert.equal(legacy.uncertain,true);
+ assert.equal(modern.before,0);
+ assert.equal(modern.after,0);
+});
+test('ambiguous duplicated project identifiers are flagged as uncertain',()=>{
+ const before=fixture(),after=fixture();
+ before.hub.custom=[{id:'custom-1',name:'Name'}];
+ after.hub.custom=[{id:'custom-1',name:'Name'},{id:'custom-1',name:'Duplicate'}];
+ const row=review.compare(after,before).changes.find(x=>x.key==='custom-projects');
+ assert.equal(row.uncertain,true);
+ assert.equal(row.modified,null);
+});
 test('client records appear in the backup comparison without leaking any client name',()=>{
  const before=fixture(2,1),after=fixture(1,1);
  before.command.clients=[{id:'c1',name:'Confidentiel entreprise'},{id:'c2',name:'Client second'}];
