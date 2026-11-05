@@ -34,6 +34,26 @@ function validate(input,projects=[]){
  if(website&&(website.length>1500||!safeWebsite(website)))return {ok:false,error:'Seul un lien HTTPS public sans identifiant ou jeton est autorisé.'};
  return {ok:true,client:{name,project,status,nextStep,nextDue,website}};
 }
+/* A task can be linked only to an existing local client in its own project.
+   A client without a project is explicitly available across all local projects. */
+function clientForTask(clientId,project,clients=[]){
+ if(!clientId)return {ok:true,client:null};
+ if(typeof clientId!=='string'||typeof project!=='string'||!Array.isArray(clients))
+  return {ok:false,error:'Association client invalide.'};
+ const client=clients.find(x=>x&&x.id===clientId&&typeof x.name==='string'&&x.name.trim());
+ if(!client)return {ok:false,error:'Client introuvable. Actualisez CONTROL ou retirez le lien.'};
+ if(client.project&&client.project!==project)
+  return {ok:false,error:'Ce client appartient à un autre projet. Corrigez le projet ou retirez le lien.'};
+ return {ok:true,client};
+}
+function eligibleForProject(clients,project){
+ return (Array.isArray(clients)?clients:[]).filter(x=>x&&typeof x.id==='string'&&x.id&&
+  typeof x.name==='string'&&x.name.trim()&&(!x.project||x.project===project));
+}
+function tasksForClient(tasks,clientId){
+ return (Array.isArray(tasks)?tasks:[]).filter(x=>x&&x.clientId===clientId&&x.status!=='cancelled'&&
+  typeof x.title==='string'&&x.title.trim());
+}
 function matches(client,query='',status='Tous',project=''){
  if(status!=='Tous'&&client.status!==status)return false;
  if(project&&client.project!==project)return false;
@@ -48,7 +68,7 @@ function sort(clients=[]){
   due(a).localeCompare(due(b))||
   String(a?.name||'').localeCompare(String(b?.name||''),'fr'));
 }
-const api={statuses,validDate,normalize,safeWebsite,validate,matches,sort};
+const api={statuses,validDate,normalize,safeWebsite,validate,matches,sort,clientForTask,eligibleForProject,tasksForClient};
 if(typeof module==='object'&&module.exports)module.exports=api;
 if(root)root.CONTROL_CLIENTS=api;
 })(typeof window==='object'?window:undefined);
