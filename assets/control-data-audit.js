@@ -101,7 +101,7 @@ function inspectBackup(data,{catalogProjects}={}){
  const catalogComplete=Array.isArray(catalogProjects);
  const standard=catalogComplete?catalogProjects.filter(x=>object(x)&&safeId(x.id)):[];
  const hub=object(data.hub)?data.hub:{};
- const custom=Array.isArray(hub.custom)?hub.custom.filter(x=>object(x)&&safeId(x.id)):[];
+ const custom=Array.isArray(hub.custom)?hub.custom:[]; // Keep malformed rows for the read-only audit.
  const projects=catalogComplete?[...standard,...custom]:[];
  return inspect({
   projects,
