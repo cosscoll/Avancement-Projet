@@ -15,7 +15,7 @@ function validDate(x){
  return Number.isFinite(d.getTime())&&d.toISOString().slice(0,10)===x;
 }
 function safeId(x){return typeof x==='string'&&x.length>0&&x.length<=180&&!/[\u0000-\u001f]/.test(x)}
-function inspect({projects=[],clients=[],actions=[]}={}){
+function inspect({projects=[],clients=[],actions=[],validateProjectCatalog=true}={}){
  const projectList=Array.isArray(projects)?projects:[];
  const clientList=Array.isArray(clients)?clients:[];
  const actionList=Array.isArray(actions)?actions:[];
@@ -46,7 +46,7 @@ function inspect({projects=[],clients=[],actions=[]}={}){
   else if(clientIndex.has(id))issue({kind:'client',code:'duplicate_id',severity:'error',id,message:'Identifiant client utilisé par plusieurs fiches.'});
   else clientIndex.set(id,client);
   if(typeof client.name!=='string'||!client.name.trim())issue({kind:'client',code:'invalid_name',severity:'error',id,message:'Nom de fiche client absent.'});
-  if(client.project&&(!safeId(client.project)||!ids.has(client.project)))
+  if(validateProjectCatalog&&client.project&&(!safeId(client.project)||!ids.has(client.project)))
    issue({kind:'client',code:'orphan_project',id,message:'Projet client introuvable dans ce navigateur.'});
   if(client.nextDue&&!validDate(client.nextDue))
    issue({kind:'client',code:'invalid_date',id,message:'Date de prochaine étape invalide.'});
@@ -60,7 +60,7 @@ function inspect({projects=[],clients=[],actions=[]}={}){
   if(!safeId(id))issue({kind:'task',code:'missing_id',severity:'error',message:'Identifiant de tâche absent ou invalide.'});
   if(typeof task.title!=='string'||!task.title.trim())
    issue({kind:'task',code:'invalid_title',severity:'error',id,message:'Intitulé de tâche absent.'});
-  if(task.project&&(!safeId(task.project)||!ids.has(task.project)))
+  if(validateProjectCatalog&&task.project&&(!safeId(task.project)||!ids.has(task.project)))
    issue({kind:'task',code:'orphan_project',id,message:'Projet de la tâche introuvable dans ce navigateur.'});
   if(task.due&&!validDate(task.due))
    issue({kind:'task',code:'invalid_date',id,message:'Date de tâche invalide.'});
@@ -83,7 +83,19 @@ function inspect({projects=[],clients=[],actions=[]}={}){
   status:counts.errors?'attention':counts.warnings?'review':'clean'
  });
 }
-const api={validDate,inspect};
+// Backup snapshots can contain only part of the project catalog (or no catalog).
+// Audit all client/task relations, but do not invent missing-project findings.
+function inspectBackup(data){
+ const command=data&&typeof data==='object'&&!Array.isArray(data)?data.command:null;
+ if(!command||typeof command!=='object'||Array.isArray(command))
+  throw Error('Sauvegarde CONTROL invalide.');
+ return inspect({
+  projects:[],clients:Object.hasOwn(command,'clients')?command.clients:[],
+  actions:Object.hasOwn(command,'actions')?command.actions:[],
+  validateProjectCatalog:false
+ });
+}
+const api={validDate,inspect,inspectBackup};
 if(typeof module==='object'&&module.exports)module.exports=api;
 if(root)root.CONTROL_DATA_AUDIT=api;
 })(typeof window==='object'?window:undefined);
