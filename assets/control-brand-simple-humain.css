@@ -396,3 +396,28 @@ body.cloud-shell-v3 .cloud-backup-inspector{background:var(--control-cream);bord
 @media(prefers-reduced-motion:reduce){
  body.control-shell-v3 *,body.cloud-shell-v3 *{transition:none!important;animation-duration:.01ms!important}
 }
+/* Fine-grained Cloud brand details; Cloud feature gates remain unchanged. */
+body.cloud-shell-v3 .control-cloud-brand-icon{width:34px;height:34px;display:inline-block;flex:0 0 34px;object-fit:contain}
+body.cloud-shell-v3 .shell-sidebar{
+ background:#FFF3E9!important;
+ color:var(--control-ink)!important;
+ border-right-color:var(--control-line)!important;
+ box-shadow:3px 0 18px rgba(100,55,28,.045)!important;
+}
+body.cloud-shell-v3 .shell-sidebar .shell-brand{color:var(--control-ink)!important}
+body.cloud-shell-v3 .shell-sidebar .shell-brand-sub,
+body.cloud-shell-v3 .shell-sidebar .shell-side-heading{color:#76675E!important}
+body.cloud-shell-v3 .shell-sidebar .shell-brand-mark{background:var(--control-peach)!important;color:var(--control-ink)!important}
+body.cloud-shell-v3 .shell-sidebar .shell-side-link{color:#65564E!important}
+body.cloud-shell-v3 .shell-sidebar .shell-side-link:hover{
+ background:#FFE4D1!important;color:var(--control-orange-deep)!important;
+}
+body.cloud-shell-v3 .shell-sidebar .shell-side-link[aria-current=page]{
+ background:#FFDFCA!important;color:var(--control-orange-deep)!important;border-color:#EFBD9F!important;
+ box-shadow:inset 3px 0 0 var(--control-orange-deep)!important;
+}
+body.cloud-shell-v3 .shell-sidebar .shell-side-footer{border-color:var(--control-line)!important;color:#685F59!important}
+body.cloud-shell-v3 .control-finder-panel{background:var(--control-paper);border-color:var(--control-line)}
+body.cloud-shell-v3 .control-finder-categories button.is-active{background:var(--control-orange-deep);border-color:var(--control-orange-deep)}
+body.cloud-shell-v3 .control-nav-main-trigger{color:var(--control-orange-deep)!important;border-color:#EACAB7!important;background:#FFF8F2!important}
+@media(prefers-reduced-motion:reduce){body.cloud-shell-v3 *,body.control-shell-v3 *{scroll-behavior:auto!important}}
