@@ -1,3 +1,11 @@
+## 5 novembre 2026 — CONTROL 08 : charte « Simple & Humain » appliquée
+
+**Identité validée appliquée à l'application existante sur `main` :** fond crème, blanc et pêche, orange terracotta pour les actions, texte anthracite, typographie Poppins (fallback hors ligne), logo « C » orange et pictogrammes/états harmonisés. La feuille centrale `assets/control-brand-simple-humain.css` intervient après les CSS historiques pour homogénéiser accueil, projets, tâches, assistants, recherche et présentation Cloud. Les structures, données locales, routes et formulaires ont été préservés.
+
+**PWA :** manifeste crème, nouveau favicon/logo SVG, cache `v80` et style ajouté au shell hors ligne. Les icônes PNG historiques restent présentes en secours sur certaines installations Android et ne sont pas présentées comme ayant été remplacées. La collaboration Cloud reste désactivée et aucune automatisation ni dépense n'a été engagée.
+
+**Contrôles :** `tests/control-brand-simple-humain.test.mjs` et mise à jour des tests de cache existants. [Dossier de charte graphique appliquée](docs/CONTROL_CHARTE_SIMPLE_HUMAIN_2026_11_05.md). La recette visuelle réelle sur Pages doit être confirmée séparément de l'enregistrement du code.
+
 ## 3 novembre 2026 — CONTROL 07 : cohérence visuelle de toute l'application personnelle
 
 **Livraison sur `main` :** la charte de l'accueil CONTROL 06 (blanc, bleu foncé, contenu centré et quatre destinations visibles) s'applique maintenant aux **écrans internes** de l'application personnelle. L'ancienne barre latérale sombre et l'ancien pied de page mobile n'apparaissent plus lors du passage vers « À traiter », un projet, « Équipe », « Assistants » ou les autres outils. Un en-tête compact remplace ces menus ; sur mobile, les quatre destinations restent visibles en bas de l'écran.
