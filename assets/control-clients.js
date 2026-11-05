@@ -42,9 +42,11 @@ function matches(client,query='',status='Tous',project=''){
 }
 function sort(clients=[]){
  const index={Prospect:0,'En cours':1,'Terminé':2};
- return [...clients].sort((a,b)=>(index[a.status]??3)-(index[b.status]??3)||
-  (a.nextDue||'9999-99-99').localeCompare(b.nextDue||'9999-99-99')||
-  String(a.name||'').localeCompare(String(b.name||''),'fr'));
+ const priority=value=>Object.hasOwn(index,value)?index[value]:3;
+ const due=x=>validDate(x?.nextDue)&&x?.nextDue?x.nextDue:'9999-99-99';
+ return [...clients].sort((a,b)=>priority(a?.status)-priority(b?.status)||
+  due(a).localeCompare(due(b))||
+  String(a?.name||'').localeCompare(String(b?.name||''),'fr'));
 }
 const api={statuses,validDate,normalize,safeWebsite,validate,matches,sort};
 if(typeof module==='object'&&module.exports)module.exports=api;
