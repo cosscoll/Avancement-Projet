@@ -1,3 +1,11 @@
+## 5 novembre 2026 — CONTROL 13 : session longue « transfert + sécurité »
+
+**Bloc 1 — sauvegardes portables (appliqué sur main) :** le contrôle d'import vérifie maintenant le catalogue des projets de CONTROL et les projets personnalisés du fichier, y compris les identifiants manquants, dupliqués et listes invalides. Il n'invente pas de projet manquant lorsque le catalogue est indisponible. Guide repliable de transfert manuel entre appareils depuis Sauvegardes. Aucune suppression automatique et aucune synchronisation implicite. PWA **v87**.
+
+**Bloc 2 — contrat de permissions (préparé, pas déployé) :** security/control-access-contract.js (rôles owner/admin/editor/viewer, isolation A/B, contrôle des mémoires et agents partagés, confidentialité des connexions IA, refus des automatisations) et tests/control-access-contract.test.mjs. Ce contrat est une **simulation testable** et n'autorise aucune requête réelle. [Dossier de sécurité multi-utilisateurs et matrice des 20 tests A/B](docs/CONTROL_SECURITY_AB_ACCEPTANCE_2026_11_05.md).
+
+**Bloc 3 — qualité et organisation :** 32 contrôles ciblés du diagnostic + contrat + syntaxe passés. Cahier des charges [v1.5](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md) actualisé. Les tests de navigateur en conditions réelles, la publication GitHub Pages et le protocole A/B avec un serveur actif **restent non vérifiés**. Aucun quota limité, automatisation, service payant ou accès Cloud n'a été activé.
+
 ## 5 novembre 2026 — CONTROL 12 : restauration avec contrôle d'intégrité
 
 **P0 livré sur `main` :** l'aperçu de restauration analyse désormais les liens clients–tâches avant toute écriture. Il indique le nombre d'erreurs et d'avertissements sans exposer les noms ou les titres des enregistrements. Les références à un client absent, les liens entre projets incompatibles, les dates incorrectes et les identifiants dupliqués sont signalés. Les anciennes sauvegardes sans catalogue de projets complet sont examinées sans faux diagnostic automatique de projet introuvable.
