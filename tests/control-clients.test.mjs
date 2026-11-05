@@ -57,6 +57,12 @@ test('Accents, projects, status and sorting work without altering input records'
  assert.equal(records[0].name,'Zéro','Sorting does not modify original array');
 });
 
+test('Malformed imported legacy dates do not crash sorting',()=>{
+ const rows=[{id:'bad',name:'Ancienne fiche',status:'?',nextDue:123},
+  {id:'okay',name:'Fiche valide',status:'Prospect',nextDue:'2026-11-06'}];
+ assert.deepEqual(Array.from(sort(rows),x=>x.id),['okay','bad']);
+});
+
 test('Client pages are reachable from projects, management shortcuts and universal search',()=>{
  const html=read('index.html');
  const command=read('assets/command-center.js');
