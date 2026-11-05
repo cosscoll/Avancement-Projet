@@ -881,9 +881,47 @@ function tools(){
   if(status)status.textContent=query?count+' fonction(s) correspondante(s)':'Parcourez les fonctions par catégorie.';
  });
 }
+function auditData(){
+ const engine=window.CONTROL_DATA_AUDIT;
+ if(!engine){
+  $('#main').innerHTML=view('État des données','Vérification locale',note('Le module de diagnostic n’est pas chargé. Rechargez CONTROL. Aucune donnée n’a été modifiée.'));
+  return;
+ }
+ const report=engine.inspect({projects:ctx.projects,clients:db.clients,actions:db.actions});
+ const issueLink=row=>{
+  if(row.kind==='task'&&row.id)return '#/control/inbox?task='+encodeURIComponent(row.id);
+  if(row.kind==='client'&&row.id)return '#/control/clients?client='+encodeURIComponent(row.id);
+  return row.kind==='project'?'#/projects':row.kind==='client'?'#/control/clients':'#/control/inbox';
+ };
+ const card=row=>'<li class="control-audit-item">'+
+  '<span class="control-audit-severity '+(row.severity==='error'?'is-error':'is-warning')+'">'+(row.severity==='error'?'À corriger':'À vérifier')+'</span>'+
+  '<span class="control-audit-item-info"><strong>'+h(row.kind==='task'?'Tâche':row.kind==='client'?'Client':'Projet')+'</strong><span>'+h(row.message)+'</span></span>'+
+  '<a class="button" href="'+h(issueLink(row))+'">Ouvrir la fiche</a></li>';
+ const shown=report.issues.slice(0,12),more=report.issues.slice(12);
+ const content=note('Diagnostic en lecture seule : aucune réparation automatique, aucun transfert réseau et aucune modification des fiches. Seules les relations locales entre projets, clients et tâches sont examinées. Les autorisations Cloud ne sont pas auditées ici.')+
+ (localStoreCorrupt?'<p class="notice" role="alert"><strong>Stockage illisible.</strong> Les résultats sont partiels ; récupérez une copie brute depuis Sauvegardes.</p>':'')+
+ '<div class="control-audit-stats" role="group" aria-label="Résumé du diagnostic">'+
+ '<div><strong>'+report.summary.projects+'</strong><span>Projets examinés</span></div>'+
+ '<div><strong>'+report.summary.clients+'</strong><span>Clients examinés</span></div>'+
+ '<div><strong>'+report.summary.tasks+'</strong><span>Tâches examinées</span></div></div>'+
+ '<section class="panel control-audit-result"><h2>'+ (report.status==='clean'?'Aucune incohérence détectée dans ce périmètre':'Points à contrôler')+'</h2>'+
+ '<p class="muted"><strong>'+report.counts.errors+'</strong> erreur(s) de relation ou de donnée · <strong>'+report.counts.warnings+'</strong> avertissement(s).</p>'+
+ (report.issues.length?'<ul class="control-audit-list">'+shown.map(card).join('')+'</ul>'+
+ (more.length?'<details class="control-audit-more"><summary>Afficher '+more.length+' autre(s) point(s)</summary><ul class="control-audit-list">'+more.map(card).join('')+'</ul></details>':'')+
+ (report.omitted?'<p class="notice">+'+report.omitted+' signalement(s) supplémentaires. L’affichage est limité pour rester lisible ; aucune donnée n’a été supprimée.</p>':'')
+ :'<p>Les contrôles locaux n’ont pas relevé de lien client–tâche cassé, de projet inconnu, de date invalide ou d’identifiant répété.</p>')+
+ '</section>'+
+ box('Que faire ensuite ?', '<p>Ouvrez chaque fiche signalée, corrigez l’association ou la date, puis revenez relancer le diagnostic. Sauvegardez vos données avant une modification importante.</p>'+
+ '<div class="actions"><a class="button primary" href="#/control/backup">Sauvegarder mes données</a>'+
+ btn('Relancer le diagnostic','rerun-audit')+'</div>'+
+ '<p class="muted">Ce rapport n’est pas une certification de sécurité. Comptes, permissions, synchronisation et sauvegarde sur un autre appareil restent à valider séparément.</p>');
+ $('#main').innerHTML=view('État des données','Contrôler avant de partager ou de restaurer',content);
+ $('#main [data-act="rerun-audit"]')?.addEventListener('click',auditData);
+}
+
 function settings(){$('#main').innerHTML=view('Règles et sécurité','Protection des projets et limites des intégrations',box('Règles globales',note('Ces règles sont ajoutées aux demandes de mission copiées depuis CONTROL. Elles ne sont pas automatiquement appliquées sur les comptes Claude, ChatGPT ou Gemini.')+'<form id="global-rules">'+textarea('Règles générales','rules',db.globalRules||'','rows="8" maxlength="10000"')+'<button class="primary">Enregistrer</button></form>')+
  box('Notifications','<p class="muted">Les échéances apparaissent dans CONTROL, mais les notifications automatiques lorsque l’application est fermée exigeraient un service push privé. Ici, seuls les droits du navigateur peuvent être activés.</p>'+btn('Activer les notifications navigateur','notify')+'<p id="notification-state" class="muted"></p>')+
- box('Protection des données',note('CONTROL est hébergé publiquement sur GitHub Pages. Tes ajouts restent dans le navigateur de cet appareil. Ne saisis aucun mot de passe, clé API ou donnée confidentielle. La synchronisation privée multi-appareils et les actions authentifiées exigent une infrastructure distincte.')+'<div class="actions"><a class="button" href="#/control/backup">Sauvegardes</a><a class="button" href="#/control/library">Ressources</a></div>'));
+ box('Protection des données',note('CONTROL est hébergé publiquement sur GitHub Pages. Tes ajouts restent dans le navigateur de cet appareil. Ne saisis aucun mot de passe, clé API ou donnée confidentielle. La synchronisation privée multi-appareils et les actions authentifiées exigent une infrastructure distincte.')+'<div class="actions"><a class="button" href="#/control/backup">Sauvegardes</a><a class="button" href="#/control/audit">Vérifier mes données</a><a class="button" href="#/control/library">Ressources</a></div>'));
  registerForm('#global-rules',f=>{if(commitLocal(()=>{db.globalRules=String(f.get('rules')||'').trim()}))toast('Règles enregistrées sur cet appareil.')});
  $('#main [data-act="notify"]').onclick=async()=>{if(typeof Notification==='undefined')return toast('Notifications indisponibles.');try{const result=await Notification.requestPermission();if(!commitLocal(()=>{db.notifications=(result==='granted')}))return;$('#notification-state').textContent=result==='granted'?'Autorisation active : rappel local au prochain accès à CONTROL si une échéance a expiré. Pas de push lorsque l’application est fermée.':'Permission non accordée.'}catch{toast('Permission non prise en charge.')}};
 }
@@ -965,6 +1003,7 @@ function backup(){
  const brokenStores=backupStorageIssues();
  const recovery=brokenStores.filter(x=>x.key!==KEY).map(x=>'<p role="alert">Attention : les données de « '+h(x.label)+' » sont illisibles. L’export normal est bloqué pour éviter un fichier incomplet. '+btn('Télécharger la copie brute','download-raw:'+(x.key===HUB?'hub':x.key===AUTOS?'automations':'studio'))+'</p>').join('');
  $('#main').innerHTML=view('Sauvegarde et récupération','Protéger les données de CONTROL et changer d’appareil',note('Le stockage local peut disparaître lors d’un nettoyage du navigateur. Télécharge une sauvegarde régulière. Le fichier contient éventuellement des liens vers des espaces privés : utilise un mot de passe si tu le transfères.')+recovery+
+ box('État des données','<p class="muted">Avant une sauvegarde ou un partage, vérifiez les liens entre projets, clients et tâches. Le contrôle ne modifie rien.</p><a class="button" href="#/control/audit">Contrôler mes données</a>')+
  box('Exporter les informations','<p class="muted">Exporte en un fichier les projets, actions, brouillons d’automatisations <strong>et les agents, mémoires et discussions locaux du Studio IA lorsqu’ils existent</strong>. La sauvegarde peut être chiffrée avec un mot de passe. Elle ne récupère pas les conversations natives des comptes ChatGPT, Claude et Gemini. Si un autre onglet modifie les données pendant la préparation ou le chiffrement, l’export est annulé : recharge CONTROL et recommence.</p><form id="export-data">'+field('Mot de passe de chiffrement facultatif (12 caractères minimum)','password','','password','autocomplete="new-password"')+'<button class="primary">Télécharger ma sauvegarde</button></form>')+
  box('Importer une sauvegarde','<p class="muted">La première étape vérifie le fichier <strong>sans modifier les données</strong>. Compare les quantités, puis confirme le remplacement des espaces contenus dans la sauvegarde. <strong>Les anciens fichiers sans Studio IA laissent tes agents et mémoires actuels intacts.</strong></p>'+(localStoreCorrupt?'<p role="alert">Le stockage actuel n’est pas lisible. Tu peux télécharger les données brutes sans les modifier, puis restaurer un fichier valide.</p>'+btn('Télécharger les données brutes','download-corrupt'):'')+'<form id="import-data"><label>Fichier JSON<input class="field" name="file" type="file" required accept=".json,application/json"></label>'+field('Mot de passe du fichier','password','','password')+'<button type="submit">Examiner la sauvegarde</button></form><p class="muted" id="import-status" role="status" aria-live="polite"></p><section class="backup-restore-preview" id="import-preview" aria-label="Aperçu de restauration" hidden><div id="import-comparison"></div><div class="backup-restore-actions"><button type="button" class="primary" id="import-apply">Appliquer la restauration</button><button type="button" id="import-cancel">Annuler</button></div></section>'));
  registerForm('#export-data',async f=>{if(localStoreCorrupt)return toast('Export normal bloqué : utilise « Télécharger les données brutes » avant une restauration.');if(backupStorageIssues().length)return toast('Export bloqué : un espace local est illisible. Télécharge sa copie brute et restaure une sauvegarde valide.');const pw=String(f.get('password')||'');const pwInput=$('#export-data [name="password"]');if(pwInput)pwInput.value='';if(pw&&pw.length<12)return toast('12 caractères minimum ou champ vide.');let exportData;try{exportData=prepareBackupExport()}catch(error){return toast(String(error.message||'Sauvegarde impossible.'))}try{const data=await pack(exportData.data,pw);if(!window.CONTROL_BACKUP_REVIEW.unchanged(localStorage,exportData.original))return toast('Des données ont changé pendant le chiffrement : sauvegarde annulée. Relance la vérification.');const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='CONTROL-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Fichier téléchargé : conserve-le dans un emplacement sûr.')}catch{toast('Sauvegarde impossible sur ce navigateur.')}});
@@ -1267,6 +1306,6 @@ function paintSprints(selector,onlyBlockers=false){const out=$(selector);if(!out
  const n=Object.keys(sprintLoaded).length;if(n<SPRINT_IDS.length)out.innerHTML+=tiny((SPRINT_IDS.length-n)+' source(s) non vérifiée(s), information potentiellement partielle.');
  out.innerHTML+=tiny('Ces données sont des journaux GitHub, pas un suivi en direct de ChatGPT. Le statut en ligne nécessite une preuve de recette réelle.');
 }
-function render(input){ctx=input||ctx;init();try{const today=window.CONTROL_TASKS?.localDay()||new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a&&typeof a.title==='string'&&a.title.trim()&&a.status!=='done'&&a.status!=='cancelled'&&window.CONTROL_TASKS?.category(a,today)==='overdue').length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,team,clients,tools,aistudio,webbuilder,meetings,command,localai,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,goals,budget,backup,settings,search};(pages[page]||manager)()}
+function render(input){ctx=input||ctx;init();try{const today=window.CONTROL_TASKS?.localDay()||new Date().toISOString().slice(0,10),n=db.actions.filter(a=>a&&typeof a.title==='string'&&a.title.trim()&&a.status!=='done'&&a.status!=='cancelled'&&window.CONTROL_TASKS?.category(a,today)==='overdue').length;if(db.notifications&&n>0&&typeof Notification!=='undefined'&&Notification.permission==='granted'&&localStorage.getItem('control-notified-day')!==today){new Notification('CONTROL · Échéances',{body:n+' action(s) locale(s) en retard. Ouvre « À traiter ».',tag:'control-overdue'});localStorage.setItem('control-notified-day',today)}}catch{}const page=route().page;const pages={manager,team,clients,audit:auditData,tools,aistudio,webbuilder,meetings,command,localai,lab,inbox:intake,missions,calendar,activity,library,catalog,deploy,memory,goals,budget,backup,settings,search};(pages[page]||manager)()}
 window.CONTROL_CENTER={render};
 })();
