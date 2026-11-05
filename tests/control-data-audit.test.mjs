@@ -80,6 +80,16 @@ test('imported projects with repeated IDs are reported and do not silently overw
  assert.ok(result.issues.some(x=>x.kind==='project'&&x.code==='duplicate_id'));
 });
 
+test('malformed personalized project catalog cannot disappear silently on restore',()=>{
+ const imported={hub:{custom:{id:'custom-bad'}},command:{clients:[],actions:[]}};
+ const report=ctx.module.exports.inspectBackup(imported,{catalogProjects:[{id:'public-project'}]});
+ assert.ok(report.issues.some(x=>x.kind==='project'&&x.code==='malformed_collection'));
+ assert.equal(report.counts.errors,1);
+ const invalidList={hub:{custom:[null,{name:'missing project id'}]},command:{clients:[],actions:[]}};
+ const check=ctx.module.exports.inspectBackup(invalidList,{catalogProjects:[{id:'public-project'}]});
+ assert.ok(check.issues.some(x=>x.kind==='project'&&x.code==='missing_id'));
+});
+
 test('legacy backup without Clients works, malformed backups are refused',()=>{
  const legacy=ctx.module.exports.inspectBackup({command:{actions:[{id:'t1',title:'Historical task',status:'todo'}]}});
  assert.equal(legacy.status,'clean');
