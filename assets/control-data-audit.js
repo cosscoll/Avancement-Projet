@@ -103,13 +103,19 @@ function inspectBackup(data,{catalogProjects}={}){
  const hub=object(data.hub)?data.hub:{};
  const custom=Array.isArray(hub.custom)?hub.custom:[]; // Keep malformed rows for the read-only audit.
  const projects=catalogComplete?[...standard,...custom]:[];
- return inspect({
+ // A corrupted personalized-project list cannot be applied safely: the
+ // personal Hub would ignore or overwrite it on subsequent edits.
+ const unsafeCustom=Object.hasOwn(hub,'custom')&&(
+  !Array.isArray(hub.custom)||hub.custom.some(x=>!object(x)||!safeId(x.id)||typeof x.name!=='string'||!x.name.trim())
+ );
+ const report=inspect({
   projects,
   clients:Object.hasOwn(command,'clients')?command.clients:[],
   actions:Object.hasOwn(command,'actions')?command.actions:[],
   validateProjectCatalog:catalogComplete,
   importedCustomProjectsMalformed:Object.hasOwn(hub,'custom')&&!Array.isArray(hub.custom)
  });
+ return Object.freeze({...report,unrestorable:unsafeCustom});
 }
 const api={validDate,inspect,inspectBackup};
 if(typeof module==='object'&&module.exports)module.exports=api;
