@@ -26,6 +26,18 @@ test('the review shows counts only and warns when imported items would be lost',
  assert.equal(result.studioPreservedFromLegacy,true);
  assert.equal(JSON.stringify(result).includes('a0'),false,'comparison must not expose private records');
 });
+test('client records appear in the backup comparison without leaking any client name',()=>{
+ const before=fixture(2,1),after=fixture(1,1);
+ before.command.clients=[{id:'c1',name:'Confidentiel entreprise'},{id:'c2',name:'Client second'}];
+ after.command.clients=[{id:'c1',name:'Confidentiel entreprise'}];
+ const report=review.compare(after,before);
+ const clients=report.changes.find(x=>x.key==='clients');
+ assert.equal(clients.before,2);
+ assert.equal(clients.after,1);
+ assert.ok(report.losses.some(x=>x.key==='clients'));
+ assert.equal(JSON.stringify(report).includes('Confidentiel entreprise'),false);
+});
+
 test('untrusted backup is never executed and lacks account permissions',()=>{
  const data=fixture(1,1);data.command.actions[0]={id:'<script>alert(1)</script>',secret:'secret'};
  const report=review.compare(data,fixture());
