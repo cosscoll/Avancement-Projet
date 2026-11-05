@@ -123,6 +123,7 @@ try{
   return result.result?.value;
  }
  const ready=deadline;
+ const approveIntegrity=()=>js("(()=>{const box=document.querySelector('#import-integrity-consent');if(box&&!box.hidden){const input=document.querySelector('#import-integrity-ack');input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}));}return true})()");
  await command('Page.enable');await command('Runtime.enable');
  const production=process.env.CONTROL_BROWSER_PRODUCTION==='1';
  if(production)await verifyPublishedFiles();
@@ -806,8 +807,26 @@ try{
  await js("location.hash='#/control/backup'");
  await ready(()=>js("!!document.querySelector('#import-data')&&!!document.querySelector('#import-preview')"),10000)();
  const backupBefore=await js("({command:localStorage.getItem('control-command-v1'),hub:localStorage.getItem('control-hub-v2'),autos:localStorage.getItem('control-automations-v1')})");
+ // Imported data with a broken client reference must be shown and blocked until a separate acknowledgement.
+ await js("(()=>{const command=JSON.parse(localStorage.getItem('control-command-v1')||'{}');command.actions=Array.isArray(command.actions)?command.actions:[];command.missions=Array.isArray(command.missions)?command.missions:[];command.actions.push({id:'restore-audit-bad-link',title:'Test de lien client invalide',status:'todo',clientId:'client-introuvable-pour-test'});const envelope={format:'control-v2-plain',created:'2026-11-05T10:00:00Z',data:{command,hub:JSON.parse(localStorage.getItem('control-hub-v2')||'{}'),automations:JSON.parse(localStorage.getItem('control-automations-v1')||'{}')}};const dt=new DataTransfer();dt.items.add(new File([JSON.stringify(envelope)],'anomalie.json',{type:'application/json'}));const form=document.querySelector('#import-data');form.elements.file.files=dt.files;form.requestSubmit()})()");
+ await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
+ const restoreWarning=await js("({disabled:document.querySelector('#import-apply').disabled,warning:document.querySelector('#import-integrity').textContent,consent:document.querySelector('#import-integrity-consent').hidden,before:localStorage.getItem('control-command-v1')})");
+ assert.equal(restoreWarning.disabled,true,'Unsafe imported client link must hold restore action');
+ assert.equal(restoreWarning.consent,false,'Acknowledgement must be visible for anomalies');
+ assert.match(restoreWarning.warning,/erreur/);
+ assert.equal(restoreWarning.before,backupBefore.command,'Preflight must never overwrite data');
+ await js("document.querySelector('#import-apply').click()");
+ assert.equal(await js("localStorage.getItem('control-command-v1')"),backupBefore.command,'Unacknowledged restore must not write');
+ await js("(()=>{const ack=document.querySelector('#import-integrity-ack');ack.checked=true;ack.dispatchEvent(new Event('change',{bubbles:true}))})()");
+ assert.equal(await js("document.querySelector('#import-apply').disabled"),false,'Opt-in unlocks restore but does not apply it');
+ await js("document.querySelector('#import-cancel').click()");
+ assert.equal(await js("document.querySelector('#import-preview').hidden"),true);
+ assert.equal(await js("localStorage.getItem('control-command-v1')"),backupBefore.command);
+ log('CONTROL 12: imported broken client references require explicit opt-in, cancellation preserves storage');
+
  await js("(()=>{const command=JSON.parse(localStorage.getItem('control-command-v1')||'{}');command.actions=Array.isArray(command.actions)?command.actions:[];command.missions=Array.isArray(command.missions)?command.missions:[];command.actions.push({id:'recette-import-confirmation',title:'RECETTE-IMPORT-UNIQUEMENT',status:'todo'});const envelope={format:'control-v2-plain',created:'2026-10-22T10:00:00Z',data:{command,hub:JSON.parse(localStorage.getItem('control-hub-v2')||'{}'),automations:JSON.parse(localStorage.getItem('control-automations-v1')||'{}')}};const dt=new DataTransfer();dt.items.add(new File([JSON.stringify(envelope)],'recette.json',{type:'application/json'}));const form=document.querySelector('#import-data');form.elements.file.files=dt.files;form.requestSubmit()})()");
  await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
+ await approveIntegrity();
  assert.match(await js("document.querySelector('#import-comparison').textContent"),/Avant de remplacer mes données/);
  assert.deepEqual(await js("({command:localStorage.getItem('control-command-v1'),hub:localStorage.getItem('control-hub-v2'),autos:localStorage.getItem('control-automations-v1')})"),backupBefore,'Review must not mutate local storage');
  await js("(()=>{const before=localStorage.getItem('control-command-v1');localStorage.setItem('control-command-v1',before+' ');document.querySelector('#import-apply').click()})()");
@@ -815,11 +834,13 @@ try{
  assert.match(await js("document.querySelector('#import-status').textContent"),/ont changé/);
  await js("(()=>{const text=localStorage.getItem('control-command-v1');localStorage.setItem('control-command-v1',text.slice(0,-1));document.querySelector('#import-data').requestSubmit()})()");
  await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
+ await approveIntegrity();
  await js("document.querySelector('#import-cancel').click()");
  assert.equal(await js("document.querySelector('#import-preview').hidden"),true);
  assert.deepEqual(await js("({command:localStorage.getItem('control-command-v1'),hub:localStorage.getItem('control-hub-v2'),autos:localStorage.getItem('control-automations-v1')})"),backupBefore);
  await js("document.querySelector('#import-data').requestSubmit()");
  await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
+ await approveIntegrity();
  await js("(()=>{const confirmBefore=window.confirm;window.confirm=()=>false;try{document.querySelector('#import-apply').click()}finally{window.confirm=confirmBefore}})()");
  assert.equal(await js("document.querySelector('#import-preview').hidden"),false,'Declining restore must preserve preview');
  assert.deepEqual(await js("({command:localStorage.getItem('control-command-v1'),hub:localStorage.getItem('control-hub-v2'),autos:localStorage.getItem('control-automations-v1')})"),backupBefore);
@@ -831,12 +852,14 @@ try{
  // A rejected second-store write must roll back the first store, not claim a completed restore.
  await js("(()=>{window.__backupQuotaBefore={command:localStorage.getItem('control-command-v1'),hub:localStorage.getItem('control-hub-v2'),autos:localStorage.getItem('control-automations-v1')};document.querySelector('#import-data').requestSubmit()})()");
  await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
+ await approveIntegrity();
  await js("(()=>{const native=Storage.prototype.setItem;const yes=window.confirm;let blocked=false;Storage.prototype.setItem=function(key,value){if(key==='control-hub-v2'&&!blocked){blocked=true;throw new DOMException('quota','QuotaExceededError')}return native.call(this,key,value)};window.confirm=()=>true;try{document.querySelector('#import-apply').click()}finally{Storage.prototype.setItem=native;window.confirm=yes}})()");
  assert.equal(await js("localStorage.getItem('control-command-v1')"),await js("window.__backupQuotaBefore.command"),'Command store must roll back if the hub write fails');
  assert.equal(await js("localStorage.getItem('control-hub-v2')"),await js("window.__backupQuotaBefore.hub"));
  assert.match(await js("document.querySelector('#import-status').textContent"),/Restauration refusée/);
  await js("(()=>{localStorage.setItem('control-hub-v2','{invalid-hub');document.querySelector('#import-data').requestSubmit()})()");
  await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
+ await approveIntegrity();
  assert.match(await js("document.querySelector('#import-comparison').textContent"),/espace\(s\) locaux sont illisibles/);
  await js("(()=>{const original=window.confirm;window.confirm=()=>true;try{document.querySelector('#import-apply').click()}finally{window.confirm=original}})()");
  assert.equal(await js("localStorage.getItem('control-hub-v2')!=='{invalid-hub'"),true,'Confirmed backup import repairs malformed hub state');
@@ -846,6 +869,7 @@ try{
  // Same item counts must not conceal changed content during restore preview.
  await js("(()=>{const command=JSON.parse(localStorage.getItem('control-command-v1'));if(!command.actions?.length)throw Error('Missing synthetic action');command.actions[0].title='PRIVATE CONTENT MUST NOT LEAK TO REVIEW';const payload={format:'control-v2-plain',created:'2026-10-22T12:00:00Z',data:{command,hub:JSON.parse(localStorage.getItem('control-hub-v2')||'{}'),automations:JSON.parse(localStorage.getItem('control-automations-v1')||'{}')}};const transfer=new DataTransfer();transfer.items.add(new File([JSON.stringify(payload)],'safe-preview.json',{type:'application/json'}));const form=document.querySelector('#import-data');form.elements.file.files=transfer.files;form.requestSubmit()})()");
  await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
+ await approveIntegrity();
  const detail=await js("({text:document.querySelector('#import-comparison').textContent,table:document.querySelector('.backup-diff-table')?.textContent,cols:document.querySelectorAll('.backup-diff-table thead th').length})");
  assert.equal(detail.cols,6);
  assert.match(detail.text,/Modifications identifiées : 1/);
@@ -1117,6 +1141,7 @@ try{
  assert.equal(await js("document.querySelector('#import-preview').hidden"),true,'Wrong password cannot show the restore action');
  await js("(()=>{const f=document.querySelector('#import-data');f.elements.password.value='Une longue phrase de test privee';f.requestSubmit()})()");
  await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),20000)();
+ await approveIntegrity();
  assert.match(await js("document.querySelector('#import-comparison').textContent"),/Agents du Studio IA/);
  assert.match(await js("document.querySelector('#import-comparison').textContent"),/Mémoires du Studio IA/);
  assert.equal(await js("document.querySelector('#import-data [name=password]').value"),'','Password must be cleared after decrypting');
@@ -1125,6 +1150,7 @@ try{
  assert.equal(await js("localStorage.getItem('control-ai-studio-v1')"),beforeStudio,'Cancel must preserve the agent store');
  await js("(()=>{const f=document.querySelector('#import-data');f.elements.password.value='Une longue phrase de test privee';f.requestSubmit()})()");
  await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),20000)();
+ await approveIntegrity();
  await js("(()=>{const old=window.confirm;window.confirm=()=>true;try{document.querySelector('#import-apply').click()}finally{window.confirm=old}})()");
  assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].name"),'Assistant UX révisé');
  assert.match(await js("document.querySelector('#import-status').textContent"),/Restauration confirmée/);
