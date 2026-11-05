@@ -220,6 +220,18 @@ try{
  await command('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false});
  log('CONTROL 07: mobile task list retains the same four-tab navigation as home');
 
+ // P0 reliability: integrity report is read-only and reachable via backup.
+ await js("(()=>{window.__auditBefore=localStorage.getItem('control-command-v1');location.hash='#/control/audit'})()");
+ await ready(()=>js("!!document.querySelector('.control-audit-stats')"),8000)();
+ const auditScreen=await js("({summary:document.querySelector('.control-audit-stats')?.textContent||'',hasActions:!!document.querySelector('.control-audit-result'),backup:!!document.querySelector('a[href=\"#/control/backup\"]'),unchanged:localStorage.getItem('control-command-v1')===window.__auditBefore})");
+ assert.ok(auditScreen.hasActions);
+ assert.ok(auditScreen.backup);
+ assert.equal(auditScreen.unchanged,true,'Read-only audit must not touch personal data');
+ await js("document.querySelector('[data-act=rerun-audit]').click()");
+ assert.equal(await js("localStorage.getItem('control-command-v1')===window.__auditBefore"),true);
+ await js("delete window.__auditBefore");
+ log('CONTROL 11: read-only project/client/task integrity report does not mutate storage');
+
  await js("location.hash='#/control/localai'");
  await ready(()=>js("!!document.querySelector('[data-control-operator]')"),9000)();
 
