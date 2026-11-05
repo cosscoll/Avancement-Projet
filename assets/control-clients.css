@@ -47,3 +47,20 @@
  .control-client-form .formgrid{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){.control-client-row *{transition:none!important}}
+
+/* Compact related-task list. Each link opens the actual action, never a duplicate. */
+.control-client-task-list{
+ display:grid;gap:5px;margin:13px 0 10px;padding:12px;
+ border:1px solid #EED9CB;border-radius:11px;background:#FFFAF6;min-width:0;
+}
+.control-client-task-list>strong{display:block;font-size:11px;color:#8F492D;margin-bottom:3px}
+.control-client-task-list>a{display:flex;align-items:center;justify-content:space-between;gap:10px;
+ padding:8px 10px;border:1px solid #F0DFD3;border-radius:8px;background:#fff;color:#2C2927;text-decoration:none}
+.control-client-task-list>a:hover{border-color:#DFA98F;background:#FFF0E5}
+.control-client-task-list>a:focus-visible{outline:3px solid #B8431F;outline-offset:2px}
+.control-client-task-list>a span{font-size:12px;font-weight:650;min-width:0;overflow-wrap:anywhere}
+.control-client-task-list>a small{font-size:10px;color:#76645B;white-space:nowrap}
+.control-client-task-list>p{margin:4px 0 0;font-size:11px}
+@media(max-width:420px){
+ .control-client-task-list>a{align-items:flex-start;flex-direction:column;gap:3px}
+}
