@@ -78,7 +78,7 @@ test('New stylesheet is loaded after old layout and survives offline PWA updates
  const old=html.indexOf('href="assets/workspace-shell.css"');
  const fresh=html.indexOf('href="assets/control-home-v6.css"');
  assert.ok(old>=0&&fresh>old);
- assert.match(sw,/control-shell-v84/);
+ assert.match(sw,/control-shell-v85/);
  assert.match(sw,/control-public-data-v77/);
  assert.match(sw,/assets\/control-home-v6\.css/);
 });
