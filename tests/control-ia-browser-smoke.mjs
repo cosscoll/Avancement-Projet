@@ -807,6 +807,16 @@ try{
  await js("location.hash='#/control/backup'");
  await ready(()=>js("!!document.querySelector('#import-data')&&!!document.querySelector('#import-preview')"),10000)();
  const backupBefore=await js("({command:localStorage.getItem('control-command-v1'),hub:localStorage.getItem('control-hub-v2'),autos:localStorage.getItem('control-automations-v1')})");
+ // CONTROL 14: a portable custom project must be counted even when hub.projects is absent.
+ await js("(()=>{const command=JSON.parse(localStorage.getItem('control-command-v1')||'{}');const hub=JSON.parse(localStorage.getItem('control-hub-v2')||'{}');hub.custom=[...(Array.isArray(hub.custom)?hub.custom:[]),{id:'custom-restore-count-test',name:'Dossier confidentiel de test'}];const envelope={format:'control-v2-plain',created:'2026-11-05T10:00:00Z',data:{command,hub,automations:JSON.parse(localStorage.getItem('control-automations-v1')||'{}')}};const dt=new DataTransfer();dt.items.add(new File([JSON.stringify(envelope)],'projet-test.json',{type:'application/json'}));const form=document.querySelector('#import-data');form.elements.file.files=dt.files;form.requestSubmit()})()");
+ await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
+ const projectImportPreview=await js("(()=>{const row=[...document.querySelectorAll('.backup-diff-table tbody tr')].find(x=>x.querySelector('th')?.textContent?.includes('Projets personnalisés'));const cells=row?[...row.querySelectorAll('td')].map(x=>Number(x.textContent)):[];return {hasRow:!!row,before:cells[0],after:cells[1],storageUnchanged:localStorage.getItem('control-hub-v2')!==null}})()");
+ assert.equal(projectImportPreview.hasRow,true,'Custom projects must be visible in the backup comparison');
+ assert.equal(projectImportPreview.after,projectImportPreview.before+1,'One imported custom project must add one project, not zero');
+ await js("document.querySelector('#import-cancel').click()");
+ assert.equal(await js("localStorage.getItem('control-hub-v2')"),backupBefore.hub,'Inspecting and cancelling project import must not write');
+ log('CONTROL 14: imported custom projects are counted without mutating local project data');
+
  // Imported data with a broken client reference must be shown and blocked until a separate acknowledgement.
  await js("(()=>{const command=JSON.parse(localStorage.getItem('control-command-v1')||'{}');command.actions=Array.isArray(command.actions)?command.actions:[];command.missions=Array.isArray(command.missions)?command.missions:[];command.actions.push({id:'restore-audit-bad-link',title:'Test de lien client invalide',status:'todo',clientId:'client-introuvable-pour-test'});const envelope={format:'control-v2-plain',created:'2026-11-05T10:00:00Z',data:{command,hub:JSON.parse(localStorage.getItem('control-hub-v2')||'{}'),automations:JSON.parse(localStorage.getItem('control-automations-v1')||'{}')}};const dt=new DataTransfer();dt.items.add(new File([JSON.stringify(envelope)],'anomalie.json',{type:'application/json'}));const form=document.querySelector('#import-data');form.elements.file.files=dt.files;form.requestSubmit()})()");
  await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
