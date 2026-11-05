@@ -15,7 +15,7 @@ function validDate(x){
  return Number.isFinite(d.getTime())&&d.toISOString().slice(0,10)===x;
 }
 function safeId(x){return typeof x==='string'&&x.length>0&&x.length<=180&&!/[\u0000-\u001f]/.test(x)}
-function inspect({projects=[],clients=[],actions=[],validateProjectCatalog=true}={}){
+function inspect({projects=[],clients=[],actions=[],validateProjectCatalog=true,importedCustomProjectsMalformed=false}={}){
  const projectList=Array.isArray(projects)?projects:[];
  const clientList=Array.isArray(clients)?clients:[];
  const actionList=Array.isArray(actions)?actions:[];
@@ -36,8 +36,13 @@ function inspect({projects=[],clients=[],actions=[],validateProjectCatalog=true}
   }
  }
  if(!Array.isArray(projects))issue({kind:'project',code:'malformed_collection',severity:'error',message:'Liste des projets non valide.'});
+ if(importedCustomProjectsMalformed)issue({kind:'project',code:'malformed_collection',severity:'error',message:'Liste des projets personnalisés de la sauvegarde non valide.'});
  if(!Array.isArray(clients))issue({kind:'client',code:'malformed_collection',severity:'error',message:'Collection Clients non valide. Sauvegardez avant toute correction.'});
  if(!Array.isArray(actions))issue({kind:'task',code:'malformed_collection',severity:'error',message:'Collection Tâches non valide. Sauvegardez avant toute correction.'});
+ for(const project of projectList){
+  if(!isRecord(project))issue({kind:'project',code:'malformed',severity:'error',message:'Fiche projet non valide.'});
+  else if(!safeId(project.id))issue({kind:'project',code:'missing_id',severity:'error',message:'Identifiant de projet absent ou invalide.'});
+ }
  duplicates(projectList,'project');
  for(const client of clientList){
   if(!isRecord(client)){issue({kind:'client',code:'malformed',severity:'error',message:'Fiche client non valide.'});continue;}
@@ -102,7 +107,8 @@ function inspectBackup(data,{catalogProjects}={}){
   projects,
   clients:Object.hasOwn(command,'clients')?command.clients:[],
   actions:Object.hasOwn(command,'actions')?command.actions:[],
-  validateProjectCatalog:catalogComplete
+  validateProjectCatalog:catalogComplete,
+  importedCustomProjectsMalformed:Object.hasOwn(hub,'custom')&&!Array.isArray(hub.custom)
  });
 }
 const api={validDate,inspect,inspectBackup};
