@@ -1,6 +1,38 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 5 novembre 2026 · version de travail 1.4 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 5 novembre 2026 · version de travail 1.5 · ciblage indépendants et équipes de 2 à 10 personnes_
 
+
+## Session structurée — Sauvegardes portables et sécurité collaborative (5 novembre 2026)
+
+**Objectif :** avancer plusieurs missions liées dans la même session, sans automatisation, sans ouvrir le Cloud et sans arrêter le travail à une seule amélioration de surface.
+
+### Lot A — Fiabiliser le transfert manuel de projets entre appareils
+
+**Livré sur main :** l'aperçu d'import détecte les incohérences client–tâche et, lorsqu'un catalogue de projets connu est disponible, il vérifie également les références des projets du fichier. Les projets de base sont fournis par le catalogue CONTROL ; les projets personnels sont reconstruits à partir de la liste importée du Hub. Cette distinction évite les fausses alertes de projet manquant en l'absence de catalogue complet. Les références orphelines et identifiants dupliqués sont signalés sans écriture. Le formulaire de sauvegarde inclut un **guide repliable de transfert entre deux appareils** (export, déplacement du fichier, inspection avant remplacement, vérification après restauration). Le transfert reste manuel et remplace les données, sans fusion ni synchronisation automatique.
+
+**Preuves de code :** assets/control-data-audit.js, assets/command-center.js et tests/control-data-audit.test.mjs. PWA **v85**, ressources critiques précachées.
+
+### Lot B — Préparer sérieusement les rôles et le partage
+
+**Livré dans le dépôt, mais non activé dans l'application :**
+- Le contrat exécutable security/control-access-contract.js décrit un modèle **deny by default** avec rôles propriétaire, administrateur, éditeur et lecteur. Il refuse les non-membres, les sessions invalides, les permissions de lecture/écriture non autorisées et l'exécution automatique des IA, même lorsqu'un simple drapeau local le demande.
+- Les agents, mémoires, conversations et connexions aux fournisseurs IA ne deviennent **jamais publics du seul fait de l'appartenance à un projet**. Un partage IA exige une action explicite et doit être appliqué côté serveur.
+- Le dossier docs/CONTROL_SECURITY_AB_ACCEPTANCE_2026_11_05.md définit le modèle cible, les contraintes RLS, les interdictions (user_metadata, clés secrètes côté client, partage implicite) et **20 scénarios de recette A/B** à vérifier avec deux vrais utilisateurs.
+- Les tests/control-access-contract.test.mjs protègent le contrat attendu. **Ce JavaScript est un outil de recette, pas un mécanisme de sécurité ni une intégration dans le site.**
+
+### Lot C — Vérifications et limites
+
+**31 contrôles ciblés réussis sur 31** lors de cette session, dont 26 tests de logique/contrat et 5 vérifications de syntaxe. Les anciens tests et la recette navigateur complète sur GitHub Pages ne sont pas considérés exécutés par cette vérification ciblée.
+
+**Reste bloquant P0 :** projet Supabase indépendant actif et inventorié, vérification réelle des six tables et policies existantes, essais JWT/PostgREST avec comptes A/B, révocation, suppression/export de compte, tests sur deux appareils, et autorisation explicite de lancement. Les huit contrôles de config/cloud.json restent à false et Cloud demeure désactivé.
+
+### Protocole des prochaines longues sessions
+
+1. Commencer par le bilan des fonctionnalités et des problèmes attestés sur main.
+2. Regrouper les changements en une **mission utilisateur cohérente** (par exemple sauvegardes + diagnostic + transfert) plutôt que multiplier les micro-commits sans bénéfice visible.
+3. Développer puis exécuter les tests pertinents, traiter les régressions et actualiser la PWA pour chaque changement de code hors ligne.
+4. Livrer un bilan court : réellement disponible, seulement préparé, encore bloqué, et preuves GitHub. Ne jamais annoncer « Cloud fonctionnel » sur la base de tests locaux.
+5. Aucun déclenchement récurrent ou travail en arrière-plan sans nouvel accord explicite.
 
 ## Sprint P0 — contrôle de sauvegarde avant restauration (5 novembre 2026)
 
