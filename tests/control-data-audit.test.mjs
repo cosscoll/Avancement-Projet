@@ -25,6 +25,33 @@ test('clean, empty and legacy unlinked tasks have no false positives',()=>{
  assert.equal(inspect().status,'clean');
 });
 
+test('backup preflight reports broken client links without assuming a complete project catalog',()=>{
+ const file={
+  command:{
+   clients:[{id:'c1',name:'Organisation privée',project:'p1',status:'En cours'}],
+   actions:[{id:'t1',title:'À faire',project:'p1',clientId:'c1',status:'todo'},
+    {id:'t2',title:'Sans client',project:'p1',clientId:'missing',status:'todo'},
+    {id:'t3',title:'Autre projet',project:'p2',clientId:'c1',status:'todo'}]
+  },hub:{projects:{}},automations:{entries:[]}
+ };
+ const original=JSON.stringify(file);
+ const audit=ctx.module.exports.inspectBackup(file);
+ assert.equal(audit.counts.errors,2);
+ assert.ok(audit.issues.some(x=>x.code==='orphan_client'));
+ assert.ok(audit.issues.some(x=>x.code==='cross_project_client'));
+ assert.ok(!audit.issues.some(x=>x.code==='orphan_project'),'Partial Hub catalog must never generate false missing-project warnings');
+ assert.equal(JSON.stringify(file),original,'Backup preflight must be strictly read-only');
+ assert.equal(JSON.stringify(audit).includes('Organisation privée'),false);
+});
+test('legacy backup without Clients works, malformed backups are refused',()=>{
+ const legacy=ctx.module.exports.inspectBackup({command:{actions:[{id:'t1',title:'Historical task',status:'todo'}]}});
+ assert.equal(legacy.status,'clean');
+ assert.throws(()=>ctx.module.exports.inspectBackup({command:null}),/invalide/);
+ assert.throws(()=>ctx.module.exports.inspectBackup({}),/invalide/);
+ const bad=ctx.module.exports.inspectBackup({command:{clients:{not:'array'},actions:[]}});
+ assert.ok(bad.issues.some(x=>x.code==='malformed_collection'));
+});
+
 test('client associations detect missing, cross-project and missing project cases',()=>{
  const src=good();
  src.actions.push(
@@ -130,6 +157,25 @@ test('feature finder exposes local audit and clients without promising Cloud ava
  assert.match(finder,/personal:'#\/control\/audit',cloud:null/);
  assert.match(finder,/id:'clients',title:'Suivre mes clients'/);
  assert.match(finder,/personal:'#\/control\/clients',cloud:null/);
+});
+
+test('backup preview is read-only and requires consent when anomalies are detected',()=>{
+ const command=read('assets/command-center.js');
+ const backup=command.slice(command.indexOf('function backup(){'),command.indexOf('// Search only live, authorized device-local records.'));
+ assert.match(backup,/id="import-integrity"/);
+ assert.match(backup,/id="import-integrity-consent"/);
+ assert.match(backup,/id="import-integrity-ack"/);
+ assert.match(backup,/window\.CONTROL_DATA_AUDIT\?\.inspectBackup\(data\)/);
+ assert.match(backup,/pending=\{data,original,integrity,requiresIntegrityAcknowledgement:/);
+ assert.match(backup,/if\(staged\.requiresIntegrityAcknowledgement&&!integrityAck\.checked\)/);
+ assert.match(backup,/applyButton\.disabled=count>0/);
+ assert.match(backup,/integrityAck\.checked=false/);
+ assert.match(backup,/resetPreview\(\);/);
+ assert.match(backup,/restore\.unchanged\(localStorage,staged\.original\)/);
+ assert.ok(backup.indexOf('const integrity=window.CONTROL_DATA_AUDIT')<backup.indexOf('pending={data,original,integrity'));
+ const css=read('assets/control-data-audit.css');
+ assert.match(css,/\.control-import-consent\[hidden\]/);
+ assert.match(css,/#main #import-apply:disabled/);
 });
 
 test('client audit links focus local records without exposing them elsewhere',()=>{
