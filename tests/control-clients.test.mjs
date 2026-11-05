@@ -109,7 +109,7 @@ test('Client linked task list opens real tasks and deletion/changes do not delet
  assert.match(block,/tasksForClient\(db\.actions,r\.id\)/);
  assert.match(block,/href="#\/control\/inbox\?task='\+encodeURIComponent\(t\.id\)/);
  assert.match(block,/actionHref='#\/control\/inbox\/new\?client='\+encodeURIComponent\(r\.id\)/);
- assert.match(block,/const unlink=clientTool\.tasksForClient\(db\.actions,record\.id\)\.filter/);
+ assert.match(block,/const unlink=db\.actions\.filter\(t=>t\?\.clientId===record\.id/);
  assert.match(block,/for\(const task of unlink\)\{delete task\.clientId/);
  assert.match(block,/for\(const task of db\.actions\)if\(task\?\.clientId===item\.id\)/);
  assert.match(block,/confirm\('Supprimer cette fiche locale/);
