@@ -63,6 +63,60 @@ test('Malformed imported legacy dates do not crash sorting',()=>{
  assert.deepEqual(Array.from(sort(rows),x=>x.id),['okay','bad']);
 });
 
+test('Task-client association refuses missing clients and other projects',()=>{
+ const records=[{id:'a',name:'Atelier',project:'p1'},{id:'global',name:'Prospect global',project:''}];
+ assert.equal(ctx.module.exports.clientForTask('a','p1',records).ok,true);
+ assert.equal(ctx.module.exports.clientForTask('a','p2',records).ok,false);
+ assert.equal(ctx.module.exports.clientForTask('missing','p1',records).ok,false);
+ assert.equal(ctx.module.exports.clientForTask('global','p2',records).ok,true);
+ assert.equal(ctx.module.exports.clientForTask('','p2',records).ok,true);
+ assert.deepEqual(Array.from(ctx.module.exports.eligibleForProject(records,'p2'),x=>x.id),['global']);
+ assert.deepEqual(Array.from(ctx.module.exports.eligibleForProject(records,'p1'),x=>x.id),['a','global']);
+});
+
+test('Linked tasks are found by stable ID and preserve unrelated records',()=>{
+ const tasks=[
+  {id:'t1',title:'Relancer',clientId:'a',status:'todo'},
+  {id:'t2',title:'Réunion',clientId:'a',status:'done'},
+  {id:'t3',title:'Divers',clientId:'b',status:'doing'},
+  {id:'t4',title:'Annulée',clientId:'a',status:'cancelled'},
+  {id:'t5',title:'  ',clientId:'a',status:'todo'}
+ ];
+ assert.deepEqual(Array.from(ctx.module.exports.tasksForClient(tasks,'a'),x=>x.id),['t1','t2']);
+ assert.deepEqual(Array.from(ctx.module.exports.tasksForClient(tasks,'b'),x=>x.id),['t3']);
+ assert.equal(tasks[0].clientId,'a','Lookup must be read-only');
+});
+
+test('Task creation from a client keeps the true client link, never only its project',()=>{
+ const command=read('assets/command-center.js');
+ const index=read('index.html');
+ assert.match(command,/requestParams\.get\('client'\)/);
+ assert.match(command,/clientTool\.clientForTask\(requestClientId,createProject,db\.clients\)/);
+ assert.match(command,/field\('Action','title',createClientId\?requestedClient\.nextStep/);
+ assert.match(command,/clientField\(createProject,createClientId\)/);
+ assert.match(command,/clientTool\.clientForTask\(clientId,data\.task\.project,db\.clients\)/);
+ assert.match(command,/\.\.\.\(clientId\?\{clientId\}:\{\}\)/);
+ assert.match(command,/if\(clientId\)task\.clientId=clientId;else delete task\.clientId/);
+ assert.match(command,/querySelectorAll\('form\[data-task-edit\],#new-action'\)/);
+ assert.match(command,/Client : '\+h\(clientLabel\)/);
+ assert.match(command,/clientLabel\]\.join\(' '\)/);
+ assert.match(index,/assets\/control-clients\.js/);
+});
+
+test('Client linked task list opens real tasks and deletion/changes do not delete actions',()=>{
+ const command=read('assets/command-center.js');
+ const block=command.slice(command.indexOf('function clients(){'),command.indexOf('function team(){'));
+ assert.match(block,/tasksForClient\(db\.actions,r\.id\)/);
+ assert.match(block,/href="#\/control\/inbox\?task='\+encodeURIComponent\(t\.id\)/);
+ assert.match(block,/actionHref='#\/control\/inbox\/new\?client='\+encodeURIComponent\(r\.id\)/);
+ assert.match(block,/const unlink=clientTool\.tasksForClient\(db\.actions,record\.id\)\.filter/);
+ assert.match(block,/for\(const task of unlink\)\{delete task\.clientId/);
+ assert.match(block,/for\(const task of db\.actions\)if\(task\?\.clientId===item\.id\)/);
+ assert.match(block,/confirm\('Supprimer cette fiche locale/);
+ assert.ok(!block.includes('db.actions=db.actions.filter('));
+ assert.match(command,/linked\?\.name/);
+ assert.match(command,/client : '\+linked\.name/);
+});
 test('Client pages are reachable from projects, management shortcuts and universal search',()=>{
  const html=read('index.html');
  const command=read('assets/command-center.js');
