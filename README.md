@@ -1,3 +1,11 @@
+## 5 novembre 2026 — CONTROL 10 : vrai lien Clients ↔ Tâches
+
+**Développement sur `main` :** les tâches peuvent désormais conserver l'identifiant d'une fiche client existante (et pas seulement le projet). Depuis Clients, « Créer une tâche » préremplit l'organisation, son projet et sa prochaine étape ; la tâche n'est créée qu'après validation. Depuis la fiche client, les tâches associées sont visibles, avec liens vers chacune et vue filtrée regroupant tâches actives et terminées. La recherche des tâches et la recherche universelle reconnaissent le client lié.
+
+**Protection des données :** l'association ne peut référencer un client inexistant ou un client d'un autre projet. Une modification de projet ou suppression de fiche dissocie uniquement les tâches devenues incompatibles après confirmation, sans effacer les tâches. Les écritures restent transactionnelles, avec détection inter-onglets et prise en compte des sauvegardes existantes. **Aucun accès Cloud ou connecteur externe activé.**
+
+**Tests :** nouvelles vérifications de relation client–tâche dans `tests/control-clients.test.mjs`, contrôle de la syntaxe du centre de commande et de la version PWA `v82`. Ces contrôles du code ne remplacent pas la recette sur le site réellement déployé. [Cahier des charges v1.2](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md).
+
 ## 5 novembre 2026 — CONTROL 09 : suivi client local relié aux projets
 
 **Fonction du cahier des charges développée sur `main` :** page `#/control/clients` pour suivre les organisations clientes, leur statut (Prospect / En cours / Terminé), le projet associé et une prochaine étape datée. Création, recherche, filtres, édition et suppression confirmée. Accès depuis la zone avancée de l'accueil, le centre de pilotage et les projets. Un bouton ouvre la création de tâche avec le projet déjà sélectionné ; aucun rappel ni tâche n'est créé automatiquement.
