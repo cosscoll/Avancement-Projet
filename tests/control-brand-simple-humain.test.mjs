@@ -57,8 +57,8 @@ test('PWA manifest, SVG and offline precache share the new appearance',()=>{
  assert.ok(manifest.icons.some(i=>i.sizes==='512x512'));
  assert.match(html,/meta name="theme-color" content="#FFF8F2"/);
  assert.match(cloud,/meta name="theme-color" content="#FFF8F2"/);
- assert.match(sw,/control-shell-v82/);
- assert.match(sw,/control-public-data-v82/);
+ assert.match(sw,/control-shell-v83/);
+ assert.match(sw,/control-public-data-v83/);
  const paths=sw.match(/assets\/control-brand-simple-humain\.css/g)||[];
  assert.equal(paths.length,2,'Theme must be cached both as asset and critical shell resource');
 });
