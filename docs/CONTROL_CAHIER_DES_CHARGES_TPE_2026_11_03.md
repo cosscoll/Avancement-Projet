@@ -1,6 +1,38 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 5 novembre 2026 · version de travail 1.3 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 5 novembre 2026 · version de travail 1.4 · ciblage indépendants et équipes de 2 à 10 personnes_
 
+
+## Sprint P0 — contrôle de sauvegarde avant restauration (5 novembre 2026)
+
+**Problème corrigé :** l'aperçu de restauration comparait déjà les quantités de fichiers locaux, mais il ne vérifiait pas si les relations clients ↔ tâches du fichier importé étaient cohérentes. Une sauvegarde structurellement recevable pouvait donc être importée avec un client manquant, un lien entre deux projets différents ou une date impossible, sans avertissement adapté.
+
+**Fonction disponible sur `main` :**
+- Le formulaire « Examiner la sauvegarde » réalise désormais **deux contrôles successifs**, sans écriture : validation du format et comparaison des volumes, puis audit des clients et tâches contenus dans le fichier.
+- Le diagnostic détecte dates impossibles, statuts/priorités atypiques, doublons d'identifiants, titres absents, client lié introuvable, liens entre projets différents et collections locales mal structurées. Son résumé contient des **comptages et messages génériques**, jamais le nom du client ou le texte d'une tâche.
+- Un ancien fichier dont le catalogue complet des projets est inconnu **n'est pas automatiquement accusé d'avoir des projets manquants**. La vérification des projets absents nécessite le catalogue local complet après restauration.
+- Si le diagnostic signale au moins un problème, le bouton « Appliquer la restauration » est désactivé jusqu'à ce que l'utilisateur coche **« J'ai pris connaissance des anomalies »**. Le clic final demande toujours une confirmation distincte.
+- Un nouvel examen, un changement de fichier/mot de passe ou une annulation réinitialise l'autorisation. Un clic déclenché autrement que par l'interface reste protégé par une validation explicite dans le gestionnaire d'événements.
+- Une modification du stockage par un autre onglet entre l'examen et la confirmation continue d'annuler la restauration. Le mécanisme de retour arrière et la compatibilité des sauvegardes anciennes sont conservés.
+- Aucun diagnostic ne modifie automatiquement les données, n'envoie de requête extérieure ou n'active l'accès Cloud. Mise en cache PWA **v84** ; identité « Simple & Humain » inchangée.
+
+**Tests et preuves :** les tests unitaires de `tests/control-data-audit.test.mjs` incluent le cas client introuvable, l'incompatibilité de projet, une sauvegarde historique sans fiches Clients, les collections malformées, la non-divulgation de données et l'absence de modification du fichier. La recette Chromium `tests/control-ia-browser-smoke.mjs` inclut un fichier volontairement incohérent : son bouton doit être désactivé, les données inchangées, puis une autorisation explicite doit permettre de poursuivre sans déclencher la restauration ; l'annulation doit conserver l'état initial. **L'exécution complète de la recette sur le navigateur public n'a pas été confirmée.**
+
+### Critères d'acceptation avant une vraie ouverture multi-appareil
+
+| Contrôle | Critère |
+| --- | --- |
+| Export à partir du navigateur A | Fichier réellement téléchargé, non tronqué, identifiable, contenant les clients et liens clientId |
+| Aperçu avant import dans le navigateur B | Quantités avant/après compréhensibles et anomalies de relations détectées sans aucune écriture |
+| Sauvegarde chiffrée | Mot de passe erroné refusé, mot de passe correct accepté pour inspection ; jamais réaffiché |
+| Anomalie volontaire | Bouton désactivé jusqu'à validation explicite, puis confirmation finale toujours demandée |
+| Données modifiées pendant l'examen | Refus, absence d'écrasement silencieux |
+| Échec d'écriture pendant la restauration | Retour arrière des valeurs écrites, ou indication explicite si l'écriture concurrente rend le retour arrière incertain |
+| Rechargement et comparaison A/B | Comptage et liaisons client–projet–tâche identiques après restauration, avec aucun envoi externe |
+| PWA / responsive | Fonctionnement hors ligne sur shell précaché, écrans 320 / 390 / 1440 px, navigation clavier |
+| Données confidentielles | Aucune information personnelle ou conversation privée affichée dans les diagnostics de sauvegarde |
+| Sécurité Cloud | Toujours désactivé jusqu'aux huit validations de `config/cloud.json` |
+
+**Étape P0 encore ouverte :** conduire la vraie recette entre deux profils de navigateur indépendants, puis établir les comptes A/B du backend indépendant (RLS/JWT, révocation, suppression/export), uniquement après disponibilité du projet et accord explicite. Cette livraison améliore le transfert **manuel** de fichiers ; elle ne constitue ni la synchronisation Cloud ni l'import natif des conversations ChatGPT, Claude et Gemini.
 
 ## Sprint de fiabilité des données — CONTROL 11 (5 novembre 2026)
 
