@@ -85,14 +85,24 @@ function inspect({projects=[],clients=[],actions=[],validateProjectCatalog=true}
 }
 // Backup snapshots can contain only part of the project catalog (or no catalog).
 // Audit all client/task relations, but do not invent missing-project findings.
-function inspectBackup(data){
- const command=data&&typeof data==='object'&&!Array.isArray(data)?data.command:null;
- if(!command||typeof command!=='object'||Array.isArray(command))
-  throw Error('Sauvegarde CONTROL invalide.');
+function inspectBackup(data,{catalogProjects}={}){
+ const object=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
+ const command=object(data)?data.command:null;
+ if(!object(command))throw Error('Sauvegarde CONTROL invalide.');
+ // The app stores personalized projects in hub.custom; built-in projects are
+ // provided by the catalog and are not re-exported with each backup.
+ // Only trust project membership when the caller supplies an actual
+ // built-in catalog. Otherwise unknown projects remain unverified, not errors.
+ const catalogComplete=Array.isArray(catalogProjects);
+ const standard=catalogComplete?catalogProjects.filter(x=>object(x)&&safeId(x.id)):[];
+ const hub=object(data.hub)?data.hub:{};
+ const custom=Array.isArray(hub.custom)?hub.custom.filter(x=>object(x)&&safeId(x.id)):[];
+ const projects=catalogComplete?[...standard,...custom]:[];
  return inspect({
-  projects:[],clients:Object.hasOwn(command,'clients')?command.clients:[],
+  projects,
+  clients:Object.hasOwn(command,'clients')?command.clients:[],
   actions:Object.hasOwn(command,'actions')?command.actions:[],
-  validateProjectCatalog:false
+  validateProjectCatalog:catalogComplete
  });
 }
 const api={validDate,inspect,inspectBackup};
