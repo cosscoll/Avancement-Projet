@@ -117,6 +117,24 @@ test('Client linked task list opens real tasks and deletion/changes do not delet
  assert.match(command,/linked\?\.name/);
  assert.match(command,/client : '\+linked\.name/);
 });
+test('Client task view includes completed actions and can filter the inbox by client ID',()=>{
+ const command=read('assets/command-center.js');
+ const clients=command.slice(command.indexOf('function clients(){'),command.indexOf('function team(){'));
+ const inbox=command.slice(command.indexOf('function intake(){'),command.indexOf('function clients(){'));
+ assert.match(clients,/control-client-all-tasks/);
+ assert.match(clients,/href="#\/control\/inbox\?client='\+encodeURIComponent\(r\.id\)/);
+ assert.match(inbox,/const filterClientId=requestedClient\?requestClientId:''/);
+ assert.match(inbox,/inboxFilter='all'/);
+ assert.match(inbox,/\['all','Toutes les tâches'\]/);
+ assert.match(inbox,/data-task-client="/);
+ assert.match(inbox,/id="control-task-client"/);
+ assert.match(inbox,/row\.dataset\.taskClient===selectedClient/);
+ assert.match(inbox,/inboxFilter==='all'\?true/);
+ const css=read('assets/control-clients.css');
+ assert.match(css,/\.control-task-toolbar:has\(#control-task-client\)/);
+ assert.match(css,/@media\(max-width:700px\)/);
+});
+
 test('Client pages are reachable from projects, management shortcuts and universal search',()=>{
  const html=read('index.html');
  const command=read('assets/command-center.js');
