@@ -64,3 +64,30 @@
 @media(max-width:420px){
  .control-client-task-list>a{align-items:flex-start;flex-direction:column;gap:3px}
 }
+
+/* Optional third filter on the task inbox appears only when clients are known. */
+body.control-shell-v3 .control-task-toolbar:has(#control-task-client){
+ grid-template-columns:minmax(0,1.35fr) repeat(2,minmax(150px,.75fr));
+}
+body.control-shell-v3 .control-task-toolbar:has(#control-task-client)>label{min-width:0}
+body.control-shell-v3 .control-task-toolbar #control-task-client{border-color:#E8D5C8!important;background:#FFFDFB!important}
+body.control-shell-v3 .control-task-summary:has(.control-task-edit[open]){
+ flex-wrap:wrap;align-items:flex-start;
+}
+body.control-shell-v3 .control-task-summary:has(.control-task-edit[open]) .control-task-actions{
+ width:100%;min-width:0;flex-direction:column;align-items:stretch;
+}
+body.control-shell-v3 .control-task-summary:has(.control-task-edit[open]) .control-task-edit{
+ width:100%;max-width:none;min-width:0;
+}
+body.control-shell-v3 .control-task-summary:has(.control-task-edit[open]) .control-task-edit-form{
+ max-width:720px;
+}
+@media(max-width:800px){
+ body.control-shell-v3 .control-task-toolbar:has(#control-task-client){grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.control-shell-v3 .control-task-toolbar:has(#control-task-client)>label:first-child{grid-column:1/-1}
+}
+@media(max-width:700px){
+ body.control-shell-v3 .control-task-toolbar:has(#control-task-client){grid-template-columns:1fr}
+ body.control-shell-v3 .control-task-toolbar:has(#control-task-client)>label:first-child{grid-column:auto}
+}
