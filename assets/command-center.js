@@ -116,6 +116,7 @@ function intake(){
   requestedClient&&ctx.projects.some(p=>p.id===requestedClient.project)?requestedClient.project:'';
  const createClientId=requestedClient&&clientTool.clientForTask(requestClientId,createProject,db.clients).ok?requestClientId:'';
  const filterClientId=requestedClient?requestClientId:'';
+ if(filterClientId&&route().param!=='new')inboxFilter='all';
  const clientOptions=(project,selected='')=>{
   const matching=clientTool.eligibleForProject(db.clients,project);
   const old=selected&&!matching.some(x=>x.id===selected)?
@@ -182,7 +183,7 @@ function intake(){
  note('Données enregistrées uniquement dans ce navigateur. Gmail, les autres IA et les tâches de votre équipe ne sont pas synchronisés.')+
  box('Mes tâches et validations','<div class="control-task-toolbar"><label>Rechercher une tâche<input id="control-task-search" class="field" type="search" autocomplete="off" placeholder="Nom de la tâche, projet…" maxlength="180" value="'+h(inboxSearch)+'"></label>'+
  '<label>Afficher<select id="control-task-filter" class="field">'+
- [['active','En attente'],['overdue','En retard'],['today',"Aujourd’hui"],['review','À vérifier'],['done','Terminées']].map(([v,t])=>'<option value="'+v+'" '+(v===inboxFilter?'selected':'')+'>'+t+'</option>').join('')+
+ [['active','En attente'],['all','Toutes les tâches'],['overdue','En retard'],['today',"Aujourd’hui"],['review','À vérifier'],['done','Terminées']].map(([v,t])=>'<option value="'+v+'" '+(v===inboxFilter?'selected':'')+'>'+t+'</option>').join('')+
  '</select></label>'+
  (db.clients.length?'<label>Client<select id="control-task-client" class="field"><option value="">Tous les clients</option>'+
  db.clients.filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string').map(x=>
@@ -212,7 +213,7 @@ function intake(){
   let count=0;
   $('#main').querySelectorAll('.control-task-row').forEach(row=>{
    const kind=row.dataset.taskKind,status=row.dataset.taskStatus;
-   const eligible=inboxFilter==='active'?(status!=='done'):
+   const eligible=inboxFilter==='all'?true:inboxFilter==='active'?(status!=='done'):
     inboxFilter==='review'?kind==='mission':
     inboxFilter==='done'?status==='done':status===inboxFilter;
    const show=eligible&&(!selectedClient||row.dataset.taskClient===selectedClient)&&(!query||row.dataset.taskSearch.includes(query));
