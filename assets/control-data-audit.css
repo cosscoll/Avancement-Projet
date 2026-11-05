@@ -20,3 +20,15 @@
 @media(max-width:660px){.control-audit-item{align-items:flex-start;flex-wrap:wrap}.control-audit-item>.button{margin-left:auto}}
 @media(max-width:420px){.control-audit-stats>div{padding:12px 9px}.control-audit-stats strong{font-size:21px}.control-audit-stats span{font-size:10px}.control-audit-severity{font-size:9px;padding:5px 7px}}
 @media(prefers-reduced-motion:reduce){.control-audit-item,.control-client-highlight{transition:none!important}}
+
+/* P0 backup restoration preflight: explicit user review for broken local data. */
+.control-import-integrity{padding:14px 16px;margin:14px 0;border:1px solid var(--control-line,#EDDED3);background:#FFFDFB;border-radius:12px;color:var(--control-ink,#20252B)}
+.control-import-integrity h3{font-size:14px;margin:0 0 9px;font-weight:750}
+.control-import-integrity p{font-size:12px;line-height:1.6;margin:8px 0}
+.control-import-integrity ul{padding-left:20px;margin:10px 0;display:grid;gap:6px}
+.control-import-integrity li{font-size:12px;line-height:1.55;overflow-wrap:anywhere}
+.control-import-integrity .notice{background:#FFF0E5!important;border:1px solid #F2CAB4!important;color:#684634!important}
+.control-import-consent{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;background:#FFF0E5;border-radius:10px;border:1px solid #EAC5B1;margin:12px 0;color:#5B3C2C;font-size:12px;line-height:1.55;font-weight:640}
+.control-import-consent[hidden]{display:none!important}
+.control-import-consent input{flex:0 0 18px;width:18px;height:18px;accent-color:#B8431F;margin:1px 0 0}
+#main #import-apply:disabled{opacity:.48!important;cursor:not-allowed!important;filter:grayscale(.35)}
