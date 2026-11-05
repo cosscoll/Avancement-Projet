@@ -78,6 +78,7 @@
  <script src="assets/control-ai-studio-core.js"></script>
 <script src="assets/control-ai-studio.js"></script>
 <script src="assets/control-task-workflow.js"></script>
+<script src="assets/control-clients.js"></script>
 <script src="assets/command-center.js"></script>
 <script src="assets/tool-catalog.js"></script>
 <script src="assets/deployment-guides.js"></script>
@@ -196,7 +197,7 @@ function home(){
  '<details class="control-home-v6-advanced"><summary>Outils et fonctions supplémentaires</summary>'+
  '<div class="control-home-v6-secondary"><a href="#/control/manager">Bilan des projets</a>'+
  '<a href="#/control/search">Recherche avancée</a><a href="#/control/backup">Sauvegarde</a>'+
- '<a href="#/control/tools">Tous les outils</a></div><small>Les informations des autres plateformes ne sont pas synchronisées automatiquement.</small></details>'+
+ '<a href="#/control/tools">Tous les outils</a><a href="#/control/clients">Clients</a></div><small>Les informations des autres plateformes ne sont pas synchronisées automatiquement.</small></details>'+
  '</div>';
  const projectSearchKey=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
  const draw=()=>{
@@ -244,7 +245,7 @@ function workspace(p,t){
  const showAdvanced=advanced;
  const nav=tabs.map(([id,label])=>'<button data-tab="'+id+'" role="tab" aria-selected="'+(id===t)+'">'+label+'</button>').join('');
  const advancedNav='<details class="clarity-more-tabs shell-project-more" '+(showAdvanced?'open':'')+'><summary>Plus de fonctions'+(advanced?' · '+esc(moreTabs.find(x=>x[0]===t)?.[1]):'')+' <span class="shell-nav-count">7</span></summary><div class="clarity-advanced">'+moreTabs.map(([id,label])=>'<button type="button" data-tab="'+id+'" aria-current="'+(id===t?'page':'false')+'">'+label+'</button>').join('')+'</div></details>';
-$('#main').innerHTML=hubWarning()+'<a class="back" href="#/">← Tous les projets</a><div class="toprow"><div><span class="quiet">'+esc(p.category||'Projet')+'</span><h1>'+esc(nameOf(p))+'</h1><p class="muted">'+esc(p.tagline||p.summary||'Centralisez vos espaces de travail.')+'</p></div><div class="actions"><a class="button primary" href="#/control/manager?project='+encodeURIComponent(p.id)+'">Piloter ce projet</a>'+external(d.projectUrl,'ChatGPT','button')+'</div></div><div class="control-wayfinding"><p><strong>Dans ce projet :</strong> retrouvez toutes les rubriques ci-dessous, y compris les fonctions avancées.</p><button type="button" data-control-nav-open data-control-nav-category="project">⌕ Chercher dans ce projet</button></div><div class="clarity-work-nav shell-project-navigation"><div class="shell-project-label">Votre projet</div><div class="tabs" role="tablist">'+nav+'</div>'+advancedNav+'</div><div id="section"></div>';
+$('#main').innerHTML=hubWarning()+'<a class="back" href="#/">← Tous les projets</a><div class="toprow"><div><span class="quiet">'+esc(p.category||'Projet')+'</span><h1>'+esc(nameOf(p))+'</h1><p class="muted">'+esc(p.tagline||p.summary||'Centralisez vos espaces de travail.')+'</p></div><div class="actions"><a class="button primary" href="#/control/manager?project='+encodeURIComponent(p.id)+'">Piloter ce projet</a><a class="button" href="#/control/clients?project='+encodeURIComponent(p.id)+'">Clients liés</a>'+external(d.projectUrl,'ChatGPT','button')+'</div></div><div class="control-wayfinding"><p><strong>Dans ce projet :</strong> retrouvez toutes les rubriques ci-dessous, y compris les fonctions avancées.</p><button type="button" data-control-nav-open data-control-nav-category="project">⌕ Chercher dans ce projet</button></div><div class="clarity-work-nav shell-project-navigation"><div class="shell-project-label">Votre projet</div><div class="tabs" role="tablist">'+nav+'</div>'+advancedNav+'</div><div id="section"></div>';
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>go(p.id,b.dataset.tab));
 const target=$('#section');
 if(t==='resources')resources(p,d,target);
