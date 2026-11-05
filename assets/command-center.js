@@ -406,7 +406,7 @@ function clients(){
    if(!record)return toast('Fiche introuvable. Rechargez CONTROL.');
    const result=clientTool.validate(read(form),editAllowed(record));
    if(!result.ok)return toast(result.error);
-   const unlink=clientTool.tasksForClient(db.actions,record.id).filter(t=>result.client.project&&t.project!==result.client.project);
+   const unlink=db.actions.filter(t=>t?.clientId===record.id&&result.client.project&&t.project!==result.client.project);
    if(unlink.length&&!confirm('Ce changement de projet détachera '+unlink.length+' tâche(s) de cette fiche. Les tâches seront conservées. Continuer ?'))return;
    if(!commitLocal(()=>{
     Object.assign(record,result.client,{updatedAt:new Date().toISOString()});
