@@ -105,11 +105,35 @@ function manager(){
 async function copy(s){try{await navigator.clipboard.writeText(s);toast('Copié. Tu peux le coller dans ton IA.')}catch{toast('Copie refusée par le navigateur. Ouvre CONTROL en HTTPS.')}} 
 let inboxFilter='active',inboxSearch='';
 function intake(){
- const workflow=window.CONTROL_TASKS;
- if(!workflow){$('#main').innerHTML=view('À traiter','Vos actions',note('Le module de tâches ne s’est pas chargé. Actualisez CONTROL ; aucune donnée n’a été modifiée.'));return;}
+ const workflow=window.CONTROL_TASKS,clientTool=window.CONTROL_CLIENTS;
+ if(!workflow||!clientTool){$('#main').innerHTML=view('À traiter','Vos actions',note('Les modules de tâches et de clients ne sont pas chargés. Actualisez CONTROL ; aucune donnée n’a été modifiée.'));return;}
  const today=workflow.localDay();
- const requestProject=new URLSearchParams(location.hash.split('?')[1]||'').get('project')||'';
- const createProject=ctx.projects.some(p=>p.id===requestProject)?requestProject:'';
+ const requestParams=new URLSearchParams(location.hash.split('?')[1]||'');
+ const requestProject=requestParams.get('project')||'';
+ const requestClientId=requestParams.get('client')||'';
+ const requestedClient=db.clients.find(x=>x&&x.id===requestClientId&&typeof x.name==='string'&&x.name.trim());
+ const createProject=ctx.projects.some(p=>p.id===requestProject)?requestProject:
+  requestedClient&&ctx.projects.some(p=>p.id===requestedClient.project)?requestedClient.project:'';
+ const createClientId=requestedClient&&clientTool.clientForTask(requestClientId,createProject,db.clients).ok?requestClientId:'';
+ const clientOptions=(project,selected='')=>{
+  const matching=clientTool.eligibleForProject(db.clients,project);
+  const old=selected&&!matching.some(x=>x.id===selected)?
+   '<option value="'+h(selected)+'" selected>Ancien lien à corriger</option>':'';
+  return '<option value="">Sans client</option>'+old+matching.map(x=>
+   '<option value="'+h(x.id)+'" '+(x.id===selected?'selected':'')+'>'+h(x.name)+'</option>').join('');
+ };
+ const clientField=(project,selected='')=>
+  '<label>Client associé (facultatif)<select class="field" name="clientId">'+clientOptions(project,selected)+'</select></label>';
+ const bindProjectClient=form=>{
+  const projectSelect=form.querySelector('select[name="project"]');
+  const clientSelect=form.querySelector('select[name="clientId"]');
+  if(!projectSelect||!clientSelect)return;
+  projectSelect.addEventListener('change',()=>{
+   const oldClient=clientSelect.value;
+   const check=clientTool.clientForTask(oldClient,projectSelect.value,db.clients);
+   clientSelect.innerHTML=clientOptions(projectSelect.value,check.ok?oldClient:'');
+  });
+ };
  const actions=db.actions.filter(x=>x&&typeof x.title==='string'&&x.title.trim()&&x.status!=='cancelled');
  const missions=db.missions.filter(x=>x&&x.status==='review'&&typeof x.title==='string'&&x.title.trim());
  const pending=actions.filter(x=>x.status!=='done');
@@ -122,6 +146,8 @@ function intake(){
   const status=a.kind==='mission'?'review':workflow.category(a,today);
   const projectName=pname(a.project);
   const dueLabel=a.due&&workflow.validDue(a.due)?' · Pour le '+a.due.slice(8,10)+'/'+a.due.slice(5,7)+'/'+a.due.slice(0,4):'';
+  const linkedClient=a.kind==='action'?db.clients.find(x=>x?.id===a.clientId):null;
+  const clientLabel=linkedClient?.name||((a.kind==='action'&&a.clientId)?'Client supprimé':'');
   const description=a.kind==='mission'?'Mission IA : résultat à vérifier · '+(a.provider||'Fournisseur non précisé'):
    (a.status==='done'?'Terminée':a.status==='doing'?'En cours':'À faire')+
    ' · Priorité '+(a.priority||'Normale')+dueLabel;
@@ -137,17 +163,17 @@ function intake(){
    controls='<div class="control-task-actions">'+(a.status==='done'?btn('Rouvrir','reopen:'+a.id):btn('Terminer','done:'+a.id,'control-task-complete'))+
     '<details class="control-task-edit"><summary>Modifier</summary><form data-task-edit="'+h(a.id)+'" class="control-task-edit-form">'+
     field('Intitulé','title',a.title,'text','required maxlength="180"')+
-    projectOptions+
+    projectOptions+clientField(selected,a.clientId||'')+
     '<div class="formgrid"><label>Priorité<select class="field" name="priority">'+options(['Normale','Haute','Critique'],a.priority||'Normale')+'</select></label>'+
     '<label>Statut<select class="field" name="status"><option value="todo" '+(a.status!=='doing'&&a.status!=='done'?'selected':'')+'>À faire</option><option value="doing" '+(a.status==='doing'?'selected':'')+'>En cours</option><option value="done" '+(a.status==='done'?'selected':'')+'>Terminée</option></select></label></div>'+
     field('Échéance','due',a.due&&workflow.validDue(a.due)?a.due:'','date')+
     field('Lien de référence (facultatif)','url',a.url||'','url','maxlength="2000"')+
     '<button type="submit" class="primary">Enregistrer les modifications</button></form></details></div>';
   }
-  const search=workflow.searchText([a.title,projectName,description,a.provider||''].join(' '));
+  const search=workflow.searchText([a.title,projectName,description,a.provider||'',clientLabel].join(' '));
   return '<div class="inbox-item control-task-row" data-task-id="'+h(a.id||'')+'" data-task-kind="'+h(a.kind)+'" data-task-status="'+h(status)+'" data-task-search="'+h(search)+'">'+
    '<div class="control-task-summary"><div class="control-task-text"><span class="control-task-tag '+(status==='overdue'?'control-task-tag-late':'')+'">'+h(tag)+'</span>'+
-   '<strong>'+h(a.title)+'</strong><small>'+h(projectName)+' · '+h(description)+'</small>'+
+   '<strong>'+h(a.title)+'</strong><small>'+h(projectName)+(clientLabel?' · Client : '+h(clientLabel):'')+' · '+h(description)+'</small>'+
    (a.kind==='action'&&safe(a.url)?href(a.url,'Ouvrir la référence','control-task-reference'):'')+
    '</div>'+controls+'</div></div>';
  }).join('');
@@ -159,7 +185,7 @@ function intake(){
  '</select></label></div><p id="control-task-visible" class="control-task-visible" role="status" aria-live="polite"></p>'+
  '<div id="control-task-list" class="control-task-list">'+rows+'</div><p class="control-task-none" id="control-task-none" hidden>Aucune tâche ne correspond à votre recherche ou au filtre choisi.</p>')+
  '<details class="panel shell-progressive-form control-task-create" id="task-create" '+(route().param==='new'?'open':'')+'><summary><strong>+ Créer une tâche</strong><small>Ajoutez une action et, si besoin, son échéance</small></summary><div class="shell-progressive-body"><form id="new-action">'+
- field('Action','title','','text','required maxlength="180"')+selectProject(createProject)+
+ field('Action','title',createClientId?requestedClient.nextStep||'':'','text','required maxlength="180"')+selectProject(createProject)+clientField(createProject,createClientId)+
  '<div class="formgrid"><label>Priorité<select name="priority" class="field">'+options(['Normale','Haute','Critique'],'Normale')+'</select></label>'+field('Échéance','due','','date')+'</div>'+
  field('Lien de référence (facultatif)','url','','url','maxlength="2000"')+
  '<button class="primary">Ajouter la tâche</button></form></div></details>'+
@@ -190,6 +216,7 @@ function intake(){
  };
  $('#control-task-search').oninput=applyFilter;
  $('#control-task-filter').onchange=applyFilter;
+ $('#main').querySelectorAll('form[data-task-edit],#new-action').forEach(bindProjectClient);
  applyFilter();
  // Dashboard priority deep links select exactly the requested task without changing its data.
  const deepTask=new URLSearchParams(location.hash.split('?')[1]||'').get('task');
@@ -213,7 +240,10 @@ function intake(){
   const url=String(f.get('url')||'').trim();
   const data=workflow.validateEdit({title,project:String(f.get('project')||''),priority:String(f.get('priority')||'Normale'),status:'todo',due:String(f.get('due')||''),url},['',...ctx.projects.map(p=>p.id)]);
   if(!data.ok){toast(data.error);return;}
-  if(!commitLocal(()=>db.actions.push({id:id(),...data.task,at:new Date().toISOString()})))return;
+  const clientId=String(f.get('clientId')||'');
+  const association=clientTool.clientForTask(clientId,data.task.project,db.clients);
+  if(!association.ok)return toast(association.error);
+  if(!commitLocal(()=>db.actions.push({id:id(),...data.task,...(clientId?{clientId}:{}),at:new Date().toISOString()})))return;
   intake();toast('Tâche enregistrée sur cet appareil.');
  });
  $('#main').querySelectorAll('form[data-task-edit]').forEach(form=>{
@@ -222,12 +252,16 @@ function intake(){
    if(!task)return toast('Tâche introuvable. Recharge CONTROL.');
    const fd=new FormData(form);
    const input=Object.fromEntries(['title','priority','status','due','project','url'].map(k=>[k,fd.get(k)]));
+   const clientId=String(fd.get('clientId')||'');
    const allowed=['',...ctx.projects.map(p=>p.id),...(task.project?[task.project]:[])];
    const validation=workflow.validateEdit(input,allowed);
    if(!validation.ok)return toast(validation.error);
+   const association=clientTool.clientForTask(clientId,validation.task.project,db.clients);
+   if(!association.ok)return toast(association.error);
    if(!commitLocal(()=>{
     const previous=task.status;
     Object.assign(task,validation.task,{updatedAt:new Date().toISOString()});
+    if(clientId)task.clientId=clientId;else delete task.clientId;
     if(task.status==='done'&&previous!=='done')task.closedAt=new Date().toISOString();
     if(task.status!=='done')delete task.closedAt;
    }))return;
