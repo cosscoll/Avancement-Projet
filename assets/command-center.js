@@ -871,7 +871,7 @@ function validateBackupData(data){
  }
  const command=data.command;
  if(!Array.isArray(command.actions)||!Array.isArray(command.missions))return false;
- for(const key of ['actions','missions','events','meetings','expenses','income','decisions','websites','messages']){
+ for(const key of ['actions','missions','events','meetings','expenses','income','decisions','websites','messages','clients']){
   if(command[key]!==undefined&&(!Array.isArray(command[key])||command[key].length>15000||command[key].some(x=>!obj(x))))return false;
  }
  // Reject prototype-mutating JSON keys, including inside imported project records.
