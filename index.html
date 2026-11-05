@@ -50,7 +50,8 @@
 <link rel="stylesheet" href="assets/control-home-v6.css">
 <link rel="stylesheet" href="assets/control-workspace-v7.css">
 <link rel="stylesheet" href="assets/control-brand-simple-humain.css">
-<link rel="stylesheet" href="assets/control-clients.css"></head><body class="control-shell-v3">
+<link rel="stylesheet" href="assets/control-clients.css">
+<link rel="stylesheet" href="assets/control-data-audit.css"></head><body class="control-shell-v3">
 <aside class="shell-sidebar" aria-label="Navigation permanente">
  <a href="#/" class="shell-brand"><span class="shell-brand-mark">◈</span><span>CONTROL<span class="shell-brand-sub">ESPACE DE TRAVAIL</span></span></a>
  <nav aria-label="Menu latéral">
@@ -80,6 +81,7 @@
 <script src="assets/control-ai-studio.js"></script>
 <script src="assets/control-task-workflow.js"></script>
 <script src="assets/control-clients.js"></script>
+<script src="assets/control-data-audit.js"></script>
 <script src="assets/command-center.js"></script>
 <script src="assets/tool-catalog.js"></script>
 <script src="assets/deployment-guides.js"></script>
@@ -197,7 +199,7 @@ function home(){
  '</details>'+
  '<details class="control-home-v6-advanced"><summary>Outils et fonctions supplémentaires</summary>'+
  '<div class="control-home-v6-secondary"><a href="#/control/manager">Bilan des projets</a>'+
- '<a href="#/control/search">Recherche avancée</a><a href="#/control/backup">Sauvegarde</a>'+
+ '<a href="#/control/search">Recherche avancée</a><a href="#/control/backup">Sauvegarde</a><a href="#/control/audit">État des données</a>'+
  '<a href="#/control/tools">Tous les outils</a><a href="#/control/clients">Clients</a></div><small>Les informations des autres plateformes ne sont pas synchronisées automatiquement.</small></details>'+
  '</div>';
  const projectSearchKey=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
