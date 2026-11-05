@@ -1,3 +1,13 @@
+## 5 novembre 2026 — CONTROL 12 : restauration avec contrôle d'intégrité
+
+**P0 livré sur `main` :** l'aperçu de restauration analyse désormais les liens clients–tâches avant toute écriture. Il indique le nombre d'erreurs et d'avertissements sans exposer les noms ou les titres des enregistrements. Les références à un client absent, les liens entre projets incompatibles, les dates incorrectes et les identifiants dupliqués sont signalés. Les anciennes sauvegardes sans catalogue de projets complet sont examinées sans faux diagnostic automatique de projet introuvable.
+
+**Consentement explicite :** lorsqu'une anomalie existe, le bouton d'application reste désactivé tant que l'utilisateur n'a pas reconnu l'avertissement. Le formulaire redemande une confirmation distincte avant remplacement et continue de vérifier les modifications inter-onglets. L'aperçu, la réinitialisation et l'annulation n'altèrent pas le stockage local.
+
+**Tests et limites :** scénarios de diagnostic ajoutés à `tests/control-data-audit.test.mjs` et scénario navigateur simulant une sauvegarde corrompue ajouté à `tests/control-ia-browser-smoke.mjs`. Cache PWA **v84**. Les tests JS ciblés passent ; la recette en navigateur réel, le transfert entre deux profils indépendants et la publication GitHub Pages restent à confirmer. Pas de synchronisation Cloud, d'automatisation ou de service payant.
+
+[Cahier des charges v1.4](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md).
+
 ## 5 novembre 2026 — CONTROL 11 : contrôle de cohérence des données locales
 
 **P0 ajouté sur `main` :** `#/control/audit` analyse en lecture seule les liens entre projets, clients et tâches. Il signale les ID absents/en double, projets introuvables, associations client–tâche incohérentes, dates impossibles, statuts anciens et listes locales mal structurées. Chaque constat ouvre la fiche à vérifier ; **aucune donnée n'est corrigée ou supprimée automatiquement**. L'accès se fait depuis l'accueil, Sauvegardes et Règles et sécurité.
