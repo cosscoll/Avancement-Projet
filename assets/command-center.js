@@ -115,6 +115,7 @@ function intake(){
  const createProject=ctx.projects.some(p=>p.id===requestProject)?requestProject:
   requestedClient&&ctx.projects.some(p=>p.id===requestedClient.project)?requestedClient.project:'';
  const createClientId=requestedClient&&clientTool.clientForTask(requestClientId,createProject,db.clients).ok?requestClientId:'';
+ const filterClientId=requestedClient?requestClientId:'';
  const clientOptions=(project,selected='')=>{
   const matching=clientTool.eligibleForProject(db.clients,project);
   const old=selected&&!matching.some(x=>x.id===selected)?
@@ -171,7 +172,7 @@ function intake(){
     '<button type="submit" class="primary">Enregistrer les modifications</button></form></details></div>';
   }
   const search=workflow.searchText([a.title,projectName,description,a.provider||'',clientLabel].join(' '));
-  return '<div class="inbox-item control-task-row" data-task-id="'+h(a.id||'')+'" data-task-kind="'+h(a.kind)+'" data-task-status="'+h(status)+'" data-task-search="'+h(search)+'">'+
+  return '<div class="inbox-item control-task-row" data-task-id="'+h(a.id||'')+'" data-task-kind="'+h(a.kind)+'" data-task-status="'+h(status)+'" data-task-client="'+h(a.clientId||'')+'" data-task-search="'+h(search)+'">'+
    '<div class="control-task-summary"><div class="control-task-text"><span class="control-task-tag '+(status==='overdue'?'control-task-tag-late':'')+'">'+h(tag)+'</span>'+
    '<strong>'+h(a.title)+'</strong><small>'+h(projectName)+(clientLabel?' · Client : '+h(clientLabel):'')+' · '+h(description)+'</small>'+
    (a.kind==='action'&&safe(a.url)?href(a.url,'Ouvrir la référence','control-task-reference'):'')+
@@ -182,7 +183,12 @@ function intake(){
  box('Mes tâches et validations','<div class="control-task-toolbar"><label>Rechercher une tâche<input id="control-task-search" class="field" type="search" autocomplete="off" placeholder="Nom de la tâche, projet…" maxlength="180" value="'+h(inboxSearch)+'"></label>'+
  '<label>Afficher<select id="control-task-filter" class="field">'+
  [['active','En attente'],['overdue','En retard'],['today',"Aujourd’hui"],['review','À vérifier'],['done','Terminées']].map(([v,t])=>'<option value="'+v+'" '+(v===inboxFilter?'selected':'')+'>'+t+'</option>').join('')+
- '</select></label></div><p id="control-task-visible" class="control-task-visible" role="status" aria-live="polite"></p>'+
+ '</select></label>'+
+ (db.clients.length?'<label>Client<select id="control-task-client" class="field"><option value="">Tous les clients</option>'+
+ db.clients.filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string').map(x=>
+ '<option value="'+h(x.id)+'" '+(x.id===filterClientId?'selected':'')+'>'+h(x.name)+'</option>').join('')+
+ '</select></label>':'')+
+ '</div><p id="control-task-visible" class="control-task-visible" role="status" aria-live="polite"></p>'+
  '<div id="control-task-list" class="control-task-list">'+rows+'</div><p class="control-task-none" id="control-task-none" hidden>Aucune tâche ne correspond à votre recherche ou au filtre choisi.</p>')+
  '<details class="panel shell-progressive-form control-task-create" id="task-create" '+(route().param==='new'?'open':'')+'><summary><strong>+ Créer une tâche</strong><small>Ajoutez une action et, si besoin, son échéance</small></summary><div class="shell-progressive-body"><form id="new-action">'+
  field('Action','title',createClientId?requestedClient.nextStep||'':'','text','required maxlength="180"')+selectProject(createProject)+clientField(createProject,createClientId)+
@@ -202,13 +208,14 @@ function intake(){
   inboxSearch=$('#control-task-search')?.value||'';
   inboxFilter=$('#control-task-filter')?.value||'active';
   const query=workflow.searchText(inboxSearch);
+  const selectedClient=$('#control-task-client')?.value||'';
   let count=0;
   $('#main').querySelectorAll('.control-task-row').forEach(row=>{
    const kind=row.dataset.taskKind,status=row.dataset.taskStatus;
    const eligible=inboxFilter==='active'?(status!=='done'):
     inboxFilter==='review'?kind==='mission':
     inboxFilter==='done'?status==='done':status===inboxFilter;
-   const show=eligible&&(!query||row.dataset.taskSearch.includes(query));
+   const show=eligible&&(!selectedClient||row.dataset.taskClient===selectedClient)&&(!query||row.dataset.taskSearch.includes(query));
    row.hidden=!show;if(show)count++;
   });
   $('#control-task-visible').textContent=count+' résultat'+(count>1?'s':'')+' dans ce filtre';
@@ -216,6 +223,7 @@ function intake(){
  };
  $('#control-task-search').oninput=applyFilter;
  $('#control-task-filter').onchange=applyFilter;
+ if($('#control-task-client'))$('#control-task-client').onchange=applyFilter;
  $('#main').querySelectorAll('form[data-task-edit],#new-action').forEach(bindProjectClient);
  applyFilter();
  // Dashboard priority deep links select exactly the requested task without changing its data.
@@ -336,7 +344,8 @@ function clients(){
    '<strong>Tâches associées ('+linked.length+' · '+activeLinked.length+' à faire)</strong>'+
    linked.slice(0,6).map(t=>'<a href="#/control/inbox?task='+encodeURIComponent(t.id)+'">'+
     '<span>'+h(t.title)+'</span><small>'+(t.status==='done'?'Terminée':t.status==='doing'?'En cours':'À faire')+'</small></a>').join('')+
-   (linked.length>6?'<p class="muted">+'+(linked.length-6)+' tâche(s) supplémentaires · ouvrez À traiter.</p>':'')+
+   (linked.length>6?'<p class="muted">+'+(linked.length-6)+' tâche(s) supplémentaires.</p>':'')+
+   '<a class="control-client-all-tasks" href="#/control/inbox?client='+encodeURIComponent(r.id)+'">Voir toutes les tâches liées</a>'+
    '</div>':'<p class="muted">Aucune tâche directement liée à cette fiche.</p>';
   const website=safe(r.website);
   const search=clientTool.normalize([r.name,r.nextStep||'',projectLabel,status].join(' '));
