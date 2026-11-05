@@ -313,7 +313,9 @@ function clients(){
  }
  const known=new Set(ctx.projects.map(p=>p.id));
  const items=clientTool.sort(db.clients.filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string'&&x.name.trim()));
- const scoped=new URLSearchParams(location.hash.split('?')[1]||'').get('project')||'';
+ const clientParams=new URLSearchParams(location.hash.split('?')[1]||'');
+ const scoped=clientParams.get('project')||'';
+ const focusedClient=clientParams.get('client')||'';
  const scopedValid=known.has(scoped)?scoped:'';
  const optionsProject=(selected='')=>{
   const missing=selected&&!known.has(selected)?'<option value="'+h(selected)+'" selected>Projet conservé (non listé)</option>':'';
@@ -391,6 +393,15 @@ function clients(){
   element.addEventListener(selector.includes('search')?'input':'change',filter);
  }
  filter();
+ if(focusedClient){
+  const row=[...$('#main').querySelectorAll('.control-client-row[data-client-id]')].find(el=>el.dataset.clientId===focusedClient);
+  if(row){
+   row.hidden=false;
+   row.classList.add('control-client-highlight');
+   row.querySelector('.control-client-edit')?.setAttribute('open','');
+   row.scrollIntoView?.({block:'center',behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?'instant':'smooth'});
+  }
+ }
  const read=form=>Object.fromEntries(['name','status','project','nextStep','nextDue','website'].map(key=>[key,new FormData(form).get(key)]));
  const editAllowed=record=>['',...ctx.projects.map(p=>p.id),...(record?.project?[record.project]:[])];
  registerForm('#new-client',(_,form)=>{
