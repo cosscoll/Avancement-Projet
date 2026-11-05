@@ -90,6 +90,22 @@ test('malformed personalized project catalog cannot disappear silently on restor
  assert.ok(check.issues.some(x=>x.kind==='project'&&x.code==='missing_id'));
 });
 
+test('malformed custom projects are a non-overridable restoration blocker',()=>{
+ const inspection=ctx.module.exports.inspectBackup({hub:{custom:[null,{id:'',name:'Invalid'}]},command:{actions:[],clients:[]}},{catalogProjects:[]});
+ assert.equal(inspection.unrestorable,true);
+ const missing=ctx.module.exports.inspectBackup({hub:{custom:{id:'bad'}},command:{actions:[],clients:[]}}, {catalogProjects:[]});
+ assert.equal(missing.unrestorable,true);
+ const good=ctx.module.exports.inspectBackup({hub:{custom:[{id:'custom-safe',name:'Safe name'}]},command:{actions:[],clients:[]}},{catalogProjects:[]});
+ assert.equal(good.unrestorable,false);
+ const legacy=ctx.module.exports.inspectBackup({command:{actions:[],clients:[]}});
+ assert.equal(legacy.unrestorable,false);
+ const code=read('assets/command-center.js');
+ const backup=code.slice(code.indexOf('function backup(){'),code.indexOf('// Search only live, authorized device-local records.'));
+ assert.match(backup,/integrity\.unrestorable\?'<div role="alert"/);
+ assert.match(backup,/if\(staged\.integrity\.unrestorable\)/);
+ assert.match(backup,/integrityConsent\.hidden=count===0\|\|integrity\.unrestorable/);
+ assert.match(backup,/applyButton\.disabled=count>0\|\|integrity\.unrestorable/);
+});
 test('legacy backup without Clients works, malformed backups are refused',()=>{
  const legacy=ctx.module.exports.inspectBackup({command:{actions:[{id:'t1',title:'Historical task',status:'todo'}]}});
  assert.equal(legacy.status,'clean');
