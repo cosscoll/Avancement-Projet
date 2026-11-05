@@ -5,7 +5,7 @@
 
 :root{
  --control-orange:#F76A39;
- --control-orange-deep:#C44922; /* Accessible white-on-orange CTA */
+ --control-orange-deep:#B8431F; /* Accessible white-on-orange CTA */
  --control-orange-hover:#AE3C1D;
  --control-peach:#FFCAA3;
  --control-peach-soft:#FFF0E5;
@@ -102,6 +102,10 @@ body.control-shell-v3 .control-home-v6{
  color:var(--control-ink);
  font-family:var(--control-font);
  box-shadow:0 12px 42px rgba(95,52,20,.075);
+ background-image:
+  radial-gradient(ellipse 330px 120px at 99% 17%,rgba(255,202,163,.30),transparent 75%),
+  radial-gradient(ellipse 290px 135px at 93% 24%,rgba(255,231,212,.37),transparent 80%);
+ background-repeat:no-repeat;
 }
 .control-home-v6 .control-home-v6-header{border-bottom-color:var(--control-line)}
 .control-home-v6 .control-home-v6-brand{flex-direction:row;align-items:center;gap:11px}
