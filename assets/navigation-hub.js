@@ -29,6 +29,8 @@ const FEATURES=[
  {id:'deploy',title:'Mettre un site en ligne',hint:'Guides de publication et déploiement',category:'publish',keywords:'publier deployer mettre en ligne projet heberger site web github pages vercel netlify',personal:'#/control/deploy',cloud:'deploy'},
  {id:'activity',title:'Activité GitHub et tests',hint:'Suivi des dépôts et preuves publiques',category:'publish',keywords:'ci publication actions commits',personal:'#/control/activity',cloud:null},
  {id:'budget',title:'Budget et quotas',hint:'Consulter les dépenses renseignées',category:'account',keywords:'prix limite forfait argent coût finances',personal:'#/control/budget',cloud:'tools:budget'},
+ {id:'clients',title:'Suivre mes clients',hint:'Retrouver les organisations et leurs prochaines étapes',category:'manage',keywords:'client clients prospect entreprise organisation suivi relance relation projet',personal:'#/control/clients',cloud:null},
+ {id:'data-audit',title:'Vérifier mes données',hint:'Repérer les liens projet, client et tâche à corriger sans effacer les informations',category:'account',keywords:'verification controle audit securite qualite données erreur incoherence doublon client projet tache sauvegarde',personal:'#/control/audit',cloud:null},
  {id:'backup',title:'Sauvegarder mes données',hint:'Sauvegarder projets, agents, mémoires et restaurer un fichier chiffré',category:'account',keywords:'exporter json sauvegarde chiffrer restaurer fichier',personal:'#/control/backup',cloud:'account'},
  {id:'settings',title:'Paramètres et confidentialité',hint:'Règles, comptes et sécurité',category:'account',keywords:'préférences profil connexion se déconnecter reglages configuration modifier',personal:'#/control/settings',cloud:'account'}
 ];
