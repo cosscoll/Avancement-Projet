@@ -328,13 +328,22 @@ function clients(){
   const validDue=clientTool.validDate(r.nextDue||'')&&r.nextDue;
   const dueLabel=validDue?' · '+r.nextDue.slice(8,10)+'/'+r.nextDue.slice(5,7)+'/'+r.nextDue.slice(0,4):'';
   const permitted=known.has(r.project);
-  const actionHref='#/control/inbox/new'+(permitted?'?project='+encodeURIComponent(r.project):'');
+  const actionHref='#/control/inbox/new?client='+encodeURIComponent(r.id)+
+   (permitted?'&project='+encodeURIComponent(r.project):'');
+  const linked=clientTool.tasksForClient(db.actions,r.id);
+  const activeLinked=linked.filter(x=>x.status!=='done');
+  const taskItems=linked.length?'<div class="control-client-task-list">'+
+   '<strong>Tâches associées ('+linked.length+' · '+activeLinked.length+' à faire)</strong>'+
+   linked.slice(0,6).map(t=>'<a href="#/control/inbox?task='+encodeURIComponent(t.id)+'">'+
+    '<span>'+h(t.title)+'</span><small>'+(t.status==='done'?'Terminée':t.status==='doing'?'En cours':'À faire')+'</small></a>').join('')+
+   (linked.length>6?'<p class="muted">+'+(linked.length-6)+' tâche(s) supplémentaires · ouvrez À traiter.</p>':'')+
+   '</div>':'<p class="muted">Aucune tâche directement liée à cette fiche.</p>';
   const website=safe(r.website);
   const search=clientTool.normalize([r.name,r.nextStep||'',projectLabel,status].join(' '));
   return '<article class="control-client-row" data-client-id="'+h(r.id)+'" data-client-status="'+h(status)+'" data-client-project="'+h(r.project||'')+'" data-client-search="'+h(search)+'">'+
    '<div class="control-client-info"><strong>'+h(r.name)+'</strong>'+
    '<small>'+h(projectLabel)+' · '+h(status)+'</small>'+
-   (r.nextStep?'<p>Prochaine étape : '+h(r.nextStep)+h(dueLabel)+'</p>':'<p class="muted">Aucune prochaine étape renseignée.</p>')+
+   (r.nextStep?'<p>Prochaine étape : '+h(r.nextStep)+h(dueLabel)+'</p>':'<p class="muted">Aucune prochaine étape renseignée.</p>')+taskItems+
    '<div class="actions"><a class="button" href="'+h(actionHref)+'">Créer une tâche</a>'+
    (permitted?'<a class="button" href="#/project/'+encodeURIComponent(r.project)+'/pilot">Ouvrir le projet</a>':'')+
    (website?href(website,'Site public'):'')+'</div></div>'+
@@ -387,7 +396,12 @@ function clients(){
    if(!record)return toast('Fiche introuvable. Rechargez CONTROL.');
    const result=clientTool.validate(read(form),editAllowed(record));
    if(!result.ok)return toast(result.error);
-   if(!commitLocal(()=>Object.assign(record,result.client,{updatedAt:new Date().toISOString()})))return;
+   const unlink=clientTool.tasksForClient(db.actions,record.id).filter(t=>result.client.project&&t.project!==result.client.project);
+   if(unlink.length&&!confirm('Ce changement de projet détachera '+unlink.length+' tâche(s) de cette fiche. Les tâches seront conservées. Continuer ?'))return;
+   if(!commitLocal(()=>{
+    Object.assign(record,result.client,{updatedAt:new Date().toISOString()});
+    for(const task of unlink){delete task.clientId;task.updatedAt=new Date().toISOString();}
+   }))return;
    clients();toast('Fiche mise à jour sur cet appareil.');
   };
  });
@@ -395,8 +409,12 @@ function clients(){
   button.onclick=()=>{
    const item=db.clients.find(x=>x?.id===button.dataset.act.slice('client-delete:'.length));
    if(!item)return toast('Client introuvable. Rechargez CONTROL.');
-   if(!confirm('Supprimer définitivement cette fiche locale ? Cette action ne supprime aucun projet ni aucune tâche.'))return;
-   if(!commitLocal(()=>{db.clients=db.clients.filter(x=>x.id!==item.id)}))return;
+   const linked=clientTool.tasksForClient(db.actions,item.id);
+   if(!confirm('Supprimer cette fiche locale ? '+(linked.length?linked.length+' tâche(s) seront conservées mais détachées du client. ':'')+'Les projets et tâches ne seront pas supprimés.'))return;
+   if(!commitLocal(()=>{
+    db.clients=db.clients.filter(x=>x.id!==item.id);
+    for(const task of db.actions)if(task?.clientId===item.id){delete task.clientId;task.updatedAt=new Date().toISOString();}
+   }))return;
    clients();toast('Fiche locale supprimée.');
   };
  });
@@ -1172,7 +1190,12 @@ function searchResults(scope='',query=''){
    'Fiche locale · '+(client.status||'à vérifier')+' · prochaine étape : '+(client.nextStep||'non renseignée'),
    '#/control/clients?project='+encodeURIComponent(client.project),client.nextStep||'');
  }
- for(const action of db.actions||[])add(action.project,'Action',action.title,'Action locale · '+(action.status||'état inconnu')+' · '+freshness(action.at||action.due),'#/control/inbox',action.priority||'');
+ for(const action of db.actions||[]){
+  const linked=db.clients.find(x=>x?.id===action.clientId);
+  add(action.project,'Action',action.title,
+   'Action locale · '+(action.status||'état inconnu')+(linked?' · client : '+linked.name:'')+' · '+freshness(action.at||action.due),
+   '#/control/inbox?task='+encodeURIComponent(action.id||''),[action.priority||'',linked?.name||''].join(' '));
+ }
  for(const mission of db.missions||[])add(mission.project,'Mission',mission.title,'Mission déclarée · '+(mission.provider||'IA non renseignée')+' · '+(mission.status||'statut non vérifié'),'#/control/missions');
  for(const event of db.events||[])add(event.project,'Événement',event.title,'Calendrier local · '+(event.date||'date non renseignée'),'#/control/calendar');
  for(const decision of db.decisions||[]){
