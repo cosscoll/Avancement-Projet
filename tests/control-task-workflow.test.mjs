@@ -58,6 +58,6 @@ test('deployed inbox is wired for edit/reopen/search and recency-safe persistenc
  for(const text of ['id="control-task-search"','id="control-task-filter"','data-task-edit','reopen:','workflow.validateEdit','commitLocal('])
   assert.ok(command.includes(text),text);
  assert.match(command,/getItem\(KEY\)!==localLastLoadedRaw/);
- assert.match(sw,/control-shell-v79/);
+ assert.match(sw,/control-shell-v80/);
  assert.match(sw,/control-task-workflow\.js/);
 });
