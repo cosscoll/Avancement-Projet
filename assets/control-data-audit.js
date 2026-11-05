@@ -35,6 +35,9 @@ function inspect({projects=[],clients=[],actions=[]}={}){
    else seen.add(x.id);
   }
  }
+ if(!Array.isArray(projects))issue({kind:'project',code:'malformed_collection',severity:'error',message:'Liste des projets non valide.'});
+ if(!Array.isArray(clients))issue({kind:'client',code:'malformed_collection',severity:'error',message:'Collection Clients non valide. Sauvegardez avant toute correction.'});
+ if(!Array.isArray(actions))issue({kind:'task',code:'malformed_collection',severity:'error',message:'Collection Tâches non valide. Sauvegardez avant toute correction.'});
  duplicates(projectList,'project');
  for(const client of clientList){
   if(!isRecord(client)){issue({kind:'client',code:'malformed',severity:'error',message:'Fiche client non valide.'});continue;}
