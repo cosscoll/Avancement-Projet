@@ -1,6 +1,33 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 5 novembre 2026 · version de travail 1.5 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 5 novembre 2026 · version de travail 1.6 · ciblage indépendants et équipes de 2 à 10 personnes_
 
+
+## Sprint P0 — Fiabilité du transfert de projets (5 novembre 2026)
+
+**Audit et problème réellement corrigé :** l'aperçu de sauvegarde comptait les anciens `hub.projects`, alors que l'application personnelle conserve les nouveaux projets dans **`hub.custom`**. Des projets personnalisés pouvaient donc apparaître comme absents dans la comparaison, même si le fichier les contenait. Un test de sauvegarde utilisait aussi un cache PWA obsolète.
+
+### Fonctions réellement modifiées sur main
+
+- Le contrôle de sauvegarde distingue les **espaces projets historiques** et les **projets personnalisés**. Pour les seconds, il compare les identifiants stables : nombre de projets, ajouts, suppressions, remplacement d'un identifiant et modification du contenu à quantité constante.
+- La comparaison n'affiche **ni nom privé, ni URL, ni identifiant personnel**. Les doublons et identifiants ambigus sont signalés comme résultats incertains, sans inventer une comparaison exacte.
+- La restauration vérifie le catalogue officiel seulement lorsque les projets de référence ont réellement été chargés. Sans catalogue de référence, le résultat mentionne une couverture partielle plutôt que signaler à tort les projets comme inconnus.
+- Une sauvegarde contenant une liste `hub.custom` non-tableau ou des projets personnalisés sans identifiant/nom valide est **non restaurable** : le bouton reste désactivé et le gestionnaire bloque toute tentative, même après un clic forcé ou une coche de consentement. Le diagnostic reste en lecture seule et ne supprime aucune donnée.
+- Une sauvegarde historique **sans `hub.custom`** continue d'être acceptée dans ce contrôle. Le remplacement des autres données reste soumis à l'aperçu, à la confirmation finale et à la détection de modification inter-onglets.
+- Le cahier des charges conserve la différence entre le **transfert manuel** par fichier, livré localement, et la **synchronisation multi-appareils**, toujours absente tant que le Cloud n'est pas sécurisé.
+
+### Recette ajoutée / corrigée
+
+- `tests/control-backup-review.test.mjs` : comparaison moderne, changement du nombre de projets, changement de contenu sans changement de quantité, remplacement d'ID, réorganisation, dossiers historiques et anomalies de doublons. Vérification du cache actuel.
+- `tests/control-data-audit.test.mjs` : pré-vol avec catalogue complet ou absent, projets personnalisés malformés, refus non contournable et maintien des sauvegardes historiques.
+- `tests/control-ia-browser-smoke.mjs` : scénario de contrôle du compteur de projets importés dans l'aperçu et vérification que l'annulation ne modifie pas le stockage local. **Scénario écrit, mais non exécuté dans un vrai navigateur pendant cette session.**
+- **51 contrôles ciblés réussis sur 51** dans une exécution JavaScript de modules et tests avec vérification de syntaxe. Cela n'atteste **pas** le succès de toute la suite de tests du dépôt ni le rendu GitHub Pages.
+
+### Restant à valider avant clôture de P0
+
+1. Exécuter la recette Chromium intégrale sur le code de `main` et vérifier les fichiers effectivement servis par GitHub Pages.
+2. Exporter une sauvegarde dans un navigateur A, la restaurer dans un profil B neuf, vérifier réellement les projets `custom`, clients, tâches liées et agents, puis réexporter et comparer.
+3. Tester un projet supprimé du catalogue, une sauvegarde trop ancienne, un stockage saturé, une interruption pendant la restauration et une erreur de révocation de lien.
+4. Inventorier en lecture seule les tables et règles du projet Supabase indépendant ; **n'activer aucun compte** sans la recette A/B documentée et l'approbation distincte.
 
 ## Session structurée — Sauvegardes portables et sécurité collaborative (5 novembre 2026)
 
