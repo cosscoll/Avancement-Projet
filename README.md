@@ -1,3 +1,13 @@
+## 5 novembre 2026 — CONTROL 09 : suivi client local relié aux projets
+
+**Fonction du cahier des charges développée sur `main` :** page `#/control/clients` pour suivre les organisations clientes, leur statut (Prospect / En cours / Terminé), le projet associé et une prochaine étape datée. Création, recherche, filtres, édition et suppression confirmée. Accès depuis la zone avancée de l'accueil, le centre de pilotage et les projets. Un bouton ouvre la création de tâche avec le projet déjà sélectionné ; aucun rappel ni tâche n'est créé automatiquement.
+
+**Données et sécurité :** les fiches sont uniquement dans `control-command-v1` sur cet appareil ; noms d'organisations non confidentiels recommandés, pas de contacts privés. Validation des dates, projets, statuts, liens HTTPS et références sensibles. Modifications transactionnelles avec détection de conflit inter-onglets. Les nouvelles fiches sont incluses dans les exports existants et comptées dans l'aperçu de restauration ; les anciennes sauvegardes restent compatibles.
+
+**Vérification :** `tests/control-clients.test.mjs` (règles, navigation, filtres, sauvegarde, sécurité, cache) ; ajout d'un test à `tests/control-backup-review.test.mjs`. Les 8 cas dédiés ont été exécutés dans un environnement JS de contrôle ; la recette navigateur réelle et la distribution GitHub Pages ne sont pas encore confirmées. PWA `v81`.
+
+**Cahier mis à jour :** [État des fonctionnalités, conditions de validation et priorités restantes](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md). Aucun compte Cloud, connecteur privé, automatisation ou dépense n'a été activé.
+
 ## 5 novembre 2026 — CONTROL 08 : charte « Simple & Humain » appliquée
 
 **Identité validée appliquée à l'application existante sur `main` :** fond crème, blanc et pêche, orange terracotta pour les actions, texte anthracite, typographie Poppins (fallback hors ligne), logo « C » orange et pictogrammes/états harmonisés. La feuille centrale `assets/control-brand-simple-humain.css` intervient après les CSS historiques pour homogénéiser accueil, projets, tâches, assistants, recherche et présentation Cloud. Les structures, données locales, routes et formulaires ont été préservés.
