@@ -124,6 +124,14 @@ test('audit page is reachable from backup, security settings and home',()=>{
  assert.equal(cfg.enabled,false);
 });
 
+test('feature finder exposes local audit and clients without promising Cloud availability',()=>{
+ const finder=read('assets/navigation-hub.js');
+ assert.match(finder,/id:'data-audit',title:'Vérifier mes données'/);
+ assert.match(finder,/personal:'#\/control\/audit',cloud:null/);
+ assert.match(finder,/id:'clients',title:'Suivre mes clients'/);
+ assert.match(finder,/personal:'#\/control\/clients',cloud:null/);
+});
+
 test('client audit links focus local records without exposing them elsewhere',()=>{
  const command=read('assets/command-center.js');
  const client=command.slice(command.indexOf('function clients(){'),command.indexOf('function team(){'));
