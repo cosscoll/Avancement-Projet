@@ -1,0 +1,22 @@
+/* CONTROL — audit de cohérence local. Charte Simple & Humain.
+   Aucun élément de contrôle destructif. */
+.control-audit-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0}
+.control-audit-stats>div{background:#FFFDFC;border:1px solid var(--control-line,#EDDED3);border-radius:12px;padding:16px 15px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.control-audit-stats strong{font-size:25px;line-height:1;color:var(--control-ink,#20252B);font-variant-numeric:tabular-nums}
+.control-audit-stats span{font-size:11px;line-height:1.35;color:var(--control-muted,#6D6763)}
+.control-audit-result h2{margin-bottom:10px}
+.control-audit-result>.muted{font-size:12px;line-height:1.65}
+.control-audit-list{list-style:none;display:flex;flex-direction:column;gap:8px;padding:0!important;margin:13px 0!important}
+.control-audit-item{background:#FFFDFC;border:1px solid var(--control-line,#EDDED3);padding:13px 14px;display:flex;align-items:center;gap:12px;border-radius:10px;min-width:0}
+.control-audit-severity{align-self:flex-start;white-space:nowrap;border-radius:6px;font-size:10px;font-weight:750;padding:6px 8px;color:#8F3B35;background:#FCE7E4}
+.control-audit-severity.is-warning{color:#80531B;background:#FFF0D8}
+.control-audit-item-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.control-audit-item-info strong{font-size:12px;font-weight:750;color:#20252B}
+.control-audit-item-info span{font-size:12px;line-height:1.5;color:#665C57;overflow-wrap:anywhere}
+.control-audit-item>.button{font-size:11px!important;white-space:nowrap;min-height:36px!important;padding:8px 10px!important;background:#FFF1E7!important;border-color:#EAD0BE!important;color:#9C411F!important}
+.control-audit-item>.button:hover{background:#FFE7D6!important}
+.control-audit-more>summary{font-size:12px;color:#A44321;cursor:pointer;font-weight:750;padding:10px 2px}
+.control-client-highlight{background:#FFF0E4!important;border-left:3px solid #B8431F;padding:13px!important;border-radius:9px;scroll-margin-top:100px}
+@media(max-width:660px){.control-audit-item{align-items:flex-start;flex-wrap:wrap}.control-audit-item>.button{margin-left:auto}}
+@media(max-width:420px){.control-audit-stats>div{padding:12px 9px}.control-audit-stats strong{font-size:21px}.control-audit-stats span{font-size:10px}.control-audit-severity{font-size:9px;padding:5px 7px}}
+@media(prefers-reduced-motion:reduce){.control-audit-item,.control-client-highlight{transition:none!important}}
