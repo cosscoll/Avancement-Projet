@@ -1,6 +1,42 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 5 novembre 2026 · version de travail 1.2 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 5 novembre 2026 · version de travail 1.3 · ciblage indépendants et équipes de 2 à 10 personnes_
 
+
+## Sprint de fiabilité des données — CONTROL 11 (5 novembre 2026)
+
+**Objectif P0 :** avant de créer des comptes, de synchroniser des clients ou de déléguer des tâches, signaler les incohérences existantes sans les masquer et sans écraser les données.
+
+### Fonctionnalité effectivement développée dans l'application personnelle
+
+- **État des données** : page dédiée `#/control/audit`, accessible depuis l'accueil (outils secondaires), les sauvegardes et les règles de sécurité. Charte « Simple & Humain » conservée.
+- **Lecture seule** : aucune suppression, migration, validation automatique, connexion distante, collecte d'informations, activation de notifications ou action sur des comptes externes.
+- Contrôle local des collections **projets, clients et tâches**, y compris des listes mal structurées sauvegardées dans `control-command-v1` avant normalisation des données de l'interface.
+- Contrôles : identifiants absents ou en double, titres clients/tâches manquants, projets inexistants, liens tâche → client cassés ou incompatibles avec le projet, dates impossibles, statuts et priorités inhabituels.
+- Présentation du nombre de fiches examinées, des **erreurs** et des **points à vérifier** ; les diagnostics sont limités à 120 entrées affichables pour rester lisibles, mais le total des problèmes est conservé. Les noms clients et détails des tâches **ne sont pas copiés** dans les messages de diagnostic.
+- Chaque signalement renvoie vers la fiche client, la tâche ou la liste des projets. Une fiche client peut être mise en évidence par `#/control/clients?client=<id>`, sans changer la donnée.
+- Les problèmes sont corrigés uniquement par l'utilisateur dans les formulaires existants, soumis aux validations et à la protection contre les modifications d'un autre onglet. Bouton **Relancer le diagnostic** après correction.
+- Cache PWA **v83** incluant les nouveaux modules et les styles, pour consultation hors ligne dans le shell personnel.
+
+### Recette et limites
+
+| Test d'acceptation | Attendu |
+| --- | --- |
+| Une fiche client et sa tâche cohérente | Aucun faux signalement |
+| Client supprimé dont la tâche conserve l'ancien `clientId` | Erreur + accès à la tâche pour retirer/corriger le lien |
+| Une tâche d'un projet A liée à un client du projet B | Erreur sans modification automatique |
+| Date `2026-02-30`, ancien statut et priorité inconnue | Signalement explicite ; aucun calcul ne les présente comme valides |
+| Deux clients, tâches ou projets portant le même ID | Signaler la duplication sans fusion |
+| Fichier local avec `clients` ou `actions` non-tableau | Erreur dans l'analyse des données persistées, même si l'interface charge un tableau vide |
+| 135 anomalies | Total 135 ; affichage plafonné et avertissement sur les résultats non présentés |
+| Lancement et relance de l'audit | Contenu de `control-command-v1` strictement inchangé |
+| Navigation vers une fiche puis sauvegarde | Aucun écrasement non sollicité ; vérification inter-onglets |
+| Version navigateur public | Contrôle réel nécessaire après publication GitHub Pages (non déduit des commits) |
+
+**Tests ajoutés** : `tests/control-data-audit.test.mjs` vérifie les données valides, les incohérences, la non-divulgation de détails privés, l'absence de mutation, la limite d'affichage, les liens et la disponibilité hors ligne. La recette Chromium `tests/control-ia-browser-smoke.mjs` est étendue pour contrôler la route et l'absence de modification du stockage.
+
+**Non couvert** : les permissions Supabase RLS, les mots de passe, les accès Google/ChatGPT/Claude/Gemini, les données des autres appareils ou un audit de cybersécurité. Le Cloud CONTROL reste désactivé et son projet serveur était noté `INACTIVE` au dernier relevé du 3 novembre. Toute activation nécessite les huit critères de sécurité de `config/cloud.json` et un accord exprès.
+
+**Prochaine priorité P0 :** valider une sauvegarde/restauration réelle dans deux navigateurs, vérifier les données importées et préparer un protocole A/B de tests d'accès à deux comptes **sans activer** l'environnement multi-utilisateur avant les validations. Ensuite seulement : rôles, invitations et synchronisation officielle.
 
 ## Sprint suivant — relation Clients ↔ Tâches réelle (5 novembre 2026)
 
