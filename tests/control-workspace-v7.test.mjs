@@ -81,7 +81,7 @@ test('One-click local task creation is available without opening technical menus
 });
 
 test('Latest offline shell version includes workspace stylesheet',()=>{
- assert.match(worker,/control-shell-v83/);
- assert.match(worker,/control-public-data-v83/);
+ assert.match(worker,/control-shell-v84/);
+ assert.match(worker,/control-public-data-v84/);
  assert.match(worker,/\.\/assets\/control-workspace-v7\.css/);
 });
