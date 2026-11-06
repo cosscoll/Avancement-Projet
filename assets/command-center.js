@@ -1344,16 +1344,32 @@ function searchResults(scope='',query=''){
  return rows.filter(x=>fold(x.title+' '+x.kind+' '+x.metadata+' '+x.searchable+' '+allowed.get(x.project).name).includes(q)).slice(0,65);
 }
 function search(){
- $('#main').innerHTML=view('Recherche universelle','Résultats locaux par projet avec provenance, date et accès direct',
- box('Chercher dans CONTROL','<div class="row"><label>Recherche<input id="global-search" type="search" class="field" placeholder="Projet, décision, source, échéance…"></label>'+
- '<label>Limiter à un projet<select id="search-project" class="field">'+projopts('',true)+'</select></label></div>'+
- '<p class="muted">Sources déclarées, pas certifiées ; les anciennes décisions et dates peuvent être périmées. Les conversations privées des fournisseurs ne sont pas accessibles.</p>'+
+ const params=new URLSearchParams(location.hash.split('?')[1]||'');
+ const requestedProject=params.get('project')||'';
+ const requestedQuery=(params.get('q')||'').slice(0,180);
+ const validProject=ctx.projects.some(p=>p.id===requestedProject);
+ const optionsProject=requestedProject&&!validProject?
+  '<option value="'+h(requestedProject.slice(0,160))+'" selected>Projet demandé introuvable</option>'+projopts('',true):
+  projopts(validProject?requestedProject:'',true);
+ $('#main').innerHTML=view('Recherche universelle','Projets, tâches, décisions et ressources conservés dans CONTROL',
+ box('Chercher dans CONTROL','<div class="control-search-toolbar"><label>Que recherchez-vous ?<input id="global-search" type="search" class="field" maxlength="180" autocomplete="off" placeholder="Projet, tâche, décision, source…" value="'+h(requestedQuery)+'"></label>'+
+ '<label>Dans quel projet ?<select id="search-project" class="field">'+optionsProject+'</select></label></div>'+
+ '<p class="muted">Résultats locaux avec source et date déclarées ; aucune synchronisation automatique avec les conversations privées des IA.</p>'+
  '<div id="search-hits" role="status" aria-live="polite"></div>'));
  const draw=()=>{
   const scope=$('#search-project').value,q=$('#global-search').value,results=searchResults(scope,q);
-  $('#search-hits').innerHTML=results.length?results.map(x=>
-   '<a class="link" href="'+h(x.url)+'" '+(x.url.startsWith('https:')?'target="_blank" rel="noopener noreferrer"':'')+
-   '><span><strong>'+h(x.title)+'</strong><small>'+h(x.kind)+' · '+h(pname(x.project))+'</small><small>'+h(x.metadata)+'</small></span><span>→</span></a>').join(''):tiny('Aucun résultat actuel dans ce périmètre.');
+  const kinds=['Action','Décision','Projet','Client','Mission','Ressource','Événement'];
+  const groups=kinds.map(kind=>[kind,results.filter(x=>x.kind===kind)]).filter(([,rows])=>rows.length);
+  const count=results.length+' résultat'+(results.length>1?'s':'')+(scope?' dans ce projet':' dans CONTROL')+
+   (results.length===65?' · 65 premiers affichés : affinez votre recherche':'');
+  $('#search-hits').innerHTML='<p class="control-search-count">'+h(count)+'</p>'+
+   (results.length?'<div class="control-search-groups">'+groups.map(([kind,rows])=>
+    '<section class="control-search-group" data-search-group="'+h(kind)+'" aria-label="'+h(kind)+'">'+
+    '<div class="control-search-group-head"><h3>'+h(kind)+'</h3><span>'+rows.length+'</span></div>'+
+    '<div class="control-search-group-list">'+rows.map(x=>
+     '<a class="control-search-hit" href="'+h(x.url)+'" '+(x.url.startsWith('https:')?'target="_blank" rel="noopener noreferrer"':'')+
+     '><span><strong>'+h(x.title)+'</strong><small>'+h(pname(x.project))+' · '+h(x.metadata)+'</small></span><span aria-hidden="true">›</span></a>').join('')+
+    '</div></section>').join('')+'</div>':tiny('Aucun résultat actuel dans ce périmètre.'));
  };
  draw();$('#global-search').oninput=draw;$('#search-project').onchange=draw;
 }
