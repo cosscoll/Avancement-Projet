@@ -179,7 +179,7 @@ try{
    command:['.cmd-empty','rgb(109, 103, 99)'],
    meetings:['.vs-past-toggle','rgb(184, 67, 31)'],
    aistudio:['.as-connect-counter','rgb(109, 103, 99)'],
-   webbuilder:['.web-builder .chip','rgb(184, 67, 31)']};
+   webbuilder:['.web-builder .chip','rgb(96, 69, 55)']};
   if(residualTargets[route]){
    const [selector,want,property='color']=residualTargets[route];
    const found=await js("(()=>{const e=document.querySelector("+JSON.stringify(selector)+");return e?getComputedStyle(e)["+JSON.stringify(property)+"]:null})()");
