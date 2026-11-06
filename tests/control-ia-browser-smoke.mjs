@@ -165,6 +165,8 @@ try{
   assert.equal(skin.background,warmBg,'Cold application background on '+route);
   assert.match(skin.font,/Poppins/i,'Poppins missing on '+route);
   assert.equal(skin.accent,route==='webbuilder'?'rgb(255, 255, 255)':warmTint,'Non-brand surface on '+route);
+  const blue=await js("(()=>{const r=document.querySelector('#main');if(!r)return[];const rows=[];const blue=x=>{const m=x.match(/^rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)(?:,\\s*([\\d.]+))?\\)$/);if(!m||(+m[4]||1)<.45)return false;const [rr,g,b]=m.slice(1,4).map(Number);return b>rr+24&&b>g+13};for(const e of [...r.querySelectorAll('*')].slice(0,550)){if(!e.getClientRects().length)continue;const c=getComputedStyle(e);for(const prop of ['color','backgroundColor','borderTopColor']){const value=c[prop];if(blue(value))rows.push({className:String(e.className||'').slice(0,65),tag:e.tagName,color:value,property:prop})}}return rows.slice(0,9)})()");
+  if(blue.length)log('Theme color audit '+route,blue.length+' example(s): '+JSON.stringify(blue.slice(0,4)));
  }
  log('Simple & Humain: eight functional screens use cream, Poppins and warm surfaces in Chromium');
 
