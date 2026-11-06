@@ -2,9 +2,9 @@
 
 **Correction P0 sur `main` :** les doublons de projets personnalisés et les identifiants entrant en collision avec le catalogue officiel bloquent désormais toute restauration. Le moteur `applyTransaction` remplace la succession d'écritures dans l'interface par une transaction locale vérifiable : contrôle de concurrence, validation des écritures, retour arrière conditionnel sans écraser les modifications d'un autre onglet.
 
-**Recette de logique :** tests avec deux stockages indépendants, conservation du Studio IA des sauvegardes historiques, transfert clients/projets/tâches, erreur de quota, modification concurrente et panne d'initialisation. Les **60 contrôles de logique/syntaxe** exécutés après l'intégration ont réussi. La recette navigateur sur deux profils réels et le déploiement GitHub Pages restent à valider.
+**Recette de logique :** tests avec deux stockages indépendants, conservation du Studio IA des sauvegardes historiques, transfert clients/projets/tâches, erreur de quota, modification concurrente et panne d'initialisation. Les **61 contrôles de logique/syntaxe** exécutés après l'intégration ont réussi. La recette navigateur sur deux profils réels et le déploiement GitHub Pages restent à valider.
 
-**État :** cahier des charges [v1.7](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md), cache PWA **v90**, Cloud toujours désactivé, aucun coût ni automatisation activés.
+**État :** cahier des charges [v1.7](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md), cache PWA **v91**, Cloud toujours désactivé, aucun coût ni automatisation activés.
 
 ## 5 novembre 2026 — CONTROL 14 : fiabilité de l'aperçu des projets et restauration protégée
 
