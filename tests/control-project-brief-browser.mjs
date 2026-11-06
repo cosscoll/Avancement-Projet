@@ -87,6 +87,22 @@ try{
  await wait(()=>run("location.hash==='#/control/inbox'&&document.querySelectorAll('.control-task-row').length===3"));
  await go('#/project/ifsi/ai');
 
+
+ const scopedSearchLink=a.links.find(x=>x.includes('#/control/search?project=ifsi'));
+ assert.ok(scopedSearchLink,'Project summary must include direct scoped search');
+ await run("location.hash='#/control/search?project=ifsi'");
+ await wait(()=>run("document.querySelector('#search-project')?.value==='ifsi'&&document.querySelectorAll('.control-search-hit').length>0"));
+ const scopedSearch=await run("({group:[...document.querySelectorAll('[data-search-group]')].map(e=>e.dataset.searchGroup),text:document.querySelector('#search-hits').textContent})");
+ assert.ok(scopedSearch.group.includes('Action'));
+ assert.match(scopedSearch.text,/A only overdue/);
+ assert.doesNotMatch(scopedSearch.text,/B secret task/);
+ await run("(()=>{const f=document.querySelector('#global-search');f.value='A only overdue';f.dispatchEvent(new Event('input',{bubbles:true}))})()");
+ assert.equal(await run("document.querySelectorAll('.control-search-hit').length"),1);
+ await run("(()=>{document.querySelector('#global-search').value='';const s=document.querySelector('#search-project');s.value='ucp';s.dispatchEvent(new Event('change',{bubbles:true}))})()");
+ const switched=await run("document.querySelector('#search-hits').textContent");
+ assert.match(switched,/B secret task/);
+ assert.doesNotMatch(switched,/A only overdue/);
+ await go('#/project/ifsi/ai');
  await go('#/project/ucp/ai');
  const b=await run("document.querySelector('#control-project-brief').textContent");
  assert.match(b,/B secret task/);assert.match(b,/B confidential decision/);
