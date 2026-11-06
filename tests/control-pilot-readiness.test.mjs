@@ -37,8 +37,8 @@ test('Synthetic ChatGPT fixture is parsed by the actual Studio core without pers
 });
 test('Participant guide and synthetic archive are precached with versioned PWA assets',()=>{
  for(const asset of ['testeurs.html','assets/control-test-pilot.css','assets/control-test-pilot.js','data/control-pilot-chatgpt.json'])assert.ok(sw.includes("'./"+asset+"'"),asset);
- assert.match(sw,/control-shell-v106/);
- assert.match(sw,/control-public-data-v106/);
+ assert.match(sw,/control-shell-v107/);
+ assert.match(sw,/control-public-data-v107/);
  assert.match(sw,/endsWith\('\.json'\)/);
 });
 test('Report exports only the intentional feedback fields and progress is reactive',async()=>{
