@@ -152,7 +152,7 @@ function home(){
       '<span class="control-home-v6-priority-copy"><strong>'+esc(item.title)+'</strong><small>'+esc(projectName(item.project))+' · '+esc(item.label)+'</small></span>'+
       '<span class="control-home-v6-chevron" aria-hidden="true">›</span></a>';
    }).join('')+'</div>'
-   :'<div class="control-home-v6-empty"><strong>Aucune tâche en attente dans CONTROL.</strong>Créez votre première tâche pour voir vos priorités ici. Les applications externes ne sont pas synchronisées.</div>');
+   :'<div class="control-home-v6-empty"><strong>Aucune tâche en attente dans CONTROL.</strong>Créez votre première tâche pour voir vos priorités ici. Les applications externes ne sont pas synchronisées.<a class="control-home-v6-empty-start" href="#/control/inbox/new">Créer ma première tâche</a></div>');
  const search='<input id="search" class="field search" type="search" aria-label="Rechercher un projet" placeholder="Rechercher un projet…" autocomplete="off">';
  $('#main').innerHTML=hubWarning()+
  '<div class="control-home-v6'+(projectsView?' control-home-v6--projects':'')+'" aria-label="Accueil CONTROL, mon activité">'+
@@ -174,7 +174,7 @@ function home(){
  '<button type="submit">Préparer cette action <span aria-hidden="true">→</span></button></form>'+
  '<p class="control-home-v6-ask-hint">CONTROL vous oriente vers les fonctions disponibles. Cette recherche ne lance pas d’assistant IA connecté ni d’action externe.</p></section>'+
  '<section class="control-home-v6-priorities" aria-labelledby="control-home-priorities-title">'+
- '<div class="control-home-v6-section-title"><h2 id="control-home-priorities-title">À traiter en priorité</h2><a href="#/control/inbox">Tout afficher</a></div>'+
+ '<div class="control-home-v6-section-title"><h2 id="control-home-priorities-title">À traiter en priorité</h2><div class="control-home-v6-priority-actions"><a class="control-home-v6-new-task" href="#/control/inbox/new" aria-label="Créer une tâche">+ Nouvelle tâche</a><a href="#/control/inbox">Tout afficher</a></div></div>'+
  list+'<p class="control-home-v6-provenance">Priorités calculées uniquement à partir des tâches et missions enregistrées sur cet appareil.</p>'+
  '</section>'+
  '<nav class="control-home-v6-tabs" aria-label="Navigation principale">'+
