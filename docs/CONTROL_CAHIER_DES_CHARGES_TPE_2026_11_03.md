@@ -1,5 +1,14 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 6 novembre 2026 · version de travail 1.11 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 6 novembre 2026 · version de travail 1.12 · ciblage indépendants et équipes de 2 à 10 personnes_
+
+
+## CONTROL 20 — Première livraison UX et protocole de sessions visibles (6 novembre 2026)
+
+**Besoin P0 :** lancer une tâche en un geste à partir de l'accueil, sans trouver les sous-menus. **Livraison dans le code sur `main` :** bouton « + Nouvelle tâche » dans la section existante « À traiter en priorité » et « Créer ma première tâche » si la liste est vide. Les deux ouvrent la vraie page `#/control/inbox/new`, qui met le curseur dans le titre sans enregistrer quoi que ce soit avant la confirmation. Une présentation compacte sur ordinateur et mobile conserve les six sections de l'interface CONTROL v6 validée. PWA **v96**.
+
+**Recette :** nouveau test de non-régression `control-home-v6.test.mjs`, vérification de navigation et de focus en Chromium. [Qualité Node #42194565344](https://github.com/cosscoll/Avancement-Projet/actions/runs/42194565344) : **762 tests sur 762 réussis** au commit `945cfc8b05`. Ne déclarer la publication finale réussie qu'après le contrôle GitHub Pages et la recette publique de ce commit.
+
+**Organisation des sessions suivantes :** [Plan de développement par livrables visibles](CONTROL_PLAN_SESSIONS_LIVRABLES_2026_11_06.md). Chaque session doit produire une amélioration utilisateur sur le site, tests Node + Chromium, cache PWA mis à jour si nécessaire, déploiement GitHub Pages confirmé et compte rendu avec preuves. La priorité va à l'onboarding, puis au traitement des tâches, aux clients, aux espaces projets, à la recherche et aux assistants ; l'authentification et les connecteurs réels restent bloqués sans preuves d'isolation et autorisations. Aucune automatisation récurrente, consommation de quota limité ou dépense non approuvée.
 
 
 ## Sprint CONTROL 19 — Sauvegarde portable entre stockages Chromium isolés (6 novembre 2026)
