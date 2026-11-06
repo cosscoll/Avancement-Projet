@@ -222,6 +222,20 @@ test('an actual storage transaction transfers clients, projects and linked tasks
  assert.equal(JSON.parse(a.getItem('control-ai-studio-v1')).agents[0].id,'agent-original');
  assert.equal(JSON.stringify(backup),copy,'source file must be unchanged by transfer');
 });
+test('backup import errors are useful, allowlisted and never expose secrets from arbitrary exceptions',()=>{
+ assert.match(review.safeImportError(new Error('Format de sauvegarde inconnu.')),/fichier JSON exporté depuis CONTROL/);
+ assert.match(review.safeImportError(new Error('Enveloppe de sauvegarde invalide.')),/sauvegarde CONTROL/);
+ assert.match(review.safeImportError(new Error('Mot de passe manquant.')),/indique le mot de passe/);
+ assert.match(review.safeImportError(new Error('Mot de passe incorrect ou sauvegarde chiffrée altérée.')),/Mot de passe incorrect/);
+ assert.match(review.safeImportError(new Error('Métadonnées du fichier chiffré invalides.')),/incomplète ou endommagée/);
+ const secret='private-access-token-can-never-be-displayed';
+ assert.ok(!review.safeImportError(new Error('Broken JSON '+secret)).includes(secret));
+ assert.ok(!review.safeImportError({message:secret}).includes(secret));
+ assert.ok(!review.safeImportError(null).includes('undefined'));
+ const center=readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
+ assert.match(center,/message\.textContent=restore\.safeImportError\(error\)/);
+});
+
 test('a fresh second browser can import a full backup without modifying the first browser',()=>{
  const first=fakeStore(storedBase()),second=fakeStore({});
  const backup={command:JSON.parse(first.getItem('control-command-v1')),
