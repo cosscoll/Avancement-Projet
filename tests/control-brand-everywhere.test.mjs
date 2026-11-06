@@ -55,8 +55,8 @@ test('Known feature pages, help and inner screens all have theme scopes',()=>{
 });
 test('New stylesheet participates in reliable PWA offline install',()=>{
  const sw=read('service-worker.js');
- assert.match(sw,/const CACHE_SHELL='control-shell-v114'/);
- assert.match(sw,/const CACHE_PUBLIC='control-public-data-v114'/);
+ assert.match(sw,/const CACHE_SHELL='control-shell-v115'/);
+ assert.match(sw,/const CACHE_PUBLIC='control-public-data-v115'/);
  const parts=sw.match(/const (?:ASSETS|CRITICAL_SHELL)=.+/g)||[];
  assert.ok(parts.length>=2);
  for(const part of parts)assert.match(part,/control-brand-global\.css/);
@@ -173,4 +173,12 @@ test('Last blue defaults in catalog, deployment and AI Studio now inherit the wa
   '.as-journey-head h2','.as-thread-manage summary','.as-thread-hit',
   '.as-backup-inner p','.as-agent-item[aria-current=page]'])
   assert.ok(brand.includes(selector),'Missing final warm control: '+selector);
+});
+
+test('Studio assistant account and backup buttons are warm without changing disabled/destructive semantics',()=>{
+ for(const selector of ['.as-connect-actions button:not(.as-primary)',
+  '.as-backup-inner button:not(.as-primary)', '.as-shell :is(label,',
+  '.as-backup-inner .as-restore-review', '.as-backup-inner button):disabled'])
+ assert.ok(brand.includes(selector),'Studio button/label unthemed: '+selector);
+ assert.match(brand,/\.as-shell \.as-danger/);
 });

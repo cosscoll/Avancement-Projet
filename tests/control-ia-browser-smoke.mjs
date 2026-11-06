@@ -188,7 +188,7 @@ try{
   const finalTargets={
    catalog:[['.tool-results-head span','color','rgb(109, 103, 99)'],['.tool-kits.clarity-helpnote > summary','color','rgb(184, 67, 31)']],
    deploy:[['#deploy-more','color','rgb(184, 67, 31)']],
-   aistudio:[['.as-steps button:not([aria-current="page"])','color','rgb(109, 103, 99)'],['.as-journey-head h2','color','rgb(32, 37, 43)']]
+   aistudio:[['.as-steps button:not([aria-current="page"])','color','rgb(109, 103, 99)'],['.as-journey-head h2','color','rgb(32, 37, 43)'],['.as-connect-actions button:not(.as-primary)','color','rgb(184, 67, 31)'],['.as-backup-inner button:not(.as-primary):not(.as-danger)','color','rgb(184, 67, 31)']]
   };
   for(const [selector,property,want] of finalTargets[route]||[]){
     const actual=await js("(()=>{const e=document.querySelector("+JSON.stringify(selector)+");return e?getComputedStyle(e)["+JSON.stringify(property)+"]:null})()");
@@ -211,6 +211,12 @@ try{
   assert.equal(viewTheme.body,warmBg,route+' uses an old page background');
   assert.match(viewTheme.font,/Poppins/i,route+' font');
   assert.equal(viewTheme.stylesheet,true,route+' has no final brand sheet');
+
+  // Audit user-facing actions in all 16 management routes. Log selectors only;
+  // do not log customer data, task titles or conversation text.
+  const coolActions=await js("(()=>{const r=document.querySelector('#main');if(!r)return[];const isBlue=value=>{const m=value.match(/^rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)/);if(!m)return false;const [red,green,blue]=m.slice(1,4).map(Number);return blue>red+24&&blue>green+13};return [...r.querySelectorAll('button,a,summary')].filter(e=>e.getClientRects().length&&isBlue(getComputedStyle(e).color)).slice(0,9).map(e=>({tag:e.tagName,className:String(e.className||'').slice(0,60),parent:String(e.parentElement?.className||'').slice(0,60),color:getComputedStyle(e).color}))})()");
+  if(coolActions.length)log('Management interaction color audit '+route+': '+JSON.stringify(coolActions.slice(0,6)));
+
  }
  log('Simple & Humain: sixteen management routes render their actual content with the common palette');
  await js("location.hash='#/'");
@@ -1678,7 +1684,7 @@ try{
  assert.ok(pilotMobile.link,'Tester guide must link to real assistant screen');
  log('CONTROL pilot guide: six real missions, optional feedback, responsive 320px');
  // The guide itself registers the PWA, even when it is a participant's first page.
- await ready(()=>js("(async()=>{if(!navigator.serviceWorker?.controller)return false;const keys=await caches.keys();if(!keys.includes('control-shell-v114'))return false;const cache=await caches.open('control-shell-v114');return !!(await cache.match(new URL('./testeurs.html',location.href)))&&!!(await cache.match(new URL('./assets/control-test-pilot.js',location.href)))})()"),30000)();
+ await ready(()=>js("(async()=>{if(!navigator.serviceWorker?.controller)return false;const keys=await caches.keys();if(!keys.includes('control-shell-v115'))return false;const cache=await caches.open('control-shell-v115');return !!(await cache.match(new URL('./testeurs.html',location.href)))&&!!(await cache.match(new URL('./assets/control-test-pilot.js',location.href)))})()"),30000)();
  await command('Network.enable');
  await command('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await command('Page.reload',{ignoreCache:false});

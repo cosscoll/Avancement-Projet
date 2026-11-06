@@ -974,3 +974,36 @@ body.control-shell-v3 .as-shell .as-agent-item[aria-current=page]{
   background:var(--control-peach-soft)!important;
   border-color:var(--control-edge)!important;
 }
+
+
+/* CONTROL Studio IA — final secondary actions, labels and backup flows.
+   Keep deletion/error classes red and confirmed calls terracotta. */
+body.control-shell-v3 .as-shell :is(.as-connect-actions button:not(.as-primary):not(.as-danger),
+ .as-backup-inner button:not(.as-primary):not(.as-danger):not(:disabled)){
+ background:var(--control-paper)!important;
+ border-color:var(--control-line)!important;
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .as-shell :is(.as-connect-actions button:not(.as-primary):not(.as-danger),
+ .as-backup-inner button:not(.as-primary):not(.as-danger):not(:disabled)):hover{
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+}
+body.control-shell-v3 .as-shell :is(.as-connect-actions button,.as-backup-inner button):disabled{
+ opacity:.6;
+ background:var(--control-cream)!important;
+ border-color:var(--control-line)!important;
+ color:var(--control-muted)!important;
+}
+body.control-shell-v3 .as-shell :is(label,.as-import-choice label,.as-consent label){
+ color:var(--control-ink)!important;
+}
+body.control-shell-v3 .as-shell .as-backup-inner :is(input,select,textarea){
+ border-color:var(--control-line)!important;
+ background:var(--control-white)!important;
+ color:var(--control-ink)!important;
+}
+body.control-shell-v3 .as-shell .as-backup-inner .as-restore-review{
+ border-color:var(--control-edge)!important;
+ background:var(--control-peach-soft)!important;
+}
