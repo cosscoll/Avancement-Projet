@@ -218,6 +218,7 @@ root.querySelectorAll('[data-as-import-choice]').forEach(el=>el.onchange=()=>{if
   });
   const mForm=$('#as-memory-form');if(mForm)mForm.onsubmit=e=>{e.preventDefault();try{
    const title=$('#as-memory-title').value,content=$('#as-memory-content').value;
+    if(memoryDraft&&!editingMemoryId&&!$('#as-memory-approve')?.checked)return notify('Relis et approuve explicitement l’extrait avant de le mémoriser.',true);
    if(editingMemoryId){
     const updated=core.editMemory(db,editingMemoryId,{title,content});
     if(commit(s=>{const i=s.memories.findIndex(m=>m.id===editingMemoryId);if(i<0)throw Error('Mémoire introuvable.');s.memories[i]=updated})){
@@ -225,12 +226,17 @@ root.querySelectorAll('[data-as-import-choice]').forEach(el=>el.onchange=()=>{if
     }
    }else{
     const data={title,content,conversationId:$('#as-memory-source').value,projectId:$('#as-memory-project').value};
+     if(memoryDraft){
+      if(data.conversationId!==memoryDraft.conversationId)return notify('La conversation source a changé. Recommence depuis le message à mémoriser.',true);
+      data.sourceMessageIndex=memoryDraft.sourceMessageIndex;
+      data.sourceRole=memoryDraft.sourceRole;
+     }
     const item=core.memory(db,data);
-    if(commit(s=>s.memories.push(item))){selectedImport=null;refresh();notify('Mémoire approuvée.')}
+    if(commit(s=>s.memories.push(item))){selectedImport=null;memoryDraft=null;refresh();notify('Mémoire approuvée avec sa provenance.')}
    }
   }catch(error){notify(error.message,true)}
  };
- root.querySelectorAll('[data-as-edit-memory]').forEach(b=>b.onclick=()=>{editingMemoryId=b.dataset.asEditMemory;refresh();$('#as-memory-title')?.focus()});
+ root.querySelectorAll('[data-as-edit-memory]').forEach(b=>b.onclick=()=>{memoryDraft=null;editingMemoryId=b.dataset.asEditMemory;refresh();$('#as-memory-title')?.focus()});
   root.querySelectorAll('[data-as-delete-memory]').forEach(b=>b.onclick=()=>{const id=b.dataset.asDeleteMemory;if(!confirm('Révoquer cette mémoire pour tous les assistants ?'))return;if(commit(s=>{s.memories=s.memories.filter(m=>m.id!==id);s.agents.forEach(a=>a.memoryIds=a.memoryIds.filter(x=>x!==id))})){if(generating)stop();refresh()}});
   const aForm=$('#as-agent-form');if(aForm){const project=$('#as-agent-project');const sync=()=>root.querySelectorAll('[data-memory-project]').forEach(x=>{const can=x.dataset.memoryProject==='general'||x.dataset.memoryProject===project.value;x.disabled=!can;if(!can)x.checked=false});project.onchange=sync;sync();aForm.onsubmit=e=>{e.preventDefault();const data={name:$('#as-agent-name').value,instructions:$('#as-agent-instructions').value,projectId:project.value,conversationIds:[...root.querySelectorAll('[name="agent-source"]:checked')].map(x=>x.value),memoryIds:[...root.querySelectorAll('[name="agent-memory"]:checked')].map(x=>x.value)};try{const item=core.agent(db,data);if(commit(s=>s.agents.push(item))){selectedAgent=item.id;selectedThread=item.threads[0].id;selectedImport=null;refresh();notify('Assistant créé. Charge le modèle pour commencer à discuter.')}}catch(e){notify(e.message,true)}}}
   root.querySelectorAll('[data-as-open-agent]').forEach(b=>b.onclick=()=>{if(generating)stop();selectedAgent=b.dataset.asOpenAgent;selectedThread=null;highlightedMessageIndex=-1;refresh()});
@@ -292,7 +298,7 @@ root.querySelectorAll('[data-as-import-choice]').forEach(el=>el.onchange=()=>{if
    }catch(error){notify('Copie brute impossible.',true)}
    return;
   }
-  if(name==='cancel-memory-edit'){editingMemoryId=null;return refresh()}
+  if(name==='cancel-memory-edit'){editingMemoryId=null;memoryDraft=null;return refresh()}
   if(name==='toggle-agent-edit'){const panel=$('#as-agent-edit');if(panel){panel.open=!panel.open;if(panel.open)$('#as-edit-agent-name')?.focus()}return}
   if(name==='confirm-import')return saveImport();
   if(name==='cancel-import'){++importGeneration;preview=null;return refresh()}
