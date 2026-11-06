@@ -115,6 +115,7 @@ function intake(){
  const createProject=ctx.projects.some(p=>p.id===requestProject)?requestProject:
   requestedClient&&ctx.projects.some(p=>p.id===requestedClient.project)?requestedClient.project:'';
  const createClientId=requestedClient&&clientTool.clientForTask(requestClientId,createProject,db.clients).ok?requestClientId:'';
+ const createDue=createClientId&&clientTool.validDate(requestedClient.nextDue||'')?requestedClient.nextDue||'':'';
  const filterClientId=requestedClient?requestClientId:'';
  if(filterClientId&&route().param!=='new')inboxFilter='all';
  const clientOptions=(project,selected='')=>{
@@ -200,7 +201,7 @@ function intake(){
  '<div id="control-task-list" class="control-task-list">'+rows+'</div><p class="control-task-none" id="control-task-none" hidden>Aucune tâche ne correspond à votre recherche ou au filtre choisi.</p>')+
  '<details class="panel shell-progressive-form control-task-create" id="task-create" '+(route().param==='new'?'open':'')+'><summary><strong>+ Créer une tâche</strong><small>Ajoutez une action et, si besoin, son échéance</small></summary><div class="shell-progressive-body"><form id="new-action">'+
  field('Action','title',createClientId?requestedClient.nextStep||'':'','text','required maxlength="180"')+selectProject(createProject)+clientField(createProject,createClientId)+
- '<div class="formgrid"><label>Priorité<select name="priority" class="field">'+options(['Normale','Haute','Critique'],'Normale')+'</select></label>'+field('Échéance','due','','date')+'</div>'+
+ '<div class="formgrid"><label>Priorité<select name="priority" class="field">'+options(['Normale','Haute','Critique'],'Normale')+'</select></label>'+field('Échéance','due',createDue,'date')+'</div>'+
  field('Lien de référence (facultatif)','url','','url','maxlength="2000"')+
  '<button class="primary">Ajouter la tâche</button></form></div></details>'+
  '<details class="panel shell-progressive-form control-task-externals"><summary><strong>Sources externes et alertes publiques</strong><small>Informations secondaires, non synchronisées</small></summary><div class="shell-progressive-body">'+
@@ -333,6 +334,8 @@ function clients(){
  const clientParams=new URLSearchParams(location.hash.split('?')[1]||'');
  const scoped=clientParams.get('project')||'';
  const focusedClient=clientParams.get('client')||'';
+ const today=window.CONTROL_TASKS?.localDay?.()||'';
+ const dueNow=items.filter(r=>['overdue','today'].includes(clientTool.followup(r,today).kind)).length;
  const scopedValid=known.has(scoped)?scoped:'';
  const optionsProject=(selected='')=>{
   const missing=selected&&!known.has(selected)?'<option value="'+h(selected)+'" selected>Projet conservé (non listé)</option>':'';
@@ -354,6 +357,8 @@ function clients(){
   const status=clientTool.statuses.includes(r.status)?r.status:'Statut inconnu';
   const projectLabel=r.project?pname(r.project):'Sans projet';
   const validDue=clientTool.validDate(r.nextDue||'')&&r.nextDue;
+  const followup=clientTool.followup(r,today);
+  const urgentFollowup=followup.kind==='overdue'||followup.kind==='today';
   const dueLabel=validDue?' · '+r.nextDue.slice(8,10)+'/'+r.nextDue.slice(5,7)+'/'+r.nextDue.slice(0,4):'';
   const permitted=known.has(r.project);
   const actionHref='#/control/inbox/new?client='+encodeURIComponent(r.id)+
@@ -369,11 +374,11 @@ function clients(){
    '</div>':'<p class="muted">Aucune tâche directement liée à cette fiche.</p>';
   const website=safe(r.website);
   const search=clientTool.normalize([r.name,r.nextStep||'',projectLabel,status].join(' '));
-  return '<article class="control-client-row" data-client-id="'+h(r.id)+'" data-client-status="'+h(status)+'" data-client-project="'+h(r.project||'')+'" data-client-search="'+h(search)+'">'+
+  return '<article class="control-client-row" data-client-id="'+h(r.id)+'" data-client-status="'+h(status)+'" data-client-project="'+h(r.project||'')+'" data-client-followup="'+h(followup.kind)+'" data-client-search="'+h(search)+'">'+
    '<div class="control-client-info"><strong>'+h(r.name)+'</strong>'+
    '<small>'+h(projectLabel)+' · '+h(status)+'</small>'+
-   (r.nextStep?'<p>Prochaine étape : '+h(r.nextStep)+h(dueLabel)+'</p>':'<p class="muted">Aucune prochaine étape renseignée.</p>')+taskItems+
-   '<div class="actions"><a class="button" href="'+h(actionHref)+'">Créer une tâche</a>'+
+   (r.nextStep?'<p>Prochaine étape : '+h(r.nextStep)+h(dueLabel)+'</p><span class="control-client-followup control-client-followup-'+h(followup.kind)+'">'+h(followup.label)+'</span>':'<p class="muted">Aucune prochaine étape renseignée.</p>')+taskItems+
+   '<div class="actions"><a class="button" href="'+h(actionHref)+'">'+(r.nextStep?'Préparer la relance':'Créer une tâche')+'</a>'+
    (permitted?'<a class="button" href="#/project/'+encodeURIComponent(r.project)+'/pilot">Ouvrir le projet</a>':'')+
    (website?href(website,'Site public'):'')+'</div></div>'+
    '<div class="control-client-controls"><details class="control-client-edit"><summary>Modifier</summary>'+form(r)+'</details>'+
@@ -383,7 +388,8 @@ function clients(){
  '<div class="control-client-stats" aria-label="Clients enregistrés localement">'+
  '<span><strong>'+items.length+'</strong> fiche(s)</span>'+
  '<span><strong>'+items.filter(r=>r.status==='En cours').length+'</strong> en cours</span>'+
- '<span><strong>'+items.filter(r=>r.nextStep&&r.status!=='Terminé').length+'</strong> prochaine(s) étape(s)</span></div>'+
+ '<span><strong>'+dueNow+'</strong> relance(s) à traiter</span></div>'+ 
+ '<div class="control-client-followup-filter"><button id="control-client-due-filter" type="button" aria-pressed="false">À relancer maintenant <strong>'+dueNow+'</strong></button><small>Échéances aujourd’hui ou dépassées, d’après vos fiches locales</small></div>'+ 
  '<section class="panel"><h2>Retrouver un client</h2><div class="control-client-toolbar">'+
  '<label>Rechercher<input id="control-client-search" class="field" type="search" maxlength="120" placeholder="Organisation, projet, étape…" autocomplete="off"></label>'+
  '<label>Statut<select id="control-client-filter" class="field"><option value="Tous">Tous</option>'+clientTool.statuses.map(s=>'<option value="'+h(s)+'">'+h(s)+'</option>').join('')+'</select></label>'+
@@ -398,7 +404,8 @@ function clients(){
   const project=$('#control-client-project').value;
   let count=0;
   $('#main').querySelectorAll('.control-client-row').forEach(row=>{
-   const show=(status==='Tous'||row.dataset.clientStatus===status)&&(!project||row.dataset.clientProject===project)&&
+   const dueOnly=$('#control-client-due-filter')?.getAttribute('aria-pressed')==='true';
+   const show=(!dueOnly||row.dataset.clientFollowup==='overdue'||row.dataset.clientFollowup==='today')&&(status==='Tous'||row.dataset.clientStatus===status)&&(!project||row.dataset.clientProject===project)&&
       (!query||row.dataset.clientSearch.includes(clientTool.normalize(query)));
    row.hidden=!show;if(show)count++;
   });
@@ -409,6 +416,7 @@ function clients(){
   const element=$(selector);
   element.addEventListener(selector.includes('search')?'input':'change',filter);
  }
+ $('#control-client-due-filter').onclick=()=>{const button=$('#control-client-due-filter');button.setAttribute('aria-pressed',String(button.getAttribute('aria-pressed')!=='true'));filter()};
  filter();
  if(focusedClient){
   const row=[...$('#main').querySelectorAll('.control-client-row[data-client-id]')].find(el=>el.dataset.clientId===focusedClient);
