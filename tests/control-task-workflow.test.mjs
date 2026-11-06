@@ -38,9 +38,9 @@ test('CONTROL 22: every local action or review has exactly one visible priority 
   {kind:'action',id:'done',title:'Fini',status:'done',due:'2026-11-01'}
  ];
  const groups=task.group(sample,day);
- assert.deepEqual(groups.map(x=>x.id),['overdue','today','review','next','done']);
- assert.deepEqual(groups.map(x=>x.items.length),[1,1,1,1,1]);
- assert.deepEqual(groups.flatMap(x=>x.items.map(item=>item.id)),['late','today','review','later','done']);
+ assert.deepEqual(Array.from(groups,x=>x.id),['overdue','today','review','next','done']);
+ assert.deepEqual(Array.from(groups,x=>x.items.length),[1,1,1,1,1]);
+ assert.deepEqual(Array.from(groups).flatMap(x=>Array.from(x.items,item=>item.id)),['late','today','review','later','done']);
 });
 test('CONTROL 22: cancelled tasks and missions not in review never appear in triage',()=>{
  const groups=task.group([
@@ -49,7 +49,7 @@ test('CONTROL 22: cancelled tasks and missions not in review never appear in tri
   {kind:'action',title:'En cours',status:'doing',due:'invalid'},
   {kind:'action',title:'Critique',status:'todo',priority:'Critique',due:''}
  ],day);
- assert.deepEqual(groups.map(x=>x.id),['next']);
+ assert.deepEqual(Array.from(groups,x=>x.id),['next']);
  assert.equal(groups[0].items.length,2);
 });
 test('CONTROL 22: overdue and due-today sorting is stable even when the input is scrambled',()=>{
@@ -59,7 +59,7 @@ test('CONTROL 22: overdue and due-today sorting is stable even when the input is
   {kind:'action',title:'A',status:'todo',due:'2026-10-20'},
   {kind:'action',title:'C',status:'doing',due:day}
  ];
- assert.deepEqual(task.group(unordered,day).map(x=>x.items.map(a=>a.title)),[['A','B'],['C','D']]);
+ assert.deepEqual(Array.from(task.group(unordered,day),x=>Array.from(x.items,a=>a.title)),[['A','B'],['C','D']]);
 });
 test('CONTROL 22: grouping is read-only, leaves the original records untouched',()=>{
  const source=[
