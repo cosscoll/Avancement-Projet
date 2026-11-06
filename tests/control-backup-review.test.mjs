@@ -278,6 +278,19 @@ test('invalid or incomplete transaction is rejected without modifying storage',(
  }
  assert.deepEqual(review.snapshot(store),original);
 });
+test('a failed post-restore UI reload triggers a safe in-memory refresh after rollback',()=>{
+ const center=readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
+ assert.match(center,/let reinitializationAttempted=false/);
+ assert.match(center,/if\(!result\.ok&&reinitializationAttempted&&!result\.rollbackUncertain\)/);
+ assert.match(center,/try\{init\(\);\}catch/);
+ const store=fakeStore(storedBase()),snapshot=review.snapshot(store);
+ let invoked=0;
+ const result=review.applyTransaction(store,snapshot,importedBase(),()=>{invoked++;throw Error('init failed')});
+ assert.equal(invoked,1);
+ assert.equal(result.ok,false);
+ assert.equal(result.rollbackUncertain,false);
+ assert.deepEqual(review.snapshot(store),snapshot);
+});
 test('restore transaction is used only after explicit preview and confirmation',()=>{
  const command=readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
  const backupSection=command.slice(command.indexOf('function backup(){'),command.indexOf('// Search only live, authorized'));
