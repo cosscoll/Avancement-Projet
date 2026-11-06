@@ -67,6 +67,15 @@ Pour chaque livraison suivante, ajouter une ligne avec les preuves correspondant
 [CONTROL — Cahier des charges TPE v1.17](CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md). Les parties « priorités », « navigation », « onboarding », « IA et mémoires », « sécurité » et « recette mesurable » font foi sur les livrables attendus, sous réserve des dépendances techniques et des permissions.
 
 
+## Préparation réelle de la campagne de tests locaux
+
+- **Guide visible :** [testeurs.html](../testeurs.html) et lien depuis l’accueil ; six actions dans l’interface existante, aucune fausse fonctionnalité.
+- **Données sûres :** export conversation ChatGPT fictif téléchargeable ; consignes explicites contre l’utilisation de vraies données ou d’archives privées.
+- **Retour :** JSON téléchargé localement (missions cochées, appareil, score de facilité, remarques) ; aucun envoi automatique ni accès au stockage privé CONTROL.
+- **Technique :** 800 tests Node réussis, recette publique Chromium 320 px et hors ligne réussie sur [run 42213333846](https://github.com/cosscoll/Avancement-Projet/actions/runs/42213333846), PWA v106 ; les tests physiques restent à réaliser.
+- **Interdictions :** ne pas proposer d’inscription Cloud, collaboration, import natif automatique des comptes IA, données réelles, Work/Codex ou automatisations ; CONTROL Cloud inactif et huit critères non validés.
+- **Campagne :** faire passer six missions à des personnes non initiées ; recueillir leurs rapports JSON et les observations sur smartphone réel avant de prétendre disposer d’une version prête pour utilisateurs professionnels.
+
 ## CONTROL 26 — Fonctions implémentées, validations locales et navigateur
 
 - **Interface :** import sélectif des historiques JSON/TXT, aucune conversation présélectionnée, consentement explicite de stockage non chiffré avant écriture. Un second consentement approuve chaque extrait de discussion que l'utilisateur veut transformer en mémoire.

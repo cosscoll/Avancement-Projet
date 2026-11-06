@@ -2,6 +2,18 @@
 _Mise à jour : 6 novembre 2026 · version de travail 1.18 · ciblage indépendants et équipes de 2 à 10 personnes_
 
 
+## Préparation des tests utilisateurs — CONTROL local (6 novembre 2026)
+
+**Résultat utilisateur visible :** un lien « Suivre le parcours de test » sur l’accueil conduit à **testeurs.html**. Six missions portent sur les vraies routes CONTROL : projet, tâche, client/relance, recherche, import IA/assistant et sauvegarde. L’archive **data/control-pilot-chatgpt.json** est synthétique et suffit à essayer l’import sans ouvrir les vraies conversations des participants. Le testeur coche chaque mission réussie, peut donner un score facultatif de facilité 1–5 et des remarques, puis télécharge un JSON **composé seulement du formulaire** (aucune télétransmission ni accès aux données locales métiers). Guide responsive 320 px et PWA hors ligne v106.
+
+**Preuves :** qualité [800/800](https://github.com/cosscoll/Avancement-Projet/actions/runs/42213250878), [Chromium sur le site public déployé](https://github.com/cosscoll/Avancement-Projet/actions/runs/42213333846), [publication Pages](https://github.com/cosscoll/Avancement-Projet/actions/runs/42213250581). Test mobile Chromium 320 px ne remplace pas des essais sur un Android et un iPhone physiques.
+
+**Conditions de la première campagne :** petite cohorte avec données fictives ; ouvrir une fenêtre de navigation privée pour éviter de mêler des données existantes, noter les blocages, transmettre uniquement le rapport téléchargé à l’organisateur. Ne jamais demander à un participant d’importer des conversations ou fichiers clients réels, ni d’activer un abonnement/modèle IA. Aucun serveur Cloud ni quotas d’automatisation activés.
+
+**Portée exclue :** véritables inscriptions, séparation des comptes, synchronisation et collaboration Cloud, connexion officielle OAuth, permissions A/B et tests réels multi-appareils. Le backend CONTROL connecté reste **INACTIVE** au 6 novembre 2026 et la sécurité serveur n’est pas certifiée. **Une bêta utilisant de vraies données de professionnels n’est pas autorisée** avant un backend indépendant, deux comptes A/B authentifiés, tests JWT/RLS/révocation, export/suppression de compte et validation expresse.
+
+**Suite :** faire passer le parcours à quelques utilisateurs novices et mobiles réels, classer les problèmes bloquants et relancer les tests après correction ; poursuivre CONTROL 27 de délégation contrôlée sans prétendre exécuter des commandes externes.
+
 ## CONTROL 26 — Choisir mes historiques et créer une mémoire approuvée (6 novembre 2026)
 
 **Problème résolu :** l'ancien import « tout ou rien » conservait toutes les conversations reconnues. Le parcours permet désormais de sélectionner individuellement les discussions et impose un consentement de stockage local, vérifié au moment de l'enregistrement. Le fichier est seulement analysé en mémoire avant validation ; zéro conversation ne doit être sauvegardée sans double choix (sélection et autorisation).

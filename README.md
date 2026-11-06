@@ -1,3 +1,11 @@
+## CONTROL — Première campagne de tests utilisateurs préparée (6 novembre 2026)
+
+**Test encadré de l’application locale :** [Ouvrir les six missions](testeurs.html). Le guide est accessible depuis l'accueil, sans inscription Cloud ; il fournit une archive ChatGPT **entièrement fictive** et permet à chaque testeur de télécharger un retour structuré (6 accomplissements, appareil, facilité 1–5, blocages) sans envoi réseau ni lecture des autres données du navigateur.
+
+**Preuves :** [800/800 tests qualité](https://github.com/cosscoll/Avancement-Projet/actions/runs/42213250878) ; [test navigateur sur le site publié](https://github.com/cosscoll/Avancement-Projet/actions/runs/42213333846) : guide affiché à 320 px, sans débordement, fonctionnel après mise hors ligne, cache PWA v106 ; [déploiement Pages](https://github.com/cosscoll/Avancement-Projet/actions/runs/42213250581). Les testeurs doivent utiliser des **données fictives**, idéalement dans une fenêtre privée. Les sauvegardes et conversations locales ne sont pas chiffrées ; le compte rendu ne doit pas contenir de secrets ni de fichier de sauvegarde.
+
+**À ne pas confondre :** ce protocole permet une **évaluation encadrée du prototype local**, pas une bêta multi-utilisateurs. Le projet CONTROL Cloud reste **INACTIVE** selon vérification connecteur du 6/11, configuration désactivée, huit contrôles non validés ; inscription, synchronisation, partage d’équipe et connexion native aux historiques ChatGPT/Claude/Gemini sont indisponibles. **Tests physiques Android/iPhone et recette A/B serveur** non réalisés.
+
 ## CONTROL 26 — Import sélectif et mémoires approuvées (6 novembre 2026)
 
 **Fonction livrée dans le code de `main`, PWA v104 :** dans **Mes assistants IA → Imports**, sélection explicite de chaque conversation analysée et accord de stockage local avant enregistrement. Dans une conversation importée, **« Proposer comme mémoire »** crée un brouillon modifiable d'un message précis. Un second accord est exigé avant son enregistrement. Chaque mémoire issue d'un message conserve sa provenance vérifiable (discussion, rang du message, rôle auteur) ; la suppression de l'archive retire ses mémoires liées et les références des agents. Aucune archive privée n'est envoyée à un fournisseur IA.
