@@ -115,6 +115,7 @@ try{
  // CONTROL 24 offline contract: the two added assets are in the active PWA shell.
  const cached=await wait(()=>run("(async()=>{const sw=await navigator.serviceWorker.ready;const cache=await caches.open('control-shell-v101');const paths=['./assets/control-project-brief.js','./assets/control-project-brief.css'];const entries=await Promise.all(paths.map(path=>cache.match(new URL(path,sw.scope))));return entries.every(Boolean)})()"),14000);
  assert.equal(cached,true,'The critical project summary assets must be available in the offline cache');
+ console.log('CONTROL 24 CACHE PASS: both overview assets have cached responses');
  await page.send('Network.enable');
  await page.send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await page.send('Page.reload',{ignoreCache:false});
@@ -128,5 +129,5 @@ try{
  try{page?.ws.close()}catch{}
  try{browser?.ws.close()}catch{}
  chrome.kill('SIGKILL');
- rmSync(profile,{recursive:true,force:true});
+ try{rmSync(profile,{recursive:true,force:true,maxRetries:10,retryDelay:200})}catch(error){console.warn('Chrome test cleanup warning:',error.message)}
 }
