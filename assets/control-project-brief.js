@@ -23,6 +23,31 @@ function summarize(project,local,raw,now=new Date()){
  for(const item of [...(Array.isArray(project.other_sites)?project.other_sites:[]),...(Array.isArray(d.links)?d.links:[])])if(obj(item))add(item.label,item.url);
  return{status,projectId:id,open:pending.length,overdue:pending.filter(x=>level(x)===0).length,tasks:status==='ok'?tasks:[],notes,report:reports.length?{provider:reports[0][0],date:String(reports[0][1].updatedAt||'').slice(0,10)}:null,links:links.slice(0,4)};
 }
-root.CONTROL_PROJECT_BRIEF={summarize,safeUrl,esc};
+function render(project,local,raw,now){
+ const s=summarize(project,local,raw,now);if(!s.projectId)return'';
+ const p=encodeURIComponent(s.projectId);
+ const url='#/control/inbox?project='+p,create='#/control/inbox/new?project='+p;
+ const tasks=s.status==='invalid'?'<p role="alert" class="control-project-brief-empty">Tâches locales illisibles : consultez les sauvegardes sans modifier ces données.</p>':
+ s.tasks.length?s.tasks.map(t=>'<a class="control-project-brief-task" href="'+url+(t.id?'&task='+encodeURIComponent(t.id):'')+'"><strong>'+esc(t.title)+'</strong><small>'+esc(t.label)+'</small></a>').join(''):
+ '<p class="control-project-brief-empty">Aucune tâche ouverte associée à ce projet sur cet appareil.</p>';
+ const notes=s.notes?'<p class="control-project-brief-note">'+esc(s.notes.slice(0,240))+(s.notes.length>240?'…':'')+'</p>':
+ '<p class="control-project-brief-empty">Aucune décision ou note saisie pour ce projet.</p>';
+ const report=s.report?'<small class="control-project-brief-provenance">Dernier bilan IA ajouté manuellement : '+esc(s.report.provider)+(validDate(s.report.date)?' · '+esc(s.report.date):'')+'</small>':
+ '<small class="control-project-brief-provenance">Aucun bilan IA ajouté manuellement.</small>';
+ const resources=s.links.length?s.links.map(x=>'<a class="control-project-brief-resource" href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">'+esc(x.label)+' <span aria-hidden="true">↗</span></a>').join(''):
+ '<p class="control-project-brief-empty">Aucune ressource enregistrée pour ce projet.</p>';
+ return '<section id="control-project-brief" class="control-project-brief" data-project-brief="'+esc(s.projectId)+'" aria-labelledby="control-project-brief-title">'+
+ '<div class="control-project-brief-head"><div><small>MON PROJET</small><h2 id="control-project-brief-title">En un coup d’œil</h2></div><a class="control-project-brief-create" href="'+create+'">+ Nouvelle tâche liée</a></div>'+
+ '<div class="control-project-brief-grid">'+
+ '<div class="control-project-brief-panel" data-brief-panel="tasks"><div class="control-project-brief-panel-head"><h3>Prochaines tâches</h3><span>'+(s.status==='ok'?s.open:'—')+'</span></div>'+
+ (s.status==='ok'&&s.overdue?'<p class="control-project-brief-alert">'+s.overdue+' tâche(s) en retard</p>':'')+
+ '<div class="control-project-brief-list">'+tasks+'</div><a class="control-project-brief-more" href="'+url+'">Toutes les tâches du projet</a></div>'+
+ '<div class="control-project-brief-panel" data-brief-panel="decisions"><div class="control-project-brief-panel-head"><h3>Décisions et notes</h3></div>'+
+ notes+report+'<a class="control-project-brief-more" href="#/project/'+p+'/pilot">Voir et modifier dans Suivi</a></div>'+
+ '<div class="control-project-brief-panel" data-brief-panel="resources"><div class="control-project-brief-panel-head"><h3>Ressources</h3></div>'+
+ '<div class="control-project-brief-list">'+resources+'</div><a class="control-project-brief-more" href="#/project/'+p+'/resources">Tous les documents et liens</a></div></div>'+
+ '<p class="control-project-brief-footnote">Données enregistrées sur cet appareil pour ce projet. Les comptes IA ne sont pas synchronisés automatiquement.</p></section>';
+}
+root.CONTROL_PROJECT_BRIEF={summarize,render,safeUrl,esc};
 if(typeof module==='object'&&module.exports)module.exports=root.CONTROL_PROJECT_BRIEF;
 })(typeof window==='object'?window:globalThis);
