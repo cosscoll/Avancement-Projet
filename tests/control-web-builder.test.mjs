@@ -107,7 +107,7 @@ test('user interface is in a sandbox with no scripts or remote publishing',()=>{
  assert.ok(index.indexOf('assets/control-web-builder.js')<index.indexOf('assets/command-center.js'));
  assert.ok(index.includes('assets/control-web-builder.css'));
  assert.match(app,/function webbuilder\(\)/);
- assert.match(app,/const pages=\{manager,tools,aistudio,webbuilder/);
+ assert.match(app,/const pages=\{manager,team,clients,audit:auditData,tools,aistudio,webbuilder/);
  assert.match(app,/return commitLocal\(\(\)=>\{/);
  assert.match(app,/websites:\[\]/);
  assert.match(app,/decisions','websites','messages/);
