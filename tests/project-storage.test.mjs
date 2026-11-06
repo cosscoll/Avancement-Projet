@@ -18,7 +18,7 @@ test('Failed local storage never creates a phantom user project',()=>{
     classList:{add(){},remove(){},toggle(){}},focus(){},addEventListener(){},setAttribute(){},});
   return nodes.get(id);
  }
- const document={querySelector:node,querySelectorAll:()=>[]};
+ const document={querySelector:node,querySelectorAll:()=>[],body:{classList:{add(){},remove(){}}}};
  const messages=[];
  const store={getItem:()=>null,setItem:()=>{throw new Error('QuotaExceededError')}};
  const win={addEventListener(){},setTimeout(){},clearTimeout(){},CONTROL_HELP:{setAdapter(){}}};
@@ -46,7 +46,7 @@ test('Personal persistent saves acknowledge success only after write',()=>{
 test('Invalid persisted JSON primitives do not crash CONTROL initialization',()=>{
  for(const raw of ['null','[]','42','"invalid"','not-json']){
   const node=()=>({classList:{add(){},remove(){}},textContent:'',addEventListener(){},setAttribute(){}});
-  const win={addEventListener(){},CONTROL_HELP:{setAdapter(){}}},document={querySelector:node,querySelectorAll:()=>[]};
+  const win={addEventListener(){},CONTROL_HELP:{setAdapter(){}}},document={querySelector:node,querySelectorAll:()=>[],body:{classList:{add(){},remove(){}}}};
   const storage={getItem:()=>raw,setItem(){}};
   new Function('window','document','localStorage','location','FormData',code)(win,document,storage,{hash:'#/'},class{});
   const h=win.__CONTROL_TEST__;
