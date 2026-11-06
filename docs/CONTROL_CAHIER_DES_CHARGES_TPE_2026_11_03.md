@@ -1,6 +1,28 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 5 novembre 2026 · version de travail 1.7 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 6 novembre 2026 · version de travail 1.8 · ciblage indépendants et équipes de 2 à 10 personnes_
 
+
+## Session P0 — Recette réelle sur GitHub Pages (6 novembre 2026)
+
+**Mission accomplie partiellement en conditions réelles :** pour la première fois, la restauration des données de CONTROL a été testée directement sur **https://cosscoll.github.io/Avancement-Projet/** dans un navigateur isolé, avec uniquement des projets, tâches et clients fictifs. Le navigateur public affichait **PWA v91** et les modules de restauration étaient effectivement chargés.
+
+**Résultats réels constatés :**
+- La page Sauvegardes présente les formulaires d'export et d'import ; aucune erreur JavaScript n'a été relevée à l'ouverture.
+- Un import `control-v2-plain` de démonstration a affiché correctement **0 → 1 projet personnalisé, 0 → 1 client, 0 → 1 tâche**, avec annulation sans modification des données.
+- Après une restauration confirmée, les trois zones de stockage ont contenu les références de test ; l'écran Clients montrait la tâche reliée, le filtre de tâches retrouvait le client, et le diagnostic indiquait **0 erreur / 0 avertissement**. Les données étaient toujours présentes après rechargement.
+- Une sauvegarde fictive contenant deux projets avec le **même identifiant** a affiché **« Restauration impossible »**, désactivé le bouton et masqué la case de consentement. Une tentative de déclenchement du bouton par code n'a modifié aucun enregistrement.
+- Les tests ont révélé une faiblesse d'ergonomie : le JSON sans enveloppe CONTROL affichait un message d'erreur générique. Une fonction pure `safeImportError` a donc été ajoutée à `assets/control-backup-review.js`, avec des messages préétablis compréhensibles sans exposer les détails du fichier, et intégrée dans le parcours d'import.
+- Deux sauvegardes fictives versionnées et sans secret sont fournies dans `tests/fixtures/`. Les tests Chromium du dépôt incluent désormais le blocage des doublons même si le gestionnaire est invoqué directement, et l'explication des fichiers non reconnus.
+- **63 contrôles ciblés de logique/syntaxe passent sur 63** après intégration et version PWA **v92** enregistrée sur `main`.
+
+**Ce qui n'est pas encore prouvé :**
+- L'ouverture d'un **second profil de navigateur indépendant** a expiré. Le test d'export physique depuis le navigateur A puis import dans B est **non validé**. Les deux stockages simulés par les tests Node ne remplacent pas un second vrai profil.
+- La publication **v92** et son nouveau message d'erreur n'ont pas été revérifiés publiquement : l'ancienne session de navigateur de test n'était plus accessible à la fin. Seule la diffusion de **v91** a été attestée pendant la recette.
+- Aucun test bout-en-bout d'export chiffré, de faible espace disque sur le navigateur public ou d'ouverture Cloud ne peut être considéré réussi.
+
+**Rapport détaillé, preuve et grille de recette :** [CONTROL_RECETTE_NAVIGATEUR_2026_11_06.md](CONTROL_RECETTE_NAVIGATEUR_2026_11_06.md). Les résultats reproductibles sont encadrés par `tests/control-ia-browser-smoke.mjs`, `tests/control-backup-review.test.mjs` et `tests/control-data-audit.test.mjs`.
+
+**Suite P0 :** valider deux profils indépendants A/B, export chiffré et restauration effective ; tester les supports mobiles et le cache hors ligne ; vérifier les permissions RLS/JWT serveur uniquement sur un environnement autorisé. Le Cloud et les automatisations restent désactivés, sans consommation de services payants.
 
 ## Session P0 — Restauration transactionnelle et tests de transfert (6 novembre 2026)
 
