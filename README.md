@@ -1,3 +1,11 @@
+## 6 novembre 2026 — CONTROL 16 : première recette réelle de sauvegarde sur GitHub Pages
+
+**Navigation et import effectivement testés en navigateur :** la version **v91** servie sur GitHub Pages ouvrait bien les pages de sauvegarde et de diagnostic. Dans un profil de navigateur isolé, la prévisualisation, l'annulation, l'import confirmé et la persistance après rechargement ont été observés avec **un projet, un client et une tâche fictifs**. Les liens client–projet–tâche et le filtre par client fonctionnaient ; le diagnostic affichait zéro anomalie. Une sauvegarde enveloppée contenant des projets avec le même ID a été refusée, même en tentant d'invoquer le bouton désactivé par code.
+
+**Amélioration livrée sur `main` :** messages d'erreur de sauvegarde compréhensibles et prédéfinis (notamment lorsque le JSON n'est pas un export CONTROL) ; deux fixtures fictives et des régressions navigateur réutilisables ; cache **PWA v92**. **63 contrôles ciblés JS/syntaxe exécutés et réussis.** La diffusion publique de v92, le test d'un fichier exporté et importé dans **deux vrais profils indépendants** et les essais de sauvegarde chiffrée restent à confirmer.
+
+**Documents :** [cahier des charges v1.8](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md) · [recette en vrai navigateur, résultats et limites](docs/CONTROL_RECETTE_NAVIGATEUR_2026_11_06.md). Aucune automatisation, Cloud ni dépense activée.
+
 ## 6 novembre 2026 — CONTROL 15 : restauration transactionnelle testable
 
 **Correction P0 sur `main` :** les doublons de projets personnalisés et les identifiants entrant en collision avec le catalogue officiel bloquent désormais toute restauration. Le moteur `applyTransaction` remplace la succession d'écritures dans l'interface par une transaction locale vérifiable : contrôle de concurrence, validation des écritures, retour arrière conditionnel sans écraser les modifications d'un autre onglet.
