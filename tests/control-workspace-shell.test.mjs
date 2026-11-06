@@ -5,17 +5,18 @@ const read=f=>readFileSync(new URL('../'+f,import.meta.url),'utf8');
 const personal=read('index.html'),cloud=read('app.html'),cloudJs=read('assets/cloud-app.js');
 const css=read('assets/workspace-shell.css'),sw=read('service-worker.js');
 const localScript=personal.match(/<script>([\s\S]*?)<\/script>/)?.[1]||'';
-test('desktop CONTROL is a real two-zone workspace, not another centered card layout',()=>{
+test('approved simple homepage replaces the legacy dark two-column rail without deleting routes',()=>{
  assert.match(personal,/<body class="control-shell-v3">/);
  assert.match(personal,/<aside class="shell-sidebar" aria-label="Navigation permanente">/);
- assert.match(css,/@media\s*\(min-width:960px\)/);
- assert.match(css,/margin:0 0 0 262px/);
- assert.match(css,/background:#192331/);
- assert.match(css,/\.shell-feature-grid\{display:grid/);
- assert.match(css,/\.shell-dashboard-section\{order:3\}/);
- assert.match(css,/\.control-whats-new\{order:4\}/);
- assert.match(personal,/shell-feature-primary/);
- assert.match(personal,/shell-projects-list/);
+ assert.match(personal,/href="assets\/control-home-v6\.css"/);
+ assert.match(personal,/href="assets\/control-workspace-v7\.css"/);
+ assert.match(personal,/control-home-v6-header/);
+ assert.match(personal,/control-home-v6-priorities/);
+ const homeStyle=read('assets/control-home-v6.css');
+ const workspaceStyle=read('assets/control-workspace-v7.css');
+ assert.match(homeStyle,/control-simple-home \.shell-sidebar/);
+ assert.match(workspaceStyle,/control-simple-workspace \.shell-sidebar/);
+ assert.match(personal,/document\.body\.classList\.add\('control-simple-home'\)/);
 });
 test('desktop sidebar uses existing app routes and recent projects, without duplicating bottom tabs',()=>{
  for(const route of ['#/','control/inbox','control/manager','control/missions','control/calendar','automations','control/tools'])
@@ -28,7 +29,7 @@ test('desktop sidebar uses existing app routes and recent projects, without dupl
 test('personal dashboard preserves project creation, search, all-project pagination and full feature access',()=>{
  for(const selector of ['id="add-project"','id="new-project"','id="cards"','id="more-projects"','id="search"','data-control-nav-open'])
   assert.ok(localScript.includes(selector),selector);
- for(const text of ['NOUVEAUTÉS DISPONIBLES','clarity-work-nav','clarity-more-tabs','control-whats-new'])
+ for(const text of ['control-home-v6-welcome','control-home-v6-priorities','control-home-v6-advanced','control-workspace-mainnav'])
   assert.ok(localScript.includes(text),text);
  new Function(localScript);
 });
@@ -54,5 +55,6 @@ test('current PWA release precaches the redesigned shell and invalidates stale i
  assert.match(sw,/\.\/assets\/workspace-shell\.css/);
  assert.match(personal,/href="assets\/workspace-shell.css"/);
  assert.match(cloud,/href="\.\/assets\/workspace-shell.css"/);
- assert.match(read('tests/control-ia-browser-smoke.mjs'),/1440px desktop has persistent dark navigation/);
+ assert.match(read('tests/control-ia-browser-smoke.mjs'),/control-home-v6-stats/);
+ assert.match(read('tests/control-ia-browser-smoke.mjs'),/width:1440,height:900/);
 });
