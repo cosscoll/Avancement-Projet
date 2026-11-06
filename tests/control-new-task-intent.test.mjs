@@ -7,8 +7,8 @@ const finderCode=readFileSync(new URL('../assets/navigation-hub.js',import.meta.
 const command=readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
 const routeSource=command.match(/function route\(\)\{[^\n]*\}/)?.[0]||'';
 const focusSource=command.slice(
- command.indexOf(" if(route().page==='inbox'&&route().param==='new'){"),
- command.indexOf(" paintSprints('#inbox-sprint-status',true);")
+ command.indexOf(" if(route().param==='new'){"),
+ command.indexOf(" const externalPanel=$('#main').querySelector('.control-task-externals');")
 );
 
 test('new task intent leads straight to the personal action form and stays unavailable in Cloud',()=>{
@@ -31,7 +31,7 @@ test('inbox/new is parsed as inbox with a safe new-form instruction',()=>{
 });
 
 test('direct route scrolls to the action title and focuses it without writing data',()=>{
- assert.ok(focusSource.startsWith(" if(route().page==='inbox'&&route().param==='new'){"));
+ assert.ok(focusSource.startsWith(" if(route().param==='new'){"));
  let scrolls=0,focuses=0;
  const title={scrollIntoView(){scrolls++},focus(){focuses++}};
  const context={route:()=>({page:'inbox',param:'new'}),$:(selector)=>{
