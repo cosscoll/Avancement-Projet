@@ -55,8 +55,8 @@ test('Known feature pages, help and inner screens all have theme scopes',()=>{
 });
 test('New stylesheet participates in reliable PWA offline install',()=>{
  const sw=read('service-worker.js');
- assert.match(sw,/const CACHE_SHELL='control-shell-v112'/);
- assert.match(sw,/const CACHE_PUBLIC='control-public-data-v112'/);
+ assert.match(sw,/const CACHE_SHELL='control-shell-v113'/);
+ assert.match(sw,/const CACHE_PUBLIC='control-public-data-v113'/);
  const parts=sw.match(/const (?:ASSETS|CRITICAL_SHELL)=.+/g)||[];
  assert.ok(parts.length>=2);
  for(const part of parts)assert.match(part,/control-brand-global\.css/);
@@ -155,5 +155,13 @@ test('Operator mission approval view is warm but retains all its safe actions',(
  for(const target of ['.control-operator [data-op-draft]', '.control-operator form label',
  '.control-operator-response:not(:empty)', '.control-operator-link']){
   assert.ok(brand.includes(target),'Old operator color: '+target);
+ }
+});
+
+test('Legacy labels and secondary buttons never reintroduce the navy UI palette',()=>{
+ for(const selector of ['.tool-controls>label','.deploy-check-grid label',
+ '.as-connect-card button:disabled','.as-connect-plan p','.as-memory-draft p',
+ '.web-builder button:not(.primary)']){
+  assert.ok(brand.includes(selector),'Remaining navy control: '+selector);
  }
 });

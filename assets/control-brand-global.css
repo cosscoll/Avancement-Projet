@@ -845,3 +845,38 @@ body.control-shell-v3 .loc-shell .control-operator-response .control-operator-li
  border-color:var(--control-edge)!important;
  background:var(--control-paper)!important;
 }
+
+
+/* Final calculated-style audit: secondary labels and neutral buttons. */
+body.control-shell-v3 .tool-page .tool-controls>label,
+body.control-shell-v3 .deploy-page .deploy-check-grid label,
+body.control-shell-v3 .deploy-page .deploy-buttons a,
+body.control-shell-v3 .deploy-page .deploy-buttons button:not([data-deploy-prompt]),
+body.control-shell-v3 .as-shell :is(.as-connect-plan p,.as-memory-draft p){
+ color:var(--control-muted)!important;
+}
+body.control-shell-v3 .deploy-page :is(.deploy-buttons a,.deploy-buttons button:not([data-deploy-prompt])){
+ background:var(--control-paper)!important;
+ border-color:var(--control-edge)!important;
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .deploy-page :is(.deploy-buttons a,.deploy-buttons button:not([data-deploy-prompt])):hover{
+ background:var(--control-peach-soft)!important;
+}
+body.control-shell-v3 .as-shell .as-connect-card button:disabled,
+body.control-shell-v3 .as-shell .as-connect-card button[disabled]{
+ color:var(--control-muted)!important;
+ border-color:var(--control-line)!important;
+ background:var(--control-cream)!important;
+ cursor:not-allowed;
+}
+body.control-shell-v3 .as-shell .as-memory-draft strong{
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .web-builder button:not(.primary):not(.danger):not(#builder-delete){
+ color:var(--control-orange-deep)!important;
+ border-color:var(--control-line);
+}
+body.control-shell-v3 .web-builder button:not(.primary):not(.danger):not(#builder-delete):hover{
+ border-color:var(--control-edge);
+}

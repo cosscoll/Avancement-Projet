@@ -1,3 +1,5 @@
+**Charte graphique CONTROL :** [contrat « Simple & Humain »](docs/CONTROL_CHARTE_APPLICATIVE_2026_11_06.md) — palette, composants, pages et contrôles visuels.
+
 ## CONTROL — Première campagne de tests utilisateurs préparée (6 novembre 2026)
 
 **Test encadré de l’application locale :** [Ouvrir les six missions](testeurs.html). Le guide est accessible depuis l'accueil, sans inscription Cloud ; il fournit une archive ChatGPT **entièrement fictive** et permet à chaque testeur de télécharger un retour structuré (6 accomplissements, appareil, facilité 1–5, blocages) sans envoi réseau ni lecture des autres données du navigateur.
