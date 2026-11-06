@@ -1039,10 +1039,12 @@ function backup(){
  $('#main [data-act="download-corrupt"]')?.addEventListener('click',()=>{try{const raw=localStorage.getItem(KEY);if(raw===null)throw Error('Données non accessibles');const url=URL.createObjectURL(new Blob([raw],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='CONTROL-donnees-brutes-'+new Date().toISOString().slice(0,10)+'.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Copie brute téléchargée. Elle peut contenir des informations sensibles.')}catch{toast('Récupération brute impossible dans ce navigateur.')}});
  for(const [key,name] of [[HUB,'hub'],[AUTOS,'automations'],[STUDIO,'studio']])$('#main [data-act="download-raw:'+name+'"]')?.addEventListener('click',()=>downloadRawStorage(key,name));
  const restore=window.CONTROL_BACKUP_REVIEW;
- let pending=null;
+ let pending=null,importGeneration=0;
  const preview=$('#import-preview'),comparison=$('#import-comparison'),message=$('#import-status');
  const integrityBox=$('#import-integrity'),integrityConsent=$('#import-integrity-consent'),integrityAck=$('#import-integrity-ack'),applyButton=$('#import-apply');
  const resetPreview=()=>{
+  // Invalidate unfinished file reads and AES-GCM decryptions as well as visible previews.
+  importGeneration++;
   pending=null;preview.hidden=true;comparison.replaceChildren();integrityBox.replaceChildren();
   integrityConsent.hidden=true;integrityAck.checked=false;applyButton.disabled=false;
  };
@@ -1072,14 +1074,19 @@ function backup(){
   preview.hidden=false;
  };
  $('#import-cancel').onclick=()=>{resetPreview();message.textContent='Import annulé. Aucune donnée modifiée.'};
- $('#import-data').addEventListener('change',()=>{if(pending){resetPreview();message.textContent='Fichier ou mot de passe modifié : relance la vérification.'}});
+ $('#import-data').addEventListener('change',()=>{resetPreview();message.textContent='Fichier ou mot de passe modifié : relance la vérification.'});
  registerForm('#import-data',async f=>{
   resetPreview();
+  const generation=importGeneration;
+  message.textContent='Vérification du fichier en cours. Aucune donnée modifiée.';
   const file=f.get('file'),pw=String(f.get('password')||'');
   const pwInput=$('#import-data [name="password"]');if(pwInput)pwInput.value='';
   if(!file||typeof file.size!=='number'||file.size>6000000||file.size===0){message.textContent='Choisis un fichier JSON (6 Mo maximum, chiffré ou non).';return}
   try{
-   const data=await unpack(JSON.parse(await file.text()),pw);
+   const envelope=JSON.parse(await file.text());
+   if(generation!==importGeneration)return; // File, password or preview changed while reading.
+   const data=await unpack(envelope,pw);
+   if(generation!==importGeneration)return; // Do not show a stale decrypted preview.
    if(!validateBackupData(data))throw Error('Invalid backup format');
    // A valid backup is only inspected; no storage writes during this phase.
    const original=restore.snapshot(localStorage);
@@ -1095,6 +1102,7 @@ function backup(){
    if(corrupt.length)comparison.insertAdjacentHTML('afterbegin','<p role="alert" class="notice"><strong>Attention :</strong> '+corrupt.length+' espace(s) locaux sont illisibles. Leurs éléments actuels ne peuvent pas être dénombrés ; conserve leur copie brute avant la restauration.</p>');
    message.textContent='Sauvegarde déchiffrée et vérifiée. Examine les différences avant de confirmer.';
   }catch(error){
+   if(generation!==importGeneration)return; // A previous request must not overwrite a newer status.
    resetPreview();
    message.textContent=restore.safeImportError(error);
   }
