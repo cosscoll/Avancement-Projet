@@ -1,3 +1,11 @@
+## CONTROL 20 — Une amélioration visible par session (6 novembre 2026)
+
+**Organisation validée :** [plan des prochaines sessions avec livrables visibles, critères de recette et contrôle public](docs/CONTROL_PLAN_SESSIONS_LIVRABLES_2026_11_06.md). Chaque session doit modifier un parcours réellement utilisable sur le site, et ne sera clôturée que si le commit sur `main`, les tests Node, la recette Chromium publique et GitHub Pages sont confirmés. Aucun travail récurrent ou service payant n'est déclenché automatiquement.
+
+**Session 20 publiée sur le site :** depuis l'accueil CONTROL v6, **« + Nouvelle tâche »** ouvre directement le formulaire, avec focus sur le titre ; l'état vide affiche **« Créer ma première tâche »**. Charte préservée, affichage responsive, cache **PWA v96**.
+
+**Preuves :** [762/762 tests réussis](https://github.com/cosscoll/Avancement-Projet/actions/runs/42194565344) ; [publication GitHub Pages](https://github.com/cosscoll/Avancement-Projet/actions/runs/42194758506) ; [test Chromium sur le site publié, bouton et focus réussis](https://github.com/cosscoll/Avancement-Projet/actions/runs/42194841844). [Cahier des charges v1.12](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md).
+
 ## 6 novembre 2026 — CONTROL 19 : transfert portable AES-GCM et JSON
 
 **Recette réelle ajoutée :** export de données fictives par les formulaires CONTROL, puis restauration dans deux contextes Chromium indépendants de la source (stockages locaux séparés), une fois avec chiffrement AES-GCM et une fois sans chiffrement. Mauvais mot de passe refusé, aperçu non destructif, consentement explicite, concordance des tâches/agents/mémoires et conservation après actualisation.
