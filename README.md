@@ -1,3 +1,13 @@
+## CONTROL 24–25 — Tableau projet + recherche contextualisée (6 novembre 2026)
+
+**Deux sessions visibles livrées sur le site public, PWA v101 :**
+- **CONTROL 24 :** à l'ouverture d'un espace projet, « En un coup d’œil » rassemble tâches ouvertes prioritaires, notes/derniers bilans saisis manuellement et ressources HTTPS. Le lien « Toutes les tâches du projet » applique effectivement le bon filtre aux tâches et aux compteurs. Les fichiers sont précachés et le panneau a été rechargé en Chromium **sans réseau**.
+- **CONTROL 25 :** la **Recherche universelle** affiche résultats groupés (tâches, décisions, projets, clients, missions, événements, ressources), avec leurs projets, provenances et dates déclarées. Le lien « Rechercher dans ce projet » préfiltre la recherche, sans mélanger les données des autres projets ni communiquer avec une IA distante.
+
+**Preuves :** [789/789 tests Node réussis](https://github.com/cosscoll/Avancement-Projet/actions/runs/42205346466), [recette ciblée Chromium publique et hors ligne réussie](https://github.com/cosscoll/Avancement-Projet/actions/runs/42206519001), [déploiement GitHub Pages](https://github.com/cosscoll/Avancement-Projet/actions/runs/42206429921). Une installation réelle sur téléphone et la synchronisation Cloud ne sont pas couvertes par cette recette.
+
+**À poursuivre :** CONTROL 26 — assistant personnalisé et import de mémoire avec consentement explicite. [Cahier des charges v1.17](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md) · [Plan des sessions](docs/CONTROL_PLAN_SESSIONS_LIVRABLES_2026_11_06.md).
+
 ## CONTROL 23 — Clients et relances réellement actionnables (6 novembre 2026)
 
 **Publié :** les fiches clients locales indiquent si une relance est en retard, prévue aujourd'hui, à venir ou à planifier. Le filtre « À relancer maintenant » n'affiche que les fiches à échéance et se combine aux autres critères. Le bouton « Préparer la relance » ouvre la création d'une tâche avec titre, client, projet et échéance préremplis ; aucune tâche n'est créée sans validation. Les clients terminés n'apparaissent pas comme relances dues. **PWA v99**.
