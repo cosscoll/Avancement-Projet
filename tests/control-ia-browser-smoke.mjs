@@ -822,6 +822,13 @@ try{
  assert.equal(await js("localStorage.getItem('control-hub-v2')"),backupBefore.hub,'Inspecting and cancelling project import must not write');
  log('CONTROL 14: imported custom projects are counted without mutating local project data');
 
+ // CONTROL 17: user receives an actionable error for JSON that lacks a CONTROL backup envelope.
+ await js("(()=>{const payload={command:{actions:[],missions:[]},hub:{custom:[]},automations:{entries:[]}};const dt=new DataTransfer();dt.items.add(new File([JSON.stringify(payload)],'pas-une-sauvegarde.json',{type:'application/json'}));const form=document.querySelector('#import-data');form.elements.file.files=dt.files;form.requestSubmit();return true})()");
+ await ready(()=>js("document.querySelector('#import-status')?.textContent.includes('ne correspond pas à une sauvegarde CONTROL')"),10000)();
+ assert.equal(await js("document.querySelector('#import-preview').hidden"),true);
+ assert.deepEqual(await js("({command:localStorage.getItem('control-command-v1'),hub:localStorage.getItem('control-hub-v2'),autos:localStorage.getItem('control-automations-v1')})"),backupBefore);
+ log('CONTROL 17: unknown backup format is rejected with a human-readable explanation');
+
  // CONTROL 16: malformed projects must remain non-restorable even on forced handler execution.
  // Use an exact versioned fixture, including the required control-v2-plain envelope.
  const duplicateFixture=JSON.parse(readFileSync(resolve(root,'tests/fixtures/control-backup-duplicate-project-fictif.json'),'utf8'));
