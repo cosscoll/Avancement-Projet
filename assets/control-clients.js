@@ -60,6 +60,19 @@ function matches(client,query='',status='Tous',project=''){
  if(!query.trim())return true;
  return normalize([client.name,client.nextStep,client.status,client.project].join(' ')).includes(normalize(query));
 }
+// A client's follow-up state is a read-only hint, not a sent message or reminder.
+function followup(client,today=new Date()){
+ if(!client||typeof client!=='object'||client.status==='Terminé'||!String(client.nextStep||'').trim())
+  return {kind:'none',label:'',due:''};
+ const current=typeof today==='string'&&validDate(today)?today:
+  [today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
+ const date=client.nextDue||'';
+ if(!validDate(date))return {kind:'invalid',label:'Date de relance à corriger',due:''};
+ if(!date)return {kind:'unscheduled',label:'Date à planifier',due:''};
+ return date<current?{kind:'overdue',label:'Relance en retard',due:date}:
+  date===current?{kind:'today',label:"Relance aujourd’hui",due:date}:
+  {kind:'upcoming',label:'Relance à venir',due:date};
+}
 function sort(clients=[]){
  const index={Prospect:0,'En cours':1,'Terminé':2};
  const priority=value=>Object.hasOwn(index,value)?index[value]:3;
@@ -68,7 +81,7 @@ function sort(clients=[]){
   due(a).localeCompare(due(b))||
   String(a?.name||'').localeCompare(String(b?.name||''),'fr'));
 }
-const api={statuses,validDate,normalize,safeWebsite,validate,matches,sort,clientForTask,eligibleForProject,tasksForClient};
+const api={statuses,validDate,normalize,safeWebsite,validate,matches,sort,followup,clientForTask,eligibleForProject,tasksForClient};
 if(typeof module==='object'&&module.exports)module.exports=api;
 if(root)root.CONTROL_CLIENTS=api;
 })(typeof window==='object'?window:undefined);
