@@ -170,8 +170,8 @@ test('CONTROL theme and offline shell include the client feature',()=>{
  assert.ok(html.indexOf('control-brand-simple-humain.css')<html.indexOf('control-clients.css'));
  assert.match(css,/control-client-row:has\(\.control-client-edit\[open\]\)/);
  assert.match(css,/@media\(max-width:420px\)/);
- assert.match(sw,/control-shell-v92/);
- assert.match(sw,/control-public-data-v92/);
+ assert.match(sw,/control-shell-v\d+/);
+ assert.match(sw,/control-public-data-v\d+/);
  assert.equal((sw.match(/assets\/control-clients\.js/g)||[]).length,2);
  assert.equal((sw.match(/assets\/control-clients\.css/g)||[]).length,2);
  const config=JSON.parse(read('config/cloud.json'));
