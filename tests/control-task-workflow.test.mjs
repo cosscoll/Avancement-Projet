@@ -29,6 +29,63 @@ test('late tasks rank before due-today, critical, review and later work',()=>{
  ];
  assert.deepEqual(Array.from(task.sort(list,day),i=>i.title),['En retard','Ce jour','Critique','Revoir','Futur']);
 });
+test('CONTROL 22: every local action or review has exactly one visible priority group',()=>{
+ const sample=[
+  {kind:'action',id:'late',title:'Retard',status:'todo',due:'2026-11-01'},
+  {kind:'action',id:'today',title:'Aujourd’hui',status:'doing',due:day},
+  {kind:'mission',id:'review',title:'Résultat',status:'review'},
+  {kind:'action',id:'later',title:'Après',status:'todo',due:'2026-11-30'},
+  {kind:'action',id:'done',title:'Fini',status:'done',due:'2026-11-01'}
+ ];
+ const groups=task.group(sample,day);
+ assert.deepEqual(groups.map(x=>x.id),['overdue','today','review','next','done']);
+ assert.deepEqual(groups.map(x=>x.items.length),[1,1,1,1,1]);
+ assert.deepEqual(groups.flatMap(x=>x.items.map(item=>item.id)),['late','today','review','later','done']);
+});
+test('CONTROL 22: cancelled tasks and missions not in review never appear in triage',()=>{
+ const groups=task.group([
+  {kind:'action',title:'Annulée',status:'cancelled',due:'2026-11-01'},
+  {kind:'mission',title:'Exécutée',status:'completed'},
+  {kind:'action',title:'En cours',status:'doing',due:'invalid'},
+  {kind:'action',title:'Critique',status:'todo',priority:'Critique',due:''}
+ ],day);
+ assert.deepEqual(groups.map(x=>x.id),['next']);
+ assert.equal(groups[0].items.length,2);
+});
+test('CONTROL 22: overdue and due-today sorting is stable even when the input is scrambled',()=>{
+ const unordered=[
+  {kind:'action',title:'B',status:'todo',due:'2026-10-29'},
+  {kind:'action',title:'D',status:'todo',due:day},
+  {kind:'action',title:'A',status:'todo',due:'2026-10-20'},
+  {kind:'action',title:'C',status:'doing',due:day}
+ ];
+ assert.deepEqual(task.group(unordered,day).map(x=>x.items.map(a=>a.title)),[['A','B'],['C','D']]);
+});
+test('CONTROL 22: grouping is read-only, leaves the original records untouched',()=>{
+ const source=[
+  {kind:'action',title:'En cours',status:'todo',due:''},
+  {kind:'mission',title:'Revoir',status:'review'}
+ ];
+ const original=JSON.stringify(source);
+ const once=task.group(source,day),twice=task.group(source,day);
+ assert.equal(JSON.stringify(source),original);
+ assert.deepEqual(JSON.stringify(once),JSON.stringify(twice));
+ assert.equal(task.bucket({kind:'mission',status:'review'},day),'review');
+ assert.equal(task.bucket({kind:'mission',status:'done'},day),null);
+});
+test('CONTROL 22: inbox has user-visible grouped headings and keyboard-operated quick filters',()=>{
+ const command=readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
+ const css=readFileSync(new URL('../assets/command-center.css',import.meta.url),'utf8');
+ assert.match(command,/workflow\.group\(items,today\)/);
+ for(const id of ['overdue','today','review','next','done']) assert.ok(command.includes(id),id);
+ assert.match(command,/data-task-group="/);
+ assert.match(command,/data-task-filter-quick="/);
+ assert.match(command,/aria-pressed/);
+ assert.match(command,/button\.onclick=\(\)=>\{/);
+ assert.match(command,/group\.hidden=visible===0/);
+ assert.match(css,/\.control-task-triage-button:focus-visible/);
+ assert.match(css,/@media\(max-width:540px\)/);
+});
 test('valid edits preserve only permitted fields and project membership',()=>{
  const v=task.validateEdit({title:'  Contacter le client  ',due:'2026-11-05',priority:'Haute',status:'doing',project:'p1',url:'https://example.com/info'},['','p1']);
  assert.equal(v.ok,true);
