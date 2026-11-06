@@ -108,11 +108,17 @@ function importRows(state,rows){
  for(const row of rows){if(ids.has(row.id))continue;next.imports.push({...row,importedAt:new Date().toISOString()});ids.add(row.id);added++}
  return {state:next,added,duplicates:rows.length-added};
 }
-function memory(state,{title,content,conversationId='',projectId='general'}){
+function memory(state,{title,content,conversationId='',projectId='general',sourceMessageIndex=null,sourceRole=null}){
  if(!clean(title,100).trim()||!clean(content,1600).trim())throw Error('Renseigne un titre et un contenu de mémoire.');
- if(conversationId&&!state.imports.some(c=>c.id===conversationId))throw Error('Conversation source introuvable.');
+ const origin=list(state?.imports).find(c=>c.id===conversationId);
+ if(conversationId&&!origin)throw Error('Conversation source introuvable.');
+ if(sourceMessageIndex!==null){
+  if(!origin||!Number.isInteger(sourceMessageIndex)||sourceMessageIndex<0||sourceMessageIndex>=list(origin.messages).length||origin.messages[sourceMessageIndex]?.role!==sourceRole)throw Error('Extrait source invalide ou modifié : sélectionne à nouveau le message.');
+ }
  const id='mem-'+hash(String(Date.now())+Math.random()+title);
- return {id,title:clean(title.trim(),100),content:clean(content.trim(),1600),conversationId,projectId:clean(projectId,100),createdAt:new Date().toISOString(),version:1};
+ return {id,title:clean(title.trim(),100),content:clean(content.trim(),1600),conversationId,projectId:clean(projectId,100),
+  ...(sourceMessageIndex!==null?{sourceMessageIndex,sourceRole}:{}),
+  createdAt:new Date().toISOString(),version:1};
 }
 function agent(state,{name,instructions,projectId='general',conversationIds=[],memoryIds=[]}){
  if(!String(name||'').trim()||!String(instructions||'').trim())throw Error('Nom et instructions requis.');
@@ -238,6 +244,10 @@ function validateBackupState(state){
  const memories=unique(state.memories,'mémoires');
  for(const m of state.memories){
   if(typeof m.title!=='string'||!m.title.trim()||m.title.length>100||typeof m.content!=='string'||!m.content.trim()||m.content.length>1600||!safeId(m.projectId)||typeof m.conversationId!=='string'||(m.conversationId&&!imports.has(m.conversationId)))throw Error('Une mémoire du fichier est invalide.');
+  if(Object.hasOwn(m,'sourceMessageIndex')||Object.hasOwn(m,'sourceRole')){
+   const conversation=state.imports.find(c=>c.id===m.conversationId);
+   if(!conversation||!Number.isInteger(m.sourceMessageIndex)||m.sourceMessageIndex<0||m.sourceMessageIndex>=conversation.messages.length||conversation.messages[m.sourceMessageIndex].role!==m.sourceRole)throw Error('Référence de message source invalide dans la sauvegarde.');
+  }
  }
  unique(state.agents,'agents');
  for(const a of state.agents){
