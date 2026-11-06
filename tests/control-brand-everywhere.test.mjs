@@ -52,8 +52,8 @@ test('Known feature pages, help and inner screens all have theme scopes',()=>{
 });
 test('New stylesheet participates in reliable PWA offline install',()=>{
  const sw=read('service-worker.js');
- assert.match(sw,/const CACHE_SHELL='control-shell-v107'/);
- assert.match(sw,/const CACHE_PUBLIC='control-public-data-v107'/);
+ assert.match(sw,/const CACHE_SHELL='control-shell-v108'/);
+ assert.match(sw,/const CACHE_PUBLIC='control-public-data-v108'/);
  const parts=sw.match(/const (?:ASSETS|CRITICAL_SHELL)=.+/g)||[];
  assert.ok(parts.length>=2);
  for(const part of parts)assert.match(part,/control-brand-global\.css/);
