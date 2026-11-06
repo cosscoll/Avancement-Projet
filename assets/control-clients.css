@@ -2,6 +2,20 @@
 .control-client-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:16px 0}
 .control-client-stats span{border:1px solid var(--control-line,#E8E4DE);border-radius:12px;background:#FFFDFC;padding:15px 17px;display:flex;flex-direction:column;gap:4px;min-width:0;font-size:11px;color:#6D6763}
 .control-client-stats strong{font-size:24px;line-height:1.2;color:#20252B;font-weight:750;font-variant-numeric:tabular-nums}
+/* CONTROL 23: contextual followups, derived only from local client deadlines. */
+.control-client-followup-filter{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 12px;margin:0 0 14px;padding:12px 14px;border:1px solid #e9dfd5;background:#fffbf8;border-radius:12px}
+.control-client-followup-filter>button{display:inline-flex;align-items:center;gap:10px;min-height:39px;padding:8px 12px;border:1px solid #e5cbbb;border-radius:9px;background:#fff9f4;color:#8e4e2b;font-size:12px;font-weight:750;cursor:pointer}
+.control-client-followup-filter>button strong{display:inline-flex;justify-content:center;align-items:center;min-width:22px;padding:3px 6px;background:#f5e3d8;border-radius:7px;font-size:11px}
+.control-client-followup-filter>button[aria-pressed="true"]{background:#965c3b;color:#fff;border-color:#965c3b}
+.control-client-followup-filter>button[aria-pressed="true"] strong{background:#fff3;color:#fff}
+.control-client-followup-filter>button:focus-visible{outline:3px solid #b46535;outline-offset:3px}
+.control-client-followup-filter>small{font-size:11px;line-height:1.4;color:#716964}
+.control-client-followup{display:inline-block;padding:5px 9px;border-radius:16px;background:#edf3f8;color:#4f6178;font-size:11px;font-weight:700;margin:1px 0 8px}
+.control-client-followup-overdue{background:#fff0e4;color:#94512d}
+.control-client-followup-today{background:#fff5df;color:#875f28}
+.control-client-followup-invalid{background:#fff0e7;color:#97502b}
+.control-client-followup-unscheduled{background:#f5f1eb;color:#776b61}
+@media(max-width:540px){.control-client-followup-filter{padding:10px}.control-client-followup-filter>button{width:100%;justify-content:space-between}.control-client-followup-filter>small{font-size:10px}}
 .control-client-toolbar{display:grid;grid-template-columns:minmax(0,1.3fr) repeat(2,minmax(130px,1fr));gap:10px;align-items:end;margin:15px 0}
 .control-client-toolbar label{min-width:0;font-size:12px;font-weight:700;color:#5A514B}
 .control-client-toolbar .field{margin-bottom:0}
