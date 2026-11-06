@@ -1083,3 +1083,19 @@ body.control-shell-v3 #main .chip:not(.danger):not(.success):not(.error){
   color:var(--control-warm-ink)!important;
   border-color:var(--control-edge)!important;
 }
+
+
+/* Preserve destructive-action meaning during secondary-button harmonization.
+   These action IDs exist in the local manager (client, calendar, expense etc.);
+   no event handler or deletion behavior is modified. */
+body.control-shell-v3 #main button:is([data-act*="delete"],[data-act*="del:"],[data-act*="remove"],[data-act*="clear"]):not(.primary),
+body.control-shell-v3 #main .actions > button:is([data-act*="delete"],[data-act*="del:"],[data-act*="remove"],[data-act*="clear"]){
+  color:var(--control-negative)!important;
+  background:#FFF7F6!important;
+  border-color:#EABAB5!important;
+}
+body.control-shell-v3 #main button:is([data-act*="delete"],[data-act*="del:"],[data-act*="remove"],[data-act*="clear"]):not(.primary):hover{
+  color:var(--control-negative)!important;
+  background:#FCE9E6!important;
+  border-color:#D8948C!important;
+}

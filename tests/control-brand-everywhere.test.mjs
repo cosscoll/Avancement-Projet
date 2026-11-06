@@ -55,8 +55,8 @@ test('Known feature pages, help and inner screens all have theme scopes',()=>{
 });
 test('New stylesheet participates in reliable PWA offline install',()=>{
  const sw=read('service-worker.js');
- assert.match(sw,/const CACHE_SHELL='control-shell-v116'/);
- assert.match(sw,/const CACHE_PUBLIC='control-public-data-v116'/);
+ assert.match(sw,/const CACHE_SHELL='control-shell-v117'/);
+ assert.match(sw,/const CACHE_PUBLIC='control-public-data-v117'/);
  const parts=sw.match(/const (?:ASSETS|CRITICAL_SHELL)=.+/g)||[];
  assert.ok(parts.length>=2);
  for(const part of parts)assert.match(part,/control-brand-global\.css/);
@@ -195,4 +195,13 @@ test('Secondary actions, progressive forms, search and tool tiles share warm man
     '#main .chip:not(.danger)'
   ]) assert.ok(brand.includes(selector),'Missing warm manager component '+selector);
   assert.match(brand,/\.button:not\(\.primary\):not\(\.danger\)/);
+});
+
+test('Manager destructive actions retain explicit red warning styling',()=>{
+ for(const selector of ['[data-act*="delete"]','[data-act*="del:"]','[data-act*="remove"]','[data-act*="clear"]']){
+   assert.ok(brand.includes(selector),'Deletion action selector missing: '+selector);
+ }
+ assert.match(brand,/background:#FFF7F6!important/);
+ assert.match(brand,/color:var\(--control-negative\)!important/);
+ assert.match(brand,/background:#FCE9E6!important/);
 });

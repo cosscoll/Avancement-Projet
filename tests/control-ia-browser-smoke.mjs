@@ -234,6 +234,12 @@ try{
   if(coolActions.length)log('Management interaction color audit '+route+': '+JSON.stringify(coolActions.slice(0,6)));
 
  }
+ const managementActionColors=await js("(()=>{const main=document.querySelector('#main');const div=document.createElement('div');div.className='actions';div.innerHTML='<button type=\"button\" data-act=\"copy:fake\">Copier</button><button type=\"button\" data-act=\"delete-event:fake\">Supprimer</button>';main.appendChild(div);const buttons=[...div.querySelectorAll('button')];const rows=buttons.map(e=>({fg:getComputedStyle(e).color,bg:getComputedStyle(e).backgroundColor}));div.remove();return rows})()");
+ assert.equal(managementActionColors[0].fg,'rgb(184, 67, 31)');
+ assert.equal(managementActionColors[0].bg,'rgb(255, 253, 251)');
+ assert.equal(managementActionColors[1].fg,'rgb(187, 52, 43)');
+ assert.equal(managementActionColors[1].bg,'rgb(255, 247, 246)');
+ log('Simple & Humain: secondary and destructive manager buttons retain distinct accessible states');
  log('Simple & Humain: sixteen management routes render their actual content with the common palette');
  await js("location.hash='#/'");
  await delay(150);
@@ -1700,7 +1706,7 @@ try{
  assert.ok(pilotMobile.link,'Tester guide must link to real assistant screen');
  log('CONTROL pilot guide: six real missions, optional feedback, responsive 320px');
  // The guide itself registers the PWA, even when it is a participant's first page.
- await ready(()=>js("(async()=>{if(!navigator.serviceWorker?.controller)return false;const keys=await caches.keys();if(!keys.includes('control-shell-v116'))return false;const cache=await caches.open('control-shell-v116');return !!(await cache.match(new URL('./testeurs.html',location.href)))&&!!(await cache.match(new URL('./assets/control-test-pilot.js',location.href)))})()"),30000)();
+ await ready(()=>js("(async()=>{if(!navigator.serviceWorker?.controller)return false;const keys=await caches.keys();if(!keys.includes('control-shell-v117'))return false;const cache=await caches.open('control-shell-v117');return !!(await cache.match(new URL('./testeurs.html',location.href)))&&!!(await cache.match(new URL('./assets/control-test-pilot.js',location.href)))})()"),30000)();
  await command('Network.enable');
  await command('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await command('Page.reload',{ignoreCache:false});
