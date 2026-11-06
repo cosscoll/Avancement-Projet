@@ -116,7 +116,7 @@ test('Private route is re-skinned but authentication implementation remains sepa
  assert.match(html,/type="module" src="assets\/private\.js"/);
  assert.match(html,/id="private-main"/);
  assert.match(html,/robots" content="noindex,nofollow"/);
- assert.match(brand,/body\.control-private \.private-form textarea/);
+ assert.match(brand,/body\.control-private :is\(\.private-form input/);
  assert.match(brand,/body\.control-private \.warning-banner/);
  assert.doesNotMatch(brand,/localStorage|sessionStorage|signInWithPassword|createClient\(/);
 });
