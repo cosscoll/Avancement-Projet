@@ -1535,6 +1535,9 @@ try{
 
  // A tester must follow a real six-mission guide without Cloud login,
  // unsafe archives or remote feedback uploads.
+
+ // A tester must follow a real six-mission guide without Cloud login,
+ // unsafe archives or remote feedback uploads.
  const targetPilot=production?PUBLIC_ORIGIN+'testeurs.html':'http://127.0.0.1:'+port+'/testeurs.html';
  await command('Page.navigate',{url:targetPilot});
  await ready(()=>js("!!document.querySelector('[data-control-pilot]')&&!!window.CONTROL_PILOT_REPORT"),14000)();
@@ -1545,12 +1548,12 @@ try{
  assert.equal(pilot.report.ease,null);
  assert.equal(pilot.report.device,'non_precise');
  assert.equal(pilot.download,true);
- assert.match(pilot.url,/testeurs\\.html$/);
+ assert.match(pilot.url,/testeurs\.html$/);
  await js("(()=>{const x=document.querySelector('[data-pilot-check]');x.checked=true;x.dispatchEvent(new Event('change',{bubbles:true}))})()");
- assert.match(await js("document.querySelector('#pilot-progress').textContent"),/1 \\/ 6/);
+ assert.equal((await js("document.querySelector('#pilot-progress').textContent")).trim(),'1 / 6');
  assert.equal(await js("window.CONTROL_PILOT_REPORT.collect().steps[0].terminee"),true);
  await command('Emulation.setDeviceMetricsOverride',{width:320,height:780,deviceScaleFactor:1,mobile:true});
- const pilotMobile=await js("({body:document.documentElement.scrollWidth,screen:innerWidth,link:!!document.querySelector('a[href=\\\"index.html#/control/aistudio\\\"]')})");
+ const pilotMobile=await js("({body:document.documentElement.scrollWidth,screen:innerWidth,link:[...document.querySelectorAll('a')].some(a=>a.getAttribute('href')==='index.html#/control/aistudio')})");
  assert.ok(pilotMobile.body<=pilotMobile.screen+2,'Tester guide must not overflow at 320px');
  assert.ok(pilotMobile.link,'Tester guide must link to real assistant screen');
  log('CONTROL pilot guide: six real missions, optional feedback, responsive 320px');
@@ -1560,7 +1563,6 @@ try{
  await ready(()=>js("!!document.querySelector('[data-control-pilot]')&&!!window.CONTROL_PILOT_REPORT"),18000)();
  await command('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:0,uploadThroughput:0});
  log('CONTROL pilot guide remains usable offline from the versioned PWA cache');
-
 
  assert.equal(errors.length,0,'Unexpected JS browser exceptions: '+errors.join(' | '));
  log('no uncaught JavaScript exceptions');
