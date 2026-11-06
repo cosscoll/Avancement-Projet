@@ -55,8 +55,8 @@ test('Known feature pages, help and inner screens all have theme scopes',()=>{
 });
 test('New stylesheet participates in reliable PWA offline install',()=>{
  const sw=read('service-worker.js');
- assert.match(sw,/const CACHE_SHELL='control-shell-v110'/);
- assert.match(sw,/const CACHE_PUBLIC='control-public-data-v110'/);
+ assert.match(sw,/const CACHE_SHELL='control-shell-v111'/);
+ assert.match(sw,/const CACHE_PUBLIC='control-public-data-v111'/);
  const parts=sw.match(/const (?:ASSETS|CRITICAL_SHELL)=.+/g)||[];
  assert.ok(parts.length>=2);
  for(const part of parts)assert.match(part,/control-brand-global\.css/);
@@ -140,4 +140,13 @@ test('A user sees warm labels inside all eight real feature modules',()=>{
  assert.match(brand,/\.as-journey-main \.as-journey-number/);
  assert.match(brand,/\.tool-deploy-cta/);
  assert.match(brand,/\.lab-table th/);
+});
+
+test('No cold-blue remains on action controls, instructions and banners highlighted by color QA',()=>{
+ for(const selector of ['.loc-shell label','.tool-kit button','.tool-deploy-cta button',
+ '.tool-info','.deploy-steps summary','.deploy-details','.cmd-empty','.cmd-guide summary',
+ '.vs-empty','.vs-past-toggle','.as-connect-counter','.as-studio-backup summary',
+ '.as-journey-head p','.web-builder .chip']){
+  assert.ok(brand.includes(selector),'Unfinished Simple & Humain element: '+selector);
+ }
 });

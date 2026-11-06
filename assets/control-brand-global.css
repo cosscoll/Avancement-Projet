@@ -737,3 +737,86 @@ body.control-private .private-head .page-eyebrow{
 body.control-private .private-title{
  letter-spacing:-.04em;
 }
+
+
+/* Last visible cold-blue controls from the Chromium per-route color audit.
+   Treat blue as a semantic information color only; ordinary controls stay warm. */
+body.control-shell-v3 .loc-shell label{
+ color:var(--control-muted)!important;
+}
+body.control-shell-v3 .loc-shell .loc-details summary{
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .tool-page :is(.tool-track-count,.tool-kit-caption){
+ color:var(--control-muted)!important;
+}
+body.control-shell-v3 .tool-page :is(.tool-kit button,.tool-deploy-cta button){
+ background:var(--control-orange-deep)!important;
+ border-color:var(--control-orange-deep)!important;
+ color:white!important;
+}
+body.control-shell-v3 .tool-page :is(.tool-kit button,.tool-deploy-cta button):hover{
+ background:var(--control-orange-hover)!important;
+ border-color:var(--control-orange-hover)!important;
+}
+body.control-shell-v3 :is(.tool-info,.tool-safety),
+body.cloud-shell-v3 :is(.tool-info,.tool-safety){
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+ color:var(--control-warm-ink)!important;
+}
+body.control-shell-v3 .deploy-page :is(.deploy-steps summary,.deploy-details h3){
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .deploy-page .deploy-steps summary{
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-line)!important;
+}
+body.control-shell-v3 .deploy-page .deploy-details{
+ color:var(--control-muted)!important;
+}
+body.control-shell-v3 .cmd-shell .cmd-empty{
+ color:var(--control-muted)!important;
+ background:var(--control-paper)!important;
+ border-color:var(--control-line)!important;
+}
+body.control-shell-v3 .cmd-shell .cmd-guide summary{
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .vs-page .vs-empty{
+ color:var(--control-muted)!important;
+ background:var(--control-paper)!important;
+ border-color:var(--control-line)!important;
+}
+body.control-shell-v3 .vs-page .vs-past-toggle{
+ color:var(--control-orange-deep)!important;
+ background:var(--control-paper)!important;
+ border-color:var(--control-edge)!important;
+}
+body.control-shell-v3 .vs-page .vs-past-toggle:hover{
+ background:var(--control-peach-soft)!important;
+}
+body.control-shell-v3 .as-shell :is(.as-journey-head p,.as-connect-intro p,.as-connect-counter){
+ color:var(--control-muted)!important;
+}
+body.control-shell-v3 .as-shell .as-connect-counter{
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+}
+body.control-shell-v3 .as-shell .as-studio-backup summary{
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .web-builder .chip{
+ color:var(--control-orange-deep)!important;
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+}
+body.control-shell-v3 .web-builder :is(.web-builder-modes button,.web-builder-actions button):not(.primary){
+ color:var(--control-orange-deep)!important;
+ background:var(--control-paper)!important;
+ border-color:var(--control-line)!important;
+}
+body.control-shell-v3 .web-builder :is(.web-builder-modes button,.web-builder-actions button):not(.primary):hover{
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+}
