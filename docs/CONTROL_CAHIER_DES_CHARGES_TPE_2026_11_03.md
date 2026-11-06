@@ -1,5 +1,25 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 6 novembre 2026 · version de travail 1.10 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 6 novembre 2026 · version de travail 1.11 · ciblage indépendants et équipes de 2 à 10 personnes_
+
+
+## Sprint CONTROL 19 — Sauvegarde portable entre stockages Chromium isolés (6 novembre 2026)
+
+**Mission validée sur le site public :** la recette navigateur emploie le protocole DevTools pour créer deux contextes Chromium indépendants du navigateur source, chacun avec son stockage local, son cache et ses cookies. Elle exporte par le formulaire réel une archive chiffrée AES-GCM et une archive JSON claire (avec uniquement des données synthétiques), puis les restaure par le formulaire réel dans deux destinations vierges.
+
+**Contrôles réussis :**
+- mauvais mot de passe AES-GCM refusé sans ouverture de l’aperçu ni modification des données ;
+- prévisualisation intégrale et comparaison des volumes sans écriture sur la destination ;
+- avertissements d’intégrité et consentement explicite avant restauration ;
+- concordance du nombre de tâches, d’agents, de mémoires et du nom de l’agent après import ;
+- conservation des agents et des données après rechargement complet de chaque contexte ;
+- contextes de test détruits après la recette, sans donnée client ni accès tiers.
+
+**Preuves :** [Chromium local #42193248162](https://github.com/cosscoll/Avancement-Projet/actions/runs/42193248162) ; [test du véritable GitHub Pages #42193304921](https://github.com/cosscoll/Avancement-Projet/actions/runs/42193304921) (25 fichiers publics vérifiés octet pour octet) ; [qualité Node #42193248145](https://github.com/cosscoll/Avancement-Projet/actions/runs/42193248145) (761/761) ; [publication #42193247376](https://github.com/cosscoll/Avancement-Projet/actions/runs/42193247376) réussie.
+
+**Portée :** deux contextes Chromium isolés ne sont pas deux appareils physiques. Ce test valide le transfert et la persistance réels, pas une synchronisation automatique, des comptes tiers natifs, ni les autorisations Cloud/JWT/RLS. PWA v95 inchangée, Cloud et automatisations non activés, aucune dépense.
+
+**P0 suivant :** migration entre appareils physiques, faible espace disque, perte du navigateur en pleine transaction, modifications inter-onglets, accessibilité au clavier et audit mobile 320/390 px. Les comptes multi-utilisateurs restent soumis aux tests d’isolation réelle et à l’autorisation explicite.
+
 
 
 ## Sprint de stabilisation — recherche et couverture qualité (6 novembre 2026)
