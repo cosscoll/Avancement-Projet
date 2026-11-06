@@ -127,3 +127,8 @@ body.control-shell-v3.control-simple-home>.wrap>main#main{max-width:800px!import
 @media(prefers-reduced-motion:reduce){
  .control-home-v6 *{scroll-behavior:auto!important;transition:none!important}
 }
+
+/* Pilot testing: visible opt-in link without adding a fifth navigation destination. */
+.control-home-v6-pilot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:13px 0 14px;padding:11px 14px;border:1px solid #dce5ee;background:#f5f8fb;border-radius:12px;font-size:12px;color:#597089}
+.control-home-v6-pilot a{color:#305e8f;text-decoration:underline;text-underline-offset:2px;font-weight:700}
+@media(max-width:560px){.control-home-v6-pilot{align-items:flex-start;flex-wrap:wrap;font-size:11px}}
