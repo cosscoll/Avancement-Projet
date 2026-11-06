@@ -53,7 +53,7 @@ test('new unified restore includes Studio IA when present in verified backup',()
 test('failed third store rolls back only keys actually written by this transaction',()=>{
  const x=setup({failKey:review.storeKeys[2]});x.trigger();
  assert.deepEqual(x.keys.map(k=>x.content.get(k)),x.original);
- assert.match(x.message.textContent,/anciennes données ont été rétablies/);
+ assert.match(x.message.textContent,/anciennes données récupérables ont été rétablies/);
  assert.deepEqual(x.events,[]);
 });
 test('failure with concurrent external changes never overwrites the other tab data',()=>{
@@ -75,6 +75,6 @@ test('restore checks for conflicts and never silently claims an unverified succe
 test('denied Studio store write rolls back other restored stores without deleting the original agents',()=>{
  const x=setup({failKey:review.storeKeys[3],includeStudio:true});x.trigger();
  assert.deepEqual(x.keys.map(k=>x.content.get(k)),x.original);
- assert.match(x.message.textContent,/anciennes données ont été rétablies/);
+ assert.match(x.message.textContent,/anciennes données récupérables ont été rétablies/);
  assert.deepEqual(x.events,[]);
 });
