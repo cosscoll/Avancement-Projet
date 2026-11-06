@@ -1110,33 +1110,20 @@ function backup(){
   if(!restore.unchanged(localStorage,staged.original)){resetPreview();message.textContent='Des données locales ont changé depuis la vérification : relance la comparaison avant toute restauration.';return}
   if(!confirm('Remplacer maintenant les données CONTROL présentes dans ce fichier vérifié ? Les anciens fichiers conservent le Studio IA actuel. Cette action écrase les espaces concernés.'))return;
   if(!restore.unchanged(localStorage,staged.original)){resetPreview();message.textContent='Les données ont changé pendant la confirmation. Recommence la vérification.';return}
-  let rollbackUncertain=false;
-  const old=restore.storeKeys.map((key,i)=>[key,staged.original[i]]);
-  const written=new Map();
-  try{
-   const entries=[[KEY,staged.data.command],[HUB,staged.data.hub],[AUTOS,staged.data.automations]];
-   if(Object.hasOwn(staged.data,'studio'))entries.push([STUDIO,staged.data.studio]);
-   for(const [key,value] of entries){
-    // Refuse an intervening edit before each store is replaced.
-    if(!restore.unchanged(localStorage,staged.original.map((raw,i)=>written.has(restore.storeKeys[i])?written.get(restore.storeKeys[i]):raw)))throw Error('Concurrent restore edit');
-    const serialized=JSON.stringify(value);
-    localStorage.setItem(key,serialized);
-    written.set(key,serialized);
-   }
-   resetPreview();localStoreCorrupt=false;init();
+  const result=restore.applyTransaction(localStorage,staged.original,staged.data,()=>{
+   localStoreCorrupt=false;
+   init();
+  });
+  resetPreview();
+  if(result.ok){
    message.textContent='Restauration confirmée et enregistrée. Recharge CONTROL pour actualiser les projets.';
    toast('Sauvegarde importée.');
-  }catch{
-   // Never roll back a key that another tab has changed since our write.
-   for(const [key,raw] of old){
-    if(!written.has(key))continue;
-    try{
-     if(localStorage.getItem(key)!==written.get(key)){rollbackUncertain=true;continue}
-     if(raw===null)localStorage.removeItem(key);else localStorage.setItem(key,raw);
-    }catch{rollbackUncertain=true}
-   }
-   resetPreview();
-   message.textContent=rollbackUncertain?'Restauration interrompue : des données ont pu changer dans un autre onglet. Recharge CONTROL et conserve ta sauvegarde.':'Restauration refusée par le stockage. Les anciennes données ont été rétablies.';
+  }else if(result.rollbackUncertain){
+   message.textContent='Restauration interrompue : des données ont pu changer dans un autre onglet. Recharge CONTROL et conserve ta sauvegarde.';
+  }else if(result.reason==='concurrent'){
+   message.textContent='Des données locales ont changé pendant la restauration. Les écritures récupérables ont été annulées. Recharge CONTROL.';
+  }else{
+   message.textContent='Restauration refusée : le stockage ne répond pas. Les anciennes données récupérables ont été rétablies.';
   }
  };
 
