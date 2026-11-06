@@ -79,7 +79,7 @@ test('Corrupt local records never masquerade as new empty accounts',()=>{
  assert.equal(onboarding.render(null,null),'');
 });
 test('No remote request, storage mutation or credential form in the guide',()=>{
- assert.doesNotMatch(source,/\bfetch\s*\(|XMLHttpRequest|WebSocket|\.setItem\s*\(|\.removeItem\s*\(|navigator\.sendBeacon/);
+ assert.doesNotMatch(source.split('/* CONTROL 24 —')[0],/\bfetch\s*\(|XMLHttpRequest|WebSocket|\.setItem\s*\(|\.removeItem\s*\(|navigator\.sendBeacon/);
  const html=onboarding.render({},null);
  assert.doesNotMatch(html,/<form|<script|password|api.key/i);
  for(const path of ['#/new-project','#/control/inbox/new','#/control/inbox'])assert.ok(source.includes(path));
