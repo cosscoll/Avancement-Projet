@@ -1,0 +1,341 @@
+/* CONTROL — Charte 03 « Simple & Humain » : feuille de finition unifiée.
+   Toujours chargée APRÈS les CSS fonctionnelles. Style uniquement :
+   aucune route, aucun composant, aucune donnée, aucun droit n'est modifié.
+   Écrans concernés : accueil, projets, tâches, clients, recherche, IA,
+   agents, outils, visios, publication, sauvegardes, aide, Cloud verrouillé,
+   ancien tableau de bord et guide testeur.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+:root{
+  --control-orange:#F76A39;
+  --control-orange-deep:#B8431F;
+  --control-orange-hover:#AE3C1D;
+  --control-peach:#FFCAA3;
+  --control-peach-soft:#FFF0E5;
+  --control-cream:#FFF8F2;
+  --control-paper:#FFFDFB;
+  --control-white:#FFFFFF;
+  --control-ink:#20252B;
+  --control-muted:#6D6763;
+  --control-line:#EDDED3;
+  --control-positive:#16834B;
+  --control-negative:#BB342B;
+  --control-focus:#AA431E;
+  --control-shadow:0 7px 26px rgba(92,54,30,.055);
+  --control-font:"Poppins","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --control-edge:#E7C5B1;
+  --control-warm-ink:#604537;
+  --control-on-accent:#FFFFFF;
+  /* Legacy variable aliases: the functional styles retain their layout. */
+  --clarity-ink:var(--control-ink);
+  --clarity-accent:var(--control-orange-deep);
+  --clarity-muted:var(--control-muted);
+  --clarity-border:var(--control-line);
+  --clarity-surface:var(--control-white);
+  --clarity-soft:var(--control-peach-soft);
+  --shell-ink:var(--control-ink);
+  --shell-blue:var(--control-orange-deep);
+  --shell-paper:var(--control-cream);
+  --shell-line:var(--control-line);
+  --shell-muted:var(--control-muted);
+  --shell-amber:var(--control-peach);
+  --bg:var(--control-cream);
+  --surface:var(--control-white);
+  --elev:var(--control-peach-soft);
+  --line:var(--control-line);
+  --ink:var(--control-ink);
+  --muted:var(--control-muted);
+  --mint:var(--control-orange-deep);
+  --accent:var(--control-orange-deep);
+  --violet:var(--control-orange);
+  color-scheme:light;
+}
+body.control-shell-v3,body.cloud-shell-v3,body.control-legacy,body.control-pilot{
+  background:var(--control-cream)!important;
+  color:var(--control-ink)!important;
+  font-family:var(--control-font)!important;
+}
+body.control-shell-v3 :is(input,select,textarea,button),
+body.cloud-shell-v3 :is(input,select,textarea,button),
+body.control-legacy :is(input,select,textarea,button),
+body.control-pilot :is(input,select,textarea,button){font-family:var(--control-font)!important}
+body.control-shell-v3 :is(a,button,input,textarea,select,summary):focus-visible,
+body.cloud-shell-v3 :is(a,button,input,textarea,select,summary):focus-visible,
+body.control-legacy :is(a,button,input,textarea,select,summary):focus-visible,
+body.control-pilot :is(a,button,input,textarea,select,summary):focus-visible{
+ outline:3px solid var(--control-focus)!important;
+ outline-offset:3px!important;
+}
+body.control-shell-v3 :is(input,textarea,select):not([type=checkbox]):not([type=radio]),
+body.cloud-shell-v3 :is(input,textarea,select):not([type=checkbox]):not([type=radio]),
+body.control-pilot :is(input,textarea,select):not([type=checkbox]):not([type=radio]){
+ accent-color:var(--control-orange-deep);
+ border-color:var(--control-line);
+ color:var(--control-ink);
+}
+body.control-shell-v3 :is(input,textarea,select):focus,
+body.cloud-shell-v3 :is(input,textarea,select):focus,
+body.control-pilot :is(input,textarea,select):focus{border-color:var(--control-orange-deep)!important}
+body.control-shell-v3 :is(input[type=checkbox],input[type=radio],progress),
+body.cloud-shell-v3 :is(input[type=checkbox],input[type=radio],progress),
+body.control-legacy :is(input[type=checkbox],input[type=radio],progress),
+body.control-pilot :is(input[type=checkbox],input[type=radio],progress){accent-color:var(--control-orange-deep)}
+body.control-shell-v3 :is(.panel,.card,.stat,.quicktile),
+body.cloud-shell-v3 :is(.panel,.card,.surface,.stat){
+ border-color:var(--control-line);
+ box-shadow:var(--control-shadow);
+}
+body.control-shell-v3 :is(.muted,.quiet),body.cloud-shell-v3 .muted{color:var(--control-muted)}
+/* Common buttons. Destructive and error controls keep their danger semantics. */
+body.control-shell-v3 :is(.button,.btn,.tool-link,.tool-actions button,.ch-chip,.as-card button:not(.as-danger)),
+body.cloud-shell-v3 :is(.button,.btn,.tool-link,.ch-chip){
+ border-color:var(--control-line);
+}
+body.control-shell-v3 :is(a,button).primary:not(.danger),
+body.cloud-shell-v3 :is(a,button).primary:not(.danger),
+body.control-shell-v3 :is(.cmd-primary,.loc-primary,.lab-primary,.as-primary,.ch-send,.vs-primary,.vs-join,.deploy-buttons button[data-deploy-prompt]),
+body.cloud-shell-v3 :is(.cmd-primary,.loc-primary,.lab-primary,.ch-send,.vs-primary,.vs-join){
+ background:var(--control-orange-deep)!important;
+ border-color:var(--control-orange-deep)!important;
+ color:white!important;
+}
+body.control-shell-v3 :is(a,button).primary:not(.danger):hover,
+body.control-shell-v3 :is(.cmd-primary,.loc-primary,.lab-primary,.as-primary,.ch-send,.vs-primary,.vs-join):hover,
+body.cloud-shell-v3 :is(a,button).primary:not(.danger):hover{
+ background:var(--control-orange-hover)!important;border-color:var(--control-orange-hover)!important;
+}
+/* Interior pages: one warm foundation and restrained content hierarchy. */
+body.control-shell-v3.control-simple-workspace,
+body.control-shell-v3.control-simple-home{background:var(--control-cream)!important;color:var(--control-ink)!important}
+body.control-shell-v3 .control-home-v6,
+body.control-shell-v3 #main :is(.tool-page,.lab-shell,.loc-shell,.cmd-shell,.vs-page,.deploy-page,.web-builder,.as-shell){
+ color:var(--control-ink);
+}
+body.control-shell-v3 .control-home-v6-pilot{
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+ color:var(--control-warm-ink)!important;
+}
+body.control-shell-v3 .control-home-v6-pilot a{color:var(--control-orange-deep)!important}
+body.control-shell-v3 .control-home-v6-onboarding{
+ background:var(--control-paper);
+ border-color:var(--control-line);
+}
+body.control-shell-v3 .control-home-v6-onboarding :is(.control-home-v6-onboarding-kicker,.control-home-v6-onboarding-progress){color:var(--control-orange-deep)}
+body.control-shell-v3 .control-home-v6-onboarding-step.is-current{
+ background:var(--control-peach-soft);border-color:var(--control-edge)
+}
+body.control-shell-v3 .control-workspace-mainnav a[aria-current=page],
+body.control-shell-v3 .control-home-v6-tabs a[aria-current=page]{
+ color:var(--control-orange-deep)!important;
+ background:var(--control-peach-soft)!important;
+}
+/* Boards, tasks, search, backup and project summary: no leftover cold-blue surfaces. */
+body.control-shell-v3 #main :is(.stat,.quicktile,.control-task-group,.control-search-group,.backup-restore-preview,
+ .control-project-brief-panel,.control-project-brief-task,.control-project-brief-resource,.web-builder-panel,.web-builder-work){
+ background:var(--control-white);
+ border-color:var(--control-line);
+ color:var(--control-ink);
+}
+body.control-shell-v3 #main :is(.stat strong,.quicktile strong,.control-task-group-heading h3,.control-search-hit strong,
+ .control-project-brief-task strong,.control-project-brief-panel h3){
+ color:var(--control-ink)!important;
+}
+body.control-shell-v3 #main :is(.stat span,.control-search-hit small,.control-project-brief-note,.control-project-brief-empty,
+ .control-task-reference,.control-project-brief-provenance,.control-task-group small){color:var(--control-muted)}
+body.control-shell-v3 #main :is(.control-task-triage-button,.control-task-visible,.control-search-toolbar,
+ .control-task-none,.control-project-brief-empty,.web-builder-draft){
+ background:var(--control-paper);color:var(--control-warm-ink);border-color:var(--control-line);
+}
+body.control-shell-v3 #main :is(.control-task-triage-button[aria-pressed=true],.control-task-triage-button:hover,
+ .control-project-brief-task:hover,.control-project-brief-resource:hover,.control-search-hit:hover,.web-builder-draft:hover){
+ background:var(--control-peach-soft)!important;border-color:var(--control-edge)!important;
+}
+body.control-shell-v3 #main .control-task-triage-button[aria-pressed=true] strong{
+ background:var(--control-orange-deep);color:#fff;
+}
+body.control-shell-v3 #main :is(.control-task-tag,.control-search-count,.control-task-group-count,.control-project-brief-panel-head span){
+ background:var(--control-peach-soft);color:var(--control-orange-deep);border-color:var(--control-edge);
+}
+body.control-shell-v3 #main :is(.control-project-brief-create,.control-project-brief-search,.control-project-brief-more){
+ color:var(--control-orange-deep)!important;border-color:var(--control-edge);
+}
+body.control-shell-v3 #main :is(.control-project-brief-create,.control-project-brief-search):hover{
+ background:var(--control-peach-soft);
+}
+body.control-shell-v3 #main :is(.backup-diff-table thead,.control-search-group-head,.control-task-group-heading){
+ background:var(--control-cream);border-color:var(--control-line);
+}
+/* AI Studio, all sub-tabs: accounts, archives, agents, chat, memory and imports. */
+body.control-shell-v3 .as-shell{--as-blue:var(--control-orange-deep);--as-line:var(--control-line);
+ --as-ink:var(--control-ink);--as-sub:var(--control-muted);}
+body.control-shell-v3 .as-shell :is(.as-provider a,.as-provider-icon,.as-record-actions button,
+ .as-thread-hit strong,.as-model-actions button,.as-connect-card a,.as-extract-button){
+ color:var(--control-orange-deep);
+}
+body.control-shell-v3 .as-shell :is(.as-provider,.as-metrics>div,.as-record,.as-memory,.as-agent-side,
+ .as-config,.as-context-preview,.as-thread-search,.as-studio-backup,.as-backup-inner,.as-thread-manage,
+ .as-connect-plan,.as-connect-card,.as-restore-review,.as-modelbar){
+ border-color:var(--control-line);
+}
+body.control-shell-v3 .as-shell :is(.as-empty,.as-emptytext,.as-studio-backup,.as-backup-inner,
+ .as-thread-manage-inner,.as-agent-item,.as-context-preview-inner,.as-chat,.as-transcript){
+ background:var(--control-paper);color:var(--control-ink);
+}
+body.control-shell-v3 .as-shell :is(.as-preview,.as-memory-draft,.as-thread-search,.as-notice,
+ .as-connect-method,.as-connect-status,.as-local-tag){
+ background:var(--control-peach-soft);border-color:var(--control-edge);color:var(--control-warm-ink);
+}
+body.control-shell-v3 .as-shell :is(.as-source,.as-count,.as-provider-icon,.as-connect-logo,.as-extract-button){
+ background:var(--control-peach-soft);color:var(--control-orange-deep);border-color:var(--control-edge);
+}
+body.control-shell-v3 .as-shell .as-steps button[aria-current=page]{
+ color:var(--control-orange-deep);
+ background:var(--control-white);
+}
+body.control-shell-v3 .as-shell :is(.as-record-actions button,.as-model-actions button,.as-extract-button):hover{
+ background:var(--control-peach-soft);color:var(--control-orange-deep);border-color:var(--control-edge);
+}
+body.control-shell-v3 .as-shell :is(.as-chat .as-bubble.as-user,.as-transcript .as-bubble.as-user){
+ background:var(--control-peach-soft);border-color:var(--control-edge);
+}
+/* Catalog, deployment, the AI lab and local AI: shared typography, surfaces, controls. */
+body.control-shell-v3 :is(.tool-page,.deploy-page,.lab-shell,.loc-shell,.cmd-shell,.vs-page) :is(h1,h2,h3,strong){color:var(--control-ink)}
+body.control-shell-v3 :is(.tool-page,.deploy-page,.lab-shell,.loc-shell,.cmd-shell,.vs-page) :is(
+ .tool-page-heading p,.tool-summary,.tool-use,.deploy-title p,.deploy-card-head p,.lab-hero p,.lab-help,
+ .loc-heading p,.loc-small,.cmd-top p,.cmd-small,.vs-head p,.vs-hint){color:var(--control-muted)}
+body.control-shell-v3 :is(.tool-eyebrow,.deploy-kicker,.lab-overline,.loc-eyebrow,.cmd-eyebrow,.vs-kicker){
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 :is(.tool-track,.tool-controls,.tool-item,.tool-kit,.deploy-card,.deploy-filters,
+ .deploy-checklist,.lab-context,.lab-content,.loc-settings,.loc-model,.loc-chat,.cmd-builder,.cmd-column,
+ .vs-create,.vs-card,.vs-video,.web-builder-panel,.web-builder-work){
+ background:var(--control-white)!important;
+ border-color:var(--control-line)!important;
+ color:var(--control-ink);
+}
+body.control-shell-v3 :is(.tool-total,.tool-meta,.tool-logo,.tool-category,.tool-access,.tool-no-results,
+ .deploy-duration,.deploy-tags span,.deploy-connection,.lab-pill,.lab-caution,.loc-badge,.loc-hint,
+ .cmd-tag,.cmd-hint,.cmd-avatar,.cmd-status,.vs-label,.vs-category,.vs-disclaimer,.vs-privacy){
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+ color:var(--control-warm-ink)!important;
+}
+body.control-shell-v3 :is(.tool-track.chosen,.tool-track[aria-pressed=true],.tool-track:hover,
+ .lab-tabs button[aria-selected=true],.vs-filters button[aria-pressed=true],
+ .web-builder-modes button[aria-pressed=true]){
+ border-color:var(--control-edge)!important;
+ background:var(--control-peach-soft)!important;
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 :is(.tool-link,.tool-actions button,.tool-more-wrap button,
+ .deploy-buttons a,.deploy-buttons button,.lab-tabs button,.lab-actions button,
+ .loc-topline button,.loc-model-actions button,.loc-chat-actions button,
+ .cmd-actions button,.cmd-actions a,.vs-buttons a,.vs-actions a,.vs-actions button,
+ .vs-video button,.vs-filters button,.web-builder-modes button){
+ background:var(--control-paper);
+ color:var(--control-orange-deep);
+ border-color:var(--control-line);
+}
+body.control-shell-v3 :is(.tool-link,.tool-actions button,.deploy-buttons a,.lab-tabs button,
+ .cmd-actions button,.vs-buttons a,.vs-actions button):hover{
+ border-color:var(--control-edge);background:var(--control-peach-soft);
+}
+body.control-shell-v3 :is(.deploy-steps,.loc-details,.cmd-guide details,.web-builder-audit li,
+ .web-builder-version,.web-builder-brief,.web-builder-pages){
+ border-color:var(--control-line);
+}
+body.control-shell-v3 :is(.deploy-steps summary,.lab-result,.loc-stream,.loc-user,.cmd-item,.cmd-guide details,
+ .vs-empty,.web-builder-draft,.web-builder-modes,.web-builder-canvas,.web-builder-saves){
+ background:var(--control-paper);
+ border-color:var(--control-line);
+}
+body.control-shell-v3 :is(.deploy-details h3,.lab-result h3,.loc-message>span,.cmd-provider small,.vs-card h3){
+ color:var(--control-ink);
+}
+body.control-shell-v3 :is(.lab-input,.lab-select,.lab-output,.loc-topline select,#loc-form textarea,
+ .cmd-input,.vs-input,.deploy-filters .tool-field,.tool-controls .tool-field){
+ color:var(--control-ink);border-color:var(--control-line);background:var(--control-white);
+}
+body.control-shell-v3 .loc-user{background:var(--control-peach-soft)!important;border-color:var(--control-edge)}
+/* Help chatbot: always visible on top of every route, with the same brand. */
+body.control-shell-v3 .ch-launch,body.cloud-shell-v3 .ch-launch{
+ background:var(--control-orange-deep)!important;color:white!important;
+ border-color:var(--control-orange-deep)!important;
+ box-shadow:0 10px 28px rgba(92,54,30,.14)!important;
+}
+body.control-shell-v3 .ch-launch:hover,body.cloud-shell-v3 .ch-launch:hover{background:var(--control-orange-hover)!important}
+body.control-shell-v3 .ch-panel,body.cloud-shell-v3 .ch-panel{
+ background:var(--control-paper)!important;color:var(--control-ink)!important;
+ border-color:var(--control-line)!important;font-family:var(--control-font)!important;
+}
+body.control-shell-v3 .ch-head,body.cloud-shell-v3 .ch-head{
+ background:var(--control-orange-deep)!important;color:white!important;
+}
+body.control-shell-v3 .ch-head :is(strong,span),body.cloud-shell-v3 .ch-head :is(strong,span){color:white!important}
+body.control-shell-v3 .ch-avatar,body.cloud-shell-v3 .ch-avatar{background:rgba(255,255,255,.16)}
+body.control-shell-v3 .ch-disclaimer,body.cloud-shell-v3 .ch-disclaimer,
+body.control-shell-v3 .ch-msg.ch-user,body.cloud-shell-v3 .ch-msg.ch-user{
+ background:var(--control-peach-soft);border-color:var(--control-edge);color:var(--control-warm-ink);
+}
+body.control-shell-v3 .ch-messages,body.cloud-shell-v3 .ch-messages{background:var(--control-cream)}
+body.control-shell-v3 .ch-msg,body.cloud-shell-v3 .ch-msg{border-color:var(--control-line)}
+body.control-shell-v3 .ch-msg-label,body.cloud-shell-v3 .ch-msg-label{color:var(--control-orange-deep)}
+body.control-shell-v3 :is(.ch-chip,.ch-msg-actions button,.ch-msg-actions a),
+body.cloud-shell-v3 :is(.ch-chip,.ch-msg-actions button,.ch-msg-actions a){
+ background:var(--control-paper);color:var(--control-orange-deep);border-color:var(--control-edge);
+}
+body.control-shell-v3 .ch-footer,body.cloud-shell-v3 .ch-footer{
+ background:var(--control-paper);border-color:var(--control-line);
+}
+body.control-shell-v3 .ch-send,body.cloud-shell-v3 .ch-send{
+ background:var(--control-orange-deep)!important;border-color:var(--control-orange-deep)!important;color:white!important
+}
+/* Cloud is disabled until real A/B checks, but must not look like a different product. */
+body.cloud-shell-v3 :is(.header,.surface,.card,.auth-box,.auth-cards,.item){
+ background:var(--control-paper);border-color:var(--control-line);color:var(--control-ink);
+}
+body.cloud-shell-v3 :is(.pill,.badge,.hint,.eyebrow,.iconlink,.back,.tabbar button[aria-current=page]){
+ color:var(--control-orange-deep);border-color:var(--control-edge);
+}
+body.cloud-shell-v3 :is(.pill,.badge,.hint,.auth-intro){
+ background:var(--control-peach-soft);
+}
+body.cloud-shell-v3 :is(.notice-error,.red){color:var(--control-negative)!important}
+body.cloud-shell-v3 .notice-ok{color:var(--control-positive)}
+/* Old read-only dashboard: same identity, even on the legacy route. */
+body.control-legacy .shell,body.control-legacy .surface,body.control-legacy .panel,
+body.control-legacy :is(.card,.tile,.row,.dialog,.modal,.command-panel){
+ background:var(--control-paper);border-color:var(--control-line);color:var(--control-ink);
+}
+body.control-legacy :is(.brand,.logo,.section-title,.eyebrow,.small,.muted){color:var(--control-muted)}
+body.control-legacy :is(.btn.primary,.button.primary,button.primary,a.primary){
+ background:var(--control-orange-deep)!important;color:white!important;border-color:var(--control-orange-deep)!important;
+}
+body.control-legacy :is(input,select,textarea){background:#fff;color:var(--control-ink);border-color:var(--control-line)}
+body.control-legacy :is(.mobile-tab[aria-current=page],.tab[aria-selected=true],.selected,.active){
+ background:var(--control-peach-soft);color:var(--control-orange-deep);border-color:var(--control-edge);
+}
+/* Standalone test guide: no blue island, same visual hierarchy as the application. */
+body.control-pilot a{color:var(--control-orange-deep)}
+body.control-pilot :is(.pilot-brand,.pilot-hero h1,.pilot-section-head h2,.pilot-report h2){color:var(--control-ink)}
+body.control-pilot :is(.pilot-hero>p,.pilot-task p,.pilot-report>p,.pilot-top,.pilot-footer){color:var(--control-muted)}
+body.control-pilot :is(.eyebrow,.pilot-num){color:var(--control-orange-deep)}
+body.control-pilot :is(.pilot-warning,.pilot-num,.pilot-task:has(.pilot-done input:checked)){background:var(--control-peach-soft);border-color:var(--control-edge)}
+body.control-pilot :is(.pilot-task,.pilot-report){background:var(--control-paper);border-color:var(--control-line)}
+body.control-pilot .pilot-done{border-top-color:var(--control-line)}
+body.control-pilot :is(.pilot-top,.pilot-footer){border-color:var(--control-line)}
+body.control-pilot .pilot-rating-options label{border-color:var(--control-line)}
+body.control-pilot .button.primary{background:var(--control-orange-deep)!important;color:white!important;border-color:var(--control-orange-deep)!important}
+body.control-pilot .button.primary:hover{background:var(--control-orange-hover)!important}
+body.control-pilot .button.secondary{background:var(--control-white);color:var(--control-orange-deep);border-color:var(--control-edge)}
+body.control-pilot :is(input,select,textarea){accent-color:var(--control-orange-deep)}
+@media(max-width:600px){
+ body.control-shell-v3 :is(.tool-page,.lab-shell,.loc-shell,.cmd-shell,.vs-page,.deploy-page){max-width:100%}
+ body.control-shell-v3 .ch-panel{border-color:var(--control-line)}
+}
+@media(prefers-reduced-motion:reduce){
+ body.control-shell-v3 *,body.cloud-shell-v3 *,body.control-legacy *,body.control-pilot *{
+  transition-duration:.01ms!important;animation-duration:.01ms!important;
+ }
+}
