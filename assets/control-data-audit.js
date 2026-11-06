@@ -105,9 +105,15 @@ function inspectBackup(data,{catalogProjects}={}){
  const projects=catalogComplete?[...standard,...custom]:[];
  // A corrupted personalized-project list cannot be applied safely: the
  // personal Hub would ignore or overwrite it on subsequent edits.
- const unsafeCustom=Object.hasOwn(hub,'custom')&&(
+ const invalidCustom=Object.hasOwn(hub,'custom')&&(
   !Array.isArray(hub.custom)||hub.custom.some(x=>!object(x)||!safeId(x.id)||typeof x.name!=='string'||!x.name.trim())
  );
+ const customIds=custom.filter(object).map(x=>x.id).filter(safeId);
+ const duplicateCustomIds=new Set(customIds).size!==customIds.length;
+ // A restore would shadow a built-in project if a personalized project
+ // reused the same ID. Do not silently replace the catalog identity.
+ const shadowedCatalog=catalogComplete&&customIds.some(id=>standard.some(project=>project.id===id));
+ const unsafeCustom=invalidCustom||duplicateCustomIds||shadowedCatalog;
  const report=inspect({
   projects,
   clients:Object.hasOwn(command,'clients')?command.clients:[],
