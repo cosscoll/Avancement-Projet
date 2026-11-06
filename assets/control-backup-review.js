@@ -95,5 +95,45 @@ function unchanged(storage,original){
  return Array.isArray(original)&&original.length===storeKeys.length&&
   storeKeys.every((key,i)=>storage.getItem(key)===original[i]);
 }
-window.CONTROL_BACKUP_REVIEW=Object.freeze({compare,snapshot,unchanged,storeKeys,BUCKETS});
+// The actual restore writer is deliberately isolated from the read-only preview.
+// Always compare all 4 storage keys before and between writes; on failure,
+// roll back only keys whose values still equal the values written by this run.
+function applyTransaction(storage,original,data,afterApply){
+ if(!safeObject(data)||!safeObject(data.command)||!safeObject(data.hub)||!safeObject(data.automations))
+  return {ok:false,reason:'invalid',rollbackUncertain:false};
+ const old=Array.isArray(original)&&original.length===storeKeys.length?storeKeys.map((key,i)=>[key,original[i]]):[];
+ if(old.length!==storeKeys.length)return {ok:false,reason:'invalid_snapshot',rollbackUncertain:false};
+ if(!unchanged(storage,original))return {ok:false,reason:'concurrent',rollbackUncertain:false};
+ const entries=[[storeKeys[0],data.command],[storeKeys[1],data.hub],[storeKeys[2],data.automations]];
+ if(Object.hasOwn(data,'studio'))entries.push([storeKeys[3],data.studio]);
+ const written=new Map();
+ try{
+  for(const [key,value] of entries){
+   const currentExpected=original.map((raw,i)=>written.has(storeKeys[i])?written.get(storeKeys[i]):raw);
+   if(!unchanged(storage,currentExpected))throw Error('CONCURRENT');
+   const serialized=JSON.stringify(value);
+   if(typeof serialized!=='string')throw Error('INVALID_DATA');
+   storage.setItem(key,serialized);
+   written.set(key,serialized);
+   if(storage.getItem(key)!==serialized)throw Error('WRITE_MISMATCH');
+  }
+  // Recheck all keys immediately before marking a restore successful.
+  if(!unchanged(storage,original.map((raw,i)=>written.has(storeKeys[i])?written.get(storeKeys[i]):raw)))
+   throw Error('CONCURRENT');
+  if(typeof afterApply==='function')afterApply();
+  return {ok:true,reason:'applied',rollbackUncertain:false};
+ }catch(error){
+  let rollbackUncertain=false;
+  for(const [key,raw] of old){
+   if(!written.has(key))continue;
+   try{
+    if(storage.getItem(key)!==written.get(key)){rollbackUncertain=true;continue}
+    if(raw===null)storage.removeItem(key);else storage.setItem(key,raw);
+    if(storage.getItem(key)!==raw)rollbackUncertain=true;
+   }catch{rollbackUncertain=true}
+  }
+  return {ok:false,reason:error?.message==='CONCURRENT'?'concurrent':'storage',rollbackUncertain};
+ }
+}
+window.CONTROL_BACKUP_REVIEW=Object.freeze({compare,snapshot,unchanged,applyTransaction,storeKeys,BUCKETS});
 })();
