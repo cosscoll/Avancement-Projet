@@ -22,3 +22,8 @@ body.control-simple-workspace .control-project-brief-panel h3{margin:0!important
 .control-project-brief-footnote{font-size:10px;color:#768b9f;line-height:1.5;margin:14px 0 0}
 @media(max-width:800px){.control-project-brief-grid{grid-template-columns:1fr}.control-project-brief-panel{padding:13px}}
 @media(max-width:420px){body.control-simple-workspace #control-project-brief{padding:13px}.control-project-brief-create{width:100%}}
+
+.control-project-brief-actions{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px}
+.control-project-brief-search{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 11px;border:1px solid #e0e7ef;border-radius:9px;background:#fff;color:#315677!important;font-size:11.5px;font-weight:730;text-decoration:none!important}
+.control-project-brief-search:hover{background:#f3f7fb;border-color:#bfd1e1}
+@media(max-width:420px){.control-project-brief-actions{justify-content:stretch;width:100%}.control-project-brief-actions>a{flex:1 1 100%}}
