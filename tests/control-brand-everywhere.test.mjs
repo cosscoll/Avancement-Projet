@@ -5,12 +5,12 @@ import {readFileSync} from 'node:fs';
 const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
 const brand=read('assets/control-brand-global.css');
 const oldBrand=read('assets/control-brand-simple-humain.css');
-const pages=['index.html','app.html','legacy.html','testeurs.html'];
+const pages=['index.html','app.html','legacy.html','testeurs.html','prive.html'];
 const palette={
  cream:'#FFF8F2',paper:'#FFFDFB',peach:'#FFF0E5',orange:'#F76A39',
  accent:'#B8431F',hover:'#AE3C1D',ink:'#20252B',muted:'#6D6763',line:'#EDDED3'
 };
-test('All four application entrypoints load the same brand stylesheet LAST',()=>{
+test('All five application entrypoints load the same brand stylesheet LAST',()=>{
  for(const path of pages){
   const html=read(path);
   const css=[...html.matchAll(/<link[^>]+rel="stylesheet"[^>]+href="([^"]+\.css)"/g)].map(m=>m[1]);
@@ -21,6 +21,8 @@ test('All four application entrypoints load the same brand stylesheet LAST',()=>
  }
  assert.match(read('legacy.html'),/<body class="control-legacy">/);
  assert.match(read('testeurs.html'),/<body class="control-pilot">/);
+ assert.match(read('prive.html'),/<body class="control-private">/);
+ assert.match(read('prive.html'),/content="#FFF8F2"/);
 });
 test('User-approved warm palette and Poppins are central, not replaced by navy',()=>{
  for(const color of Object.values(palette))assert.ok(brand.includes(color),'Missing brand color '+color);
@@ -37,6 +39,7 @@ test('User-approved warm palette and Poppins are central, not replaced by navy',
  assert.match(brand,/body\.cloud-shell-v3/);
  assert.match(brand,/body\.control-legacy/);
  assert.match(brand,/body\.control-pilot/);
+ assert.match(brand,/body\.control-private/);
  assert.doesNotMatch(brand,/#(?:315b94|294d70|213e61|1c2b40|f6f8fb)\b/i,'Old blue color must not return in final layer');
 });
 test('Known feature pages, help and inner screens all have theme scopes',()=>{
@@ -52,8 +55,8 @@ test('Known feature pages, help and inner screens all have theme scopes',()=>{
 });
 test('New stylesheet participates in reliable PWA offline install',()=>{
  const sw=read('service-worker.js');
- assert.match(sw,/const CACHE_SHELL='control-shell-v108'/);
- assert.match(sw,/const CACHE_PUBLIC='control-public-data-v108'/);
+ assert.match(sw,/const CACHE_SHELL='control-shell-v109'/);
+ assert.match(sw,/const CACHE_PUBLIC='control-public-data-v109'/);
  const parts=sw.match(/const (?:ASSETS|CRITICAL_SHELL)=.+/g)||[];
  assert.ok(parts.length>=2);
  for(const part of parts)assert.match(part,/control-brand-global\.css/);
@@ -106,4 +109,14 @@ test('Previously unthemed helper, update and project-overview screens use brand 
  assert.match(brand,/\.control-delivery-stage\[data-stage=operational\]/);
  assert.match(brand,/--control-positive:#16834B/);
  assert.match(brand,/--control-negative:#BB342B/);
+});
+
+test('Private route is re-skinned but authentication implementation remains separate',()=>{
+ const html=read('prive.html');
+ assert.match(html,/type="module" src="assets\/private\.js"/);
+ assert.match(html,/id="private-main"/);
+ assert.match(html,/robots" content="noindex,nofollow"/);
+ assert.match(brand,/body\.control-private \.private-form textarea/);
+ assert.match(brand,/body\.control-private \.warning-banner/);
+ assert.doesNotMatch(brand,/localStorage|sessionStorage|signInWithPassword|createClient\(/);
 });

@@ -476,3 +476,54 @@ body.control-shell-v3 .as-shell .as-danger:hover{background:#FCE9E6!important}
   transition-duration:.01ms!important;animation-duration:.01ms!important;
  }
 }
+
+
+/* Authenticated legacy private route: appearance only. No auth, storage,
+   credential handling, API request, or access restriction is changed. */
+body.control-private{
+ background:var(--control-cream)!important;color:var(--control-ink)!important;
+ --bg:var(--control-cream);--surface:var(--control-white);--elev:var(--control-peach-soft);
+ --line:var(--control-line);--ink:var(--control-ink);--muted:var(--control-muted);
+ --mint:var(--control-orange-deep);--accent:var(--control-orange-deep);
+ --red:var(--control-negative);
+ font-family:var(--control-font)!important;
+}
+body.control-private .ambient{display:none}
+body.control-private :is(.private-title,.private-head h1,.private-head strong){
+ font-family:var(--control-font)!important;color:var(--control-ink)!important;
+}
+body.control-private :is(.private-head a,.page-eyebrow,.external){
+ color:var(--control-orange-deep)!important;
+}
+body.control-private :is(.panel,.private-entry,.private-card,.surface,.card){
+ background:var(--control-paper)!important;
+ border-color:var(--control-line)!important;color:var(--control-ink)!important;
+ box-shadow:var(--control-shadow);
+}
+body.control-private :is(.private-entry p,.private-entry small,.private-head .muted){
+ color:var(--control-muted)!important;
+}
+body.control-private .warning-banner{
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;color:var(--control-warm-ink)!important;
+}
+body.control-private :is(.private-form input,.private-form textarea,.private-form select,
+ .private-toolbar select){
+ background:var(--control-white)!important;border-color:var(--control-line)!important;
+ color:var(--control-ink)!important;font-family:var(--control-font)!important;
+}
+body.control-private :is(button,input,select,textarea,a):focus-visible{
+ outline:3px solid var(--control-focus)!important;outline-offset:3px!important;
+}
+body.control-private :is(.btn,button){
+ border-color:var(--control-edge);font-family:var(--control-font)!important;
+}
+body.control-private :is(.btn.primary,button.primary){
+ background:var(--control-orange-deep)!important;
+ color:#fff!important;border-color:var(--control-orange-deep)!important;
+}
+body.control-private :is(.btn.primary,button.primary):hover{
+ background:var(--control-orange-hover)!important;border-color:var(--control-orange-hover)!important;
+}
+body.control-private :is(.private-error,.notice-error){color:var(--control-negative)!important}
+body.control-private :is(.private-ok,.notice-ok){color:var(--control-positive)!important}
