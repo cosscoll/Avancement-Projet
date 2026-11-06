@@ -1296,7 +1296,7 @@ function searchResults(scope='',query=''){
    '#/control/clients?project='+encodeURIComponent(client.project),client.nextStep||'');
  }
  for(const action of db.actions||[]){
-  const linked=db.clients.find(x=>x?.id===action.clientId);
+  const linked=(Array.isArray(db.clients)?db.clients:[]).find(x=>x?.id===action.clientId);
   add(action.project,'Action',action.title,
    'Action locale · '+(action.status||'état inconnu')+(linked?' · client : '+linked.name:'')+' · '+freshness(action.at||action.due),
    '#/control/inbox?task='+encodeURIComponent(action.id||''),[action.priority||'',linked?.name||''].join(' '));
