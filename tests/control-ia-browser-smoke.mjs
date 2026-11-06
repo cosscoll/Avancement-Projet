@@ -1311,6 +1311,39 @@ try{
    await starter.ready("!!document.querySelector('.control-home-v6')",10000);
    assert.equal(await starter.evaluate("document.querySelector('#control-onboarding')"),null,'Guide must disappear only after a real completed task');
    log('CONTROL 21: three-step real onboarding creates project, saves task, completes task and disappears in isolated Chromium');
+   // CONTROL 22: real task categorization is visible, unique, filterable and editable.
+   // Keep all test records inside this independently disposed Chromium context.
+   await starter.evaluate("(()=>{const state=JSON.parse(localStorage.getItem('control-command-v1'));const today=window.CONTROL_TASKS.localDay();const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);state.actions.push({id:'triage-late',title:'Retard contrôle',status:'todo',project:'',priority:'Haute',due:window.CONTROL_TASKS.localDay(yesterday)},{id:'triage-today',title:'Échéance du jour',status:'doing',project:'',priority:'Normale',due:today},{id:'triage-next',title:'Autre tâche locale',status:'todo',project:'',priority:'Normale',due:''});state.missions=Array.isArray(state.missions)?state.missions:[];state.missions.push({id:'triage-review',title:'Livrable à vérifier',status:'review',provider:'Test local',project:''});localStorage.setItem('control-command-v1',JSON.stringify(state));location.hash='#/control/inbox'})()");
+   await starter.pageCDP.command('Page.reload',{ignoreCache:true});
+   await starter.ready("document.querySelectorAll('.control-task-group').length===5",18000);
+   const triageLayout=await starter.evaluate("({groups:[...document.querySelectorAll('.control-task-group')].map(g=>({type:g.dataset.taskGroup,total:g.querySelectorAll('.control-task-row').length,hidden:g.hidden})),buttons:document.querySelectorAll('[data-task-filter-quick]').length})");
+   assert.deepEqual(triageLayout.groups.map(g=>g.type),['overdue','today','review','next','done']);
+   assert.deepEqual(triageLayout.groups.map(g=>g.total),[1,1,1,1,1]);
+   assert.equal(triageLayout.buttons,5);
+   assert.equal(triageLayout.groups.find(g=>g.type==='done').hidden,true,'Default active view hides closed tasks without dropping their record');
+   await starter.evaluate("document.querySelector('[data-task-filter-quick=\"overdue\"]').click()");
+   const lateView=await starter.evaluate("({selected:document.querySelector('#control-task-filter').value,pressed:document.querySelector('[data-task-filter-quick=\"overdue\"]').getAttribute('aria-pressed'),visible:[...document.querySelectorAll('.control-task-group')].filter(g=>!g.hidden).map(g=>g.dataset.taskGroup),count:document.querySelector('#control-task-visible').textContent})");
+   assert.equal(lateView.selected,'overdue');
+   assert.equal(lateView.pressed,'true');
+   assert.deepEqual(lateView.visible,['overdue']);
+   assert.match(lateView.count,/1 résultat/);
+   await starter.evaluate("(()=>{const field=document.querySelector('#control-task-search');field.value='inexistant';field.dispatchEvent(new Event('input',{bubbles:true}))})()");
+   assert.equal(await starter.evaluate("document.querySelector('#control-task-none').hidden"),false);
+   await starter.evaluate("(()=>{const field=document.querySelector('#control-task-search');field.value='Retard';field.dispatchEvent(new Event('input',{bubbles:true}))})()");
+   assert.equal(await starter.evaluate("document.querySelector('#control-task-none').hidden"),true);
+   await starter.evaluate("document.querySelector('[data-task-filter-quick=\"review\"]').click()");
+   const reviewView=await starter.evaluate("({selected:document.querySelector('#control-task-filter').value,visible:[...document.querySelectorAll('.control-task-group')].filter(g=>!g.hidden).map(g=>g.dataset.taskGroup),link:document.querySelector('[data-task-group=\"review\"] a.button')?.getAttribute('href')})");
+   assert.equal(reviewView.selected,'review');
+   assert.deepEqual(reviewView.visible,[],'Search must still narrow the review view until cleared');
+   await starter.evaluate("(()=>{const field=document.querySelector('#control-task-search');field.value='';field.dispatchEvent(new Event('input',{bubbles:true}))})()");
+   assert.deepEqual(await starter.evaluate("[...document.querySelectorAll('.control-task-group')].filter(g=>!g.hidden).map(g=>g.dataset.taskGroup)"),['review']);
+   assert.equal(reviewView.link,'#/control/missions','Mission review keeps a working destination');
+   await starter.evaluate("document.querySelector('[data-task-filter-quick=\"done\"]').click()");
+   await starter.ready("!document.querySelector('[data-task-group=\"done\"]').hidden&&!!document.querySelector('[data-act^=\"reopen:\"]')",6000);
+   await starter.evaluate("document.querySelector('[data-task-group=\"done\"] [data-act^=\"reopen:\"]').click()");
+   assert.equal(await starter.evaluate("JSON.parse(localStorage.getItem('control-command-v1')).actions.find(x=>x.title==='Première tâche enregistrée')?.status"),'todo');
+   log('CONTROL 22: real Chromium triage groups each task once, filters/searches review and reopens a recorded task');
+
   }finally{try{starter.pageCDP.socket.close()}catch{}}
 
   const storeKeys=['control-command-v1','control-hub-v2','control-automations-v1','control-ai-studio-v1'];
