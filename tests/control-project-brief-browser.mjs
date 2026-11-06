@@ -51,7 +51,7 @@ try{
  };
  const go=async hash=>{
   await run('location.hash='+JSON.stringify(hash));
-  await wait(()=>run("location.hash==="+JSON.stringify(hash)+"&&!!document.querySelector('#control-project-brief')"));
+  await wait(()=>run("location.hash==="+JSON.stringify(hash)+"&&document.querySelector('#control-project-brief')?.dataset.projectBrief==="+JSON.stringify(decodeURIComponent(hash.split("/")[2]))));
  };
  await page.send('Page.navigate',{url:'https://cosscoll.github.io/Avancement-Projet/#/'});
  await wait(()=>run("!!document.querySelector('.control-home-v6')"));
@@ -73,6 +73,20 @@ try{
  assert.doesNotMatch(a.text,/B secret|B confidential|B Drive/);
  assert.ok(a.links.some(x=>x.includes('inbox/new?project=ifsi')));
  assert.ok(a.links.includes('https://example.org/a'));
+
+ const taskLink=a.links.find(x=>x.includes('inbox?project=ifsi&task=a-late'));
+ assert.ok(taskLink,'A project's task must lead to its scoped inbox with task ID');
+ await run('location.hash='+JSON.stringify('#/control/inbox?project=ifsi'));
+ await wait(()=>run("!!document.querySelector('.control-task-scope')"));
+ const scoped=await run("({banner:document.querySelector('.control-task-scope')?.textContent,rows:[...document.querySelectorAll('.control-task-row')].map(row=>row.dataset.taskId),count:document.querySelector('#control-task-visible')?.textContent})");
+ assert.deepEqual(scoped.rows.sort(),['a-late','a-today']);
+ assert.match(scoped.banner,/Projet affiché/);
+ assert.doesNotMatch(scoped.banner,/B secret/);
+ assert.match(scoped.count,/2 résultat/);
+ await run("document.querySelector('.control-task-scope a').click()");
+ await wait(()=>run("location.hash==='#/control/inbox'&&document.querySelectorAll('.control-task-row').length===3"));
+ await go('#/project/ifsi/ai');
+
  await go('#/project/ucp/ai');
  const b=await run("document.querySelector('#control-project-brief').textContent");
  assert.match(b,/B secret task/);assert.match(b,/B confidential decision/);
