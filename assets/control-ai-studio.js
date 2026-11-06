@@ -6,7 +6,7 @@ function mount(root,adapter={}){
  if(!root||!core)return;
  window.CONTROL_AI_STUDIO?.unmount?.(root);
  const storage=adapter.storage||localStorage,loaded=core.read(storage);
- let db=loaded.state,raw=loaded.raw,blocked=loaded.error,tab='accounts',preview=null,query='',selectedImport=null,selectedAgent=null,selectedThread=null,editingMemoryId=null,restoreDraft=null,threadQuery='',highlightedMessageIndex=-1;
+ let db=loaded.state,raw=loaded.raw,blocked=loaded.error,tab='accounts',preview=null,query='',selectedImport=null,selectedAgent=null,selectedThread=null,editingMemoryId=null,memoryDraft=null,restoreDraft=null,threadQuery='',highlightedMessageIndex=-1;
  let worker=null,ready=false,loading=false,generating=false,disposed=false,requestId=0,pending=null,importGeneration=0,studioRestoreGeneration=0;
  const projects=[{id:'general',name:'Tous mes projets'},...(adapter.projects||[]).filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string')];
  const $=s=>root.querySelector(s);
@@ -201,7 +201,15 @@ root.querySelectorAll('[data-as-import-choice]').forEach(el=>el.onchange=()=>{if
   };}
   const search=$('#as-search');if(search)search.oninput=e=>{query=e.target.value;const at=e.target.selectionStart;refresh();const next=$('#as-search');next?.focus();next?.setSelectionRange(at,at)};
   root.querySelectorAll('[data-as-view]').forEach(b=>b.onclick=()=>{selectedImport=b.dataset.asView;refresh();$('#as-reader')?.scrollIntoView({block:'nearest'})});
-  root.querySelectorAll('[data-as-create-memory]').forEach(b=>b.onclick=()=>{selectedImport=b.dataset.asCreateMemory;showTab('memories')});
+  root.querySelectorAll('[data-as-extract-memory]').forEach(b=>b.onclick=()=>{
+    const conversation=db.imports.find(c=>c.id===b.dataset.asExtractMemory);
+    const index=Number(b.dataset.asExtractIndex),message=conversation?.messages?.[index];
+    if(!conversation||!Number.isInteger(index)||index<0||!message)return notify('Message source introuvable.',true);
+    memoryDraft={conversationId:conversation.id,conversationTitle:conversation.title,provider:conversation.provider,sourceMessageIndex:index,sourceRole:message.role,
+     title:('Extrait : '+conversation.title).slice(0,100),content:message.content.slice(0,1600),truncated:message.content.length>1600};
+    selectedImport=conversation.id;editingMemoryId=null;showTab('memories');$('#as-memory-title')?.focus();
+   });
+   root.querySelectorAll('[data-as-create-memory]').forEach(b=>b.onclick=()=>{memoryDraft=null;editingMemoryId=null;selectedImport=b.dataset.asCreateMemory;showTab('memories')});
   root.querySelectorAll('[data-as-source-agent]').forEach(b=>b.onclick=()=>{selectedImport=b.dataset.asSourceAgent;showTab('agents')});
   root.querySelectorAll('[data-as-delete-import]').forEach(b=>b.onclick=()=>{
    const id=b.dataset.asDeleteImport;if(!confirm('Supprimer cette conversation et toutes les mémoires liées ? Les agents perdront ces sources.'))return;
