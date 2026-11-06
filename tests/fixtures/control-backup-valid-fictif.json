@@ -1,0 +1,40 @@
+{
+  "format": "control-v2-plain",
+  "created": "2026-11-06T08:00:00.000Z",
+  "data": {
+    "command": {
+      "version": 1,
+      "actions": [
+        {
+          "id": "qa-task-01",
+          "title": "Appeler le fournisseur fictif",
+          "project": "custom-qa-01",
+          "clientId": "qa-client-01",
+          "status": "todo",
+          "priority": "Normale"
+        }
+      ],
+      "missions": [],
+      "clients": [
+        {
+          "id": "qa-client-01",
+          "name": "Entreprise Démo QA",
+          "project": "custom-qa-01",
+          "status": "Prospect",
+          "nextStep": "Appeler le fournisseur fictif"
+        }
+      ]
+    },
+    "hub": {
+      "custom": [
+        {
+          "id": "custom-qa-01",
+          "name": "Projet Démo QA"
+        }
+      ]
+    },
+    "automations": {
+      "entries": []
+    }
+  }
+}
