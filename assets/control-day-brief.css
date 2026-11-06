@@ -1,3 +1,4 @@
+@import url('./control-project-brief.css');
 /* CONTROL daily focus: readable, compact, accessible on desktop and phone. */
 .control-home-v4 .control-day-brief{margin:0 0 18px;padding:20px 22px;background:#fff;border:1px solid #d5e2ed;border-radius:18px;box-shadow:0 3px 12px #173d6010;color:#213b52}
 .control-day-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
