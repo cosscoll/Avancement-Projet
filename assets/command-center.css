@@ -56,6 +56,32 @@ header.control-head{flex-wrap:wrap;gap:10px}
 .backup-diff-scroll:focus-visible{outline:3px solid #4c83b9}
 
 
+/* CONTROL 22 — fast triage, no new navigation layer or fake notifications. */
+.control-task-triage{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin:10px 0 15px}
+.control-task-triage-button{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;min-height:40px;padding:9px 12px;border:1px solid #dce5ee;border-radius:10px;background:#f8fafc;color:#3d5269;font-size:12px;font-weight:650;box-shadow:none;cursor:pointer}
+.control-task-triage-button strong{display:grid;place-items:center;min-width:22px;height:22px;padding:2px 6px;border-radius:7px;background:#edf1f6;color:#415e79;font-size:11px;font-variant-numeric:tabular-nums}
+.control-task-triage-button[aria-pressed="true"]{background:#e6eef6;border-color:#a9c0d7;color:#214769}
+.control-task-triage-button[aria-pressed="true"] strong{background:#244767;color:#fff}
+.control-task-triage-button:hover{background:#edf3f9;border-color:#b8cddd}
+.control-task-triage-button:focus-visible{outline:3px solid #4777b7;outline-offset:2px}
+.control-task-group{margin:14px 0 22px;border:1px solid #e3eaf1;border-radius:12px;padding:0 14px;background:#fff}
+.control-task-group[hidden]{display:none!important}
+.control-task-group-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 2px 11px;border-bottom:1px solid #e5ebf1}
+.control-task-group-heading h3{font-size:14px!important;line-height:1.3;font-weight:750;margin:0 0 3px!important;color:#25415f}
+.control-task-group-heading p{font-size:11px;line-height:1.5;color:#63788c;margin:0}
+.control-task-group-count{display:grid;place-items:center;border-radius:8px;padding:5px 8px;min-width:27px;background:#edf3f8;color:#345977;font-size:12px;font-weight:750;flex-shrink:0;font-variant-numeric:tabular-nums}
+.control-task-group[data-task-group="overdue"] .control-task-group-heading h3{color:#934b28}
+.control-task-group[data-task-group="overdue"] .control-task-group-count{background:#fff0e5;color:#934b28}
+.control-task-group[data-task-group="review"] .control-task-group-count{background:#f3effb;color:#654d87}
+@media(max-width:540px){
+ .control-task-triage{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .control-task-triage-button{min-width:0;padding:9px 10px;font-size:11px}
+ .control-task-group{padding:0 10px;margin:12px 0 18px}
+ .control-task-group-heading{padding:12px 1px 10px}
+ .control-task-group-heading h3{font-size:13px!important}
+ .control-task-group-heading p{font-size:10px}
+}
+
 /* CONTROL — TPE task inbox. Edit in place without crowding the first viewport. */
 .control-task-toolbar{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(180px,.65fr);gap:12px;margin:12px 0}
 .control-task-toolbar label{display:flex;flex-direction:column;gap:6px;min-width:0;font-size:12px;font-weight:750;color:#31485f}
