@@ -1,3 +1,11 @@
+## 6 novembre 2026 — CONTROL 19 : transfert portable AES-GCM et JSON
+
+**Recette réelle ajoutée :** export de données fictives par les formulaires CONTROL, puis restauration dans deux contextes Chromium indépendants de la source (stockages locaux séparés), une fois avec chiffrement AES-GCM et une fois sans chiffrement. Mauvais mot de passe refusé, aperçu non destructif, consentement explicite, concordance des tâches/agents/mémoires et conservation après actualisation.
+
+**Résultat :** [Chromium isolé réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/42193248162), [test du site public réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/42193304921), [761/761 tests Node réussis](https://github.com/cosscoll/Avancement-Projet/actions/runs/42193248145) et [Pages publié](https://github.com/cosscoll/Avancement-Projet/actions/runs/42193247376). Le test Chromium vérifie 25 fichiers publics octet par octet. Ceci ne remplace pas un essai sur deux appareils physiques ni des permissions Cloud vérifiées. Aucun service Cloud ou automatisation activé.
+
+[Cahier des charges v1.11](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md).
+
 ## 6 novembre 2026 — CONTROL 18 : recherche fiabilisée, suite qualité entièrement verte
 
 **Livré sur `main` :** recherche universelle compatible avec les anciens états locaux sans fiches Clients ; accès discret à l'état de CONTROL Cloud depuis les fonctions supplémentaires de l'accueil (sans connexion ni activation) ; tests du parcours actuel mis à jour pour les interfaces CONTROL v6/v7 et les caches PWA. **PWA v95**.
