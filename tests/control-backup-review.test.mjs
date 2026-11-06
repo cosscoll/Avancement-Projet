@@ -177,6 +177,116 @@ test('duplicate and legacy missing IDs never generate invented exact diff claims
  const missing=fixture(1,0);missing.command.actions=[{title:'undocumented'}];
  assert.equal(review.compare(missing,before).changes.find(x=>x.key==='actions').modified,null);
 });
+function fakeStore(initial={},options={}){
+ const map=new Map(Object.entries(initial));
+ const calls=[];
+ return{
+  values:map,calls,
+  getItem(key){return map.has(key)?map.get(key):null},
+  setItem(key,value){
+   calls.push(['write',key]);
+   if(options.failOn===key)throw Error('Storage quota exceeded');
+   map.set(key,String(value));
+   if(options.afterWrite)options.afterWrite(key,map);
+  },
+  removeItem(key){calls.push(['remove',key]);map.delete(key)}
+ };
+}
+function storedBase(){
+ return {
+  'control-command-v1':JSON.stringify({actions:[{id:'old'}],missions:[]}),
+  'control-hub-v2':JSON.stringify({custom:[{id:'custom-old',name:'Ancien projet'}]}),
+  'control-automations-v1':JSON.stringify({entries:[]}),
+  'control-ai-studio-v1':JSON.stringify({agents:[{id:'agent-original'}]})
+ };
+}
+function importedBase(){
+ return {
+  command:{actions:[{id:'new-task',title:'Test utilisateur',project:'custom-new'}],missions:[]},
+  hub:{custom:[{id:'custom-new',name:'Dossier transféré'}]},
+  automations:{entries:[]}
+ };
+}
+test('an actual storage transaction transfers clients, projects and linked tasks without touching legacy Studio IA',()=>{
+ const a=fakeStore(storedBase());
+ const backup=importedBase();
+ backup.command.clients=[{id:'client-1',name:'Entreprise',project:'custom-new'}];
+ backup.command.actions[0].clientId='client-1';
+ const original=review.snapshot(a);
+ const copy=JSON.stringify(backup);
+ const result=review.applyTransaction(a,original,backup);
+ assert.equal(result.ok,true);
+ assert.deepEqual(JSON.parse(a.getItem('control-command-v1')).actions[0],backup.command.actions[0]);
+ assert.deepEqual(JSON.parse(a.getItem('control-command-v1')).clients,backup.command.clients);
+ assert.deepEqual(JSON.parse(a.getItem('control-hub-v2')).custom,backup.hub.custom);
+ assert.equal(JSON.parse(a.getItem('control-ai-studio-v1')).agents[0].id,'agent-original');
+ assert.equal(JSON.stringify(backup),copy,'source file must be unchanged by transfer');
+});
+test('a fresh second browser can import a full backup without modifying the first browser',()=>{
+ const first=fakeStore(storedBase()),second=fakeStore({});
+ const backup={command:JSON.parse(first.getItem('control-command-v1')),
+  hub:JSON.parse(first.getItem('control-hub-v2')),
+  automations:JSON.parse(first.getItem('control-automations-v1')),
+  studio:JSON.parse(first.getItem('control-ai-studio-v1'))};
+ const expectedFirst=review.snapshot(first);
+ const result=review.applyTransaction(second,review.snapshot(second),backup);
+ assert.equal(result.ok,true);
+ assert.deepEqual(review.snapshot(second),expectedFirst);
+ assert.deepEqual(review.snapshot(first),expectedFirst);
+});
+test('intervening edits prevent restore before the first write',()=>{
+ const store=fakeStore(storedBase()),expected=review.snapshot(store);
+ store.setItem('control-command-v1',JSON.stringify({actions:[{id:'external'}]}));
+ const actual=review.snapshot(store);
+ const result=review.applyTransaction(store,expected,importedBase());
+ assert.equal(result.ok,false);assert.equal(result.reason,'concurrent');
+ assert.equal(review.unchanged(store,actual),true);
+});
+test('storage quota failure during the second write rolls back the first without losing unrelated data',()=>{
+ const initial=storedBase(),store=fakeStore(initial,{failOn:'control-hub-v2'});
+ const original=review.snapshot(store);
+ const result=review.applyTransaction(store,original,importedBase());
+ assert.equal(result.ok,false);
+ assert.equal(result.rollbackUncertain,false);
+ assert.deepEqual(review.snapshot(store),original);
+});
+test('callback failure after all writes rolls back every changed storage key',()=>{
+ const store=fakeStore(storedBase()),original=review.snapshot(store);
+ const result=review.applyTransaction(store,original,importedBase(),()=>{throw Error('UI reinitialization failed')});
+ assert.equal(result.ok,false);
+ assert.equal(result.rollbackUncertain,false);
+ assert.deepEqual(review.snapshot(store),original);
+});
+test('an external edit to a written key is never overwritten during rollback',()=>{
+ const initial=storedBase(),store=fakeStore(initial,{
+  afterWrite(key,map){
+   if(key==='control-command-v1')map.set('control-command-v1',JSON.stringify({external:true}));
+  }
+ });
+ const original=review.snapshot(store);
+ const result=review.applyTransaction(store,original,importedBase());
+ assert.equal(result.ok,false);
+ assert.equal(result.rollbackUncertain,true);
+ assert.equal(JSON.parse(store.getItem('control-command-v1')).external,true);
+ assert.equal(store.getItem('control-hub-v2'),original[1]);
+});
+test('invalid or incomplete transaction is rejected without modifying storage',()=>{
+ const store=fakeStore(storedBase()),original=review.snapshot(store);
+ for(const value of [null,{}, {command:{},hub:{}}, {command:{},hub:{},automations:null}]){
+  const result=review.applyTransaction(store,original,value);
+  assert.equal(result.ok,false);
+ }
+ assert.deepEqual(review.snapshot(store),original);
+});
+test('restore transaction is used only after explicit preview and confirmation',()=>{
+ const command=readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
+ const backupSection=command.slice(command.indexOf('function backup(){'),command.indexOf('// Search only live, authorized'));
+ assert.match(backupSection,/if\(staged\.integrity\.unrestorable\)/);
+ assert.match(backupSection,/if\(staged\.requiresIntegrityAcknowledgement&&!integrityAck\.checked\)/);
+ assert.match(backupSection,/if\(!restore\.unchanged\(localStorage,staged\.original\)\)/);
+ assert.match(backupSection,/const result=restore\.applyTransaction\(localStorage,staged\.original,staged\.data/);
+ assert.match(backupSection,/if\(!confirm\('Remplacer maintenant les données CONTROL/);
+});
 test('diff table exposes redacted counts and accessible horizontal scrolling',()=>{
  const app=readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
  const css=readFileSync(new URL('../assets/command-center.css',import.meta.url),'utf8');
