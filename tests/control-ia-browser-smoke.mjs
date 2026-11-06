@@ -170,6 +170,30 @@ try{
  }
  log('Simple & Humain: eight functional screens use cream, Poppins and warm surfaces in Chromium');
 
+ // Beyond the eight dedicated modules, inspect every local management route.
+ const managementRoutes=['manager','inbox','missions','clients','backup','search','team',
+  'audit','settings','calendar','library','goals','budget','activity','memory','tools'];
+ for(const route of managementRoutes){
+  await js("location.hash="+JSON.stringify('#/control/'+route));
+  await delay(110);
+  const viewTheme=await js("({route:location.hash,hasContent:!!document.querySelector('#main')?.textContent?.trim(),body:getComputedStyle(document.body).backgroundColor,font:getComputedStyle(document.body).fontFamily,stylesheet:!!document.querySelector('link[href$=\"control-brand-global.css\"]')})");
+  assert.equal(viewTheme.route,'#/control/'+route);
+  assert.equal(viewTheme.hasContent,true,route+' is missing its functional body');
+  assert.equal(viewTheme.body,warmBg,route+' uses an old page background');
+  assert.match(viewTheme.font,/Poppins/i,route+' font');
+  assert.equal(viewTheme.stylesheet,true,route+' has no final brand sheet');
+ }
+ log('Simple & Humain: sixteen management routes render their actual content with the common palette');
+ await js("location.hash='#/'");
+ await delay(150);
+ const homeTheme=await js("({bg:getComputedStyle(document.body).backgroundColor,font:getComputedStyle(document.body).fontFamily,pilot:getComputedStyle(document.querySelector('.control-home-v6-pilot')).backgroundColor})");
+ assert.equal(homeTheme.bg,warmBg);
+ assert.match(homeTheme.font,/Poppins/i);
+ assert.equal(homeTheme.pilot,warmTint);
+ log('Simple & Humain: homepage and tester invitation match the common brand');
+
+
+
  // The home screen must show new capabilities without requiring hidden tool navigation.
  await js("location.hash='#/'");
  await js("location.hash='#/'");
