@@ -1,3 +1,11 @@
+## CONTROL 22 — Priorités en catégories, filtres rapides et actions réelles (6 novembre 2026)
+
+**Publié sur le site :** la page **À traiter** regroupe les éléments locaux par **En retard**, **Aujourd'hui**, **À vérifier**, **À suivre** et **Terminées**. Cinq filtres rapides avec compteurs fonctionnent avec la recherche et le filtre client sans créer d'action implicite. Chaque tâche n'apparaît qu'une fois ; les sections vides se masquent pendant les recherches. Terminer, Rouvrir et Modifier utilisent les enregistrements locaux réellement sauvegardés. Présentation adaptée aux mobiles, **PWA v98**, charte validée conservée.
+
+**Preuves :** [777/777 tests Node réussis](https://github.com/cosscoll/Avancement-Projet/actions/runs/42198750687), [test Chromium public réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/42198822103) avec cinq catégories, filtrage, recherches et réouverture de tâche, [publication GitHub Pages réussie](https://github.com/cosscoll/Avancement-Projet/actions/runs/42198749691). La recette du site vérifie également 26 fichiers publics octet par octet.
+
+**Suivant :** session 23, fiches clients et relances actionnables, sans ajouter de comptabilité, CRM factice ou connexion externe. [Cahier des charges v1.14](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md) · [Plan de livraison par sessions](docs/CONTROL_PLAN_SESSIONS_LIVRABLES_2026_11_06.md).
+
 ## CONTROL 21 — Onboarding en trois étapes, réellement fonctionnel (6 novembre 2026)
 
 **Changement visible sur l'accueil :** « Bien démarrer avec CONTROL » guide les nouveaux utilisateurs vers leur projet, leur première tâche, puis sa clôture. La progression provient des projets et tâches enregistrés, sans faux avancement ; elle disparaît quand la première tâche est terminée et n'interrompt pas les utilisateurs expérimentés. L'interface CONTROL v6/v7 et le mode local restent inchangés. **PWA v97**.
