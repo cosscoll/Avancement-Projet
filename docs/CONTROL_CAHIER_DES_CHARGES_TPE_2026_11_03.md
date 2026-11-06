@@ -1,5 +1,24 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 6 novembre 2026 · version de travail 1.15 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 6 novembre 2026 · version de travail 1.17 · ciblage indépendants et équipes de 2 à 10 personnes_
+
+
+## CONTROL 25 — Recherche locale centralisée et filtrée par projet (6 novembre 2026)
+
+**Amélioration utilisateur déployée :** l'écran `#/control/search` organise les résultats locaux en sections distinctes **Actions**, **Décisions**, **Projets**, **Clients**, **Missions**, **Ressources** et **Événements**, avec un compteur par section, le projet d'origine, la source/date déclarées et un lien direct vers la donnée. Les résultats proviennent exclusivement des données locales accessibles, jamais des conversations privées de ChatGPT, Claude ou Gemini.
+
+**Recherche contextualisée :** dans la synthèse de chaque espace, le bouton « Rechercher dans ce projet » ouvre `#/control/search?project=<identifiant>` avec le bon filtre déjà sélectionné. La recherche texte et le changement de projet recalculent immédiatement la liste sans écriture locale. Un projet demandé mais inconnu ne révèle pas d'autres projets par défaut. Les recherches insensibles aux accents/casse, la suppression immédiate d'une décision et l'échappement HTML sont conservés par les contrôles existants. Une limite d'affichage de 65 résultats est signalée.
+
+**Preuves :** [789/789 tests Node](https://github.com/cosscoll/Avancement-Projet/actions/runs/42205346466) et [recette Chromium du site public](https://github.com/cosscoll/Avancement-Projet/actions/runs/42206519001) : recherche limitée au projet A, absence de données du projet B, filtre texte, changement de projet et lien contextualisé. Interface responsive, PWA v101. Aucun connecteur Cloud ni automatisation activé.
+
+## CONTROL 24 — Synthèse projet et navigation réellement isolée (6 novembre 2026)
+
+**Amélioration visible publiée :** « En un coup d’œil » rassemble en trois cartes les trois prochaines tâches locales du projet, les notes manuelles/derniers bilans IA déclarés et les liens HTTPS utiles. La charte et les quatre onglets principaux restent inchangés. Les décisions structurées sont accessibles par la recherche, pas encore affichées individuellement dans la carte des notes.
+
+**Correctifs terminés :** le lien « Toutes les tâches du projet » applique désormais le filtrage aux vraies lignes et aux compteurs de l'écran « À traiter » ; le bandeau explicite l'espace et permet de revenir à toutes les tâches. Les fichiers de la synthèse sont précachés dans la PWA v101 et restent disponibles après rechargement sans réseau.
+
+**Preuves réelles :** [Qualité 789/789](https://github.com/cosscoll/Avancement-Projet/actions/runs/42205346466), [recette Chromium publique et hors ligne](https://github.com/cosscoll/Avancement-Projet/actions/runs/42206519001), [publication Pages](https://github.com/cosscoll/Avancement-Projet/actions/runs/42206429921). La recette cible l'isolation entre projets, l'affichage mobile 390 px, le cache PWA et les liens. Le [dossier de livraison 24](CONTROL_24_SYNTHESE_PROJET_2026_11_06.md) précise les limites restantes, notamment l'absence de synchronisation avec les comptes IA.
+
+**Suite P1 :** CONTROL 26 — rendre la création d'assistants personnalisés plus guidée, avec choix explicite des mémoires à importer, provenance des exports et consentement avant toute utilisation. Ne pas annoncer de synchronisation native des historiques ChatGPT/Claude/Gemini sans fournisseur officiellement connecté.
 
 
 ## CONTROL 23 — Suivi clients et relances actionnables (6 novembre 2026)
