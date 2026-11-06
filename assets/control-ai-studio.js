@@ -168,6 +168,9 @@ function agentPanel(){
    notify('Discussion retrouvée dans '+agent.name+'.');
   });
   root.querySelectorAll('[data-as-tab]').forEach(b=>b.onclick=()=>showTab(b.dataset.asTab));
+root.querySelectorAll('[data-as-import-choice]').forEach(el=>el.onchange=()=>{if(!preview)return;const id=el.dataset.asImportChoice;preview.selectedIds=el.checked?[...new Set([...preview.selectedIds,id])]:preview.selectedIds.filter(x=>x!==id);notify(preview.selectedIds.length+' conversation(s) sélectionnée(s) sur '+preview.rows.length+'.')});
+   const consentEl=$('#as-import-consent');if(consentEl)consentEl.onchange=()=>{if(preview)preview.consent=consentEl.checked};
+   
   const importForm=$('#as-import-form');if(importForm){
    importForm.addEventListener('change',e=>{if(!['as-file','as-provider'].includes(e.target?.id))return;++importGeneration;preview=null;const button=$('[data-as-action="confirm-import"]');if(button)button.disabled=true;notify('Archive ou fournisseur modifié : relance l’analyse.');});
    importForm.onsubmit=async e=>{
@@ -179,9 +182,7 @@ function agentPanel(){
    try{notify('Analyse de l’archive en cours. Aucune donnée enregistrée.');const contents=await file.text();if(disposed||generation!==importGeneration)return;const rows=core.parse(provider,contents,file.name);if(disposed||generation!==importGeneration)return;preview={rows,provider,selectedIds:[],consent:false};refresh();notify('Aucune donnée enregistrée : vérifie l’aperçu puis confirme.')}
    catch(err){if(disposed||generation!==importGeneration)return;preview=null;refresh();notify(String(err.message||err),true)}
   };}
-  root.querySelectorAll('[data-as-import-choice]').forEach(el=>el.onchange=()=>{if(!preview)return;const id=el.dataset.asImportChoice;preview.selectedIds=el.checked?[...new Set([...preview.selectedIds,id])]:preview.selectedIds.filter(x=>x!==id);notify(preview.selectedIds.length+' conversation(s) sélectionnée(s) sur '+preview.rows.length+'.')});
-   const consentEl=$('#as-import-consent');if(consentEl)consentEl.onchange=()=>{if(preview)preview.consent=consentEl.checked};
-   const restoreForm=$('#as-restore-form');if(restoreForm){
+  const restoreForm=$('#as-restore-form');if(restoreForm){
    restoreForm.addEventListener('change',e=>{if(e.target?.id!=='as-restore-file')return;++studioRestoreGeneration;restoreDraft=null;const button=$('[data-as-action="confirm-studio-restore"]');if(button)button.disabled=true;notify('Fichier de restauration modifié : relance la vérification.');});
    restoreForm.onsubmit=async e=>{
    e.preventDefault();const generation=++studioRestoreGeneration;restoreDraft=null;const oldConfirm=$('[data-as-action="confirm-studio-restore"]');if(oldConfirm)oldConfirm.disabled=true;const file=$('#as-restore-file')?.files?.[0];
