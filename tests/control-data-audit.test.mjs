@@ -34,9 +34,9 @@ test('reusable JSON fixtures have a valid backup envelope and explicit expected 
   assert.ok(Array.isArray(envelope.data.command.actions));
   assert.ok(Array.isArray(envelope.data.command.missions));
  }
- assert.equal(ctx.module.exports.inspectBackup(good,{catalogProjects:[]}).unrestorable,false);
- assert.equal(ctx.module.exports.inspectBackup(good,{catalogProjects:[]}).counts.errors,0);
- const duplicate=ctx.module.exports.inspectBackup(bad,{catalogProjects:[]});
+ assert.equal(ctx.module.exports.inspectBackup(good.data,{catalogProjects:[]}).unrestorable,false);
+ assert.equal(ctx.module.exports.inspectBackup(good.data,{catalogProjects:[]}).counts.errors,0);
+ const duplicate=ctx.module.exports.inspectBackup(bad.data,{catalogProjects:[]});
  assert.equal(duplicate.unrestorable,true);
  assert.equal(duplicate.issues.filter(x=>x.code==='duplicate_id').length,1);
  assert.equal(JSON.stringify(good).includes('password'),false);
