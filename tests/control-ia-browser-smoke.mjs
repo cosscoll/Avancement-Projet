@@ -806,6 +806,11 @@ try{
  // A new encrypted or plain backup must be inspected before any local overwrite.
  await js("location.hash='#/control/backup'");
  await ready(()=>js("!!document.querySelector('#import-data')&&!!document.querySelector('#import-preview')"),10000)();
+ await ready(()=>js("typeof window.CONTROL_BACKUP_REVIEW?.applyTransaction==='function'"),10000)();
+ assert.equal(await js("typeof window.CONTROL_BACKUP_REVIEW?.applyTransaction"),'function',
+  'The published browser must load the transaction writer before any restoration');
+ log('CONTROL 15: browser contains the transaction-safe restore engine');
+
  const backupBefore=await js("({command:localStorage.getItem('control-command-v1'),hub:localStorage.getItem('control-hub-v2'),autos:localStorage.getItem('control-automations-v1')})");
  // CONTROL 14: a portable custom project must be counted even when hub.projects is absent.
  await js("(()=>{const command=JSON.parse(localStorage.getItem('control-command-v1')||'{}');const hub=JSON.parse(localStorage.getItem('control-hub-v2')||'{}');hub.custom=[...(Array.isArray(hub.custom)?hub.custom:[]),{id:'custom-restore-count-test',name:'Dossier confidentiel de test'}];const envelope={format:'control-v2-plain',created:'2026-11-05T10:00:00Z',data:{command,hub,automations:JSON.parse(localStorage.getItem('control-automations-v1')||'{}')}};const dt=new DataTransfer();dt.items.add(new File([JSON.stringify(envelope)],'projet-test.json',{type:'application/json'}));const form=document.querySelector('#import-data');form.elements.file.files=dt.files;form.requestSubmit()})()");
