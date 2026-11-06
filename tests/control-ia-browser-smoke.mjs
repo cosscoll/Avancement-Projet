@@ -174,15 +174,15 @@ try{
   assert.equal(textColor,route==='meetings'?'rgb(184, 67, 31)':'rgb(109, 103, 99)',
     'Old navy visible in '+route+' on '+target);
   const residualTargets={localai:['.loc-shell label','rgb(109, 103, 99)'],
-   catalog:['.tool-deploy-cta button','rgb(184, 67, 31)'],
+   catalog:['.tool-deploy-cta button','rgb(184, 67, 31)','backgroundColor'],
    deploy:['.deploy-steps summary','rgb(184, 67, 31)'],
    command:['.cmd-empty','rgb(109, 103, 99)'],
    meetings:['.vs-past-toggle','rgb(184, 67, 31)'],
    aistudio:['.as-connect-counter','rgb(109, 103, 99)'],
    webbuilder:['.web-builder .chip','rgb(184, 67, 31)']};
   if(residualTargets[route]){
-   const [selector,want]=residualTargets[route];
-   const found=await js("(()=>{const e=document.querySelector("+JSON.stringify(selector)+");return e?getComputedStyle(e).color:null})()");
+   const [selector,want,property='color']=residualTargets[route];
+   const found=await js("(()=>{const e=document.querySelector("+JSON.stringify(selector)+");return e?getComputedStyle(e)["+JSON.stringify(property)+"]:null})()");
    assert.equal(found,want,'Residual blue action/text on '+route+' '+selector);
   }
   const blue=await js("(()=>{const r=document.querySelector('#main');if(!r)return[];const rows=[];const blue=x=>{const m=x.match(/^rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)(?:,\\s*([\\d.]+))?\\)$/);if(!m||(+m[4]||1)<.45)return false;const [rr,g,b]=m.slice(1,4).map(Number);return b>rr+24&&b>g+13};for(const e of [...r.querySelectorAll('*')].slice(0,550)){if(!e.getClientRects().length)continue;const c=getComputedStyle(e);for(const prop of ['color','backgroundColor','borderTopColor']){const value=c[prop];if(blue(value))rows.push({className:String(e.className||'').slice(0,65),tag:e.tagName,color:value,property:prop})}}return rows.slice(0,9)})()");
@@ -1669,7 +1669,7 @@ try{
  assert.ok(pilotMobile.link,'Tester guide must link to real assistant screen');
  log('CONTROL pilot guide: six real missions, optional feedback, responsive 320px');
  // The guide itself registers the PWA, even when it is a participant's first page.
- await ready(()=>js("(async()=>{if(!navigator.serviceWorker?.controller)return false;const keys=await caches.keys();if(!keys.includes('control-shell-v111'))return false;const cache=await caches.open('control-shell-v111');return !!(await cache.match(new URL('./testeurs.html',location.href)))&&!!(await cache.match(new URL('./assets/control-test-pilot.js',location.href)))})()"),30000)();
+ await ready(()=>js("(async()=>{if(!navigator.serviceWorker?.controller)return false;const keys=await caches.keys();if(!keys.includes('control-shell-v112'))return false;const cache=await caches.open('control-shell-v112');return !!(await cache.match(new URL('./testeurs.html',location.href)))&&!!(await cache.match(new URL('./assets/control-test-pilot.js',location.href)))})()"),30000)();
  await command('Network.enable');
  await command('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await command('Page.reload',{ignoreCache:false});

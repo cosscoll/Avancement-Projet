@@ -820,3 +820,28 @@ body.control-shell-v3 .web-builder :is(.web-builder-modes button,.web-builder-ac
  background:var(--control-peach-soft)!important;
  border-color:var(--control-edge)!important;
 }
+
+
+/* Operator assistant inside local AI: preserve approval behavior, replace
+   the remaining cold-blue conversation and approval cards. */
+body.control-shell-v3 .loc-shell .control-operator,
+body.control-shell-v3 .loc-shell .control-operator [data-op-draft]:not([hidden]){
+ background:var(--control-paper)!important;
+ border-color:var(--control-line)!important;
+ color:var(--control-ink)!important;
+}
+body.control-shell-v3 .loc-shell .control-operator form label{
+ color:var(--control-muted)!important;
+}
+body.control-shell-v3 .loc-shell .control-operator-response{
+ color:var(--control-ink)!important;
+}
+body.control-shell-v3 .loc-shell .control-operator-response:not(:empty){
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+}
+body.control-shell-v3 .loc-shell .control-operator-response .control-operator-link{
+ color:var(--control-orange-deep)!important;
+ border-color:var(--control-edge)!important;
+ background:var(--control-paper)!important;
+}

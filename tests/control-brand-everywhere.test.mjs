@@ -55,8 +55,8 @@ test('Known feature pages, help and inner screens all have theme scopes',()=>{
 });
 test('New stylesheet participates in reliable PWA offline install',()=>{
  const sw=read('service-worker.js');
- assert.match(sw,/const CACHE_SHELL='control-shell-v111'/);
- assert.match(sw,/const CACHE_PUBLIC='control-public-data-v111'/);
+ assert.match(sw,/const CACHE_SHELL='control-shell-v112'/);
+ assert.match(sw,/const CACHE_PUBLIC='control-public-data-v112'/);
  const parts=sw.match(/const (?:ASSETS|CRITICAL_SHELL)=.+/g)||[];
  assert.ok(parts.length>=2);
  for(const part of parts)assert.match(part,/control-brand-global\.css/);
@@ -148,5 +148,12 @@ test('No cold-blue remains on action controls, instructions and banners highligh
  '.vs-empty','.vs-past-toggle','.as-connect-counter','.as-studio-backup summary',
  '.as-journey-head p','.web-builder .chip']){
   assert.ok(brand.includes(selector),'Unfinished Simple & Humain element: '+selector);
+ }
+});
+
+test('Operator mission approval view is warm but retains all its safe actions',()=>{
+ for(const target of ['.control-operator [data-op-draft]', '.control-operator form label',
+ '.control-operator-response:not(:empty)', '.control-operator-link']){
+  assert.ok(brand.includes(target),'Old operator color: '+target);
  }
 });
