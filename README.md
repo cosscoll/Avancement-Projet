@@ -1,3 +1,11 @@
+## 6 novembre 2026 — CONTROL 17 : protection des imports en cours et cache PWA v94
+
+**Corrections livrées directement sur `main` :** dans Sauvegardes et le Studio IA, une analyse asynchrone ne peut plus rouvrir une ancienne prévisualisation après remplacement du fichier, modification du fournisseur, annulation ou démontage de l'écran. Les fichiers chiffrés restent examinés localement avant consentement ; aucune écriture automatique, aucune synchronisation native des comptes ChatGPT/Claude/Gemini, aucune activation Cloud ni automatisation.
+
+**Tests :** nouveaux scénarios de courses de lecture/déchiffrement et de restauration dans `tests/control-backup-import-race.test.mjs` et `tests/control-ai-studio-import-race.test.mjs`. Corrections des attentes obsolètes de tests de transaction. La suite CI historique n'est pas entièrement verte ; la diffusion publique de v94 et un transfert réel entre deux profils distincts restent à valider.
+
+[Cahier des charges v1.9](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md).
+
 ## 6 novembre 2026 — CONTROL 16 : première recette réelle de sauvegarde sur GitHub Pages
 
 **Navigation et import effectivement testés en navigateur :** la version **v91** servie sur GitHub Pages ouvrait bien les pages de sauvegarde et de diagnostic. Dans un profil de navigateur isolé, la prévisualisation, l'annulation, l'import confirmé et la persistance après rechargement ont été observés avec **un projet, un client et une tâche fictifs**. Les liens client–projet–tâche et le filtre par client fonctionnaient ; le diagnostic affichait zéro anomalie. Une sauvegarde enveloppée contenant des projets avec le même ID a été refusée, même en tentant d'invoquer le bouton désactivé par code.
