@@ -96,6 +96,7 @@
 <script src="assets/local-ai.js"></script>
 <script src="assets/navigation-hub.js"></script>
 <script src="assets/control-day-brief.js"></script>
+<script src="assets/control-onboarding.js"></script>
 <script>
 (()=>{
 "use strict";
@@ -141,6 +142,8 @@ function home(){
  try{day=window.CONTROL_DAY_BRIEF?.summarize(localStorage.getItem('control-command-v1'))||{status:'invalid',open:0,urgent:0,review:0,items:[]};}
  catch{day={status:'invalid',open:0,urgent:0,review:0,items:[]};}
  const invalid=day.status==='invalid';
+ let onboarding='';
+ try{onboarding=window.CONTROL_ONBOARDING?.render(state,localStorage.getItem('control-command-v1'),hubCorrupt)||''}catch{/* No guide if device storage cannot be read safely. */}
  const counter=n=>invalid?'—':String(Number.isInteger(n)&&n>=0?n:0);
  const projectName=key=>projects.find(p=>p.id===key)?.name||'Sans projet associé';
  const list=(invalid
@@ -165,7 +168,7 @@ function home(){
  '<a class="control-home-v6-stat" href="#/control/inbox"><strong>'+counter(day.urgent)+'</strong><small>Urgences</small></a>'+
  '<a class="control-home-v6-stat" href="#/control/inbox"><strong>'+counter(day.open)+'</strong><small>À faire</small></a>'+
  '<a class="control-home-v6-stat" href="#/control/missions"><strong>'+counter(day.review)+'</strong><small>En attente</small></a>'+
- '</section>'+
+ '</section>'+onboarding+
  '<section class="control-home-v6-ask" aria-labelledby="control-home-ask-title">'+
  '<h2 id="control-home-ask-title" class="control-home-v6-ask-title"><span>'+icon('sparkle')+'</span>Demander à CONTROL</h2>'+
  '<p>Que voulez-vous faire aujourd’hui ?</p>'+
