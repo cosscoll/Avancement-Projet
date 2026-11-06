@@ -19,7 +19,7 @@ test('Brand-new device receives one honest three-step guide',()=>{
  assert.equal(status.completed,0);
  const markup=onboarding.render({},null);
  assert.match(markup,/Bien démarrer avec CONTROL/);
- assert.equal((markup.match(/class="control-home-v6-onboarding-step/g)||[]).length,3);
+ assert.equal((markup.match(/class="control-home-v6-onboarding-step is-/g)||[]).length,3);
  assert.match(markup,/href="#\/new-project" aria-current="step"/);
  assert.match(markup,/Aucune connexion à un service externe/);
  assert.doesNotMatch(markup,/Synchronisation active|Compte connecté/);
