@@ -13,7 +13,7 @@ function setup({failKey='',externalMutation=false,includeStudio=false}={}){
  const keys=review.storeKeys;
  const original=keys.map((k,i)=>JSON.stringify({original:i}));
  const content=new Map(keys.map((k,i)=>[k,original[i]]));
- let saved=0,alerts=[],pending={data:{command:{actions:[],missions:[]},hub:{projects:{}},automations:{drafts:[]}},original:[...original]};
+ let saved=0,alerts=[],pending={data:{command:{actions:[],missions:[]},hub:{projects:{}},automations:{drafts:[]}},original:[...original],integrity:{unrestorable:false},requiresIntegrityAcknowledgement:false};
  if(includeStudio)pending.data.studio={version:1,imports:[],memories:[],agents:[]};
  const staged=JSON.parse(JSON.stringify(pending.data));
  const localStorage={
@@ -65,10 +65,11 @@ test('failure with concurrent external changes never overwrites the other tab da
  assert.deepEqual(x.events,[]);
 });
 test('restore checks for conflicts and never silently claims an unverified success',()=>{
- assert.match(handler,/written=new Map\(\)/);
- assert.match(handler,/if\(!restore\.unchanged\(localStorage,staged\.original\.map/);
- assert.match(handler,/if\(localStorage\.getItem\(key\)!==written\.get\(key\)\)/);
- assert.doesNotMatch(handler,/for\(const \[key,raw\] of old\)\{try/);
+ assert.match(handler,/restore\.applyTransaction\(/);
+ assert.match(reviewCode,/const written=new Map\(\)/);
+ assert.match(reviewCode,/if\(!unchanged\(storage,original\.map/);
+ assert.match(reviewCode,/if\(storage\.getItem\(key\)!==written\.get\(key\)\)/);
+ assert.doesNotMatch(reviewCode,/for\(const \[key,raw\] of old\)\{try/);
 });
 
 test('denied Studio store write rolls back other restored stores without deleting the original agents',()=>{
