@@ -29,7 +29,8 @@ test('desktop sidebar uses existing app routes and recent projects, without dupl
 test('personal dashboard preserves project creation, search, all-project pagination and full feature access',()=>{
  for(const selector of ['id="add-project"','id="new-project"','id="cards"','id="more-projects"','id="search"','data-control-nav-open'])
   assert.ok(localScript.includes(selector),selector);
- for(const text of ['control-home-v6-welcome','control-home-v6-priorities','control-home-v6-advanced','control-workspace-mainnav'])
+ assert.ok(personal.includes('control-workspace-mainnav'),'Inner navigation must still exist');
+ for(const text of ['control-home-v6-welcome','control-home-v6-priorities','control-home-v6-advanced'])
   assert.ok(localScript.includes(text),text);
  new Function(localScript);
 });
