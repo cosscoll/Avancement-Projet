@@ -106,6 +106,23 @@ test('malformed custom projects are a non-overridable restoration blocker',()=>{
  assert.match(backup,/integrityConsent\.hidden=count===0\|\|integrity\.unrestorable/);
  assert.match(backup,/applyButton\.disabled=count>0\|\|integrity\.unrestorable/);
 });
+test('duplicate or catalog-shadowing custom IDs are blocked before restore',()=>{
+ const f=id=>({hub:{custom:[{id,name:'Projet 1'},{id,name:'Projet 2'}]},command:{clients:[],actions:[]}});
+ const duplicate=ctx.module.exports.inspectBackup(f('custom-1'),{catalogProjects:[{id:'reference'}]});
+ assert.equal(duplicate.unrestorable,true);
+ assert.ok(duplicate.issues.some(x=>x.code==='duplicate_id'&&x.kind==='project'));
+ const catalog=ctx.module.exports.inspectBackup({
+  hub:{custom:[{id:'reference',name:'Faux projet personnalisé'}]},
+  command:{clients:[],actions:[]}
+ },{catalogProjects:[{id:'reference',name:'Projet officiel'}]});
+ assert.equal(catalog.unrestorable,true);
+ assert.ok(catalog.issues.some(x=>x.code==='duplicate_id'));
+ const valid=ctx.module.exports.inspectBackup({
+  hub:{custom:[{id:'custom-2',name:'Projet valide'}]},
+  command:{clients:[],actions:[]}
+ },{catalogProjects:[{id:'reference'}]});
+ assert.equal(valid.unrestorable,false);
+});
 test('legacy backup without Clients works, malformed backups are refused',()=>{
  const legacy=ctx.module.exports.inspectBackup({command:{actions:[{id:'t1',title:'Historical task',status:'todo'}]}});
  assert.equal(legacy.status,'clean');
