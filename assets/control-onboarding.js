@@ -52,3 +52,61 @@ const api=Object.freeze({inspect,render});
 root.CONTROL_ONBOARDING=api;
 if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
+
+/* CONTROL 24 — Connect the optional project overview to the existing personal
+   workspace, without changing the approved tab layout or the Cloud shell. */
+(function(){
+ if(typeof window==='undefined'||typeof document==='undefined'||typeof MutationObserver==='undefined')return;
+ const projectMeta=new Map();
+ let metaLoaded=false,started=false,lastPage='',lastHub='',lastTasks='',lastMeta=false;
+ const main=document.querySelector('#main');
+ if(!main)return;
+ function mount(){
+  const hash=location.hash;
+  const match=hash.match(/^#\/project\/([^/?#]+)(?:\/(ai|pilot))?$/);
+  if(!match||!window.CONTROL_PROJECT_BRIEF)return;
+  const title=main.querySelector(':scope > .toprow');
+  const tabs=main.querySelector(':scope > .shell-project-navigation');
+  if(!title||!tabs)return;
+  const old=main.querySelector(':scope > #control-project-brief');
+  let id;
+  try{id=decodeURIComponent(match[1])}catch{return}
+  let hubRaw,taskRaw,hub;
+  try{
+   hubRaw=localStorage.getItem('control-hub-v2')||'';
+   taskRaw=localStorage.getItem('control-command-v1');
+   hub=hubRaw?JSON.parse(hubRaw):{};
+   if(!hub||typeof hub!=='object'||Array.isArray(hub))return;
+  }catch{return}
+  if(old&&lastPage===hash&&lastHub===hubRaw&&lastTasks===taskRaw&&lastMeta===metaLoaded)return;
+  const stored=hub[id]&&typeof hub[id]==='object'&&!Array.isArray(hub[id])?hub[id]:{};
+  const project={...(projectMeta.get(id)||{}),id};
+  const html=window.CONTROL_PROJECT_BRIEF.render(project,stored,taskRaw);
+  if(!html)return;
+  const wrap=document.createElement('div');
+  wrap.innerHTML=html;
+  const section=wrap.firstElementChild;
+  if(!section)return;
+  lastPage=hash;lastHub=hubRaw;lastTasks=taskRaw;lastMeta=metaLoaded;
+  if(old)old.replaceWith(section);else title.after(section);
+ }
+ function schedule(){queueMicrotask(mount)}
+ function start(){
+  if(started)return;started=true;
+  new MutationObserver(schedule).observe(main,{childList:true,subtree:true});
+  window.addEventListener('hashchange',schedule);
+  schedule();
+  Promise.allSettled(['data/projects.json','data/catalog.json'].map(url=>
+   fetch(url,{cache:'force-cache'}).then(response=>response.ok?response.json():null))).then(results=>{
+   for(const result of results)if(result.status==='fulfilled'&&Array.isArray(result.value?.projects)){
+    for(const project of result.value.projects)if(project&&typeof project.id==='string')projectMeta.set(project.id,project);
+   }
+   metaLoaded=true;schedule();
+  });
+ }
+ const script=document.createElement('script');
+ script.src='assets/control-project-brief.js';
+ script.onload=start;
+ script.onerror=()=>{};
+ document.head.append(script);
+})();
