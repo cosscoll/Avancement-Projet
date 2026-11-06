@@ -1,5 +1,20 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 6 novembre 2026 · version de travail 1.14 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 6 novembre 2026 · version de travail 1.15 · ciblage indépendants et équipes de 2 à 10 personnes_
+
+
+## CONTROL 23 — Suivi clients et relances actionnables (6 novembre 2026)
+
+**Livré sur le site public :** chaque fiche client locale dotée d'une « prochaine étape » et d'une date affiche maintenant une indication explicite : **« Relance en retard »**, **« Relance aujourd’hui »** ou **« Relance à venir »**. Les étapes sans échéance indiquent « Date à planifier » ; une ancienne date invalide est signalée comme « Date de relance à corriger » sans inventer d'urgence. Un client au statut `Terminé` ne génère pas d'alerte de relance.
+
+**Action réelle visible :** le bouton **« Préparer la relance »** ouvre le véritable formulaire de tâche, en préremplissant l'action prévue, l'échéance vérifiée, le client existant et son projet autorisé. L'utilisateur doit explicitement soumettre « Ajouter la tâche » pour écrire dans son navigateur. Le lien client-projet est contrôlé, les anciennes fiches sans projet reconnu ne sont pas reliées de force, et aucune notification ou email n'est envoyé.
+
+**Filtre opérationnel :** bouton **« À relancer maintenant »** avec compteur honnête des échéances du jour ou dépassées ; `aria-pressed` et filtrage combiné aux filtres client déjà présents. Les fiches futures ne polluent pas cette liste. Reprise responsive conforme à la charte validée ; **PWA v99**.
+
+**Tests et preuves :** [Qualité GitHub Actions #42199767022](https://github.com/cosscoll/Avancement-Projet/actions/runs/42199767022) **780/780 réussis**. [Chromium local #42199767002](https://github.com/cosscoll/Avancement-Projet/actions/runs/42199767002) et [Chromium public #42199850418](https://github.com/cosscoll/Avancement-Projet/actions/runs/42199850418) **réussis** : deux clients fictifs d'échéances différentes, sélection des relances dues, formulaire de tâche prérempli, confirmation explicite, liaison client et date sauvegardées, tâche visible ensuite sur la fiche. Le site public a présenté les mêmes octets pour **26 fichiers** contrôlés. [Publication Pages #42199765495](https://github.com/cosscoll/Avancement-Projet/actions/runs/42199765495) **réussie**.
+
+**Limites :** pas d'envoi Gmail/SMS, pas de CRM connecté, pas de partage d'équipe Cloud, pas de coordonnées sensibles transférées à des tiers. Tout est local à l'appareil.
+
+**Session suivante — CONTROL 24 :** rendre l'espace projet directement actionnable depuis sa page synthèse : tâches prioritaires, décisions et ressources associées au projet ; ne pas multiplier les rubriques et valider le bon filtrage des données entre projets.
 
 
 ## CONTROL 22 — Triage clair et actions réellement enregistrées (6 novembre 2026)
