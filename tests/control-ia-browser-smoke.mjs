@@ -1195,8 +1195,117 @@ try{
  await js("(()=>{const old=window.confirm;window.confirm=()=>true;try{document.querySelector('#import-apply').click()}finally{window.confirm=old}})()");
  assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].name"),'Assistant UX révisé');
  assert.match(await js("document.querySelector('#import-status').textContent"),/Restauration confirmée/);
+ // Keep the exact encrypted download in Node, not the browser's localStorage.
+ // This test transfers only synthetic fixture data into new incognito storage contexts.
+ const transferEncrypted=await js("(async()=>window.__cryptoBackup.blob.text())()");
  await js("delete window.__cryptoBackup");
  log('Encrypted unified backup includes Studio IA: wrong password refused, preview, cancel and restore verified');
+
+ // The same export UI also supports an explicitly unencrypted, portable JSON file.
+ // Its contents are intentionally kept inside this ephemeral test process.
+ await js("(()=>{const old=URL.createObjectURL;window.__plainBackup={old,blob:null};URL.createObjectURL=function(blob){window.__plainBackup.blob=blob;return old.call(URL,blob)};const f=document.querySelector('#export-data');f.elements.password.value='';f.requestSubmit()})()");
+ await ready(()=>js("!!window.__plainBackup?.blob&&document.querySelector('#toast')?.textContent?.includes('Fichier téléchargé')"),17000)();
+ const transferPlain=await js("(async()=>window.__plainBackup.blob.text())()");
+ assert.equal(JSON.parse(transferPlain).format,'control-v2-plain');
+ await js("(()=>{URL.createObjectURL=window.__plainBackup.old;delete window.__plainBackup})()");
+ const sourceTransfer=await js("(()=>{const task=JSON.parse(localStorage.getItem('control-command-v1'));const studio=JSON.parse(localStorage.getItem('control-ai-studio-v1'));return {tasks:task.actions.length,agents:studio.agents.length,agentName:studio.agents[0].name,memories:studio.memories.length}})()");
+ assert.equal(sourceTransfer.agentName,'Assistant UX révisé');
+
+ // A Chrome browser context has a distinct localStorage, IndexedDB, cache and cookies.
+ // This is stronger than a second tab sharing the source profile, but does not
+ // pretend to test a second physical device or a native provider account.
+ const browserVersion=await (await fetch('http://127.0.0.1:'+debugPort+'/json/version')).json();
+ async function connectCDP(endpoint){
+  const socket=new WebSocket(endpoint);
+  await new Promise((yes,no)=>{socket.addEventListener('open',yes,{once:true});socket.addEventListener('error',no,{once:true})});
+  let number=0;const pendingReplies=new Map();
+  socket.addEventListener('message',event=>{
+   let message;try{message=JSON.parse(event.data)}catch{return}
+   if(message.method==='Runtime.exceptionThrown'){
+    const detail=message.params?.exceptionDetails;
+    errors.push(String(detail?.exception?.description||detail?.text||'Cross-profile JS exception').slice(0,260));
+   }
+   if(message.id&&pendingReplies.has(message.id)){
+    const {yes,no}=pendingReplies.get(message.id);
+    pendingReplies.delete(message.id);
+    if(message.error)no(Error(message.error.message));else yes(message.result);
+   }
+  });
+  return {socket,command(method,params={}){
+   const id=++number;
+   return new Promise((yes,no)=>{pendingReplies.set(id,{yes,no});socket.send(JSON.stringify({id,method,params}))});
+  }};
+ }
+ const browserCDP=await connectCDP(browserVersion.webSocketDebuggerUrl);
+ const isolatedContexts=[];
+ try{
+  async function openIsolated(){
+   const {browserContextId}=await browserCDP.command('Target.createBrowserContext',{disposeOnDetach:true});
+   isolatedContexts.push(browserContextId);
+   const {targetId}=await browserCDP.command('Target.createTarget',{url:'about:blank',browserContextId});
+   const target=await deadline(async()=>{
+    const list=await (await fetch('http://127.0.0.1:'+debugPort+'/json')).json();
+    return list.find(t=>t.id===targetId&&t.webSocketDebuggerUrl);
+   },10000)();
+   const pageCDP=await connectCDP(target.webSocketDebuggerUrl);
+   await pageCDP.command('Page.enable');
+   await pageCDP.command('Runtime.enable');
+   const evaluate=async expression=>{
+    const value=await pageCDP.command('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true,userGesture:true});
+    if(value.exceptionDetails)throw Error(value.exceptionDetails.exception?.description||value.exceptionDetails.text||'Isolated browser script failed');
+    return value.result?.value;
+   };
+   await pageCDP.command('Page.navigate',{url:addr.replace(/#.*$/,'')+'#/control/backup'});
+   await deadline(()=>evaluate("!!document.querySelector('#import-data')&&!!window.CONTROL_BACKUP_REVIEW"),19000)();
+   return {pageCDP,evaluate,ready:(expression,max=18000)=>deadline(()=>evaluate(expression),max)()};
+  }
+  const storeKeys=['control-command-v1','control-hub-v2','control-automations-v1','control-ai-studio-v1'];
+  const snapshotExpression="JSON.stringify("+JSON.stringify(storeKeys)+".map(key=>localStorage.getItem(key)))";
+  for(const [label,file,password] of [
+   ['encrypted',transferEncrypted,'Une longue phrase de test privee'],
+   ['plain',transferPlain,'']
+  ]){
+   const isolated=await openIsolated();
+   try{
+    const before=await isolated.evaluate(snapshotExpression);
+    assert.equal(await isolated.evaluate("(()=>{const raw=localStorage.getItem('control-ai-studio-v1');return !!raw&&raw.includes('Assistant UX révisé')})()"),false,
+     'A fresh browser context must not see another context’s agent');
+    const loadFile=(pw)=>"(()=>{const form=document.querySelector('#import-data');const transfer=new DataTransfer();transfer.items.add(new File(["+JSON.stringify(file)+"],'transfert-test.json',{type:'application/json'}));form.elements.file.files=transfer.files;form.elements.password.value="+JSON.stringify(pw)+";form.requestSubmit()})()";
+    if(label==='encrypted'){
+     await isolated.evaluate(loadFile('mot de passe incorrect'));
+     await isolated.ready("document.querySelector('#import-status')?.textContent?.includes('Mot de passe incorrect')",20000);
+     assert.equal(await isolated.evaluate("document.querySelector('#import-preview').hidden"),true,
+      'An incorrect password cannot unlock restore in a different browser context');
+     assert.equal(await isolated.evaluate(snapshotExpression),before,
+      'Bad password cannot mutate isolated storage');
+    }
+    await isolated.evaluate(loadFile(password));
+    await isolated.ready("document.querySelector('#import-preview')?.hidden===false",25000);
+    assert.equal(await isolated.evaluate(snapshotExpression),before,
+     'Review must not alter destination storage before explicit confirmation');
+    await isolated.evaluate("(()=>{const consent=document.querySelector('#import-integrity-consent');if(!consent.hidden){const ack=document.querySelector('#import-integrity-ack');ack.checked=true;ack.dispatchEvent(new Event('change',{bubbles:true}));}return true})()");
+    assert.equal(await isolated.evaluate("document.querySelector('#import-apply').disabled"),false,
+     'A valid transfer must have an enabled apply control after integrity review');
+    await isolated.evaluate("(()=>{const old=window.confirm;window.confirm=()=>true;try{document.querySelector('#import-apply').click()}finally{window.confirm=old}})()");
+    await isolated.ready("document.querySelector('#import-status')?.textContent?.includes('Restauration confirmée')",12000);
+    const restored=await isolated.evaluate("(()=>{const raw=localStorage.getItem('control-command-v1');const studioRaw=localStorage.getItem('control-ai-studio-v1');if(!raw||!studioRaw)return null;const task=JSON.parse(raw),studio=JSON.parse(studioRaw);return {tasks:task.actions?.length,agents:studio.agents?.length,agentName:studio.agents?.[0]?.name,memories:studio.memories?.length}})()");
+    assert.deepEqual(restored,sourceTransfer,
+     'Exported tasks, agent names and memories must survive restoring in separate browser storage');
+    await isolated.pageCDP.command('Page.reload',{ignoreCache:true});
+    await isolated.ready("!!document.querySelector('#import-data')",20000);
+    assert.equal(await isolated.evaluate("JSON.parse(localStorage.getItem('control-ai-studio-v1')).agents[0].name"),sourceTransfer.agentName,
+     'A restored agent must remain after a full refresh in its new context');
+    log('CONTROL 19: '+label+' backup restored to independent Chromium storage, preview non-destructive and persisted after reload');
+   }finally{try{isolated.pageCDP.socket.close()}catch{}}
+  }
+ }finally{
+  for(const contextId of isolatedContexts.reverse()){
+   try{await browserCDP.command('Target.disposeBrowserContext',{browserContextId:contextId})}catch{}
+  }
+  try{browserCDP.socket.close()}catch{}
+ }
+
+
 
  await js("location.hash='#/'");
  await ready(()=>js("!!document.querySelector('.control-home-v6-tabs a[href=\"#/control/aistudio\"]')"),6500)();
