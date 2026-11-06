@@ -1011,6 +1011,15 @@ try{
  await js("(()=>{const data=[{id:'smoke-1',title:'Décisions UX du projet',current_node:'final',mapping:{first:{parent:null,message:{author:{role:'user'},content:{parts:['La version mobile est prioritaire.']},create_time:1}},final:{parent:'first',message:{author:{role:'assistant'},content:{parts:['Préserver la navigation.']},create_time:2}}}}];const dt=new DataTransfer();dt.items.add(new File([JSON.stringify(data)],'conversations.json',{type:'application/json'}));document.querySelector('#as-provider').value='chatgpt';document.querySelector('#as-file').files=dt.files;document.querySelector('#as-import-form').requestSubmit()})()");
  await ready(()=>js("!!document.querySelector('[data-as-action=confirm-import]')"),10000)();
  assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')||'null')"),null,'Import preview must not mutate stored data');
+ // CONTROL 26: no import happens unless a conversation is chosen and storage consent is explicit.
+ assert.equal(await js("document.querySelectorAll('[data-as-import-choice]').length"),1);
+ assert.equal(await js("document.querySelector('[data-as-import-choice]').checked"),false);
+ await js("document.querySelector('[data-as-action=confirm-import]').click()");
+ assert.equal(await js("localStorage.getItem('control-ai-studio-v1')"),null,'Import without selection or consent must not write anything');
+ await js("(()=>{const input=document.querySelector('[data-as-import-choice]');input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}))})()");
+ await js("document.querySelector('[data-as-action=confirm-import]').click()");
+ assert.equal(await js("localStorage.getItem('control-ai-studio-v1')"),null,'Consent is required even after choosing a conversation');
+ await js("(()=>{const input=document.querySelector('#as-import-consent');input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}))})()");
  await js("document.querySelector('[data-as-action=confirm-import]').click()");
  await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')||'{}').imports?.length===1"),6000)();
  assert.match(await js("document.querySelector('.as-record strong').textContent"),/Décisions UX/);
