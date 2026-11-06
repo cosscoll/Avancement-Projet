@@ -10,7 +10,9 @@ _Mise à jour : 6 novembre 2026 · version de travail 1.9 · ciblage indépendan
 
 **Recette :** les tests Node simulent des changements de fichier durant lecture/déchiffrement et des réponses arrivant dans le désordre. Les tests de navigateur en CI et la présence du code dans GitHub ne remplacent ni une recette sur le site public recevant effectivement v94, ni le transfert réel d'une archive chiffrée entre deux profils indépendants. La suite complète conserve des tests historiques en échec sans lien avec ce correctif ; les distinguer des tests de sécurité récemment ajoutés.
 
-**Suite prioritaire :** mesurer et réduire les tests historiques non alignés sur l'interface actuelle, puis réaliser la vraie recette navigateur A/B avant toute ouverture Cloud.
+**Recette automatisée après corrections :** contrôle GitHub Actions [Qualité et régressions #42189879161](https://github.com/cosscoll/Avancement-Projet/actions/runs/42189879161) : **761 tests, 726 réussis, 35 en échec**. Au début de cette session, 50 tests échouaient sur 757 ; les huit nouveaux tests de concurrence sont tous réussis. Les tests PWA historiques liés aux anciens noms de cache ont été réalignés sur la version courante. Les 35 échecs restants concernent des parcours et hypothèses de l'interface historique, ainsi que des simulations locales : ils demandent un triage détaillé et ne sont ni considérés comme validés, ni supprimés. Le contrôle de navigateur automatisé [#42189887981](https://github.com/cosscoll/Avancement-Projet/actions/runs/42189887981) est réussi ; la [publication GitHub Pages #42189879083](https://github.com/cosscoll/Avancement-Projet/actions/runs/42189879083) a réussi au commit de la PWA v94. Ceci ne prouve pas que chaque appareil a actualisé son service worker ni que l'import manuel entre deux profils indépendants fonctionne.
+
+**Suite prioritaire :** analyser les 35 échecs restants à partir des comportements présents dans le produit, réparer les vrais dysfonctionnements et réaligner seulement les assertions obsolètes ; réaliser ensuite la vraie recette navigateur A/B avant toute ouverture Cloud.
 
 ## Session P0 — Recette réelle sur GitHub Pages (6 novembre 2026)
 
