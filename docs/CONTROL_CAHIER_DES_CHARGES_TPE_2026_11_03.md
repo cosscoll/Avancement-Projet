@@ -1,5 +1,22 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 6 novembre 2026 · version de travail 1.12 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 6 novembre 2026 · version de travail 1.13 · ciblage indépendants et équipes de 2 à 10 personnes_
+
+
+## CONTROL 21 — Démarrage accompagné, trois étapes vérifiables (6 novembre 2026)
+
+**Livré dans l'application réelle (`main`) :** sur un appareil neuf, un encart « Bien démarrer avec CONTROL » apparaît dans l'accueil validé CONTROL v6, avec une progression ancrée dans les données locales :
+
+1. **Créer ou ouvrir un projet** : lien vers le formulaire existant, focus sur le nom, prise en compte uniquement après enregistrement ou vraie consultation d'un espace.
+2. **Ajouter une première tâche** : lien direct `#/control/inbox/new`, qui ouvre le vrai formulaire de création.
+3. **Traiter cette action** : lien direct `#/control/inbox`, accomplie uniquement lorsqu'une tâche enregistrée passe réellement au statut `done`.
+
+Le guide se masque automatiquement après l'achèvement d'une tâche ou pour les comptes ayant déjà suffisamment d'activité enregistrée. Il ne modifie ni la base locale ni les quotas lors de l'affichage. En cas de stockage corrompu, il ne présente pas une fausse première utilisation : les alertes existantes de CONTROL conservent la priorité. Aucune connexion ChatGPT, Claude, Gemini ou Cloud n'est demandée.
+
+**Technique :** nouveau module pur `assets/control-onboarding.js`, intégré dans `index.html`, CSS limité à `assets/control-home-v6.css`, ajout à la liste de fichiers critiques PWA **v97**. Les six sections de l'accueil restent dans l'ordre validé.
+
+**Recettes réussies :** [suite Node #42196714258](https://github.com/cosscoll/Avancement-Projet/actions/runs/42196714258) **772 tests sur 772** ; [Chromium local #42196714495](https://github.com/cosscoll/Avancement-Projet/actions/runs/42196714495) : enregistrement réel d'un projet, d'une tâche et clôture dans un contexte Chromium isolé, avec vérification des trois états du guide et de sa disparition ; recette initiale de navigation avec annulation sans changement de progression. Les sauvegardes et autres fonctions de CONTROL restent intactes. Le contrôle de publication publique est consigné séparément dans le journal des sessions.
+
+**Suivant :** CONTROL 22 — rendre la liste « À traiter » plus lisible par catégories du jour / retards / validations, sans masquer la provenance ni transformer une suggestion en action réellement exécutée.
 
 
 ## CONTROL 20 — Première livraison UX et protocole de sessions visibles (6 novembre 2026)
