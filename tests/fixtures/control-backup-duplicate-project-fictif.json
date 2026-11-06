@@ -1,0 +1,27 @@
+{
+  "format": "control-v2-plain",
+  "created": "2026-11-06T08:00:00.000Z",
+  "data": {
+    "command": {
+      "version": 1,
+      "actions": [],
+      "missions": [],
+      "clients": []
+    },
+    "hub": {
+      "custom": [
+        {
+          "id": "custom-qa-duplicate",
+          "name": "Projet Démo doublon A"
+        },
+        {
+          "id": "custom-qa-duplicate",
+          "name": "Projet Démo doublon B"
+        }
+      ]
+    },
+    "automations": {
+      "entries": []
+    }
+  }
+}
