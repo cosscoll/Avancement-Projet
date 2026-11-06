@@ -65,3 +65,14 @@ Pour chaque livraison suivante, ajouter une ligne avec les preuves correspondant
 ## Cahier des charges source
 
 [CONTROL — Cahier des charges TPE v1.17](CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md). Les parties « priorités », « navigation », « onboarding », « IA et mémoires », « sécurité » et « recette mesurable » font foi sur les livrables attendus, sous réserve des dépendances techniques et des permissions.
+
+
+## CONTROL 26 — livraison partielle : import sélectif (6 novembre 2026)
+
+- Studio IA → Importer : après analyse d’une archive JSON ou TXT, toutes les conversations reconnues sont affichées avec leur source et leur nombre de messages.
+- **Sélection initialement vide** ; l’utilisateur choisit individuellement les conversations qu’il souhaite réellement conserver.
+- La confirmation requiert une case de **consentement explicite**, rappelant que le stockage local n’est pas chiffré. Si aucune conversation n’est choisie, aucun enregistrement n’a lieu.
+- Le stockage réutilise l’import existant, avec filtrage des lignes choisies et contrôle des doublons ; import complet automatique supprimé.
+- Code livré sur `main` : `assets/control-ai-studio.js`, `assets/control-ai-studio.css` ; cache PWA version `v103`.
+- **Vérification effectuée** : analyse syntaxique JavaScript réussie. **Non encore démontré** : suite Node complète, recette Chromium 320/390 px, succès du déploiement GitHub Pages et chiffrement. Ne pas considérer ce sprint comme complètement validé avant ces preuves.
+- **Suite du CONTROL 26** : proposition d’une mémoire issue d’extraits choisis, validation élément par élément avant l’ajout dans un assistant, journal de provenance et suppression effective.
