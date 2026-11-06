@@ -1,0 +1,24 @@
+/* CONTROL 24 — scoped project overview in existing light workspace */
+body.control-simple-workspace #control-project-brief{margin:0 0 16px;padding:18px;border:1px solid #e1e8ef;border-radius:14px;background:#fff}
+.control-project-brief-head{display:flex;align-items:center;justify-content:space-between;gap:13px;flex-wrap:wrap;margin-bottom:14px}
+.control-project-brief-head small{font-size:10px;color:#7c8d9d;letter-spacing:1px;font-weight:760}
+body.control-simple-workspace #control-project-brief-title{margin:3px 0 0!important;font-size:17px!important;color:#233a52!important}
+.control-project-brief-create{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 12px;border:1px solid #b9d0e3;background:#eaf2f9;border-radius:9px;color:#315677!important;text-decoration:none!important;font-size:12px;font-weight:740}
+.control-project-brief-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.control-project-brief-panel{min-width:0;display:flex;flex-direction:column;gap:9px;padding:14px;border:1px solid #e4eaf1;background:#fbfcfe;border-radius:10px}
+.control-project-brief-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+body.control-simple-workspace .control-project-brief-panel h3{margin:0!important;font-size:12px!important;color:#29435e!important;font-weight:750}
+.control-project-brief-panel-head span{font-size:11px;font-weight:700;color:#355575;background:#eaf1f7;border-radius:7px;padding:5px 8px}
+.control-project-brief-list{display:flex;flex-direction:column;gap:6px}
+.control-project-brief-task,.control-project-brief-resource{display:flex;flex-direction:column;gap:3px;padding:8px;border-radius:8px;border:1px solid #e6edf3;background:#fff;color:#2a4f72!important;font-size:11.5px;text-decoration:none!important;overflow-wrap:anywhere}
+.control-project-brief-task:hover,.control-project-brief-resource:hover{border-color:#b9cbdd;background:#f5f9fd}
+.control-project-brief-task strong{font-weight:740;color:#263f5a}
+.control-project-brief-task small{font-size:10px;color:#768799}
+.control-project-brief-alert{font-size:11px;color:#92512c;font-weight:740;margin:0}
+.control-project-brief-note{font-size:11.5px;color:#536a80;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+.control-project-brief-empty{margin:0;font-size:11px;color:#75889a;line-height:1.6}
+.control-project-brief-provenance{font-size:10px;color:#8293a5;line-height:1.5}
+.control-project-brief-more{margin-top:auto;padding-top:12px;min-height:34px;color:#315d87!important;font-weight:750;text-decoration:underline!important;text-underline-offset:3px;font-size:11px}
+.control-project-brief-footnote{font-size:10px;color:#768b9f;line-height:1.5;margin:14px 0 0}
+@media(max-width:800px){.control-project-brief-grid{grid-template-columns:1fr}.control-project-brief-panel{padding:13px}}
+@media(max-width:420px){body.control-simple-workspace #control-project-brief{padding:13px}.control-project-brief-create{width:100%}}
