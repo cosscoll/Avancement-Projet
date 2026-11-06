@@ -110,7 +110,8 @@ test('recovery surface offers raw download, blocks normal export and keeps Cloud
  assert.match(source,/data-act="download-corrupt"/);
  assert.match(source,/if\(localStoreCorrupt\)return toast\('Export normal bloqué/);
  assert.match(source,/const raw=localStorage\.getItem\(KEY\)/);
- assert.match(source,/localStoreCorrupt=false;init\(\)/);
+ assert.match(source,/restore\.applyTransaction\(localStorage,staged\.original,staged\.data/);
+ assert.match(source,/localStoreCorrupt=false;/);
  const cloud=JSON.parse(readFileSync(new URL('../config/cloud.json',import.meta.url),'utf8'));
  assert.equal(cloud.enabled,false);
 });
