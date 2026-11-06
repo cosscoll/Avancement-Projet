@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 
 const code=readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
+const reviewerCode=readFileSync(new URL('../assets/control-backup-review.js',import.meta.url),'utf8');
 const exposed=code.replace('window.CONTROL_CENTER={render};','window.CONTROL_CENTER={render,validateBackupData};');
 const window={};
 new Function('window',exposed)(window);
@@ -26,7 +27,8 @@ test('Reject prototype-mutation JSON keys at any nesting level',()=>{
  assert.equal(validate(another),false);
 });
 test('Import has an explicit warning if storage rollback itself fails',()=>{
- assert.match(code,/rollbackUncertain=true/);
+ assert.match(reviewerCode,/rollbackUncertain=true/);
+ assert.match(code,/restore\.applyTransaction\(/);
  assert.match(code,/Restauration interrompue : des données ont pu changer dans un autre onglet/);
  assert.match(code,/validateBackupData\(data\)/);
 });
