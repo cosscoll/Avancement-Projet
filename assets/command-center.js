@@ -1110,10 +1110,17 @@ function backup(){
   if(!restore.unchanged(localStorage,staged.original)){resetPreview();message.textContent='Des données locales ont changé depuis la vérification : relance la comparaison avant toute restauration.';return}
   if(!confirm('Remplacer maintenant les données CONTROL présentes dans ce fichier vérifié ? Les anciens fichiers conservent le Studio IA actuel. Cette action écrase les espaces concernés.'))return;
   if(!restore.unchanged(localStorage,staged.original)){resetPreview();message.textContent='Les données ont changé pendant la confirmation. Recommence la vérification.';return}
+  let reinitializationAttempted=false;
   const result=restore.applyTransaction(localStorage,staged.original,staged.data,()=>{
+   reinitializationAttempted=true;
    localStoreCorrupt=false;
    init();
   });
+  // A failed UI reinitialization can leave in-memory records ahead of the
+  // rolled-back store. Refresh memory only when rollback is known complete.
+  if(!result.ok&&reinitializationAttempted&&!result.rollbackUncertain){
+   try{init();}catch{/* The user is instructed to reload when storage is unreliable. */}
+  }
   resetPreview();
   if(result.ok){
    message.textContent='Restauration confirmée et enregistrée. Recharge CONTROL pour actualiser les projets.';
