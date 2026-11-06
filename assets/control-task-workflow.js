@@ -35,6 +35,33 @@ function sort(items,today=localDay()){
    (a.due&&validDue(a.due)?a.due:'9999').localeCompare(b.due&&validDue(b.due)?b.due:'9999')||
    String(a.title||'').localeCompare(String(b.title||''),'fr'));
 }
+// A single read-only grouping rule powers both headings and quick filters.
+// Every task belongs to one group, with no duplicate DOM rows or extra storage.
+const GROUPS=[
+ {id:'overdue',title:'En retard',description:'Échéance dépassée, à reprendre en priorité'},
+ {id:'today',title:"Aujourd’hui",description:'Tâches à réaliser dans la journée'},
+ {id:'review',title:'À vérifier',description:'Résultats de missions en attente de validation'},
+ {id:'next',title:'À suivre',description:'Autres tâches ouvertes et échéances à venir'},
+ {id:'done',title:'Terminées',description:'Actions clôturées sur cet appareil'}
+];
+function bucket(item,today=localDay()){
+ if(!item||typeof item!=='object')return null;
+ if(item.kind==='mission')return item.status==='review'?'review':null;
+ if(item.kind!=='action')return null;
+ const c=category(item,today);
+ if(c==='cancelled')return null;
+ return c==='overdue'||c==='today'||c==='done'?c:'next';
+}
+function group(items,today=localDay()){
+ const groups=GROUPS.map(({id,title,description})=>({id,title,description,items:[]}));
+ const byId=new Map(groups.map(x=>[x.id,x]));
+ for(const item of Array.isArray(items)?items:[]){
+  const key=bucket(item,today);
+  if(key)byId.get(key).items.push(item);
+ }
+ for(const entry of groups)entry.items=sort(entry.items,today);
+ return groups.filter(x=>x.items.length);
+}
 function validateEdit(data,allowedProjects=[]){
  const title=String(data.title??'').trim();
  const due=String(data.due??'').trim();
@@ -57,7 +84,7 @@ function validateEdit(data,allowedProjects=[]){
  }
  return {ok:true,task:{title,due,priority,status,project,url}};
 }
-const api={validDue,localDay,searchText,category,rank,sort,validateEdit};
+const api={validDue,localDay,searchText,category,rank,sort,bucket,group,validateEdit};
 if(typeof module==='object'&&module.exports)module.exports=api;
 if(root)root.CONTROL_TASKS=api;
 })(typeof window==='object'?window:undefined);
