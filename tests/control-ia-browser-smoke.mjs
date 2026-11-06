@@ -27,7 +27,7 @@ const swCaches=['CACHE_SHELL','CACHE_PUBLIC'].map(key=>{
  assert.ok(match,'Missing service worker cache version: '+key);
  return match[1];
 });
-const PUBLIC_ASSETS=['service-worker.js','index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/control-backup-review.js','assets/control-data-audit.js','assets/control-data-audit.css','assets/control-clients.js','assets/control-clients.css','assets/control-ai-studio-core.js','assets/control-ai-studio.js','assets/control-ai-studio.css','assets/control-web-builder.js','assets/control-web-builder-ui.js','assets/control-web-builder.css','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','assets/navigation-hub.js','assets/navigation-hub.css','assets/control-onboarding.js','data/control-ia-delivery.json','data/control-ia-requirements.json'];
+const PUBLIC_ASSETS=['service-worker.js','index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/control-backup-review.js','assets/control-data-audit.js','assets/control-data-audit.css','assets/control-clients.js','assets/control-clients.css','assets/control-ai-studio-core.js','assets/control-ai-studio.js','assets/control-ai-studio.css','assets/control-web-builder.js','assets/control-web-builder-ui.js','assets/control-web-builder.css','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','assets/navigation-hub.js','assets/navigation-hub.css','assets/control-onboarding.js','testeurs.html','assets/control-test-pilot.js','assets/control-test-pilot.css','data/control-pilot-chatgpt.json','data/control-ia-delivery.json','data/control-ia-requirements.json'];
 const hash=data=>createHash('sha256').update(data).digest('hex');
 async function verifyPublishedFiles(){
  const expected=new Map(PUBLIC_ASSETS.map(path=>[path,hash(readFileSync(resolve(root,path)))]));
@@ -1532,6 +1532,35 @@ try{
  assert.match(await js("document.querySelector('#cloud-readiness').textContent"),/INACTIVE/);
  assert.match(await js("document.querySelector('#cloud-readiness').textContent"),/révocation/);
  log('Cloud setup shows installed independent backend but blocks private sign-in until genuine JWT A-B tests');
+
+ // A tester must follow a real six-mission guide without Cloud login,
+ // unsafe archives or remote feedback uploads.
+ const targetPilot=production?PUBLIC_ORIGIN+'testeurs.html':'http://127.0.0.1:'+port+'/testeurs.html';
+ await command('Page.navigate',{url:targetPilot});
+ await ready(()=>js("!!document.querySelector('[data-control-pilot]')&&!!window.CONTROL_PILOT_REPORT"),14000)();
+ const pilot=await js("({tasks:document.querySelectorAll('[data-pilot-check]').length,report:window.CONTROL_PILOT_REPORT.collect(),download:!!document.querySelector('#pilot-download'),url:location.pathname})");
+ assert.equal(pilot.tasks,6);
+ assert.equal(pilot.report.steps.length,6);
+ assert.equal(pilot.report.steps.some(x=>x.terminee),false);
+ assert.equal(pilot.report.ease,null);
+ assert.equal(pilot.report.device,'non_precise');
+ assert.equal(pilot.download,true);
+ assert.match(pilot.url,/testeurs\\.html$/);
+ await js("(()=>{const x=document.querySelector('[data-pilot-check]');x.checked=true;x.dispatchEvent(new Event('change',{bubbles:true}))})()");
+ assert.match(await js("document.querySelector('#pilot-progress').textContent"),/1 \\/ 6/);
+ assert.equal(await js("window.CONTROL_PILOT_REPORT.collect().steps[0].terminee"),true);
+ await command('Emulation.setDeviceMetricsOverride',{width:320,height:780,deviceScaleFactor:1,mobile:true});
+ const pilotMobile=await js("({body:document.documentElement.scrollWidth,screen:innerWidth,link:!!document.querySelector('a[href=\\\"index.html#/control/aistudio\\\"]')})");
+ assert.ok(pilotMobile.body<=pilotMobile.screen+2,'Tester guide must not overflow at 320px');
+ assert.ok(pilotMobile.link,'Tester guide must link to real assistant screen');
+ log('CONTROL pilot guide: six real missions, optional feedback, responsive 320px');
+ await command('Network.enable');
+ await command('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
+ await command('Page.reload',{ignoreCache:false});
+ await ready(()=>js("!!document.querySelector('[data-control-pilot]')&&!!window.CONTROL_PILOT_REPORT"),18000)();
+ await command('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:0,uploadThroughput:0});
+ log('CONTROL pilot guide remains usable offline from the versioned PWA cache');
+
 
  assert.equal(errors.length,0,'Unexpected JS browser exceptions: '+errors.join(' | '));
  log('no uncaught JavaScript exceptions');
