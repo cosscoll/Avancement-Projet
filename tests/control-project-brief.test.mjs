@@ -38,7 +38,7 @@ test('Project 24: manual decisions and links belong to the requested project onl
 test('Project 24: bad task storage never presents fabricated zero priorities',()=>{
  const out=brief.render(project,own,'not-json',date);
  assert.match(out,/Tâches locales illisibles/);
- assert.match(out,/tâches ouvertes/);
+ assert.match(out,/Prochaines tâches/);
  assert.doesNotMatch(out,/>0<\/span><\/div><div class="control-project-brief-list"/);
  assert.equal(brief.summarize(project,own,'{').status,'invalid');
 });
