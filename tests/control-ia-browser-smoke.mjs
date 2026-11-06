@@ -1628,7 +1628,7 @@ try{
  assert.ok(pilotMobile.link,'Tester guide must link to real assistant screen');
  log('CONTROL pilot guide: six real missions, optional feedback, responsive 320px');
  // The guide itself registers the PWA, even when it is a participant's first page.
- await ready(()=>js("(async()=>{if(!navigator.serviceWorker?.controller)return false;const keys=await caches.keys();if(!keys.includes('control-shell-v109'))return false;const cache=await caches.open('control-shell-v109');return !!(await cache.match(new URL('./testeurs.html',location.href)))&&!!(await cache.match(new URL('./assets/control-test-pilot.js',location.href)))})()"),30000)();
+ await ready(()=>js("(async()=>{if(!navigator.serviceWorker?.controller)return false;const keys=await caches.keys();if(!keys.includes('control-shell-v110'))return false;const cache=await caches.open('control-shell-v110');return !!(await cache.match(new URL('./testeurs.html',location.href)))&&!!(await cache.match(new URL('./assets/control-test-pilot.js',location.href)))})()"),30000)();
  await command('Network.enable');
  await command('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await command('Page.reload',{ignoreCache:false});

@@ -527,3 +527,212 @@ body.control-private :is(.btn.primary,button.primary):hover{
 }
 body.control-private :is(.private-error,.notice-error){color:var(--control-negative)!important}
 body.control-private :is(.private-ok,.notice-ok){color:var(--control-positive)!important}
+
+
+/* CONTROL design QA — 06/11: interactive panels and text actually rendered in
+   Chromium still used a cold-blue palette. Keep all original layouts. */
+body.control-shell-v3 :is(.control-nav-main-trigger,.control-nav-mobile-trigger),
+body.cloud-shell-v3 :is(.control-nav-main-trigger,.control-nav-mobile-trigger){
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 :is(.control-nav-main-trigger,.control-nav-mobile-trigger):hover,
+body.cloud-shell-v3 :is(.control-nav-main-trigger,.control-nav-mobile-trigger):hover{
+ background:#FFE4D1!important;
+ border-color:#DDA98B!important;
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .control-nav-main-trigger kbd,
+body.cloud-shell-v3 .control-nav-main-trigger kbd{
+ color:var(--control-warm-ink);
+ border-color:var(--control-line);
+ background:var(--control-paper);
+}
+body.control-shell-v3 .control-finder-panel,
+body.cloud-shell-v3 .control-finder-panel{
+ background:var(--control-paper)!important;
+ border-color:var(--control-line)!important;
+ color:var(--control-ink)!important;
+ box-shadow:0 23px 72px rgba(92,54,30,.16);
+}
+body.control-shell-v3 .control-finder-search input,
+body.cloud-shell-v3 .control-finder-search input{
+ color:var(--control-ink)!important;
+}
+body.control-shell-v3 .control-finder-heading p,
+body.cloud-shell-v3 .control-finder-heading p,
+body.control-shell-v3 .control-finder-foot,
+body.cloud-shell-v3 .control-finder-foot{
+ color:var(--control-muted)!important;
+}
+body.control-shell-v3 .control-finder-recents-title,
+body.cloud-shell-v3 .control-finder-recents-title{color:var(--control-orange-deep)!important}
+body.control-shell-v3 .control-finder-categories button:hover,
+body.cloud-shell-v3 .control-finder-categories button:hover{
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .control-finder-categories button.is-active,
+body.cloud-shell-v3 .control-finder-categories button.is-active{
+ background:var(--control-orange-deep)!important;
+ border-color:var(--control-orange-deep)!important;
+ color:white!important;
+}
+body.control-shell-v3 .control-finder-item:hover,
+body.cloud-shell-v3 .control-finder-item:hover{
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+}
+body.control-shell-v3 .control-wayfinding,
+body.cloud-shell-v3 .control-wayfinding{
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+ color:var(--control-warm-ink)!important;
+}
+body.control-shell-v3 .control-wayfinding button,
+body.cloud-shell-v3 .control-wayfinding button{
+ color:var(--control-orange-deep)!important;
+ border-color:var(--control-edge);
+}
+/* Form labels and instructional text retained the earlier slate/navy. */
+body.control-shell-v3 .loc-shell :is(.loc-topline label,.loc-checkbox,.loc-chathead span,
+ .loc-model p,.loc-details,.loc-details summary,.loc-empty,.loc-small),
+body.control-shell-v3 .lab-shell :is(.lab-context span,.lab-checkboxes,.lab-help,.lab-result p,.lab-table td),
+body.control-shell-v3 .cmd-shell :is(.cmd-toggle,.cmd-sectiontop span,.cmd-meta,.cmd-small,.cmd-guide),
+body.control-shell-v3 .vs-page :is(.vs-head p,.vs-listhead span,.vs-notes label,.vs-card-head p,.vs-hint),
+body.control-shell-v3 .deploy-page :is(.deploy-filters label,.deploy-helper,.deploy-count,.deploy-card-head p),
+body.control-shell-v3 .tool-page :is(.tool-kit-caption,.tool-info,.tool-summary,.tool-use,.tool-track small),
+body.control-shell-v3 .web-builder :is(.web-builder-intro p,.web-builder-panel label,.web-builder-limits,.web-builder-draft small),
+body.control-shell-v3 .as-shell :is(.as-journey-step,.as-journey-step small,.as-journey-footnote,
+ .as-connect-description,.as-small,.as-card label,.as-card-head p){
+ color:var(--control-muted)!important;
+}
+body.control-shell-v3 .as-shell .as-journey-step{
+ background:var(--control-paper)!important;
+ border-color:var(--control-line)!important;
+}
+body.control-shell-v3 .as-shell .as-journey-step strong{
+ color:var(--control-ink)!important;
+}
+body.control-shell-v3 .as-shell .as-journey-number{
+ background:var(--control-peach-soft)!important;
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .as-shell .as-journey-main .as-journey-number{
+ background:var(--control-orange-deep)!important;
+ color:white!important;
+}
+body.control-shell-v3 .as-shell .as-journey-step:hover{
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+}
+body.control-shell-v3 .vs-page .vs-create>summary{
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .lab-shell .lab-table th{
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-line);
+ color:var(--control-ink)!important;
+}
+body.control-shell-v3 .tool-page .tool-deploy-cta{
+ background:linear-gradient(110deg,var(--control-peach-soft),var(--control-paper))!important;
+ border-color:var(--control-edge)!important;
+}
+body.control-shell-v3 .tool-page .tool-deploy-cta strong{
+ color:var(--control-ink)!important;
+}
+body.control-shell-v3 .tool-page .tool-deploy-cta span{
+ color:var(--control-muted)!important;
+}
+/* The secondary/legacy dashboard is still a usable part of CONTROL.
+   Its earlier theme.css navigation and header must match the main app. */
+body.control-legacy .sidebar{
+ background:var(--control-paper)!important;
+ border-color:var(--control-line)!important;
+}
+body.control-legacy .brand{
+ color:var(--control-ink)!important;
+ font-family:var(--control-font)!important;
+}
+body.control-legacy .brand-mark,
+body.control-legacy .nav-dot{
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+ color:var(--control-orange-deep)!important;
+}
+body.control-legacy .nav-item{
+ color:var(--control-muted)!important;
+}
+body.control-legacy .nav-item:hover,
+body.control-legacy .nav-item.active,
+body.control-legacy .nav-item[aria-current=page]{
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+ color:var(--control-orange-deep)!important;
+}
+body.control-legacy .nav-item.active .nav-dot,
+body.control-legacy .nav-item[aria-current=page] .nav-dot{
+ background:var(--control-orange-deep)!important;
+ color:white!important;
+}
+body.control-legacy .topbar{
+ background:var(--control-paper)!important;
+ border-color:var(--control-line)!important;
+}
+body.control-legacy .page-title,
+body.control-legacy .panel h2,
+body.control-legacy .panel h3{
+ color:var(--control-ink)!important;
+ font-family:var(--control-font)!important;
+}
+body.control-legacy :is(.page-eyebrow,.kicker,.nav-label,.breadcrumb,.sync-indicator){
+ color:var(--control-muted)!important;
+}
+body.control-legacy .breadcrumb strong{
+ color:var(--control-ink)!important;
+}
+body.control-legacy :is(.btn,.ghost,.tab,.command-close,.mobile-nav){
+ color:var(--control-orange-deep)!important;
+ border-color:var(--control-line)!important;
+ background:var(--control-white)!important;
+}
+body.control-legacy :is(.btn,.ghost,.tab,.mobile-nav):hover,
+body.control-legacy .tab.active{
+ color:var(--control-orange-deep)!important;
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+}
+body.control-legacy :is(.btn.primary,.button.primary,button.primary,a.primary){
+ background:var(--control-orange-deep)!important;
+ border-color:var(--control-orange-deep)!important;
+ color:white!important;
+}
+body.control-legacy :is(.progressbar span,.timeline-entry::before){
+ background:var(--control-orange-deep)!important;
+}
+body.control-legacy :is(.external,.refresh-data,.quick-open){
+ color:var(--control-orange-deep)!important;
+}
+body.control-legacy .warning-banner{
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+ color:var(--control-warm-ink)!important;
+}
+body.control-legacy :is(.command-panel,.command-results,.command-row){
+ background:var(--control-paper)!important;
+ border-color:var(--control-line)!important;
+ color:var(--control-ink)!important;
+}
+body.control-legacy .command-panel :is(input,.command-result,.command-close){
+ color:var(--control-ink)!important;
+ background:var(--control-white)!important;
+ border-color:var(--control-line)!important;
+}
+body.control-private .private-head .page-eyebrow{
+ color:var(--control-orange-deep)!important;
+}
+body.control-private .private-title{
+ letter-spacing:-.04em;
+}

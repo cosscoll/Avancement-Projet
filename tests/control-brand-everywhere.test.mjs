@@ -55,8 +55,8 @@ test('Known feature pages, help and inner screens all have theme scopes',()=>{
 });
 test('New stylesheet participates in reliable PWA offline install',()=>{
  const sw=read('service-worker.js');
- assert.match(sw,/const CACHE_SHELL='control-shell-v109'/);
- assert.match(sw,/const CACHE_PUBLIC='control-public-data-v109'/);
+ assert.match(sw,/const CACHE_SHELL='control-shell-v110'/);
+ assert.match(sw,/const CACHE_PUBLIC='control-public-data-v110'/);
  const parts=sw.match(/const (?:ASSETS|CRITICAL_SHELL)=.+/g)||[];
  assert.ok(parts.length>=2);
  for(const part of parts)assert.match(part,/control-brand-global\.css/);
@@ -119,4 +119,25 @@ test('Private route is re-skinned but authentication implementation remains sepa
  assert.match(brand,/body\.control-private :is\(\.private-form input/);
  assert.match(brand,/body\.control-private \.warning-banner/);
  assert.doesNotMatch(brand,/localStorage|sessionStorage|signInWithPassword|createClient\(/);
+});
+
+test('Navigation modal, shortcuts and legacy dashboard use the same warm visual surface',()=>{
+ for(const selector of [
+ '.control-nav-main-trigger','.control-nav-mobile-trigger','.control-finder-panel',
+ '.control-finder-search input','.control-finder-categories button.is-active',
+ '.control-finder-recents-title','.control-wayfinding',
+ 'body.control-legacy .sidebar','body.control-legacy .nav-item.active',
+ 'body.control-legacy .brand','body.control-legacy .topbar',
+ 'body.control-legacy .page-title','body.control-legacy .tab.active'
+ ]) assert.ok(brand.includes(selector),'Old navigation visual island: '+selector);
+ assert.match(brand,/\.control-nav-main-trigger kbd/);
+ assert.match(brand,/\.control-finder-item:hover/);
+});
+test('A user sees warm labels inside all eight real feature modules',()=>{
+ const labels=['.loc-topline label','.lab-checkboxes','.cmd-toggle','.vs-listhead span',
+ '.deploy-filters label','.tool-kit-caption','.web-builder-panel label','.as-journey-step'];
+ for(const selector of labels)assert.ok(brand.includes(selector),'Unskinned label: '+selector);
+ assert.match(brand,/\.as-journey-main \.as-journey-number/);
+ assert.match(brand,/\.tool-deploy-cta/);
+ assert.match(brand,/\.lab-table th/);
 });
