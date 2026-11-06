@@ -1173,7 +1173,7 @@ try{
  await ready(()=>js("!!document.querySelector('#as-import-form')"),6000)();
  await js("(()=>{const dt=new DataTransfer();dt.items.add(new File([JSON.stringify([{uuid:'second',name:'Seconde source',chat_messages:[{sender:'human',text:'Tester deux conversations sources'},{sender:'assistant',text:'Conserver les fils existants'}]}])],'claude.json',{type:'application/json'}));document.querySelector('#as-provider').value='claude';document.querySelector('#as-file').files=dt.files;document.querySelector('#as-import-form').requestSubmit()})()");
  await ready(()=>js("!!document.querySelector('[data-as-action=confirm-import]')"),6000)();
- await js("document.querySelector('[data-as-action=confirm-import]').click()");
+ await js("(()=>{const choice=document.querySelector('[data-as-import-choice]');choice.checked=true;choice.dispatchEvent(new Event('change',{bubbles:true}));const consent=document.querySelector('#as-import-consent');consent.checked=true;consent.dispatchEvent(new Event('change',{bubbles:true}));document.querySelector('[data-as-action=confirm-import]').click()})()");
  await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).imports?.length===2"),6000)();
  await js("document.querySelector('[data-as-tab=agents]').click()");
  await js("document.querySelector('[data-as-action=toggle-agent-edit]').click()");
