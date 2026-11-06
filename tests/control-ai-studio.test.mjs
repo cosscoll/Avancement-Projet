@@ -290,3 +290,35 @@ test('agent drafts remain local to a tab and thread, and are cleared only after 
  assert.match(ui,/Tu peux écrire maintenant/);
  assert.doesNotMatch(ui,/id="as-chat-message"[^>]*disabled/);
 });
+
+test('Approved memory keeps an exact archived message provenance and rejects forged source pointers',()=>{
+ const state=fresh();
+ state.imports=x.importRows(state,x.parse('chatgpt',JSON.stringify([sample]),'conversations.json')).state.imports;
+ const conversation=state.imports[0];
+ const m=x.memory(state,{title:'Mobile',content:'La version mobile est prioritaire.',conversationId:conversation.id,projectId:'ucp',sourceMessageIndex:0,sourceRole:'user'});
+ state.memories.push(m);
+ assert.equal(m.sourceMessageIndex,0);
+ assert.equal(m.sourceRole,'user');
+ assert.equal(m.conversationId,conversation.id);
+ assert.equal(x.validateBackupState(state),state);
+ assert.equal(x.parseBackup(JSON.stringify(state)).memories[0].sourceRole,'user');
+ assert.throws(()=>x.memory(state,{title:'Faux',content:'Faux contenu',conversationId:conversation.id,sourceMessageIndex:1,sourceRole:'user'}),/Extrait source invalide/);
+ assert.throws(()=>x.memory(state,{title:'Faux',content:'Faux contenu',conversationId:conversation.id,sourceMessageIndex:4,sourceRole:'assistant'}),/Extrait source invalide/);
+ const broken=JSON.parse(JSON.stringify(state));broken.memories[0].sourceMessageIndex=99;
+ assert.throws(()=>x.validateBackupState(broken),/Référence de message source invalide/);
+ // Legacy memories without exact message reference remain valid.
+ const legacy=fresh();
+ legacy.imports.push(conversation);
+ legacy.memories.push(x.memory(legacy,{title:'Manual',content:'Manual note',conversationId:conversation.id}));
+ assert.doesNotThrow(()=>x.validateBackupState(legacy));
+});
+
+test('Studio exposes explicit extract, approval, and review semantics without auto-saving imported excerpts',()=>{
+ const ui=fs.readFileSync(new URL('../assets/control-ai-studio.js',import.meta.url),'utf8');
+ assert.match(ui,/data-as-extract-memory/);
+ assert.match(ui,/sourceMessageIndex:index/);
+ assert.match(ui,/id="as-memory-approve"/);
+ assert.match(ui,/sourceMessageIndex=memoryDraft\.sourceMessageIndex/);
+ assert.match(ui,/if\(memoryDraft&&!editingMemoryId/);
+ assert.doesNotMatch(ui,/\bfetch\s*\(/);
+});
