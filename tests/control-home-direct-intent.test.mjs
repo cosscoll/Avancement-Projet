@@ -13,8 +13,8 @@ test('home offers a visible task-first search input instead of one more hidden m
  assert.match(homeView,/id="shell-quick-query"/);
  assert.match(homeView,/role="search"/);
  assert.match(homeView,/type="search" maxlength="180"/);
- assert.match(homeView,/Rechercher une fonction ou un projet/);
- assert.match(homeView,/type="submit">Trouver/);
+ assert.match(homeView,/Décrivez votre besoin/);
+ assert.match(homeView,/type="submit">Préparer cette action/);
  assert.match(css,/\.shell-quick-row\{display:flex/);
  assert.match(css,/min-width:0/);
 });
@@ -26,7 +26,7 @@ test('home search delegates only navigation, without automatic mutations or exte
  assert.match(wiring,/CONTROL_NAVIGATION\?\.open\(\{query:/);
  assert.doesNotMatch(wiring,/fetch\(|localStorage|delete|commitHub\(/);
  assert.match(finder,/function open\(opts=\{\}\)/);
- assert.match(homeView,/Aucune action lancée sans votre choix/);
+ assert.match(homeView,/Cette recherche ne lance pas d’assistant IA connecté ni d’action externe/);
  let requested=null,prevented=0;
  const nodes={'#shell-quick-find':{},'#shell-quick-query':{value:'  créer un site web  '}};
  const find=(selector)=>nodes[selector];
