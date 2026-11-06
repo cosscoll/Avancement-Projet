@@ -21,7 +21,7 @@ Si la recette échoue, le changement reste **non livré**, et la suite prioritai
 
 | Session | Priorité et besoin du cahier des charges | Résultat **visible** attendu sur le site | Recette obligatoire |
 | --- | --- | --- | --- |
-| **20 — en cours** | **P0 Accueil utile** : tâche en un geste | Dans « À traiter en priorité », bouton **+ Nouvelle tâche** vers le vrai formulaire ; sur un état vide, lien **Créer ma première tâche** | Navigation + focus, aucun enregistrement avant validation, test Chromium public, responsive |
+| **20 — publiée** | **P0 Accueil utile** : tâche en un geste | Dans « À traiter en priorité », bouton **+ Nouvelle tâche** vers le vrai formulaire ; sur un état vide, lien **Créer ma première tâche** | Navigation + focus, aucun enregistrement avant validation, test Chromium public, responsive |
 | **21** | **P0 Onboarding** : prendre en main sans connaissances techniques | Guide de démarrage contextuel en 3 étapes maximum (projet → tâche → prochaine action), qui disparaît quand l'état local indique une vraie progression ; aucune connexion tierce obligatoire | État neuf, projet existant, stockage illisible, mobile et clavier |
 | **22** | **P0/P1 À traiter** : traiter les urgences | Liste plus claire avec catégories « Aujourd'hui », « En retard », « À vérifier » et accès direct aux tâches ; terminée/rouverte uniquement après écriture locale confirmée | Contrôle des échéances, aucune fausse action exécutée, aucun doublon |
 | **23** | **P1 Clients légers** : savoir qui relancer | Fiches clients plus utiles : état, prochaine étape, projet lié et raccourci **Créer la tâche de relance**, plus recherche ; aucune fonction CRM fictive | Association client↔projet↔tâche, filtres, erreurs stockage |
@@ -49,7 +49,7 @@ Si la recette échoue, le changement reste **non livré**, et la suite prioritai
 
 | Session | Résultat | Commit | Tests Node | Chromium public | GitHub Pages |
 | --- | --- | --- | --- | --- | --- |
-| 20 | En cours de vérification : raccourci « Nouvelle tâche » sur accueil | À renseigner | À renseigner | À renseigner | À renseigner |
+| 20 | **Publié :** « + Nouvelle tâche » sur l’accueil et « Créer ma première tâche » si la liste est vide ; focus sur le formulaire, sans sauvegarde implicite | [945cfc8](https://github.com/cosscoll/Avancement-Projet/commit/945cfc8b05244bb566ca097d88428ad37c29cdae) | [762/762](https://github.com/cosscoll/Avancement-Projet/actions/runs/42194565344) | [Réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/42194841844) | [Réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/42194758506) |
 
 Pour chaque livraison suivante, ajouter une ligne avec les preuves correspondantes et ne passer le statut à « publié » qu'après déploiement public confirmé.
 
