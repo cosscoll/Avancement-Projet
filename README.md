@@ -1,3 +1,11 @@
+## CONTROL 21 — Onboarding en trois étapes, réellement fonctionnel (6 novembre 2026)
+
+**Changement visible sur l'accueil :** « Bien démarrer avec CONTROL » guide les nouveaux utilisateurs vers leur projet, leur première tâche, puis sa clôture. La progression provient des projets et tâches enregistrés, sans faux avancement ; elle disparaît quand la première tâche est terminée et n'interrompt pas les utilisateurs expérimentés. L'interface CONTROL v6/v7 et le mode local restent inchangés. **PWA v97**.
+
+**Preuves :** [772/772 tests Node réussis](https://github.com/cosscoll/Avancement-Projet/actions/runs/42196714258) ; [recette Chromium locale, parcours complet réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/42196714495) ; [déploiement de l'application v97 sur GitHub Pages](https://github.com/cosscoll/Avancement-Projet/actions/runs/42196512270). Le lien de la recette publique sera retenu dès que GitHub aura confirmé les octets et le parcours de la version finale. Aucun Cloud, quota limité ou automatisation activé.
+
+[Cahier des charges v1.13](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md) · [Plan des sessions 20–31](docs/CONTROL_PLAN_SESSIONS_LIVRABLES_2026_11_06.md).
+
 ## CONTROL 20 — Une amélioration visible par session (6 novembre 2026)
 
 **Organisation validée :** [plan des prochaines sessions avec livrables visibles, critères de recette et contrôle public](docs/CONTROL_PLAN_SESSIONS_LIVRABLES_2026_11_06.md). Chaque session doit modifier un parcours réellement utilisable sur le site, et ne sera clôturée que si le commit sur `main`, les tests Node, la recette Chromium publique et GitHub Pages sont confirmés. Aucun travail récurrent ou service payant n'est déclenché automatiquement.
