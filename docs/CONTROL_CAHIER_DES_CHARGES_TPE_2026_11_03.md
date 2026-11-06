@@ -1,6 +1,18 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 6 novembre 2026 · version de travail 1.9 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 6 novembre 2026 · version de travail 1.10 · ciblage indépendants et équipes de 2 à 10 personnes_
 
+
+## Sprint de stabilisation — recherche et couverture qualité (6 novembre 2026)
+
+**Correctif réel livré directement sur `main` :** le moteur de recherche universelle n'appelle plus `find` sur une collection `clients` absente dans les données historiques. Il accepte une ancienne sauvegarde ne contenant pas cette liste sans planter, tout en préservant les règles de filtrage par projet et de liens HTTPS. Les scénarios de recherche, y compris l'isolation des projets, passent dans les tests Node.
+
+**Visibilité sans activation :** l'accueil comporte désormais un lien discret « Voir l’état de CONTROL Cloud » dans les outils avancés, avec un rappel clair que la connexion multi-utilisateurs n'est pas activée. Aucune authentification, synchronisation ni dépense engagée.
+
+**Dette de tests corrigée :** les régressions historiques vérifiaient parfois les écrans CONTROL 04, un cache PWA obsolète ou une navigation sombre retirée lors de la validation de l'accueil CONTROL v6 et de l'espace v7. Ces assertions ont été remplacées par des contrôles portant sur les écrans réellement conservés, sans supprimer les tests de sécurité, de transfert ou de routage. Les simulations de navigateur ont été adaptées aux classes du document actuel.
+
+**Résultat confirmé :** GitHub Actions [Contrôle qualité #42191435913](https://github.com/cosscoll/Avancement-Projet/actions/runs/42191435913) : **761 tests exécutés, 761 réussis, 0 échec** au commit `0a2fb2aba3`. Le service worker est passé à **v95** pour les modifications du shell. Ce résultat ne certifie pas un véritable transfert chiffré entre deux profils indépendants ni la sécurité de la plateforme Cloud non activée.
+
+**Priorités restantes :** vérifier le déploiement v95 sur le site public après publication, réaliser le transfert manuel profil A → profil B (plain et AES-GCM), tester le faible espace de stockage et les modifications inter-onglets dans deux navigateurs distincts ; conserver le verrou de sécurité Cloud et n'envisager les connexions officielles aux comptes IA qu'après contrôle des permissions et autorisations.
 
 ## Session P0 — Annulation fiable des analyses de fichiers (6 novembre 2026)
 
