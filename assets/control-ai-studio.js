@@ -65,6 +65,15 @@ function accountsPanel(){
  ).join('')+'</div>'+
  '<section class="as-card as-connect-plan"><span class="as-overline">PROCHAINES ÉTAPES</span><h2>Activation de vraies connexions</h2><p>CONTROL doit d’abord disposer de comptes sécurisés, de clients OAuth enregistrés et de callbacks vérifiés. Les permissions pour l’identité, la génération IA et les anciennes conversations sont distinctes. Aucune connexion n’est simulée.</p><div class="as-connect-actions"><button type="button" class="as-primary" data-as-action="go-agents">Créer un assistant maintenant</button><button type="button" data-as-action="show-archives">Archives (facultatif)</button></div></section>';
 }
+function journey(){
+  if(db.agents.length)return '';
+  return '<section class="as-journey" aria-labelledby="as-journey-title"><div class="as-journey-head"><span class="as-overline">DÉMARRAGE GUIDÉ</span><h2 id="as-journey-title">Créer mon premier assistant</h2><p>Avance à ton rythme : importer des conversations et créer des mémoires sont facultatifs. Rien n’est envoyé à un fournisseur IA.</p></div>'+
+   '<div class="as-journey-grid">'+
+   '<button type="button" data-as-tab="imports" class="as-journey-step"><span class="as-journey-number">1</span><strong>Ajouter mes conversations</strong><small>'+(db.imports.length?db.imports.length+' conversation(s) importée(s)':'Facultatif · importer un fichier exporté')+'</small></button>'+
+   '<button type="button" data-as-tab="memories" class="as-journey-step"><span class="as-journey-number">2</span><strong>Choisir mes mémoires</strong><small>'+(db.memories.length?db.memories.length+' mémoire(s) approuvée(s)':'Facultatif · sélectionner les informations utiles')+'</small></button>'+
+   '<button type="button" data-as-tab="agents" class="as-journey-step as-journey-main"><span class="as-journey-number">3</span><strong>Créer mon assistant</strong><small>Rôle, projet et sources autorisées</small></button></div>'+
+   '<p class="as-journey-footnote">Les anciennes conversations ne sont disponibles que si tu les importes toi-même. Aucun compte ChatGPT, Claude ou Gemini n’est connecté.</p></section>';
+}
 const stats=()=>'<div class="as-metrics"><div><strong>'+db.imports.length+'</strong><span>Conversations importées</span></div><div><strong>'+db.memories.length+'</strong><span>Mémoires approuvées</span></div><div><strong>'+db.agents.length+'</strong><span>Agents créés</span></div></div>';
  function header(){return '<div class="as-heading"><div><span class="as-kicker">CONTROL / ESPACE IA</span><h1>Comptes IA & agents</h1><p>Connexion des fournisseurs et assistants personnalisés.</p></div><span class="as-local-tag">Mode local</span></div>'+
  '<div class="as-notice"><strong>Situation actuelle :</strong> aucun compte externe ChatGPT, Claude ou Gemini n’est relié à CONTROL. Les agents locaux restent utilisables sans compte externe. Aucune synchronisation native, aucun quota Work/Codex et aucune dépense.</div>'+
@@ -131,7 +140,7 @@ function agentPanel(){
     '<div class="as-inline-actions"><button type="button" data-as-action="confirm-studio-restore" class="as-primary">Confirmer le remplacement</button><button type="button" data-as-action="cancel-studio-restore">Annuler</button></div></div>':'')+
    '</div></details>';
  }
- function render(){if(disposed)return;root.innerHTML='<div class="as-shell">'+header()+(!db?'<div class="as-card"><h2>Impossible d’ouvrir cet espace</h2><p>'+esc(blocked)+'</p><p>Ne supprime pas tes données locales : elles pourraient être récupérées par une sauvegarde.</p></div>':stats()+(tab==='accounts'?accountsPanel():tab==='imports'?importPanel():tab==='memories'?memoryPanel():agentPanel()))+studioBackupPanel()+'<div class="as-bottom"><p data-as-status role="status" aria-live="polite">Aucun compte externe connecté. Les données créées restent locales.</p></div></div>';wire()}
+ function render(){if(disposed)return;root.innerHTML='<div class="as-shell">'+header()+(!db?'<div class="as-card"><h2>Impossible d’ouvrir cet espace</h2><p>'+esc(blocked)+'</p><p>Ne supprime pas tes données locales : elles pourraient être récupérées par une sauvegarde.</p></div>':stats()+journey()+(tab==='accounts'?accountsPanel():tab==='imports'?importPanel():tab==='memories'?memoryPanel():agentPanel()))+studioBackupPanel()+'<div class="as-bottom"><p data-as-status role="status" aria-live="polite">Aucun compte externe connecté. Les données créées restent locales.</p></div></div>';wire()}
  function refresh(){render()}
  function saveImport(){if(!preview)return notify('Analyse une archive avant de confirmer son import.',true);const result=core.importRows(db,preview.rows);if(commit(copy=>{copy.imports=result.state.imports})){preview=null;refresh();notify(result.added+' conversation(s) importée(s), '+result.duplicates+' doublon(s) ignoré(s).')}}
  function showTab(name){++importGeneration;++studioRestoreGeneration;tab=name;refresh()}
