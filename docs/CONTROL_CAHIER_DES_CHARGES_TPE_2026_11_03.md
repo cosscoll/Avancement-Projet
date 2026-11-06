@@ -1,6 +1,29 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 5 novembre 2026 · version de travail 1.6 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 5 novembre 2026 · version de travail 1.7 · ciblage indépendants et équipes de 2 à 10 personnes_
 
+
+## Session P0 — Restauration transactionnelle et tests de transfert (6 novembre 2026)
+
+**Bilan technique et correction réelle sur `main` :**
+- Les doublons d'identifiants de projets personnalisés et les collisions entre un projet importé et le catalogue officiel provoquent désormais **un refus non contournable de restauration**. Une confirmation de l'utilisateur n'autorise plus le remplacement d'un fichier avec ces identifiants ambigus.
+- Le mécanisme de restauration n'est plus un grand bloc opaque dans l'interface. Son application transactionnelle est centralisée dans `assets/control-backup-review.js`, via `applyTransaction`. L'interface n'y accède qu'après l'examen du fichier, la validation des anomalies et la confirmation de remplacement.
+- La transaction vérifie l'état des **quatre zones locales** avant et pendant les écritures, contrôle le contenu de chaque écriture et empêche une modification inter-onglets d'être écrasée silencieusement. Si un stockage refuse l'opération ou si l'initialisation échoue, elle restaure seulement les valeurs encore identiques à celles qu'elle vient d'écrire ; si une autre session les a changées, elle signale un retour arrière incertain.
+- Les sauvegardes historiques sans Studio IA restent compatibles : une restauration sans section Studio conserve les agents/mémoires de l'appareil.
+- La **PWA v90** précache les nouveaux fichiers et impose des tests de version cohérents.
+
+**Vérification indépendante de la logique de restauration :**
+- `tests/control-backup-review.test.mjs` couvre deux stockages indépendants (équivalents à des profils de navigateur séparés), les clients et tâches liées, les projets personnalisés, une sauvegarde héritée, une panne de quota pendant l'écriture, le refus des modifications concurrentes, un échec d'initialisation et le cas de concurrence sur une donnée déjà écrite.
+- `tests/control-data-audit.test.mjs` vérifie le blocage des identifiants de projet répétés ou réutilisant ceux du catalogue et la validation de sauvegardes mal structurées.
+- **60 vérifications de logique et de syntaxe exécutées avec succès dans l'environnement JavaScript d'essai**. La suite Node globale, un test navigateur piloté sur la vraie application et GitHub Pages restent des contrôles séparés non confirmés par cette session.
+
+**Important :** un stockage simulé indépendant n'est pas un test utilisateur dans deux vrais navigateurs. Une session de recette réelle doit encore exporter un fichier sur le profil A, l'importer sur le profil B, comparer les données, tester les erreurs de stockage et confirmer le rendu dans Chromium/Firefox et sur mobile.
+
+### Suite prioritaire
+
+1. Exécuter la recette navigateur publiée, corriger les anomalies de navigation et d'import constatées.
+2. Tester le transfert A/B avec un fichier de démonstration sans données privées, vérifier la restauration des projets, tâches, clients et agents.
+3. Inventorier les autorisations serveur réelles (RLS, JWT, révocation) avant d'envisager des comptes multi-utilisateurs. Le contrat local ne remplace pas cette vérification.
+4. Ne pas activer les automatisations, dépenses ou fonctions Cloud sans instruction expresse.
 
 ## Sprint P0 — Fiabilité du transfert de projets (5 novembre 2026)
 
