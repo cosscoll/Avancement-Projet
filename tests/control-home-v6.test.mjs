@@ -62,6 +62,15 @@ test('Homepage has four functioning navigation destinations, tools kept accessib
  assert.match(command,/const pages=\{manager,team,clients,audit:auditData,tools/);
 });
 
+test('Homepage offers direct task creation in both populated and empty states',()=>{
+ assert.match(html,/class="control-home-v6-new-task" href="#\/control\/inbox\/new" aria-label="Créer une tâche"/);
+ assert.match(html,/class="control-home-v6-empty-start" href="#\/control\/inbox\/new">Créer ma première tâche/);
+ assert.match(css,/\.control-home-v6-priority-actions\{display:flex/);
+ assert.match(css,/\.control-home-v6-empty-start\{/);
+ assert.match(command,/if\(route\(\)\.param==='new'\)/);
+ assert.match(command,/titleField\?\.focus\?/);
+});
+
 test('Old blue hero and sidebar are not used on this home, and mobile has one bottom menu',()=>{
  const home=html.slice(html.indexOf('function home(){'),html.indexOf(' const projectSearchKey=',html.indexOf('function home(){')));
  assert.ok(!home.includes('shell-feature-primary'));
