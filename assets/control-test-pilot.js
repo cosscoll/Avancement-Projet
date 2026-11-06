@@ -1,4 +1,9 @@
 (()=>{'use strict';const root=document.querySelector('[data-control-pilot]');if(!root)return;
+// The guide is a first-class offline PWA entry, including when visited before the dashboard.
+if(typeof navigator!=='undefined' && 'serviceWorker' in navigator &&
+  (location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1')){
+ navigator.serviceWorker.register('./service-worker.js',{scope:'./',updateViaCache:'none'}).catch(()=>{});
+}
 const checks=Array.from(root.querySelectorAll('[data-pilot-check]'));
 const progress=root.querySelector('#pilot-progress');
 const update=()=>{progress.textContent=checks.filter(item=>item.checked).length+' / '+checks.length};
