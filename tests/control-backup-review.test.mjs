@@ -299,7 +299,8 @@ test('diff table exposes redacted counts and accessible horizontal scrolling',()
 test('unified CONTROL backup includes Studio IA and keeps legacy backups compatible',()=>{
  const center=readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
  assert.match(center,/data.studio=readBackupStore\(STUDIO\)/);
- assert.match(center,/if\(Object.hasOwn\(staged.data,'studio'\)\)entries.push/);
+ const reviewer=readFileSync(new URL('../assets/control-backup-review.js',import.meta.url),'utf8');
+ assert.match(reviewer,/if\(Object.hasOwn\(data,'studio'\)\)entries.push/);
  assert.match(center,/anciens fichiers sans Studio IA/);
 });
 test('backwards-compatible comparison never claims lost agents when an old backup has no Studio section',()=>{
