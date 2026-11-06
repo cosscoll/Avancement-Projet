@@ -90,3 +90,6 @@ jobs:
         env:
           CONTROL_BROWSER_PRODUCTION: '1'
         run: node tests/control-ia-browser-smoke.mjs
+      - name: Tester la synthèse projet sur le site public
+        if: steps.version.outputs.current == 'true'
+        run: node tests/control-project-brief-browser.mjs
