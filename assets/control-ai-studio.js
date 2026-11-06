@@ -7,7 +7,7 @@ function mount(root,adapter={}){
  window.CONTROL_AI_STUDIO?.unmount?.(root);
  const storage=adapter.storage||localStorage,loaded=core.read(storage);
  let db=loaded.state,raw=loaded.raw,blocked=loaded.error,tab='accounts',preview=null,query='',selectedImport=null,selectedAgent=null,selectedThread=null,editingMemoryId=null,restoreDraft=null,threadQuery='',highlightedMessageIndex=-1;
- let worker=null,ready=false,loading=false,generating=false,disposed=false,requestId=0,pending=null;
+ let worker=null,ready=false,loading=false,generating=false,disposed=false,requestId=0,pending=null,importGeneration=0,studioRestoreGeneration=0;
  const projects=[{id:'general',name:'Tous mes projets'},...(adapter.projects||[]).filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string')];
  const $=s=>root.querySelector(s);
  const notify=(value,error=false)=>{const el=$('[data-as-status]');if(el){el.textContent=value;el.dataset.error=String(error)}};
@@ -133,8 +133,8 @@ function agentPanel(){
  }
  function render(){if(disposed)return;root.innerHTML='<div class="as-shell">'+header()+(!db?'<div class="as-card"><h2>Impossible d’ouvrir cet espace</h2><p>'+esc(blocked)+'</p><p>Ne supprime pas tes données locales : elles pourraient être récupérées par une sauvegarde.</p></div>':stats()+(tab==='accounts'?accountsPanel():tab==='imports'?importPanel():tab==='memories'?memoryPanel():agentPanel()))+studioBackupPanel()+'<div class="as-bottom"><p data-as-status role="status" aria-live="polite">Aucun compte externe connecté. Les données créées restent locales.</p></div></div>';wire()}
  function refresh(){render()}
- function saveImport(){if(!preview)return;const result=core.importRows(db,preview.rows);if(commit(copy=>{copy.imports=result.state.imports})){preview=null;refresh();notify(result.added+' conversation(s) importée(s), '+result.duplicates+' doublon(s) ignoré(s).')}}
- function showTab(name){tab=name;refresh()}
+ function saveImport(){if(!preview)return notify('Analyse une archive avant de confirmer son import.',true);const result=core.importRows(db,preview.rows);if(commit(copy=>{copy.imports=result.state.imports})){preview=null;refresh();notify(result.added+' conversation(s) importée(s), '+result.duplicates+' doublon(s) ignoré(s).')}}
+ function showTab(name){++importGeneration;++studioRestoreGeneration;tab=name;refresh()}
  function wire(){
   const threadSearch=$('#as-thread-search-input');
   if(threadSearch)threadSearch.oninput=e=>{
@@ -159,25 +159,34 @@ function agentPanel(){
    notify('Discussion retrouvée dans '+agent.name+'.');
   });
   root.querySelectorAll('[data-as-tab]').forEach(b=>b.onclick=()=>showTab(b.dataset.asTab));
-  const importForm=$('#as-import-form');if(importForm)importForm.onsubmit=async e=>{
-   e.preventDefault();const input=$('#as-file'),file=input.files?.[0],provider=$('#as-provider').value;
+  const importForm=$('#as-import-form');if(importForm){
+   importForm.addEventListener('change',e=>{if(!['as-file','as-provider'].includes(e.target?.id))return;++importGeneration;preview=null;const button=$('[data-as-action="confirm-import"]');if(button)button.disabled=true;notify('Archive ou fournisseur modifié : relance l’analyse.');});
+   importForm.onsubmit=async e=>{
+   e.preventDefault();const generation=++importGeneration;preview=null;
+   const oldConfirm=$('[data-as-action="confirm-import"]');if(oldConfirm)oldConfirm.disabled=true;
+   const input=$('#as-file'),file=input.files?.[0],provider=$('#as-provider').value;
    if(!file)return notify('Choisis un fichier.',true);
    if(!/\.(json|txt)$/i.test(file.name)||file.size>9000000)return notify('Format ou taille non pris en charge (JSON/TXT, 9 Mo maximum).',true);
-   try{const rows=core.parse(provider,await file.text(),file.name);preview={rows,provider};refresh();notify('Aucune donnée enregistrée : vérifie l’aperçu puis confirme.')}
-   catch(err){preview=null;refresh();notify(String(err.message||err),true)}
-  };
-  const restoreForm=$('#as-restore-form');if(restoreForm)restoreForm.onsubmit=async e=>{
-   e.preventDefault();const file=$('#as-restore-file')?.files?.[0];
+   try{notify('Analyse de l’archive en cours. Aucune donnée enregistrée.');const contents=await file.text();if(disposed||generation!==importGeneration)return;const rows=core.parse(provider,contents,file.name);if(disposed||generation!==importGeneration)return;preview={rows,provider};refresh();notify('Aucune donnée enregistrée : vérifie l’aperçu puis confirme.')}
+   catch(err){if(disposed||generation!==importGeneration)return;preview=null;refresh();notify(String(err.message||err),true)}
+  };}
+  const restoreForm=$('#as-restore-form');if(restoreForm){
+   restoreForm.addEventListener('change',e=>{if(e.target?.id!=='as-restore-file')return;++studioRestoreGeneration;restoreDraft=null;const button=$('[data-as-action="confirm-studio-restore"]');if(button)button.disabled=true;notify('Fichier de restauration modifié : relance la vérification.');});
+   restoreForm.onsubmit=async e=>{
+   e.preventDefault();const generation=++studioRestoreGeneration;restoreDraft=null;const oldConfirm=$('[data-as-action="confirm-studio-restore"]');if(oldConfirm)oldConfirm.disabled=true;const file=$('#as-restore-file')?.files?.[0];
    if(!file||!/\.json$/i.test(file.name)||file.size>5000000||file.size===0)return notify('Choisis une sauvegarde JSON du Studio (5 Mo maximum).',true);
    let before;
    try{
     before=storage.getItem(core.KEY);
-    const state=core.parseBackup(await file.text());
+    const contents=await file.text();
+    if(disposed||generation!==studioRestoreGeneration)return;
+    const state=core.parseBackup(contents);
+    if(disposed||generation!==studioRestoreGeneration)return;
     if(storage.getItem(core.KEY)!==before)throw Error('Les données ont changé dans un autre onglet : nouvelle vérification requise.');
     restoreDraft={state,currentRaw:before,counts:core.backupComparison(db,state)};
     refresh();notify('Aperçu prêt : aucune donnée remplacée.');
-   }catch(error){restoreDraft=null;refresh();notify(String(error.message||error),true)}
-  };
+   }catch(error){if(disposed||generation!==studioRestoreGeneration)return;restoreDraft=null;refresh();notify(String(error.message||error),true)}
+  };}
   const search=$('#as-search');if(search)search.oninput=e=>{query=e.target.value;const at=e.target.selectionStart;refresh();const next=$('#as-search');next?.focus();next?.setSelectionRange(at,at)};
   root.querySelectorAll('[data-as-view]').forEach(b=>b.onclick=()=>{selectedImport=b.dataset.asView;refresh();$('#as-reader')?.scrollIntoView({block:'nearest'})});
   root.querySelectorAll('[data-as-create-memory]').forEach(b=>b.onclick=()=>{selectedImport=b.dataset.asCreateMemory;showTab('memories')});
@@ -241,7 +250,7 @@ function agentPanel(){
   if(name==='go-agents')return showTab('agents');
   if(name==='show-archives')return showTab('imports');
   if(name==='clear-thread-search'){threadQuery='';highlightedMessageIndex=-1;refresh();$('#as-thread-search-input')?.focus();return}
-  if(name==='cancel-studio-restore'){restoreDraft=null;return refresh()}
+  if(name==='cancel-studio-restore'){++studioRestoreGeneration;restoreDraft=null;return refresh()}
   if(name==='confirm-studio-restore'){
    const draft=restoreDraft;if(!draft)return notify('Examine le fichier avant de le restaurer.',true);
    if(!confirm('Remplacer TOUS les agents, mémoires, discussions et archives locales du Studio IA ? Les données actuelles seront perdues.'))return;
@@ -265,7 +274,7 @@ function agentPanel(){
   if(name==='cancel-memory-edit'){editingMemoryId=null;return refresh()}
   if(name==='toggle-agent-edit'){const panel=$('#as-agent-edit');if(panel){panel.open=!panel.open;if(panel.open)$('#as-edit-agent-name')?.focus()}return}
   if(name==='confirm-import')return saveImport();
-  if(name==='cancel-import'){preview=null;return refresh()}
+  if(name==='cancel-import'){++importGeneration;preview=null;return refresh()}
   if(name==='close-reader'){selectedImport=null;return refresh()}
   if(name==='load-model')return start();
   if(name==='stop-model'){stop();return refresh()}
@@ -310,7 +319,7 @@ function agentPanel(){
   clearDraft(a.id,t.id);
   generating=true;pending={agentId:a.id,threadId:t.id};++requestId;refresh();notify('Question enregistrée. Génération locale en cours…');try{worker.postMessage({action:'generate',requestId,question,history,context})}catch{generating=false;pending=null;refresh();notify('Impossible de contacter le modèle local.',true)}
  }
- root.__controlStudioStop=()=>{disposed=true;++requestId;worker?.terminate();worker=null};
+ root.__controlStudioStop=()=>{disposed=true;++importGeneration;++studioRestoreGeneration;++requestId;worker?.terminate();worker=null};
  render();
 }
 function unmount(root){const stop=root?.__controlStudioStop;if(typeof stop==='function'){stop();delete root.__controlStudioStop}}
