@@ -144,7 +144,9 @@ function intake(){
   ...actions.map(x=>({...x,kind:'action'})),
   ...missions.map(x=>({...x,kind:'mission'}))
  ],today);
- const rows=items.map(a=>{
+ const groups=workflow.group(items,today);
+ const groupedCounts=Object.fromEntries(groups.map(group=>[group.id,group.items.length]));
+ const renderTaskRow=a=>{
   const status=a.kind==='mission'?'review':workflow.category(a,today);
   const projectName=pname(a.project);
   const dueLabel=a.due&&workflow.validDue(a.due)?' · Pour le '+a.due.slice(8,10)+'/'+a.due.slice(5,7)+'/'+a.due.slice(0,4):'';
@@ -178,10 +180,15 @@ function intake(){
    '<strong>'+h(a.title)+'</strong><small>'+h(projectName)+(clientLabel?' · Client : '+h(clientLabel):'')+' · '+h(description)+'</small>'+
    (a.kind==='action'&&safe(a.url)?href(a.url,'Ouvrir la référence','control-task-reference'):'')+
    '</div>'+controls+'</div></div>';
- }).join('');
+ };
+ const rows=groups.map(group=>'<section class="control-task-group" data-task-group="'+group.id+'" aria-label="'+h(group.title)+'">'+
+  '<div class="control-task-group-heading"><div><h3>'+h(group.title)+'</h3><p>'+h(group.description)+'</p></div><span class="control-task-group-count" data-task-group-count>'+group.items.length+'</span></div>'+
+  group.items.map(renderTaskRow).join('')+'</section>').join('');
+ const quickFilters=[['active','En attente',pending.length+missions.length],['overdue','En retard',groupedCounts.overdue||0],['today',"Aujourd’hui",groupedCounts.today||0],['review','À vérifier',groupedCounts.review||0],['done','Terminées',groupedCounts.done||0]];
  let content='<div class="dash-stats">'+[['Actions ouvertes',pending.length],['En retard',overdue],['Missions à vérifier',missions.length]].map(([n,v])=>'<div class="stat"><strong>'+v+'</strong><span>'+n+'</span></div>').join('')+'</div>'+
  note('Données enregistrées uniquement dans ce navigateur. Gmail, les autres IA et les tâches de votre équipe ne sont pas synchronisés.')+
- box('Mes tâches et validations','<div class="control-task-toolbar"><label>Rechercher une tâche<input id="control-task-search" class="field" type="search" autocomplete="off" placeholder="Nom de la tâche, projet…" maxlength="180" value="'+h(inboxSearch)+'"></label>'+
+ box('Mes tâches et validations','<div class="control-task-triage" role="group" aria-label="Afficher rapidement une catégorie de tâches">'+quickFilters.map(([id,label,total])=>
+ '<button type="button" class="control-task-triage-button" data-task-filter-quick="'+id+'" aria-pressed="'+(inboxFilter===id?'true':'false')+'"><span>'+h(label)+'</span><strong>'+total+'</strong></button>').join('')+'</div><div class="control-task-toolbar"><label>Rechercher une tâche<input id="control-task-search" class="field" type="search" autocomplete="off" placeholder="Nom de la tâche, projet…" maxlength="180" value="'+h(inboxSearch)+'"></label>'+
  '<label>Afficher<select id="control-task-filter" class="field">'+
  [['active','En attente'],['all','Toutes les tâches'],['overdue','En retard'],['today',"Aujourd’hui"],['review','À vérifier'],['done','Terminées']].map(([v,t])=>'<option value="'+v+'" '+(v===inboxFilter?'selected':'')+'>'+t+'</option>').join('')+
  '</select></label>'+
@@ -219,11 +226,21 @@ function intake(){
    const show=eligible&&(!selectedClient||row.dataset.taskClient===selectedClient)&&(!query||row.dataset.taskSearch.includes(query));
    row.hidden=!show;if(show)count++;
   });
+  $('#main').querySelectorAll('.control-task-group').forEach(group=>{
+   const visible=[...group.querySelectorAll('.control-task-row')].filter(row=>!row.hidden).length;
+   group.hidden=visible===0;
+   const badge=group.querySelector('[data-task-group-count]');if(badge)badge.textContent=String(visible);
+  });
+  $('#main').querySelectorAll('[data-task-filter-quick]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.taskFilterQuick===inboxFilter)));
   $('#control-task-visible').textContent=count+' résultat'+(count>1?'s':'')+' dans ce filtre';
   $('#control-task-none').hidden=count!==0;
  };
  $('#control-task-search').oninput=applyFilter;
  $('#control-task-filter').onchange=applyFilter;
+ $('#main').querySelectorAll('[data-task-filter-quick]').forEach(button=>button.onclick=()=>{
+  $('#control-task-filter').value=button.dataset.taskFilterQuick;
+  applyFilter();
+ });
  if($('#control-task-client'))$('#control-task-client').onchange=applyFilter;
  $('#main').querySelectorAll('form[data-task-edit],#new-action').forEach(bindProjectClient);
  applyFilter();
