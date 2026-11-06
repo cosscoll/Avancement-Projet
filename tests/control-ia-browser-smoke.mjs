@@ -162,6 +162,18 @@ try{
  assert.equal(businessHome.legacyHero,false);
  assert.match(businessHome.provenance,/sur cet appareil/);
  log('CONTROL 06 home matches approved compact entrepreneur structure, not old blue hero');
+ // New visible delivery: create a real task directly from the home priorities
+ // without requiring the user to discover the separate task screen first.
+ const homeCreate=await js("({link:document.querySelector('.control-home-v6-new-task')?.getAttribute('href'),label:document.querySelector('.control-home-v6-new-task')?.textContent,emptyLink:document.querySelector('.control-home-v6-empty-start')?.getAttribute('href')||null})");
+ assert.equal(homeCreate.link,'#/control/inbox/new');
+ assert.match(homeCreate.label,/Nouvelle tâche/);
+ await js("document.querySelector('.control-home-v6-new-task').click()");
+ await ready(()=>js("location.hash==='#/control/inbox/new'&&!!document.querySelector('#new-action input[name=title]')"),8000)();
+ assert.equal(await js("document.activeElement?.getAttribute('name')"),'title');
+ await js("location.hash='#/'");
+ await ready(()=>js("!!document.querySelector('.control-home-v6-new-task')"),8000)();
+ log('CONTROL 20: home quick task opens the real editable task form and autofocuses the title');
+
 
  // Home project navigation reveals real project cards, preserving search and creation.
  await js("document.querySelector('#control-home-nav-projects').click()");
