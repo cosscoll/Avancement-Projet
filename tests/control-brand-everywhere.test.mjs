@@ -68,3 +68,42 @@ test('Theme layer never alters JS flow or grants Cloud access',()=>{
  const cssFlags=/(?:<script|javascript:|url\(\s*['"]?javascript:)/i;
  assert.doesNotMatch(brand,cssFlags);
 });
+
+test('Small text and white-on-CTA colors respect minimum WCAG AA contrast',()=>{
+ const hex=h=>h.replace(/^#/,'');
+ const rgb=h=>[0,2,4].map(i=>parseInt(hex(h).slice(i,i+2),16)/255);
+ const luminance=h=>{
+  const [r,g,b]=rgb(h).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);
+  return .2126*r+.7152*g+.0722*b;
+ };
+ const contrast=(a,b)=>{
+  const aa=luminance(a),bb=luminance(b);
+  return (Math.max(aa,bb)+.05)/(Math.min(aa,bb)+.05);
+ };
+ for(const [foreground,background,label] of [
+  [palette.accent,'#FFFFFF','primary button white text'],
+  [palette.hover,'#FFFFFF','primary button hover'],
+  [palette.muted,palette.cream,'secondary text on cream'],
+  [palette.accent,palette.peach,'warm action labels on peach'],
+  [palette.ink,palette.paper,'primary text on paper']
+ ]){
+  assert.ok(contrast(foreground,background)>=4.5,
+    label+' needs 4.5:1 contrast: '+contrast(foreground,background).toFixed(2));
+ }
+ // Bright decorative orange is intentionally not the CTA text/background.
+ assert.ok(contrast(palette.orange,'#FFFFFF')<4.5);
+ assert.match(brand,/background:var\(--control-orange-deep\)!important/);
+ assert.match(brand,/--control-orange-deep:#B8431F/);
+});
+
+test('Previously unthemed helper, update and project-overview screens use brand tokens',()=>{
+ for(const item of ['.control-delivery','.control-delivery-stage',
+  '#control-project-brief-title','.control-day-brief','#control-pwa-update',
+  '.control-external-change','.control-whats-new','.web-builder-code textarea',
+  '.web-builder-canvas']){
+  assert.ok(brand.includes(item),'Unthemed helper screen: '+item);
+ }
+ assert.match(brand,/\.control-delivery-stage\[data-stage=operational\]/);
+ assert.match(brand,/--control-positive:#16834B/);
+ assert.match(brand,/--control-negative:#BB342B/);
+});
