@@ -1096,7 +1096,7 @@ function backup(){
    message.textContent='Sauvegarde déchiffrée et vérifiée. Examine les différences avant de confirmer.';
   }catch(error){
    resetPreview();
-   message.textContent=error?.message?.startsWith('Mot de passe incorrect')||error?.message?.startsWith('Métadonnées')||error?.message==='Mot de passe manquant.'?error.message:'Impossible de lire ce fichier de sauvegarde : format invalide, contenu incompatible ou données locales illisibles.';
+   message.textContent=restore.safeImportError(error);
   }
  });
  $('#import-apply').onclick=()=>{
