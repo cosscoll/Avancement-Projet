@@ -1,3 +1,11 @@
+## CONTROL 23 — Clients et relances réellement actionnables (6 novembre 2026)
+
+**Publié :** les fiches clients locales indiquent si une relance est en retard, prévue aujourd'hui, à venir ou à planifier. Le filtre « À relancer maintenant » n'affiche que les fiches à échéance et se combine aux autres critères. Le bouton « Préparer la relance » ouvre la création d'une tâche avec titre, client, projet et échéance préremplis ; aucune tâche n'est créée sans validation. Les clients terminés n'apparaissent pas comme relances dues. **PWA v99**.
+
+**Preuves :** [780/780 tests Node réussis](https://github.com/cosscoll/Avancement-Projet/actions/runs/42199767022), [recette Chromium publique réussie](https://github.com/cosscoll/Avancement-Projet/actions/runs/42199850418) incluant la sauvegarde de la tâche liée au client, [déploiement GitHub Pages réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/42199765495).
+
+**À poursuivre :** session CONTROL 24 sur la synthèse actionnable des projets. [Cahier des charges v1.15](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md) · [Plan des sessions](docs/CONTROL_PLAN_SESSIONS_LIVRABLES_2026_11_06.md). Cloud, automatisations et connecteurs payants restent désactivés.
+
 ## CONTROL 22 — Priorités en catégories, filtres rapides et actions réelles (6 novembre 2026)
 
 **Publié sur le site :** la page **À traiter** regroupe les éléments locaux par **En retard**, **Aujourd'hui**, **À vérifier**, **À suivre** et **Terminées**. Cinq filtres rapides avec compteurs fonctionnent avec la recherche et le filtre client sans créer d'action implicite. Chaque tâche n'apparaît qu'une fois ; les sections vides se masquent pendant les recherches. Terminer, Rouvrir et Modifier utilisent les enregistrements locaux réellement sauvegardés. Présentation adaptée aux mobiles, **PWA v98**, charte validée conservée.
