@@ -185,7 +185,16 @@ try{
    const found=await js("(()=>{const e=document.querySelector("+JSON.stringify(selector)+");return e?getComputedStyle(e)["+JSON.stringify(property)+"]:null})()");
    assert.equal(found,want,'Residual blue action/text on '+route+' '+selector);
   }
-  const blue=await js("(()=>{const r=document.querySelector('#main');if(!r)return[];const rows=[];const blue=x=>{const m=x.match(/^rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)(?:,\\s*([\\d.]+))?\\)$/);if(!m||(+m[4]||1)<.45)return false;const [rr,g,b]=m.slice(1,4).map(Number);return b>rr+24&&b>g+13};for(const e of [...r.querySelectorAll('*')].slice(0,550)){if(!e.getClientRects().length)continue;const c=getComputedStyle(e);for(const prop of ['color','backgroundColor','borderTopColor']){const value=c[prop];if(blue(value))rows.push({className:String(e.className||'').slice(0,65),tag:e.tagName,color:value,property:prop})}}return rows.slice(0,9)})()");
+  const finalTargets={
+   catalog:[['.tool-results-head span','color','rgb(109, 103, 99)'],['.tool-kits.clarity-helpnote > summary','color','rgb(184, 67, 31)']],
+   deploy:[['#deploy-more','color','rgb(184, 67, 31)']],
+   aistudio:[['.as-steps button:not([aria-current="page"])','color','rgb(109, 103, 99)'],['.as-journey-head h2','color','rgb(32, 37, 43)']]
+  };
+  for(const [selector,property,want] of finalTargets[route]||[]){
+    const actual=await js("(()=>{const e=document.querySelector("+JSON.stringify(selector)+");return e?getComputedStyle(e)["+JSON.stringify(property)+"]:null})()");
+    assert.equal(actual,want,'Unbranded UI element '+route+' '+selector);
+  }
+  const blue=await js("(()=>{const r=document.querySelector('#main');if(!r)return[];const rows=[];const blue=x=>{const m=x.match(/^rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)(?:,\\s*([\\d.]+))?\\)$/);if(!m||(+m[4]||1)<.45)return false;const [rr,g,b]=m.slice(1,4).map(Number);return b>rr+24&&b>g+13};for(const e of [...r.querySelectorAll('*')].slice(0,550)){if(!e.getClientRects().length)continue;const c=getComputedStyle(e);for(const prop of ['color','backgroundColor','borderTopColor']){const value=c[prop];if(blue(value))rows.push({className:String(e.className||'').slice(0,65),parent:String(e.parentElement?.className||'').slice(0,65),tag:e.tagName,color:value,property:prop})}}return rows.slice(0,9)})()");
   if(blue.length)log('Theme color audit '+route,blue.length+' example(s): '+JSON.stringify(blue.slice(0,4)));
  }
  log('Simple & Humain: eight functional screens use cream, Poppins and warm surfaces in Chromium');
@@ -1669,7 +1678,7 @@ try{
  assert.ok(pilotMobile.link,'Tester guide must link to real assistant screen');
  log('CONTROL pilot guide: six real missions, optional feedback, responsive 320px');
  // The guide itself registers the PWA, even when it is a participant's first page.
- await ready(()=>js("(async()=>{if(!navigator.serviceWorker?.controller)return false;const keys=await caches.keys();if(!keys.includes('control-shell-v113'))return false;const cache=await caches.open('control-shell-v113');return !!(await cache.match(new URL('./testeurs.html',location.href)))&&!!(await cache.match(new URL('./assets/control-test-pilot.js',location.href)))})()"),30000)();
+ await ready(()=>js("(async()=>{if(!navigator.serviceWorker?.controller)return false;const keys=await caches.keys();if(!keys.includes('control-shell-v114'))return false;const cache=await caches.open('control-shell-v114');return !!(await cache.match(new URL('./testeurs.html',location.href)))&&!!(await cache.match(new URL('./assets/control-test-pilot.js',location.href)))})()"),30000)();
  await command('Network.enable');
  await command('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await command('Page.reload',{ignoreCache:false});

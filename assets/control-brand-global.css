@@ -880,3 +880,97 @@ body.control-shell-v3 .web-builder button:not(.primary):not(.danger):not(#builde
 body.control-shell-v3 .web-builder button:not(.primary):not(.danger):not(#builder-delete):hover{
  border-color:var(--control-edge);
 }
+
+
+/* Verified after release: neutral controls that still inherited blue defaults.
+   These are component-scoped, so provider-specific logos and status colors remain intact. */
+body.control-shell-v3 .tool-page :is(.tool-results-head span,.tool-kit p,.tool-track small),
+body.control-shell-v3 .tool-page .tool-kits.clarity-helpnote{
+  color:var(--control-muted)!important;
+}
+body.control-shell-v3 .tool-page .tool-kits.clarity-helpnote{
+  background:var(--control-paper)!important;
+  border-color:var(--control-line)!important;
+}
+body.control-shell-v3 .tool-page .tool-kits.clarity-helpnote > summary{
+  color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .tool-page .tool-kits.clarity-helpnote[open] > summary,
+body.control-shell-v3 .tool-page .tool-kits.clarity-helpnote > summary:hover{
+  background:var(--control-peach-soft)!important;
+}
+body.control-shell-v3 .tool-page :is(.tool-kit-label,.tool-kit-links a){
+  color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .tool-page .tool-kit-links a{
+  background:var(--control-peach-soft)!important;
+  border:1px solid var(--control-line);
+}
+body.control-shell-v3 .tool-page .tool-kit h3{
+  color:var(--control-ink)!important;
+}
+body.control-shell-v3 .tool-page .tool-kits{
+  border-color:var(--control-line)!important;
+}
+body.control-shell-v3 .deploy-page #deploy-more,
+body.control-shell-v3 #main .clarity-more > button{
+  color:var(--control-orange-deep)!important;
+  background:var(--control-paper)!important;
+  border-color:var(--control-line)!important;
+}
+body.control-shell-v3 .deploy-page #deploy-more:hover,
+body.control-shell-v3 #main .clarity-more > button:hover{
+  color:var(--control-orange-deep)!important;
+  background:var(--control-peach-soft)!important;
+  border-color:var(--control-edge)!important;
+}
+body.control-shell-v3 .as-shell .as-steps{
+  background:var(--control-peach-soft)!important;
+}
+body.control-shell-v3 .as-shell .as-steps button{
+  color:var(--control-muted)!important;
+  background:transparent!important;
+}
+body.control-shell-v3 .as-shell .as-steps button[aria-current=page]{
+  color:var(--control-orange-deep)!important;
+  background:var(--control-white)!important;
+}
+body.control-shell-v3 .as-shell .as-steps button:not([aria-current=page]):hover{
+  color:var(--control-orange-deep)!important;
+  background:var(--control-paper)!important;
+}
+body.control-shell-v3 .as-shell .as-journey{
+  color:var(--control-ink)!important;
+  background:var(--control-paper)!important;
+  border-color:var(--control-line)!important;
+}
+body.control-shell-v3 .as-shell :is(.as-journey-head h2,.as-thread-search-title strong){
+  color:var(--control-ink)!important;
+}
+body.control-shell-v3 .as-shell :is(.as-backup-inner p,.as-agent-toolbar p,
+ .as-thread-search-title small,.as-thread-manage-inner p,.as-thread-results-count,
+ .as-thread-hit small,.as-thread-hit span,.as-draft-note,.as-journey-footnote){
+  color:var(--control-muted)!important;
+}
+body.control-shell-v3 .as-shell .as-thread-manage summary{
+  color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .as-shell .as-thread-hit{
+  color:var(--control-ink)!important;
+  background:var(--control-paper)!important;
+  border-color:var(--control-line)!important;
+}
+body.control-shell-v3 .as-shell .as-thread-hit:hover,
+body.control-shell-v3 .as-shell .as-thread-hit:focus-visible{
+  color:var(--control-orange-deep)!important;
+  background:var(--control-peach-soft)!important;
+  border-color:var(--control-edge)!important;
+}
+body.control-shell-v3 .as-shell .as-thread-hit strong{
+  color:var(--control-ink)!important;
+}
+body.control-shell-v3 .as-shell .as-agent-item[aria-current=page]{
+  color:var(--control-orange-deep)!important;
+  background:var(--control-peach-soft)!important;
+  border-color:var(--control-edge)!important;
+}

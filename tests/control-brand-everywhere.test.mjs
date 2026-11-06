@@ -55,8 +55,8 @@ test('Known feature pages, help and inner screens all have theme scopes',()=>{
 });
 test('New stylesheet participates in reliable PWA offline install',()=>{
  const sw=read('service-worker.js');
- assert.match(sw,/const CACHE_SHELL='control-shell-v113'/);
- assert.match(sw,/const CACHE_PUBLIC='control-public-data-v113'/);
+ assert.match(sw,/const CACHE_SHELL='control-shell-v114'/);
+ assert.match(sw,/const CACHE_PUBLIC='control-public-data-v114'/);
  const parts=sw.match(/const (?:ASSETS|CRITICAL_SHELL)=.+/g)||[];
  assert.ok(parts.length>=2);
  for(const part of parts)assert.match(part,/control-brand-global\.css/);
@@ -164,4 +164,13 @@ test('Legacy labels and secondary buttons never reintroduce the navy UI palette'
  '.web-builder button:not(.primary)']){
   assert.ok(brand.includes(selector),'Remaining navy control: '+selector);
  }
+});
+
+test('Last blue defaults in catalog, deployment and AI Studio now inherit the warm palette',()=>{
+ for(const selector of ['.tool-results-head span','.tool-kits.clarity-helpnote',
+  '.tool-kit-links a','.clarity-more > button','#deploy-more',
+  '.as-steps button[aria-current=page]','.as-steps button:not([aria-current=page]):hover',
+  '.as-journey-head h2','.as-thread-manage summary','.as-thread-hit',
+  '.as-backup-inner p','.as-agent-item[aria-current=page]'])
+  assert.ok(brand.includes(selector),'Missing final warm control: '+selector);
 });
