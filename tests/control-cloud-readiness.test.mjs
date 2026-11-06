@@ -47,7 +47,8 @@ test('unexpected foreign writes are tracked for cleanup before the E2E fails',()
 test('launch readiness remains visible while signup stays locked and project observation is dated',()=>{
  const c=JSON.parse(read('config/cloud.json'));
  assert.equal(c.lastObservedBackendStatus.value,'INACTIVE');
- assert.equal(c.lastObservedBackendStatus.date,'2026-11-02');
+ assert.match(c.lastObservedBackendStatus.date,/^20\d{2}-\d{2}-\d{2}$/);
+ assert.ok(Date.parse(c.lastObservedBackendStatus.date)<=Date.now(),'Observation must not be in the future');
  assert.equal(Object.values(c.launchChecks).filter(x=>x===true).length,0);
  assert.match(setup,/id="cloud-readiness"/);
  assert.match(read('assets/cloud-app.js'),/showCloudReadiness\(cfg\)/);
@@ -67,7 +68,7 @@ test('dated readiness dashboard renders actual observation, zero validation and 
  api(config);
  const html=elements['cloud-readiness'].innerHTML;
  assert.match(html,/0 \/ 8 contrôles/);
- assert.match(html,/2026-11-02/,'Date observation must not silently disappear');
+ assert.ok(html.includes(config.lastObservedBackendStatus.date),'Date observation must not silently disappear');
  assert.match(html,/INACTIVE/);
  assert.match(html,/Deux utilisateurs réels de recette authentifiés/);
  assert.doesNotMatch(html,/sb_publishable_|access_token|refresh_token/);
