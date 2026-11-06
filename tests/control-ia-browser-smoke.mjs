@@ -993,6 +993,14 @@ try{
  // Real personal AI Studio flow: the upload is synthetic and never leaves this browser.
  await js("location.hash='#/control/aistudio'");
  await ready(()=>js("!!document.querySelector('.as-provider-grid')&&!!document.querySelector('[data-as-tab=agents]')"),12000)();
+
+ assert.equal(await js("document.querySelectorAll('.as-journey-step').length"),3);
+ await js("document.querySelector('.as-journey-step[data-as-tab=agents]').click()");
+ await ready(()=>js("!!document.querySelector('#as-agent-form')"),7000)();
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')||'{\"agents\":[]}').agents.length"),0,'Opening guide does not create an assistant');
+ await js("document.querySelector('.as-steps [data-as-tab=accounts]').click()");
+ await ready(()=>js("!!document.querySelector('[data-as-action=show-archives]')"),7000)();
+ log('CONTROL 26: optional assistant journey navigates to the real form without importing or creating data');
  assert.equal(await js("document.querySelectorAll('.as-connect-card').length"),3);
  assert.equal(await js("document.querySelectorAll('.as-connect-card button:not(:disabled)').length"),0,'No fake login');
  assert.match(await js("document.querySelector('.as-connect-counter').textContent"),/0 compte lié/);
