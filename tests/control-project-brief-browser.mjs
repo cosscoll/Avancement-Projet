@@ -75,7 +75,7 @@ try{
  assert.ok(a.links.includes('https://example.org/a'));
 
  const taskLink=a.links.find(x=>x.includes('inbox?project=ifsi&task=a-late'));
- assert.ok(taskLink,'A project's task must lead to its scoped inbox with task ID');
+ assert.ok(taskLink,'Project task should lead to its scoped inbox with task ID');
  await run('location.hash='+JSON.stringify('#/control/inbox?project=ifsi'));
  await wait(()=>run("!!document.querySelector('.control-task-scope')"));
  const scoped=await run("({banner:document.querySelector('.control-task-scope')?.textContent,rows:[...document.querySelectorAll('.control-task-row')].map(row=>row.dataset.taskId),count:document.querySelector('#control-task-visible')?.textContent})");
