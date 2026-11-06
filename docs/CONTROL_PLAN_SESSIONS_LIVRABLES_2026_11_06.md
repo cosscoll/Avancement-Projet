@@ -67,12 +67,11 @@ Pour chaque livraison suivante, ajouter une ligne avec les preuves correspondant
 [CONTROL — Cahier des charges TPE v1.17](CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md). Les parties « priorités », « navigation », « onboarding », « IA et mémoires », « sécurité » et « recette mesurable » font foi sur les livrables attendus, sous réserve des dépendances techniques et des permissions.
 
 
-## CONTROL 26 — livraison partielle : import sélectif (6 novembre 2026)
+## CONTROL 26 — Fonctions implémentées, validations locales et navigateur
 
-- Studio IA → Importer : après analyse d’une archive JSON ou TXT, toutes les conversations reconnues sont affichées avec leur source et leur nombre de messages.
-- **Sélection initialement vide** ; l’utilisateur choisit individuellement les conversations qu’il souhaite réellement conserver.
-- La confirmation requiert une case de **consentement explicite**, rappelant que le stockage local n’est pas chiffré. Si aucune conversation n’est choisie, aucun enregistrement n’a lieu.
-- Le stockage réutilise l’import existant, avec filtrage des lignes choisies et contrôle des doublons ; import complet automatique supprimé.
-- Code livré sur `main` : `assets/control-ai-studio.js`, `assets/control-ai-studio.css` ; cache PWA version `v103`.
-- **Vérification effectuée** : analyse syntaxique JavaScript réussie. **Non encore démontré** : suite Node complète, recette Chromium 320/390 px, succès du déploiement GitHub Pages et chiffrement. Ne pas considérer ce sprint comme complètement validé avant ces preuves.
-- **Suite du CONTROL 26** : proposition d’une mémoire issue d’extraits choisis, validation élément par élément avant l’ajout dans un assistant, journal de provenance et suppression effective.
+- **Interface :** import sélectif des historiques JSON/TXT, aucune conversation présélectionnée, consentement explicite de stockage non chiffré avant écriture. Un second consentement approuve chaque extrait de discussion que l'utilisateur veut transformer en mémoire.
+- **Provenance :** source (fournisseur, titre), indice du message, rôle auteur et projet conservés ; vérifiés lors de la création et restauration. Correction et révocation depuis le Studio IA ; suppression de l'archive en cascade.
+- **Preuves :** [795/795 Node](https://github.com/cosscoll/Avancement-Projet/actions/runs/42209875610) et [recette Chromium](https://github.com/cosscoll/Avancement-Projet/actions/runs/42209875813) réussies sur [0ec51ee](https://github.com/cosscoll/Avancement-Projet/commit/0ec51ee9cacd9dd1f2688ce408beda771a6c3102). Cache PWA **v104**.
+- **Reste à vérifier :** succès final GitHub Pages après cette mise à jour documentaire, recette Chromium ciblée sur **fichiers publics** et fonctionnement hors ligne au même commit. Pas de chiffrement du stockage des conversations, ni connexion OAuth à ChatGPT/Claude/Gemini.
+- **Suite 27 :** préparation/approbation d'une mission et présentation des données partagées, sans exécuter ni financer de service.
+

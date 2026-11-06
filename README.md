@@ -1,3 +1,11 @@
+## CONTROL 26 — Import sélectif et mémoires approuvées (6 novembre 2026)
+
+**Fonction livrée dans le code de `main`, PWA v104 :** dans **Mes assistants IA → Imports**, sélection explicite de chaque conversation analysée et accord de stockage local avant enregistrement. Dans une conversation importée, **« Proposer comme mémoire »** crée un brouillon modifiable d'un message précis. Un second accord est exigé avant son enregistrement. Chaque mémoire issue d'un message conserve sa provenance vérifiable (discussion, rang du message, rôle auteur) ; la suppression de l'archive retire ses mémoires liées et les références des agents. Aucune archive privée n'est envoyée à un fournisseur IA.
+
+**Tests :** [795/795 réussis](https://github.com/cosscoll/Avancement-Projet/actions/runs/42209875610) ; [recette Chromium réussie](https://github.com/cosscoll/Avancement-Projet/actions/runs/42209875813) sur le commit [0ec51ee](https://github.com/cosscoll/Avancement-Projet/commit/0ec51ee9cacd9dd1f2688ce408beda771a6c3102), avec stockage non autorisé refusé, mémoire sourcée et modification d'agent. **Publication GitHub Pages à confirmer** après le dernier commit de documentation. Le stockage local n'est **pas chiffré** ; les connexions natives aux historiques et mémoires ChatGPT / Claude / Gemini restent **indisponibles**. Les archives sont des données non fiables, pas des instructions.
+
+**Suite :** préparation explicite des missions et aperçu de partage avant délégation (CONTROL 27), sans exécution externe ni consommation automatique de quotas.
+
 ## CONTROL 24–25 — Tableau projet + recherche contextualisée (6 novembre 2026)
 
 **Deux sessions visibles livrées sur le site public, PWA v101 :**

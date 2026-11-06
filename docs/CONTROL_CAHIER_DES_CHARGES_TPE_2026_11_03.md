@@ -1,6 +1,18 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 6 novembre 2026 · version de travail 1.17 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 6 novembre 2026 · version de travail 1.18 · ciblage indépendants et équipes de 2 à 10 personnes_
 
+
+## CONTROL 26 — Choisir mes historiques et créer une mémoire approuvée (6 novembre 2026)
+
+**Problème résolu :** l'ancien import « tout ou rien » conservait toutes les conversations reconnues. Le parcours permet désormais de sélectionner individuellement les discussions et impose un consentement de stockage local, vérifié au moment de l'enregistrement. Le fichier est seulement analysé en mémoire avant validation ; zéro conversation ne doit être sauvegardée sans double choix (sélection et autorisation).
+
+**Nouvel usage :** dans `#/control/aistudio`, onglet « Mes conversations importées », cliquer **Lire**, puis **Proposer comme mémoire** sur un message donné. L'application préremplit un brouillon **modifiable** (titre, contenu, projet, discussion source), indique le compte d'origine, le titre de la discussion, la position du message et son rôle utilisateur/assistant. Le texte au-delà de 1 600 caractères est explicitement signalé comme raccourci ; le contenu doit être relu avant l'accord spécifique **« J'ai relu… »**. La sauvegarde est refusée si la conversation source ne correspond plus au brouillon. Les mémoires enregistrées conservent `conversationId`, `sourceMessageIndex` et `sourceRole` ; restauration de sauvegardes avec référence invalide refusée, anciennes mémoires sans référence exacte compatibles.
+
+**Dépendances et limites :** stockage `localStorage` non chiffré, uniquement sur cet appareil. Aucun accès automatique aux comptes ChatGPT, Claude ou Gemini, aucune synchronisation de leurs mémoires natives, aucun appel API distant ni publication externe. Une conversation peut contenir des propos inexacts, privés ou hostiles ; rien n'est autorisé comme mémoire sans validation humaine. La suppression d'une conversation supprime les mémoires qui la citent et retire leurs liens dans les assistants. Le modèle local reste expérimental et nécessite une activation distincte.
+
+**Recette :** tests Node [795/795](https://github.com/cosscoll/Avancement-Projet/actions/runs/42209875610) ; [Chromium réussi](https://github.com/cosscoll/Avancement-Projet/actions/runs/42209875813) : refus de l'import sans consentement, proposition de message, validation, provenance enregistrée, modification d'agent et navigation mobile. **GitHub Pages : preuve de publication à vérifier sur le commit final de cette session**. Cache PWA `v104` ; aucune tâche programmée activée.
+
+**Prochaine priorité :** CONTROL 27 — file de missions IA avec aperçu des données et autorisation humaine avant délégation. Ne jamais afficher une mission comme « exécutée » sur la base d'une simple intention ou d'un lien vers un fournisseur.
 
 ## CONTROL 25 — Recherche locale centralisée et filtrée par projet (6 novembre 2026)
 
