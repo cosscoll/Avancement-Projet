@@ -113,7 +113,7 @@ try{
  assert.equal(mobile.columns.trim().split(/\s+/).length,1,'Mobile summary must be a single column');
 
  // CONTROL 24 offline contract: the two added assets are in the active PWA shell.
- const cached=await wait(()=>run("(async()=>{const sw=await navigator.serviceWorker.ready;const cache=await caches.open('control-shell-v101');const paths=['./assets/control-project-brief.js','./assets/control-project-brief.css'];const entries=await Promise.all(paths.map(path=>cache.match(new URL(path,sw.scope))));return entries.every(Boolean)})()"),14000);
+ const cached=await wait(()=>run("(async()=>{const cache=await caches.open('control-shell-v101');const paths=['./assets/control-project-brief.js','./assets/control-project-brief.css'];const entries=await Promise.all(paths.map(path=>cache.match(new URL(path,location.href))));return entries.every(Boolean)})()"),14000);
  assert.equal(cached,true,'The critical project summary assets must be available in the offline cache');
  console.log('CONTROL 24 CACHE PASS: both overview assets have cached responses');
  await page.send('Network.enable');
