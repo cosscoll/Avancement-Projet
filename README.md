@@ -1,3 +1,11 @@
+## 6 novembre 2026 — CONTROL 18 : recherche fiabilisée, suite qualité entièrement verte
+
+**Livré sur `main` :** recherche universelle compatible avec les anciens états locaux sans fiches Clients ; accès discret à l'état de CONTROL Cloud depuis les fonctions supplémentaires de l'accueil (sans connexion ni activation) ; tests du parcours actuel mis à jour pour les interfaces CONTROL v6/v7 et les caches PWA. **PWA v95**.
+
+**Qualité vérifiée : 761 tests Node réussis sur 761**, 0 échec — [preuve GitHub Actions](https://github.com/cosscoll/Avancement-Projet/actions/runs/42191435913). Les erreurs historiques de tests attendus sur une ancienne interface ne sont plus comptées comme régressions de l'interface validée. La véritable recette de transfert chiffré entre deux navigateurs indépendants reste à effectuer. Aucun quota limité ni automatisation activé.
+
+[Cahier des charges v1.10](docs/CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md).
+
 ## 6 novembre 2026 — CONTROL 17 : protection des imports en cours et cache PWA v94
 
 **Corrections livrées directement sur `main` :** dans Sauvegardes et le Studio IA, une analyse asynchrone ne peut plus rouvrir une ancienne prévisualisation après remplacement du fichier, modification du fournisseur, annulation ou démontage de l'écran. Les fichiers chiffrés restent examinés localement avant consentement ; aucune écriture automatique, aucune synchronisation native des comptes ChatGPT/Claude/Gemini, aucune activation Cloud ni automatisation.
