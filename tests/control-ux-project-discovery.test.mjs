@@ -21,9 +21,9 @@ function catalog(mode='personal',project=null){
  return window.CONTROL_NAVIGATION.getItems();
 }
 test('personal project shows all four main and seven secondary destinations without removing existing routes',()=>{
- assert.match(local,/,tabs=\[\['ai','Espaces IA'\]/);
+ assert.match(local,/,tabs=\[\['ai','Mes IA'\]/);
  assert.match(local,/const advanced=moreTabs\.some/);
- assert.match(local,/const showAdvanced=advanced\|\|!/);
+ assert.match(local,/const showAdvanced=advanced;/);
  assert.match(local,/shell-project-navigation/);
  assert.match(local,/shell-project-more/);
  assert.match(local,/Autres fonctions du projet/);
@@ -45,7 +45,7 @@ test('project sections are fully visible on desktop and intentionally collapsibl
  assert.match(css,/\.shell-project-navigation \.tabs/);
  assert.match(css,/\.shell-project-more \.clarity-advanced/);
  assert.match(css,/\.shell-project-more:not\(\[open\]\) \.clarity-advanced\{display:none!important\}/);
- assert.match(local,/max-width:720px/);
+ assert.match(file('assets/control-workspace-v7.css'),/@media\(max-width:800px\)/);
  assert.match(cloudCode,/max-width:720px/);
  assert.match(cloudCode,/shell-project-navigation/);
 });
