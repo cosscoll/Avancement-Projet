@@ -162,6 +162,17 @@ try{
  assert.equal(businessHome.legacyHero,false);
  assert.match(businessHome.provenance,/sur cet appareil/);
  log('CONTROL 06 home matches approved compact entrepreneur structure, not old blue hero');
+ // CONTROL 21: the guide appears on a genuinely fresh device, never on a fake account.
+ const welcome=await js("({steps:document.querySelectorAll('#control-onboarding .control-home-v6-onboarding-step').length,progress:document.querySelector('.control-home-v6-onboarding-progress')?.textContent,first:document.querySelector('#control-onboarding a[aria-current=step]')?.getAttribute('href')})");
+ assert.deepEqual(welcome,{steps:3,progress:'0 / 3 étapes',first:'#/new-project'});
+ await js("document.querySelector('#control-onboarding a[aria-current=step]').click()");
+ await ready(()=>js("location.hash==='#/new-project'&&document.querySelector('#add-box')&&!document.querySelector('#add-box').classList.contains('hidden')"),8000)();
+ assert.equal(await js("document.activeElement?.getAttribute('name')"),'name');
+ await js("document.querySelector('#cancel-add-project').click()");
+ await ready(()=>js("location.hash==='#/'&&!!document.querySelector('#control-onboarding')"),7000)();
+ assert.equal(await js("document.querySelector('.control-home-v6-onboarding-progress').textContent"),'0 / 3 étapes');
+ log('CONTROL 21: fresh-device guide opens real project creation, focuses name and cancels without fake progress');
+
  // New visible delivery: create a real task directly from the home priorities
  // without requiring the user to discover the separate task screen first.
  const homeCreate=await js("({link:document.querySelector('.control-home-v6-new-task')?.getAttribute('href'),label:document.querySelector('.control-home-v6-new-task')?.textContent,emptyLink:document.querySelector('.control-home-v6-empty-start')?.getAttribute('href')||null})");
