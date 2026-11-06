@@ -27,7 +27,7 @@ const swCaches=['CACHE_SHELL','CACHE_PUBLIC'].map(key=>{
  assert.ok(match,'Missing service worker cache version: '+key);
  return match[1];
 });
-const PUBLIC_ASSETS=['service-worker.js','index.html','app.html','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/control-backup-review.js','assets/control-data-audit.js','assets/control-data-audit.css','assets/control-clients.js','assets/control-clients.css','assets/control-ai-studio-core.js','assets/control-ai-studio.js','assets/control-ai-studio.css','assets/control-web-builder.js','assets/control-web-builder-ui.js','assets/control-web-builder.css','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','assets/navigation-hub.js','assets/navigation-hub.css','assets/control-onboarding.js','testeurs.html','assets/control-test-pilot.js','assets/control-test-pilot.css','data/control-pilot-chatgpt.json','data/control-ia-delivery.json','data/control-ia-requirements.json'];
+const PUBLIC_ASSETS=['service-worker.js','index.html','app.html','legacy.html','testeurs.html','assets/control-brand-global.css','config/cloud.json','assets/cloud-app.js','assets/control-operator.js','assets/control-operator-core.js','assets/control-backup-review.js','assets/control-data-audit.js','assets/control-data-audit.css','assets/control-clients.js','assets/control-clients.css','assets/control-ai-studio-core.js','assets/control-ai-studio.js','assets/control-ai-studio.css','assets/control-web-builder.js','assets/control-web-builder-ui.js','assets/control-web-builder.css','assets/command-center.js','assets/control-delivery.js','assets/control-delivery.css','assets/navigation-hub.js','assets/navigation-hub.css','assets/control-onboarding.js','testeurs.html','assets/control-test-pilot.js','assets/control-test-pilot.css','data/control-pilot-chatgpt.json','data/control-ia-delivery.json','data/control-ia-requirements.json'];
 const hash=data=>createHash('sha256').update(data).digest('hex');
 async function verifyPublishedFiles(){
  const expected=new Map(PUBLIC_ASSETS.map(path=>[path,hash(readFileSync(resolve(root,path)))]));
@@ -145,6 +145,28 @@ try{
  assert.match(v12.text,/5 contrôles partiels\/simulés/);
  assert.equal(new URL(v12.link).pathname,production?'/Avancement-Projet/data/control-ia-requirements.json':'/data/control-ia-requirements.json');
  log('public V1.2 requirement overview renders 22 tickets/42 scenarios/10 additions with no fake verification');
+
+ // Brand QA in Chromium: eight real modules, not only a static CSS declaration.
+ const warmBg='rgb(255, 248, 242)',warmTint='rgb(255, 240, 229)';
+ const themedRoutes=[
+  ['localai','.loc-shell','.loc-badge'],
+  ['lab','.lab-shell','.lab-pill'],
+  ['catalog','.tool-page','.tool-total'],
+  ['deploy','.deploy-page','.deploy-duration'],
+  ['command','.cmd-shell','.cmd-tag'],
+  ['meetings','.vs-page','.vs-label'],
+  ['aistudio','.as-shell','.as-local-tag'],
+  ['webbuilder','.web-builder','.web-builder-panel']
+ ];
+ for(const [route,mainSelector,accentSelector] of themedRoutes){
+  await js("location.hash="+JSON.stringify('#/control/'+route));
+  await ready(()=>js("!!document.querySelector("+JSON.stringify(mainSelector)+")&&!!document.querySelector("+JSON.stringify(accentSelector)+")"),9000)();
+  const skin=await js("(()=>{const a=document.querySelector("+JSON.stringify(accentSelector)+");return {background:getComputedStyle(document.body).backgroundColor,font:getComputedStyle(document.body).fontFamily,accent:getComputedStyle(a).backgroundColor}})()");
+  assert.equal(skin.background,warmBg,'Cold application background on '+route);
+  assert.match(skin.font,/Poppins/i,'Poppins missing on '+route);
+  assert.equal(skin.accent,route==='webbuilder'?'rgb(255, 255, 255)':warmTint,'Non-brand surface on '+route);
+ }
+ log('Simple & Humain: eight functional screens use cream, Poppins and warm surfaces in Chromium');
 
  // The home screen must show new capabilities without requiring hidden tool navigation.
  await js("location.hash='#/'");
@@ -1533,6 +1555,22 @@ try{
  assert.match(await js("document.querySelector('#cloud-readiness').textContent"),/révocation/);
  log('Cloud setup shows installed independent backend but blocks private sign-in until genuine JWT A-B tests');
 
+ const cloudTheme=await js("({background:getComputedStyle(document.body).backgroundColor,font:getComputedStyle(document.body).fontFamily,loaded:!!document.querySelector('link[href$=\"control-brand-global.css\"]')})");
+ assert.equal(cloudTheme.background,'rgb(255, 248, 242)');
+ assert.match(cloudTheme.font,/Poppins/i);
+ assert.equal(cloudTheme.loaded,true);
+ log('Simple & Humain: Cloud setup shares the approved palette without opening accounts');
+
+ const targetLegacy=production?PUBLIC_ORIGIN+'legacy.html':'http://127.0.0.1:'+port+'/legacy.html';
+ await command('Page.navigate',{url:targetLegacy});
+ await ready(()=>js("document.body?.classList.contains('control-legacy')"),9000)();
+ const legacyTheme=await js("({background:getComputedStyle(document.body).backgroundColor,font:getComputedStyle(document.body).fontFamily,loaded:!!document.querySelector('link[href$=\"control-brand-global.css\"]')})");
+ assert.equal(legacyTheme.background,'rgb(255, 248, 242)');
+ assert.match(legacyTheme.font,/Poppins/i);
+ assert.equal(legacyTheme.loaded,true);
+ log('Simple & Humain: legacy dashboard uses the same visual language');
+
+
  // A tester must follow a real six-mission guide without Cloud login,
  // unsafe archives or remote feedback uploads.
 
@@ -1548,6 +1586,12 @@ try{
  assert.equal(pilot.report.ease,null);
  assert.equal(pilot.report.device,'non_precise');
  assert.equal(pilot.download,true);
+
+ const pilotTheme=await js("({background:getComputedStyle(document.body).backgroundColor,font:getComputedStyle(document.body).fontFamily,loaded:!!document.querySelector('link[href$=\"control-brand-global.css\"]')})");
+ assert.equal(pilotTheme.background,'rgb(255, 248, 242)');
+ assert.match(pilotTheme.font,/Poppins/i);
+ assert.equal(pilotTheme.loaded,true);
+
  assert.match(pilot.url,/testeurs\.html$/);
  await js("(()=>{const x=document.querySelector('[data-pilot-check]');x.checked=true;x.dispatchEvent(new Event('change',{bubbles:true}))})()");
  assert.equal((await js("document.querySelector('#pilot-progress').textContent")).trim(),'1 / 6');
