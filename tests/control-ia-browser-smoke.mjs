@@ -1343,6 +1343,38 @@ try{
    await starter.evaluate("document.querySelector('[data-task-group=\"done\"] [data-act^=\"reopen:\"]').click()");
    assert.equal(await starter.evaluate("JSON.parse(localStorage.getItem('control-command-v1')).actions.find(x=>x.title==='Première tâche enregistrée')?.status"),'todo');
    log('CONTROL 22: real Chromium triage groups each task once, filters/searches review and reopens a recorded task');
+   // CONTROL 23: a client followup turns into a correctly linked task only
+   // after the user explicitly submits the creation form.
+   await starter.evaluate("location.hash='#/control/clients'");
+   await starter.ready("!!document.querySelector('#new-client')",11000);
+   await starter.evaluate("(()=>{const f=document.querySelector('#new-client');const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);f.elements.name.value='Atelier test relances';f.elements.project.value=JSON.parse(localStorage.getItem('control-hub-v2')).custom[0].id;f.elements.status.value='Prospect';f.elements.nextStep.value='Envoyer la proposition';f.elements.nextDue.value=window.CONTROL_TASKS.localDay(yesterday);f.requestSubmit()})()");
+   await starter.ready("document.querySelector('.control-client-row[data-client-followup=\"overdue\"]')?.textContent?.includes('Atelier test relances')",10000);
+   assert.match(await starter.evaluate("document.querySelector('.control-client-row[data-client-followup=\"overdue\"] .control-client-followup').textContent"),/Relance en retard/);
+   await starter.evaluate("(()=>{document.querySelector('.control-client-create').open=true;const f=document.querySelector('#new-client');f.elements.name.value='Atelier prochain';f.elements.nextStep.value='Rappeler plus tard';const d=new Date();d.setDate(d.getDate()+5);f.elements.nextDue.value=window.CONTROL_TASKS.localDay(d);f.requestSubmit()})()");
+   await starter.ready("document.querySelectorAll('.control-client-row').length===2",10000);
+   assert.equal(await starter.evaluate("document.querySelector('#control-client-due-filter strong').textContent"),'1');
+   await starter.evaluate("document.querySelector('#control-client-due-filter').click()");
+   const filteredClients=await starter.evaluate("({pressed:document.querySelector('#control-client-due-filter').getAttribute('aria-pressed'),shown:[...document.querySelectorAll('.control-client-row')].filter(r=>!r.hidden).map(r=>r.querySelector('.control-client-info>strong').textContent)})");
+   assert.equal(filteredClients.pressed,'true');
+   assert.deepEqual(filteredClients.shown,['Atelier test relances']);
+   const beforeClientTask=await starter.evaluate("JSON.parse(localStorage.getItem('control-command-v1')).actions.length");
+   await starter.evaluate("document.querySelector('.control-client-row[data-client-followup=\"overdue\"] .control-client-info .actions a.button').click()");
+   await starter.ready("location.hash.startsWith('#/control/inbox/new?client=')&&!!document.querySelector('#new-action')",10000);
+   const prefilled=await starter.evaluate("({title:document.querySelector('#new-action [name=title]').value,due:document.querySelector('#new-action [name=due]').value,client:document.querySelector('#new-action [name=clientId]').value,project:document.querySelector('#new-action [name=project]').value,actions:JSON.parse(localStorage.getItem('control-command-v1')).actions.length})");
+   const expected=await starter.evaluate("(()=>{const data=JSON.parse(localStorage.getItem('control-command-v1'));const client=data.clients.find(c=>c.name==='Atelier test relances');return {due:client.nextDue,client:client.id,project:client.project}})()");
+   assert.equal(prefilled.title,'Envoyer la proposition');
+   assert.equal(prefilled.due,expected.due);
+   assert.equal(prefilled.client,expected.client);
+   assert.equal(prefilled.project,expected.project);
+   assert.equal(prefilled.actions,beforeClientTask,'Navigating from a client must not silently create a task');
+   await starter.evaluate("document.querySelector('#new-action').requestSubmit()");
+   await starter.ready("JSON.parse(localStorage.getItem('control-command-v1')||'{}').actions?.some(x=>x.title==='Envoyer la proposition'&&x.clientId)",10000);
+   const clientTask=await starter.evaluate("(()=>{const state=JSON.parse(localStorage.getItem('control-command-v1'));const task=state.actions.find(x=>x.title==='Envoyer la proposition');return {client:task.clientId,project:task.project,due:task.due}})()");
+   assert.deepEqual(clientTask,expected);
+   await starter.evaluate("location.hash='#/control/clients'");
+   await starter.ready("document.querySelector('.control-client-row[data-client-followup=\"overdue\"] .control-client-task-list')?.textContent?.includes('Envoyer la proposition')",10000);
+   log('CONTROL 23: due client filter, honest status badge and manually confirmed linked task are functional in Chromium');
+
 
   }finally{try{starter.pageCDP.socket.close()}catch{}}
 
