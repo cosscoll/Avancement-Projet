@@ -110,6 +110,7 @@ function intake(){
  const today=workflow.localDay();
  const requestParams=new URLSearchParams(location.hash.split('?')[1]||'');
  const requestProject=requestParams.get('project')||'';
+ const scopedProject=route().param==='new'?'':requestProject;
  const requestClientId=requestParams.get('client')||'';
  const requestedClient=db.clients.find(x=>x&&x.id===requestClientId&&typeof x.name==='string'&&x.name.trim());
  const createProject=ctx.projects.some(p=>p.id===requestProject)?requestProject:
@@ -137,8 +138,8 @@ function intake(){
    clientSelect.innerHTML=clientOptions(projectSelect.value,check.ok?oldClient:'');
   });
  };
- const actions=db.actions.filter(x=>x&&typeof x.title==='string'&&x.title.trim()&&x.status!=='cancelled');
- const missions=db.missions.filter(x=>x&&x.status==='review'&&typeof x.title==='string'&&x.title.trim());
+ const actions=db.actions.filter(x=>x&&typeof x.title==='string'&&x.title.trim()&&x.status!=='cancelled'&&(!scopedProject||x.project===scopedProject));
+ const missions=db.missions.filter(x=>x&&x.status==='review'&&typeof x.title==='string'&&x.title.trim()&&(!scopedProject||x.project===scopedProject));
  const pending=actions.filter(x=>x.status!=='done');
  const overdue=pending.filter(x=>workflow.category(x,today)==='overdue').length;
  const items=workflow.sort([
