@@ -111,6 +111,18 @@ try{
  const mobile=await run("({screen:innerWidth,body:document.documentElement.scrollWidth,columns:getComputedStyle(document.querySelector('.control-project-brief-grid')).gridTemplateColumns})");
  assert.ok(mobile.body<=mobile.screen+2,'Mobile project brief must not overflow horizontally');
  assert.equal(mobile.columns.trim().split(/\s+/).length,1,'Mobile summary must be a single column');
+
+ // CONTROL 24 offline contract: the two added assets are in the active PWA shell.
+ const cached=await wait(()=>run("(async()=>{const sw=await navigator.serviceWorker.ready;const cache=await caches.open('control-shell-v101');const paths=['./assets/control-project-brief.js','./assets/control-project-brief.css'];const entries=await Promise.all(paths.map(path=>cache.match(new URL(path,sw.scope))));return entries.every(Boolean)})()"),14000);
+ assert.equal(cached,true,'The critical project summary assets must be available in the offline cache');
+ await page.send('Network.enable');
+ await page.send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
+ await page.send('Page.reload',{ignoreCache:false});
+ await wait(()=>run("!!document.querySelector('.control-home-v6')"),22000);
+ await go('#/project/ifsi/ai');
+ assert.match(await run("document.querySelector('#control-project-brief').textContent"),/A only overdue/);
+ console.log('CONTROL 24 OFFLINE PASS: cached summary survives a full reload without network');
+
  console.log('CONTROL 24 PASS: independent project data, safe linked resources and responsive 390px view on published site');
 }finally{
  try{page?.ws.close()}catch{}
