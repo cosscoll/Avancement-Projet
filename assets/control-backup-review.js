@@ -135,5 +135,19 @@ function applyTransaction(storage,original,data,afterApply){
   return {ok:false,reason:error?.message==='CONCURRENT'?'concurrent':'storage',rollbackUncertain};
  }
 }
-window.CONTROL_BACKUP_REVIEW=Object.freeze({compare,snapshot,unchanged,applyTransaction,storeKeys,BUCKETS});
+// Error messages are whitelisted so parsing/provider errors cannot expose
+// private file content or technical traces in a user-facing import notice.
+function safeImportError(error){
+ const raw=typeof error?.message==='string'?error.message:'';
+ if(raw==='Format de sauvegarde inconnu.'||raw==='Enveloppe de sauvegarde invalide.'){
+  return 'Ce fichier ne correspond pas à une sauvegarde CONTROL. Utilise un fichier JSON exporté depuis CONTROL.';
+ }
+ if(raw==='Mot de passe manquant.')return 'Cette sauvegarde est chiffrée : indique le mot de passe utilisé lors de son export.';
+ if(raw==='Mot de passe incorrect ou sauvegarde chiffrée altérée.')return 'Mot de passe incorrect ou sauvegarde chiffrée altérée.';
+ if(raw==='Métadonnées du fichier chiffré invalides.'||raw==='Métadonnées cryptographiques illisibles.'){
+  return 'La sauvegarde chiffrée est incomplète ou endommagée. Essaie une autre copie.';
+ }
+ return 'Impossible de lire cette sauvegarde. Vérifie qu’il s’agit d’un fichier CONTROL complet et compatible.';
+}
+window.CONTROL_BACKUP_REVIEW=Object.freeze({compare,snapshot,unchanged,applyTransaction,safeImportError,storeKeys,BUCKETS});
 })();
