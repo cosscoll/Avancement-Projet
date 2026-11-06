@@ -822,6 +822,25 @@ try{
  assert.equal(await js("localStorage.getItem('control-hub-v2')"),backupBefore.hub,'Inspecting and cancelling project import must not write');
  log('CONTROL 14: imported custom projects are counted without mutating local project data');
 
+ // CONTROL 16: malformed projects must remain non-restorable even on forced handler execution.
+ // Use an exact versioned fixture, including the required control-v2-plain envelope.
+ const duplicateFixture=JSON.parse(readFileSync(resolve(root,'tests/fixtures/control-backup-duplicate-project-fictif.json'),'utf8'));
+ assert.equal(duplicateFixture.format,'control-v2-plain');
+ await js(`(()=>{const envelope=${JSON.stringify(duplicateFixture)};const dt=new DataTransfer();dt.items.add(new File([JSON.stringify(envelope)],'control-backup-duplicate-project-fictif.json',{type:'application/json'}));const form=document.querySelector('#import-data');form.elements.file.files=dt.files;form.requestSubmit();return true})()`);
+ await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
+ const duplicateReview=await js("({blocked:document.querySelector('#import-apply').disabled,warning:document.querySelector('#import-integrity').textContent,consentHidden:document.querySelector('#import-integrity-consent').hidden})");
+ assert.equal(duplicateReview.blocked,true,'Duplicate custom-project IDs must block restoration');
+ assert.equal(duplicateReview.consentHidden,true,'Unsafe project ID collisions must not be overridable by acknowledgement');
+ assert.match(duplicateReview.warning,/Restauration impossible/);
+ assert.match(duplicateReview.warning,/Identifiant répété/);
+ await js("document.querySelector('#import-apply').onclick()");
+ assert.deepEqual(await js("({command:localStorage.getItem('control-command-v1'),hub:localStorage.getItem('control-hub-v2'),autos:localStorage.getItem('control-automations-v1')})"),backupBefore,
+  'Calling a disabled apply handler directly must not modify data');
+ await js("document.querySelector('#import-cancel').click()");
+ assert.equal(await js("document.querySelector('#import-preview').hidden"),true);
+ log('CONTROL 16: duplicate project fixture blocked; direct handler invocation cannot bypass data validation');
+
+
  // Imported data with a broken client reference must be shown and blocked until a separate acknowledgement.
  await js("(()=>{const command=JSON.parse(localStorage.getItem('control-command-v1')||'{}');command.actions=Array.isArray(command.actions)?command.actions:[];command.missions=Array.isArray(command.missions)?command.missions:[];command.actions.push({id:'restore-audit-bad-link',title:'Test de lien client invalide',status:'todo',clientId:'client-introuvable-pour-test'});const envelope={format:'control-v2-plain',created:'2026-11-05T10:00:00Z',data:{command,hub:JSON.parse(localStorage.getItem('control-hub-v2')||'{}'),automations:JSON.parse(localStorage.getItem('control-automations-v1')||'{}')}};const dt=new DataTransfer();dt.items.add(new File([JSON.stringify(envelope)],'anomalie.json',{type:'application/json'}));const form=document.querySelector('#import-data');form.elements.file.files=dt.files;form.requestSubmit()})()");
  await ready(()=>js("document.querySelector('#import-preview')?.hidden===false"),10000)();
