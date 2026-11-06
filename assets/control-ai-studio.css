@@ -212,3 +212,10 @@
 .as-journey-main .as-journey-number{background:#345575;color:#fff}
 .as-journey-footnote{font-size:10px;line-height:1.5;color:#76899b;margin:12px 0 0}
 @media(max-width:700px){.as-journey{padding:15px}.as-journey-grid{grid-template-columns:1fr}.as-journey-step{padding:12px}}
+
+/* CONTROL 26 — clear per-conversation import decisions. */
+.as-import-selection{max-height:310px;overflow:auto;overscroll-behavior:contain;display:grid;gap:5px;padding:7px;border:1px solid #dbe6f1;border-radius:11px;background:#fff;margin:12px 0}
+.as-import-choice,.as-consent{display:flex!important;align-items:flex-start;gap:10px;padding:9px 7px;font-size:12px;line-height:1.5;cursor:pointer;overflow-wrap:anywhere}
+.as-import-choice+ .as-import-choice{border-top:1px solid #eef2f6}
+.as-import-choice input,.as-consent input{width:17px;height:17px;min-width:17px;margin:1px 0 0;accent-color:#315b94}
+.as-import-choice strong,.as-import-choice small{display:block}.as-import-choice small{color:#687c94;font-size:11px;margin-top:2px}.as-consent{border-top:1px solid #e4eaf2;margin:12px 0}
