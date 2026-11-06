@@ -119,7 +119,7 @@ try{
  await page.send('Network.enable');
  await page.send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await page.send('Page.reload',{ignoreCache:false});
- await wait(()=>run("!!document.querySelector('.control-home-v6')"),22000);
+ await wait(()=>run("document.querySelector('#control-project-brief')?.dataset.projectBrief==='ucp'"),22000);
  await go('#/project/ifsi/ai');
  assert.match(await run("document.querySelector('#control-project-brief').textContent"),/A only overdue/);
  console.log('CONTROL 24 OFFLINE PASS: cached summary survives a full reload without network');
