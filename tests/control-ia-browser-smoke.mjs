@@ -1282,6 +1282,37 @@ try{
    await deadline(()=>evaluate("!!document.querySelector('#import-data')&&!!window.CONTROL_BACKUP_REVIEW"),19000)();
    return {pageCDP,evaluate,ready:(expression,max=18000)=>deadline(()=>evaluate(expression),max)()};
   }
+  // CONTROL 21: complete the actual 3-step onboarding from a totally empty
+  // browser context, including durable project/task writes and task closure.
+  const starter=await openIsolated();
+  try{
+   await starter.evaluate("location.hash='#/'");
+   await starter.ready("!!document.querySelector('#control-onboarding a[href=\"#/new-project\"]')",10000);
+   assert.equal(await starter.evaluate("document.querySelector('.control-home-v6-onboarding-progress').textContent"),'0 / 3 étapes');
+   await starter.evaluate("document.querySelector('#control-onboarding a[href=\"#/new-project\"]').click()");
+   await starter.ready("location.hash==='#/new-project'&&!document.querySelector('#add-box')?.classList.contains('hidden')",10000);
+   await starter.evaluate("(()=>{const f=document.querySelector('#new-project');f.elements.name.value='Projet de bienvenue';f.requestSubmit()})()");
+   await starter.ready("location.hash.startsWith('#/project/custom-')&&JSON.parse(localStorage.getItem('control-hub-v2')||'{}').custom?.length===1",11000);
+   await starter.evaluate("location.hash='#/'");
+   await starter.ready("document.querySelector('.control-home-v6-onboarding-progress')?.textContent==='1 / 3 étapes'",9000);
+   assert.equal(await starter.evaluate("document.querySelector('#control-onboarding a[aria-current=step]')?.getAttribute('href')"),'#/control/inbox/new');
+   await starter.evaluate("document.querySelector('#control-onboarding a[aria-current=step]').click()");
+   await starter.ready("location.hash==='#/control/inbox/new'&&!!document.querySelector('#new-action')",11000);
+   await starter.evaluate("(()=>{const f=document.querySelector('#new-action');f.elements.title.value='Première tâche enregistrée';f.elements.project.value=JSON.parse(localStorage.getItem('control-hub-v2')).custom[0].id;f.requestSubmit()})()");
+   await starter.ready("JSON.parse(localStorage.getItem('control-command-v1')||'{}').actions?.some(x=>x.title==='Première tâche enregistrée')",10000);
+   await starter.evaluate("location.hash='#/'");
+   await starter.ready("document.querySelector('.control-home-v6-onboarding-progress')?.textContent==='2 / 3 étapes'",10000);
+   assert.equal(await starter.evaluate("document.querySelector('#control-onboarding a[aria-current=step]')?.getAttribute('href')"),'#/control/inbox');
+   await starter.evaluate("document.querySelector('#control-onboarding a[aria-current=step]').click()");
+   await starter.ready("!!document.querySelector('[data-act^=\"done:\"]')",10000);
+   await starter.evaluate("document.querySelector('[data-act^=\"done:\"]').click()");
+   await starter.ready("JSON.parse(localStorage.getItem('control-command-v1')||'{}').actions?.some(x=>x.title==='Première tâche enregistrée'&&x.status==='done')",10000);
+   await starter.evaluate("location.hash='#/'");
+   await starter.ready("!!document.querySelector('.control-home-v6')",10000);
+   assert.equal(await starter.evaluate("document.querySelector('#control-onboarding')"),null,'Guide must disappear only after a real completed task');
+   log('CONTROL 21: three-step real onboarding creates project, saves task, completes task and disappears in isolated Chromium');
+  }finally{try{starter.pageCDP.socket.close()}catch{}}
+
   const storeKeys=['control-command-v1','control-hub-v2','control-automations-v1','control-ai-studio-v1'];
   const snapshotExpression="JSON.stringify("+JSON.stringify(storeKeys)+".map(key=>localStorage.getItem(key)))";
   for(const [label,file,password] of [
