@@ -215,6 +215,22 @@ try{
   // Audit user-facing actions in all 16 management routes. Log selectors only;
   // do not log customer data, task titles or conversation text.
   const coolActions=await js("(()=>{const r=document.querySelector('#main');if(!r)return[];const isBlue=value=>{const m=value.match(/^rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)/);if(!m)return false;const [red,green,blue]=m.slice(1,4).map(Number);return blue>red+24&&blue>green+13};return [...r.querySelectorAll('button,a,summary')].filter(e=>e.getClientRects().length&&isBlue(getComputedStyle(e).color)).slice(0,9).map(e=>({tag:e.tagName,className:String(e.className||'').slice(0,60),parent:String(e.parentElement?.className||'').slice(0,60),color:getComputedStyle(e).color}))})()");
+
+  const warmInteractionTargets={
+    manager:[['.chatrow a.button','rgb(184, 67, 31)']],
+    inbox:[['.panel.shell-progressive-form > summary','rgb(32, 37, 43)']],
+    missions:[['.panel.shell-progressive-form > summary','rgb(32, 37, 43)']],
+    clients:[['.panel.shell-progressive-form > summary','rgb(32, 37, 43)']],
+    backup:[['.panel.shell-progressive-form > summary','rgb(32, 37, 43)']],
+    search:[['a.control-search-hit','rgb(184, 67, 31)']],
+    activity:[['.links a.link','rgb(184, 67, 31)']],
+    tools:[['.clarity-toolgroup > summary','rgb(32, 37, 43)'],['.clarity-tool-link','rgb(184, 67, 31)']]
+  };
+  for(const [selector,expectedColor] of warmInteractionTargets[route]||[]){
+    const actual=await js("(()=>{const el=document.querySelector('#main '+ "+JSON.stringify(selector)+");return el?getComputedStyle(el).color:null})()");
+    assert.equal(actual,expectedColor,'Unbranded management action '+route+' '+selector);
+  }
+
   if(coolActions.length)log('Management interaction color audit '+route+': '+JSON.stringify(coolActions.slice(0,6)));
 
  }
@@ -1684,7 +1700,7 @@ try{
  assert.ok(pilotMobile.link,'Tester guide must link to real assistant screen');
  log('CONTROL pilot guide: six real missions, optional feedback, responsive 320px');
  // The guide itself registers the PWA, even when it is a participant's first page.
- await ready(()=>js("(async()=>{if(!navigator.serviceWorker?.controller)return false;const keys=await caches.keys();if(!keys.includes('control-shell-v115'))return false;const cache=await caches.open('control-shell-v115');return !!(await cache.match(new URL('./testeurs.html',location.href)))&&!!(await cache.match(new URL('./assets/control-test-pilot.js',location.href)))})()"),30000)();
+ await ready(()=>js("(async()=>{if(!navigator.serviceWorker?.controller)return false;const keys=await caches.keys();if(!keys.includes('control-shell-v116'))return false;const cache=await caches.open('control-shell-v116');return !!(await cache.match(new URL('./testeurs.html',location.href)))&&!!(await cache.match(new URL('./assets/control-test-pilot.js',location.href)))})()"),30000)();
  await command('Network.enable');
  await command('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await command('Page.reload',{ignoreCache:false});

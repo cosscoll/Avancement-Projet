@@ -1007,3 +1007,79 @@ body.control-shell-v3 .as-shell .as-backup-inner .as-restore-review{
  border-color:var(--control-edge)!important;
  background:var(--control-peach-soft)!important;
 }
+
+
+/* Management-route visual audit: remove navy secondary actions while
+   preserving destructive, success and primary button semantics. */
+body.control-shell-v3 #main .button:not(.primary):not(.danger):not([data-danger]),
+body.control-shell-v3 #main .sectionhead > button:not(.primary):not(.danger),
+body.control-shell-v3 #main .actions > button:not(.primary):not(.danger):not([data-danger]){
+  background:var(--control-paper)!important;
+  border-color:var(--control-line)!important;
+  color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 #main .button:not(.primary):not(.danger):not([data-danger]):hover,
+body.control-shell-v3 #main .sectionhead > button:not(.primary):not(.danger):hover,
+body.control-shell-v3 #main .actions > button:not(.primary):not(.danger):not([data-danger]):hover{
+  background:var(--control-peach-soft)!important;
+  border-color:var(--control-edge)!important;
+  color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 #main .panel.shell-progressive-form > summary,
+body.control-shell-v3 #main .panel > details > summary,
+body.control-shell-v3 #main .control-task-edit > summary{
+  color:var(--control-ink)!important;
+}
+body.control-shell-v3 #main .panel.shell-progressive-form > summary:hover,
+body.control-shell-v3 #main .panel > details > summary:hover{
+  color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 #main a.control-search-hit{
+  color:var(--control-orange-deep)!important;
+  border-color:var(--control-line)!important;
+}
+body.control-shell-v3 #main a.control-search-hit:hover{
+  background:var(--control-peach-soft)!important;
+  color:var(--control-orange-hover)!important;
+}
+body.control-shell-v3 #main .clarity-toolgroup{
+  background:var(--control-paper)!important;
+  border-color:var(--control-line)!important;
+}
+body.control-shell-v3 #main .clarity-toolgroup > summary{
+  color:var(--control-ink)!important;
+}
+body.control-shell-v3 #main .clarity-toolgroup > summary:hover{
+  background:var(--control-peach-soft)!important;
+  color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 #main .clarity-toolgroup > summary small{
+  color:var(--control-muted)!important;
+}
+body.control-shell-v3 #main .clarity-tool-link{
+  color:var(--control-orange-deep)!important;
+  background:var(--control-paper)!important;
+  border-color:var(--control-line)!important;
+}
+body.control-shell-v3 #main .clarity-tool-link:hover,
+body.control-shell-v3 #main .clarity-tool-link[aria-current=page]{
+  background:var(--control-peach-soft)!important;
+  border-color:var(--control-edge)!important;
+}
+body.control-shell-v3 #main .clarity-tool-link small{
+  color:var(--control-muted)!important;
+}
+body.control-shell-v3 #main :is(.links a.link,.link:not(.danger)){
+  color:var(--control-orange-deep)!important;
+  border-color:var(--control-line)!important;
+  background:var(--control-paper)!important;
+}
+body.control-shell-v3 #main :is(.links a.link,.link:not(.danger)):hover{
+  background:var(--control-peach-soft)!important;
+  border-color:var(--control-edge)!important;
+}
+body.control-shell-v3 #main .chip:not(.danger):not(.success):not(.error){
+  background:var(--control-peach-soft)!important;
+  color:var(--control-warm-ink)!important;
+  border-color:var(--control-edge)!important;
+}

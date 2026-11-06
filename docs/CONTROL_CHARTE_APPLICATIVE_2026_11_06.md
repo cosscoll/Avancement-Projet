@@ -25,3 +25,6 @@ Routes protégées par les contrôles : accueil, projets, clients, actions, miss
 
 ## Résultat session 6 novembre
 Correction ciblée d'anciens bleus/gris froids dans la recherche de fonctions, les raccourcis, les parcours Studio IA, la validation manuelle d’actions locales, les formulaires, les guides, les panneaux de visio, le constructeur et le tableau de bord d’origine. La modification reste **purement visuelle**. Aucun compte Cloud n’est activé et aucune automatisation n’est créée.
+
+### Recette complémentaire : modules de gestion (6 novembre)
+Les boutons secondaires, listes de recherche, panneaux repliables, liens d'activité et tuiles d'outils sont contrôlés en **styles calculés** dans le navigateur. Les sélecteurs évitent les boutons de suppression, les actions primaires et les statuts métiers. La nouvelle passe ne touche qu'aux CSS et aux tests, avec cache PWA v116.
