@@ -1,5 +1,19 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 6 novembre 2026 · version de travail 1.13 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 6 novembre 2026 · version de travail 1.14 · ciblage indépendants et équipes de 2 à 10 personnes_
+
+
+## CONTROL 22 — Triage clair et actions réellement enregistrées (6 novembre 2026)
+
+**Besoins P0/P1 livrés directement sur `main` :** la page **« À traiter »** regroupe désormais chaque tâche ou mission locale dans **une seule catégorie** : « En retard » (échéance dépassée), « Aujourd’hui » (échéance du jour), « À vérifier » (missions IA au statut `review`), « À suivre » (autres tâches ouvertes) ou « Terminées » (actions clôturées). Les catégories disposent d'en-têtes lisibles et de compteurs correspondant aux lignes visibles. Les éléments annulés ne sont pas mélangés aux tâches ouvertes.
+
+**Parcours utilisateur réellement amélioré :** cinq boutons de filtre rapide avec compteurs et `aria-pressed` donnent accès aux tâches en attente, en retard, du jour, à vérifier et terminées. Ils réutilisent le moteur de recherche et le filtrage par client déjà présents, sans ajouter de nouvelle navigation. Après recherche ou filtre, les sections vides sont masquées. Les boutons existants « Terminer » et « Rouvrir » et le formulaire « Modifier » conservent leurs écritures locales protégées contre les changements inter-onglets ; un clic sur un filtre n'écrit aucune donnée.
+
+**Architecture et sécurité :** `assets/control-task-workflow.js` expose la classification pure `bucket` et le regroupement `group`, utilisés par `assets/command-center.js`, avec styles mobiles dans `assets/command-center.css`. Aucun connecteur distant, événement externe ou automatisation créé. Cache **PWA v98**.
+
+**Recette complète :** [GitHub Actions — qualité #42198750687](https://github.com/cosscoll/Avancement-Projet/actions/runs/42198750687) : **777 tests réussis sur 777** ; [recette Chromium locale #42198606871](https://github.com/cosscoll/Avancement-Projet/actions/runs/42198606871) et [recette Chromium sur le site public #42198822103](https://github.com/cosscoll/Avancement-Projet/actions/runs/42198822103) : affichage d'un jeu de tâches fictives réparties dans les cinq sections, aucun doublon, filtrage/état vide, sélection « À vérifier », recherche et réouverture d'une tâche confirmée dans le stockage local après clic. La recette publique vérifie aussi l'identité octet pour octet de **26 fichiers** du site. [Publication GitHub Pages #42198749691](https://github.com/cosscoll/Avancement-Projet/actions/runs/42198749691) : réussie.
+
+**Prochaine session 23 :** clients et relances actionnables, création de tâches préremplies à partir des informations client déjà autorisées, liaison client-projet robuste, tests de stockage corrompu et vérifications 320/390 px. N'introduire ni CRM complet ni faux accès à Gmail/Calendar.
+
 
 
 ## CONTROL 21 — Démarrage accompagné, trois étapes vérifiables (6 novembre 2026)
