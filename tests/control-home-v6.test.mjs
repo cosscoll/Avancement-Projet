@@ -59,7 +59,7 @@ test('Homepage has four functioning navigation destinations, tools kept accessib
  assert.match(html,/id="shell-quick-find"/);
  assert.match(html,/control-home-v6-advanced/);
  assert.match(command,/function team\(\)/);
- assert.match(command,/manager,team,tools/);
+ assert.match(command,/const pages=\{manager,team,clients,audit:auditData,tools/);
 });
 
 test('Old blue hero and sidebar are not used on this home, and mobile has one bottom menu',()=>{
