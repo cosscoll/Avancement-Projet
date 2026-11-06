@@ -709,7 +709,8 @@ body.control-legacy :is(.btn.primary,.button.primary,button.primary,a.primary){
  border-color:var(--control-orange-deep)!important;
  color:white!important;
 }
-body.control-legacy :is(.progressbar span,.timeline-entry::before){
+body.control-legacy .progressbar span,
+body.control-legacy .timeline-entry::before{
  background:var(--control-orange-deep)!important;
 }
 body.control-legacy :is(.external,.refresh-data,.quick-open){

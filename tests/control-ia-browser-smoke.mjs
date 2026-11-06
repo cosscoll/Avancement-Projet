@@ -158,6 +158,10 @@ try{
   ['aistudio','.as-shell','.as-local-tag'],
   ['webbuilder','.web-builder','.web-builder-panel']
  ];
+ const textTargets={localai:'.loc-topline label',lab:'.lab-checkboxes',
+  catalog:'.tool-info',deploy:'.deploy-filters label',
+  command:'.cmd-toggle',meetings:'.vs-create>summary',
+  aistudio:'.as-journey-step',webbuilder:'.web-builder-intro p'};
  for(const [route,mainSelector,accentSelector] of themedRoutes){
   await js("location.hash="+JSON.stringify('#/control/'+route));
   await ready(()=>js("!!document.querySelector("+JSON.stringify(mainSelector)+")&&!!document.querySelector("+JSON.stringify(accentSelector)+")"),9000)();
@@ -165,6 +169,10 @@ try{
   assert.equal(skin.background,warmBg,'Cold application background on '+route);
   assert.match(skin.font,/Poppins/i,'Poppins missing on '+route);
   assert.equal(skin.accent,route==='webbuilder'?'rgb(255, 255, 255)':warmTint,'Non-brand surface on '+route);
+  const target=textTargets[route];
+  const textColor=await js("(()=>{const node=document.querySelector("+JSON.stringify(target)+");return node?getComputedStyle(node).color:null})()");
+  assert.equal(textColor,route==='meetings'?'rgb(184, 67, 31)':'rgb(109, 103, 99)',
+    'Old navy visible in '+route+' on '+target);
   const blue=await js("(()=>{const r=document.querySelector('#main');if(!r)return[];const rows=[];const blue=x=>{const m=x.match(/^rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)(?:,\\s*([\\d.]+))?\\)$/);if(!m||(+m[4]||1)<.45)return false;const [rr,g,b]=m.slice(1,4).map(Number);return b>rr+24&&b>g+13};for(const e of [...r.querySelectorAll('*')].slice(0,550)){if(!e.getClientRects().length)continue;const c=getComputedStyle(e);for(const prop of ['color','backgroundColor','borderTopColor']){const value=c[prop];if(blue(value))rows.push({className:String(e.className||'').slice(0,65),tag:e.tagName,color:value,property:prop})}}return rows.slice(0,9)})()");
   if(blue.length)log('Theme color audit '+route,blue.length+' example(s): '+JSON.stringify(blue.slice(0,4)));
  }
@@ -191,6 +199,15 @@ try{
  assert.match(homeTheme.font,/Poppins/i);
  assert.equal(homeTheme.pilot,warmTint);
  log('Simple & Humain: homepage and tester invitation match the common brand');
+
+ await js("window.CONTROL_NAVIGATION.open()");
+ await ready(()=>js("!!document.querySelector('.control-finder')&&!document.querySelector('.control-finder').hidden"),8000)();
+ const finderSkin=await js("({panel:getComputedStyle(document.querySelector('.control-finder-panel')).backgroundColor,search:getComputedStyle(document.querySelector('.control-finder-search input')).color,heading:getComputedStyle(document.querySelector('.control-finder-heading h2')).color})");
+ assert.equal(finderSkin.panel,'rgb(255, 253, 251)');
+ assert.equal(finderSkin.search,'rgb(32, 37, 43)');
+ assert.equal(finderSkin.heading,'rgb(32, 37, 43)');
+ await js("window.CONTROL_NAVIGATION.close()");
+ log('Simple & Humain: actual feature-finder modal and search input use warm colors');
 
 
 
@@ -1594,7 +1611,19 @@ try{
  assert.equal(legacyTheme.background,'rgb(255, 248, 242)');
  assert.match(legacyTheme.font,/Poppins/i);
  assert.equal(legacyTheme.loaded,true);
+ const legacyChrome=await js("({sidebar:getComputedStyle(document.querySelector('.sidebar')).backgroundColor,nav:getComputedStyle(document.querySelector('.nav-item.active')).backgroundColor,brand:getComputedStyle(document.querySelector('.brand')).fontFamily})");
+ assert.equal(legacyChrome.sidebar,'rgb(255, 253, 251)');
+ assert.equal(legacyChrome.nav,'rgb(255, 240, 229)');
+ assert.match(legacyChrome.brand,/Poppins/i);
  log('Simple & Humain: legacy dashboard uses the same visual language');
+ const targetPrivate=production?PUBLIC_ORIGIN+'prive.html':'http://127.0.0.1:'+port+'/prive.html';
+ await command('Page.navigate',{url:targetPrivate});
+ await ready(()=>js("document.body?.classList.contains('control-private')"),9000)();
+ const privateSkin=await js("({body:getComputedStyle(document.body).backgroundColor,title:getComputedStyle(document.querySelector('.private-title')).fontFamily,panel:getComputedStyle(document.querySelector('.private-card')).backgroundColor})");
+ assert.equal(privateSkin.body,'rgb(255, 248, 242)');
+ assert.match(privateSkin.title,/Poppins/i);
+ assert.equal(privateSkin.panel,'rgb(255, 253, 251)');
+ log('Simple & Humain: private legacy screen uses the warm palette');
 
 
  // A tester must follow a real six-mission guide without Cloud login,
