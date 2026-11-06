@@ -330,6 +330,143 @@ body.control-pilot .button.primary{background:var(--control-orange-deep)!importa
 body.control-pilot .button.primary:hover{background:var(--control-orange-hover)!important}
 body.control-pilot .button.secondary{background:var(--control-white);color:var(--control-orange-deep);border-color:var(--control-edge)}
 body.control-pilot :is(input,select,textarea){accent-color:var(--control-orange-deep)}
+/* Last-mile polish for auxiliary screens previously still using navy. */
+body.control-shell-v3 .control-delivery,
+body.control-shell-v3 .control-delivery-item,
+body.control-shell-v3 .control-delivery-v12{
+ border-color:var(--control-line)!important;
+ background:var(--control-paper)!important;
+ color:var(--control-ink);
+}
+body.control-shell-v3 .control-delivery :is(.control-delivery-disclaimer,.control-delivery-date){
+ color:var(--control-muted)!important;
+}
+body.control-shell-v3 .control-delivery :is(.control-delivery-focus,.control-delivery-v12-focus){
+ background:var(--control-peach-soft)!important;
+ border-color:var(--control-edge)!important;
+ color:var(--control-warm-ink)!important;
+}
+body.control-shell-v3 .control-delivery :is(.control-delivery-kicker,.control-delivery-v12-count,
+ .control-delivery-body a,.control-delivery-v12 a){color:var(--control-orange-deep)!important}
+body.control-shell-v3 .control-delivery :is(.control-delivery-body,.control-delivery-item summary){
+ border-color:var(--control-line)!important;
+}
+body.control-shell-v3 .control-delivery .control-delivery-stage{
+ background:var(--control-peach-soft)!important;
+ color:var(--control-warm-ink)!important;
+}
+body.control-shell-v3 .control-delivery .control-delivery-stage[data-stage=operational]{
+ background:#E6F5EA!important;color:#17663C!important;
+}
+body.control-shell-v3 .control-delivery .control-delivery-stage[data-stage=deployed],
+body.control-shell-v3 .control-delivery .control-delivery-stage[data-stage=ci_tested]{
+ background:#FFE9D8!important;color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .control-delivery .control-delivery-error{color:var(--control-negative)!important}
+body.control-shell-v3.control-simple-workspace #control-project-brief{
+ background:var(--control-paper)!important;border-color:var(--control-line)!important;
+ color:var(--control-ink)!important;
+}
+body.control-shell-v3.control-simple-workspace #control-project-brief-title,
+body.control-shell-v3.control-simple-workspace .control-project-brief-panel h3{
+ color:var(--control-ink)!important;
+}
+body.control-shell-v3.control-simple-workspace .control-project-brief-task,
+body.control-shell-v3.control-simple-workspace .control-project-brief-resource{
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3.control-simple-workspace .control-project-brief-head small,
+body.control-shell-v3.control-simple-workspace .control-project-brief-footnote{color:var(--control-muted)}
+body.control-shell-v3.control-simple-workspace .control-project-brief-create{
+ background:var(--control-peach-soft)!important;color:var(--control-orange-deep)!important;
+ border-color:var(--control-edge)!important;
+}
+/* Old daily briefing can still be entered from legacy project links. */
+body.control-shell-v3 .control-day-brief,
+body.control-legacy .control-day-brief{
+ background:var(--control-paper)!important;
+ border-color:var(--control-line)!important;color:var(--control-ink)!important;
+ box-shadow:var(--control-shadow);
+}
+body.control-shell-v3 :is(.control-day-eyebrow,.control-day-item-label,.control-day-footer a),
+body.control-legacy :is(.control-day-eyebrow,.control-day-item-label,.control-day-footer a){
+ color:var(--control-orange-deep)!important;
+}
+body.control-shell-v3 .control-day-brief :is(.control-day-count,.control-day-empty),
+body.control-legacy .control-day-brief :is(.control-day-count,.control-day-empty){
+ background:var(--control-peach-soft)!important;border-color:var(--control-line)!important;
+ color:var(--control-warm-ink)!important;
+}
+body.control-shell-v3 .control-day-brief .control-day-list a,
+body.control-legacy .control-day-brief .control-day-list a{
+ background:var(--control-white)!important;border-color:var(--control-line)!important;
+}
+body.control-shell-v3 .control-day-brief .control-day-list a:hover,
+body.control-legacy .control-day-brief .control-day-list a:hover{
+ background:var(--control-peach-soft)!important;border-color:var(--control-edge)!important;
+}
+body.control-shell-v3 .control-day-brief :is(.control-day-new,.control-day-new:hover),
+body.control-legacy .control-day-brief :is(.control-day-new,.control-day-new:hover){
+ background:var(--control-orange-deep)!important;color:white!important;
+}
+body.control-shell-v3 .control-home-v6 .control-home-v6-priority-actions a,
+body.control-shell-v3 .control-home-v6 .control-home-v6-empty-start{color:var(--control-orange-deep)!important}
+/* Browser update, recovery and announcement banners, even when outside #main. */
+body.control-shell-v3 #control-pwa-update{
+ background:var(--control-paper)!important;border-color:var(--control-line)!important;
+ box-shadow:var(--control-shadow)!important;color:var(--control-ink)!important;
+}
+body.control-shell-v3 #control-pwa-update small{color:var(--control-muted)!important}
+body.control-shell-v3 .control-pwa-update-actions button{
+ background:var(--control-cream)!important;
+ color:var(--control-orange-deep)!important;border-color:var(--control-edge)!important;
+}
+body.control-shell-v3 #control-pwa-update-now{
+ background:var(--control-orange-deep)!important;border-color:var(--control-orange-deep)!important;
+ color:white!important;
+}
+body.control-shell-v3 :is(.control-external-change,.control-whats-new,.control-whats-new-status){
+ background:var(--control-paper)!important;border-color:var(--control-line)!important;color:var(--control-ink)!important;
+}
+body.control-shell-v3 .control-whats-new :is(.control-whats-new-toggle,.control-whats-new-more,.control-whats-new-links a){
+ border-color:var(--control-line);color:var(--control-orange-deep);
+}
+body.control-shell-v3 .control-whats-new .control-whats-new-links a:hover{
+ background:var(--control-peach-soft);border-color:var(--control-edge);
+}
+/* Builder canvas and code editor: warm neutrals, still excellent code contrast. */
+body.control-shell-v3 .web-builder-canvas{
+ background:repeating-linear-gradient(45deg,var(--control-cream),var(--control-cream) 12px,var(--control-peach-soft) 12px,var(--control-peach-soft) 24px)!important;
+}
+body.control-shell-v3 .web-builder-code textarea{
+ background:var(--control-ink)!important;color:var(--control-paper)!important;
+ border-color:var(--control-line)!important;
+ font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;
+}
+body.control-shell-v3 .web-builder :is(.web-builder-audit,.web-builder-toolbar,.web-builder-code,.web-builder-saves){
+ border-color:var(--control-line)!important;
+}
+/* Modern form components in sections that do not use the generic .field class. */
+body.control-shell-v3 #main :is(.as-card input,.as-card textarea,.as-card select,
+ .web-builder-panel input,.web-builder-panel textarea,.web-builder-panel select,
+ .vs-input,.cmd-input,.lab-input,.lab-select,.lab-output,#loc-form textarea){
+ border-color:var(--control-line)!important;color:var(--control-ink)!important;
+}
+body.control-shell-v3 #main :is(.vs-input,.cmd-input,.lab-input,.lab-select,.lab-output,.as-card textarea){
+ background:var(--control-white)!important;
+}
+body.control-shell-v3 #main :is(.web-builder-panel label,.as-card label,.cmd-builder label,.vs-create label,
+ .vs-notes label,.lab-field,#loc-form label){
+ color:var(--control-ink);
+}
+body.control-shell-v3 .as-shell :is(.as-empty,.as-emptytext){
+ color:var(--control-muted);border-color:var(--control-line);
+}
+body.control-shell-v3 .as-shell .as-danger{
+ color:var(--control-negative)!important;
+ border-color:#EABAB5!important;background:#FFF7F6!important;
+}
+body.control-shell-v3 .as-shell .as-danger:hover{background:#FCE9E6!important}
 @media(max-width:600px){
  body.control-shell-v3 :is(.tool-page,.lab-shell,.loc-shell,.cmd-shell,.vs-page,.deploy-page){max-width:100%}
  body.control-shell-v3 .ch-panel{border-color:var(--control-line)}
