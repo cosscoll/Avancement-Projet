@@ -27,6 +27,8 @@ function journey(hash){
  const state={uxRecent:[]};
  const context={
   $,location,projects,state,
+  document:{body:{classList:{add(){},remove(){}}}},
+  localStorage:{getItem(){return null}},
   showAllProjects:false,
   window:{matchMedia:()=>({matches:true}),CONTROL_NAVIGATION:{open(){}}},
   hubWarning:()=>'',nameOf:p=>p.name,esc:v=>String(v),
