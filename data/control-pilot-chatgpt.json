@@ -1,0 +1,41 @@
+[
+  {
+    "id": "control-demo-conversation-001",
+    "title": "Atelier du quartier — projet fictif",
+    "current_node": "reply1",
+    "mapping": {
+      "question1": {
+        "id": "question1",
+        "parent": null,
+        "message": {
+          "author": {
+            "role": "user"
+          },
+          "create_time": 1762423000,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Je prépare un site vitrine fictif pour une entreprise de quartier. Priorité : navigation simple sur téléphone, une page contact et un message rassurant."
+            ]
+          }
+        }
+      },
+      "reply1": {
+        "id": "reply1",
+        "parent": "question1",
+        "message": {
+          "author": {
+            "role": "assistant"
+          },
+          "create_time": 1762423040,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Pour cette démonstration, privilégier trois pages : accueil, prestations et contact. Sur mobile, garder un seul bouton d'action clair. Ce contenu est fictif et ne provient d'aucun vrai compte."
+            ]
+          }
+        }
+      }
+    }
+  }
+]
