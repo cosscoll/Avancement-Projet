@@ -18,7 +18,8 @@ test('tool filter searches across collapsed categories without permanently chang
  assert.match(css,/\.clarity-tool-link\[hidden\],\.clarity-toolgroup\[hidden\]\{display:none!important\}/);
 });
 test('tool search handles accents, avoids network calls and keeps existing destination links',()=>{
- const part=center.slice(center.indexOf('function tools(){'),center.indexOf('function settings(){'));
+ const start=center.indexOf('function tools(){');
+ const part=center.slice(start,center.indexOf('\nfunction ',start+1));
  assert.match(part,/\.normalize\('NFD'\)/);
  assert.match(part,/\.split\(\/\\s\+\/\)/);
  for(const route of ['missions','meetings','calendar','budget','backup','deploy'])assert.ok(part.includes("['"+route+"'"),route);
