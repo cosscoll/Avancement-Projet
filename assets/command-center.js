@@ -334,7 +334,7 @@ function clients(){
  const clientParams=new URLSearchParams(location.hash.split('?')[1]||'');
  const scoped=clientParams.get('project')||'';
  const focusedClient=clientParams.get('client')||'';
- const today=window.CONTROL_TASKS?.localDay?.()||'';
+ const today=window.CONTROL_TASKS?.localDay?.()||new Date();
  const dueNow=items.filter(r=>['overdue','today'].includes(clientTool.followup(r,today).kind)).length;
  const scopedValid=known.has(scoped)?scoped:'';
  const optionsProject=(selected='')=>{
@@ -377,8 +377,8 @@ function clients(){
   return '<article class="control-client-row" data-client-id="'+h(r.id)+'" data-client-status="'+h(status)+'" data-client-project="'+h(r.project||'')+'" data-client-followup="'+h(followup.kind)+'" data-client-search="'+h(search)+'">'+
    '<div class="control-client-info"><strong>'+h(r.name)+'</strong>'+
    '<small>'+h(projectLabel)+' · '+h(status)+'</small>'+
-   (r.nextStep?'<p>Prochaine étape : '+h(r.nextStep)+h(dueLabel)+'</p><span class="control-client-followup control-client-followup-'+h(followup.kind)+'">'+h(followup.label)+'</span>':'<p class="muted">Aucune prochaine étape renseignée.</p>')+taskItems+
-   '<div class="actions"><a class="button" href="'+h(actionHref)+'">'+(r.nextStep?'Préparer la relance':'Créer une tâche')+'</a>'+
+   (r.nextStep?'<p>Prochaine étape : '+h(r.nextStep)+h(dueLabel)+'</p>'+(followup.kind!=='none'?'<span class="control-client-followup control-client-followup-'+h(followup.kind)+'">'+h(followup.label)+'</span>':''):'<p class="muted">Aucune prochaine étape renseignée.</p>')+taskItems+
+   '<div class="actions"><a class="button" href="'+h(actionHref)+'">'+(r.nextStep&&r.status!=='Terminé'?'Préparer la relance':'Créer une tâche')+'</a>'+
    (permitted?'<a class="button" href="#/project/'+encodeURIComponent(r.project)+'/pilot">Ouvrir le projet</a>':'')+
    (website?href(website,'Site public'):'')+'</div></div>'+
    '<div class="control-client-controls"><details class="control-client-edit"><summary>Modifier</summary>'+form(r)+'</details>'+
