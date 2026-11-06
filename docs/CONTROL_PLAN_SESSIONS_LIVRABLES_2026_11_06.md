@@ -57,4 +57,4 @@ Pour chaque livraison suivante, ajouter une ligne avec les preuves correspondant
 
 ## Cahier des charges source
 
-[CONTROL — Cahier des charges TPE v1.11](CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md). Les parties « priorités », « navigation », « onboarding », « IA et mémoires », « sécurité » et « recette mesurable » font foi sur les livrables attendus, sous réserve des dépendances techniques et des permissions.
+[CONTROL — Cahier des charges TPE v1.13](CONTROL_CAHIER_DES_CHARGES_TPE_2026_11_03.md). Les parties « priorités », « navigation », « onboarding », « IA et mémoires », « sécurité » et « recette mesurable » font foi sur les livrables attendus, sous réserve des dépendances techniques et des permissions.
