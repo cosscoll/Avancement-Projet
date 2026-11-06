@@ -26,7 +26,7 @@ test('personal project shows all four main and seven secondary destinations with
  assert.match(local,/const showAdvanced=advanced;/);
  assert.match(local,/shell-project-navigation/);
  assert.match(local,/shell-project-more/);
- assert.match(local,/Autres fonctions du projet/);
+ assert.match(local,/<summary>Plus de fonctions/);
  const items=catalog('personal',{id:'my-project'});
  assert.equal(items.filter(x=>x.category==='project').length,11);
 });
