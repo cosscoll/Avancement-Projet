@@ -1,6 +1,16 @@
 # CONTROL — Cahier des charges TPE : priorités entrepreneur
-_Mise à jour : 6 novembre 2026 · version de travail 1.8 · ciblage indépendants et équipes de 2 à 10 personnes_
+_Mise à jour : 6 novembre 2026 · version de travail 1.9 · ciblage indépendants et équipes de 2 à 10 personnes_
 
+
+## Session P0 — Annulation fiable des analyses de fichiers (6 novembre 2026)
+
+**Livré sur `main` :** les imports de sauvegarde CONTROL et les imports d'archives du Studio IA ne peuvent plus publier une ancienne prévisualisation après changement de fichier, de fournisseur IA, annulation, nouvel examen ou démontage du Studio. La vérification garde un numéro de génération ; toute lecture différée ou déchiffrement terminé en retard est ignoré, y compris en cas d'erreur. Les boutons de confirmation sont neutralisés dès qu'une sélection invalide l'aperçu. Les données ne sont toujours écrites qu'après confirmation explicite.
+
+**Périmètre exact :** `assets/command-center.js` (sauvegardes générales), `assets/control-ai-studio.js` (conversations ChatGPT/Claude/Gemini exportées manuellement et restauration locale des agents/mémoires), tests de courses asynchrones `tests/control-backup-import-race.test.mjs` et `tests/control-ai-studio-import-race.test.mjs`, corrections de régressions historiques du moteur de sauvegarde, cache PWA **v94**. Aucun accès natif aux comptes tiers, aucune connexion Cloud ou automatisation activés.
+
+**Recette :** les tests Node simulent des changements de fichier durant lecture/déchiffrement et des réponses arrivant dans le désordre. Les tests de navigateur en CI et la présence du code dans GitHub ne remplacent ni une recette sur le site public recevant effectivement v94, ni le transfert réel d'une archive chiffrée entre deux profils indépendants. La suite complète conserve des tests historiques en échec sans lien avec ce correctif ; les distinguer des tests de sécurité récemment ajoutés.
+
+**Suite prioritaire :** mesurer et réduire les tests historiques non alignés sur l'interface actuelle, puis réaliser la vraie recette navigateur A/B avant toute ouverture Cloud.
 
 ## Session P0 — Recette réelle sur GitHub Pages (6 novembre 2026)
 
