@@ -37,7 +37,7 @@ function render(project,local,raw,now){
  const resources=s.links.length?s.links.map(x=>'<a class="control-project-brief-resource" href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">'+esc(x.label)+' <span aria-hidden="true">↗</span></a>').join(''):
  '<p class="control-project-brief-empty">Aucune ressource enregistrée pour ce projet.</p>';
  return '<section id="control-project-brief" class="control-project-brief" data-project-brief="'+esc(s.projectId)+'" aria-labelledby="control-project-brief-title">'+
- '<div class="control-project-brief-head"><div><small>MON PROJET</small><h2 id="control-project-brief-title">En un coup d’œil</h2></div><a class="control-project-brief-create" href="'+create+'">+ Nouvelle tâche liée</a></div>'+
+ '<div class="control-project-brief-head"><div><small>MON PROJET</small><h2 id="control-project-brief-title">En un coup d’œil</h2></div><div class="control-project-brief-actions"><a class="control-project-brief-search" href="#/control/search?project='+p+'">Rechercher dans ce projet</a><a class="control-project-brief-create" href="'+create+'">+ Nouvelle tâche liée</a></div></div>'+
  '<div class="control-project-brief-grid">'+
  '<div class="control-project-brief-panel" data-brief-panel="tasks"><div class="control-project-brief-panel-head"><h3>Prochaines tâches</h3><span>'+(s.status==='ok'?s.open:'—')+'</span></div>'+
  (s.status==='ok'&&s.overdue?'<p class="control-project-brief-alert">'+s.overdue+' tâche(s) en retard</p>':'')+
