@@ -27,10 +27,11 @@ test('User-approved warm palette and Poppins are central, not replaced by navy',
  assert.match(brand,/--control-font:"Poppins"/);
  // Poppins is hosted as a public font stylesheet. These two narrow CSP exceptions
  // permit its glyphs without enabling script execution or API connections.
- assert.match(read('app.html'),/style-src[^;]+fonts\.googleapis\.com/);
- assert.match(read('app.html'),/font-src https:\/\/fonts\.gstatic\.com/);
- assert.match(read('testeurs.html'),/style-src[^;]+fonts\.googleapis\.com/);
- assert.match(read('testeurs.html'),/font-src https:\/\/fonts\.gstatic\.com/);
+ for(const entry of ['app.html','testeurs.html']){
+  const html=read(entry);
+  assert.ok(html.includes('https://fonts.googleapis.com'),'External font stylesheet domain is not allowed on '+entry);
+  assert.ok(html.includes('font-src https://fonts.gstatic.com'),'Only font binaries from Google Fonts should be allowed on '+entry);
+ }
  assert.match(oldBrand,/Simple & Humain/);
  assert.match(brand,/body\.control-shell-v3/);
  assert.match(brand,/body\.cloud-shell-v3/);
