@@ -25,6 +25,24 @@ test('clean, empty and legacy unlinked tasks have no false positives',()=>{
  assert.equal(inspect().status,'clean');
 });
 
+test('reusable JSON fixtures have a valid backup envelope and explicit expected safety outcome',()=>{
+ const good=JSON.parse(read('tests/fixtures/control-backup-valid-fictif.json'));
+ const bad=JSON.parse(read('tests/fixtures/control-backup-duplicate-project-fictif.json'));
+ for(const envelope of [good,bad]){
+  assert.equal(envelope.format,'control-v2-plain');
+  assert.ok(envelope.data?.command&&envelope.data?.hub&&envelope.data?.automations);
+  assert.ok(Array.isArray(envelope.data.command.actions));
+  assert.ok(Array.isArray(envelope.data.command.missions));
+ }
+ assert.equal(ctx.module.exports.inspectBackup(good,{catalogProjects:[]}).unrestorable,false);
+ assert.equal(ctx.module.exports.inspectBackup(good,{catalogProjects:[]}).counts.errors,0);
+ const duplicate=ctx.module.exports.inspectBackup(bad,{catalogProjects:[]});
+ assert.equal(duplicate.unrestorable,true);
+ assert.equal(duplicate.issues.filter(x=>x.code==='duplicate_id').length,1);
+ assert.equal(JSON.stringify(good).includes('password'),false);
+ assert.equal(JSON.stringify(bad).includes('service_role'),false);
+});
+
 test('backup preflight reports broken client links without assuming a complete project catalog',()=>{
  const file={
   command:{
