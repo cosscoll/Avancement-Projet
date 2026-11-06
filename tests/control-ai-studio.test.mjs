@@ -135,7 +135,9 @@ test('Studio backup rejects stale writes and leaves preexisting data untouched',
 test('Studio preview is separate from confirm and general CONTROL backup explicitly excludes its data',()=>{
  const ui=fs.readFileSync(new URL('../assets/control-ai-studio.js',import.meta.url),'utf8');
  const center=fs.readFileSync(new URL('../assets/command-center.js',import.meta.url),'utf8');
- assert.match(ui,/core\.parseBackup\(await file\.text\(\)\)/);
+ assert.match(ui,/const contents=await file\.text\(\)/);
+ assert.match(ui,/core\.parseBackup\(contents\)/);
+ assert.match(ui,/generation!==studioRestoreGeneration/);
  assert.match(ui,/data-as-action="confirm-studio-restore"/);
  assert.match(ui,/data-as-action="cancel-studio-restore"/);
  assert.match(ui,/core\.write\(storage,draft\.state,draft\.currentRaw\)/);
