@@ -63,6 +63,34 @@ test('Malformed imported legacy dates do not crash sorting',()=>{
  assert.deepEqual(Array.from(sort(rows),x=>x.id),['okay','bad']);
 });
 
+test('CONTROL 23: overdue, today and future followups derive only from confirmed due dates',()=>{
+ const followup=ctx.module.exports.followup;
+ const original={name:'Démo',status:'Prospect',nextStep:'Appeler',nextDue:'2026-11-06'};
+ assert.equal(followup(original,'2026-11-06').kind,'today');
+ assert.equal(followup({...original,nextDue:'2026-11-05'},'2026-11-06').kind,'overdue');
+ assert.equal(followup({...original,nextDue:'2026-11-07'},'2026-11-06').kind,'upcoming');
+ assert.equal(followup({...original,nextDue:''},'2026-11-06').kind,'unscheduled');
+ assert.equal(followup({...original,nextDue:'2026-02-30'},'2026-11-06').kind,'invalid');
+ assert.equal(original.nextDue,'2026-11-06');
+});
+test('CONTROL 23: finished clients and missing next actions must not suggest overdue relances',()=>{
+ const followup=ctx.module.exports.followup;
+ assert.equal(followup({status:'Terminé',nextStep:'Appeler',nextDue:'2026-11-01'},'2026-11-06').kind,'none');
+ assert.equal(followup({status:'Prospect',nextStep:'  ',nextDue:'2026-11-01'},'2026-11-06').kind,'none');
+ assert.equal(followup(null,'2026-11-06').kind,'none');
+});
+test('CONTROL 23: followup button prefills the actual linked task form and never sends a message',()=>{
+ const command=read('assets/command-center.js');
+ const css=read('assets/control-clients.css');
+ assert.match(command,/const createDue=createClientId&&clientTool\.validDate\(requestedClient\.nextDue\|\|''\)/);
+ assert.match(command,/field\('Échéance','due',createDue,'date'\)/);
+ assert.match(command,/Préparer la relance/);
+ assert.match(command,/data-client-followup=/);
+ assert.match(command,/id="control-client-due-filter"/);
+ assert.match(command,/button\.setAttribute\('aria-pressed'/);
+ assert.match(css,/\.control-client-followup-overdue/);
+ assert.match(css,/@media\(max-width:540px\)/);
+});
 test('Task-client association refuses missing clients and other projects',()=>{
  const records=[{id:'a',name:'Atelier',project:'p1'},{id:'global',name:'Prospect global',project:''}];
  assert.equal(ctx.module.exports.clientForTask('a','p1',records).ok,true);
