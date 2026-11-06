@@ -1089,7 +1089,7 @@ body.control-shell-v3 #main .chip:not(.danger):not(.success):not(.error){
    These action IDs exist in the local manager (client, calendar, expense etc.);
    no event handler or deletion behavior is modified. */
 body.control-shell-v3 #main button:is([data-act*="delete"],[data-act*="del:"],[data-act*="remove"],[data-act*="clear"]):not(.primary),
-body.control-shell-v3 #main .actions > button:is([data-act*="delete"],[data-act*="del:"],[data-act*="remove"],[data-act*="clear"]){
+body.control-shell-v3 #main .actions > button:not(.primary):not(.danger):not([data-danger]):is([data-act*="delete"],[data-act*="del:"],[data-act*="remove"],[data-act*="clear"]){
   color:var(--control-negative)!important;
   background:#FFF7F6!important;
   border-color:#EABAB5!important;

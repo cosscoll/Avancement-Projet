@@ -55,8 +55,8 @@ test('Known feature pages, help and inner screens all have theme scopes',()=>{
 });
 test('New stylesheet participates in reliable PWA offline install',()=>{
  const sw=read('service-worker.js');
- assert.match(sw,/const CACHE_SHELL='control-shell-v117'/);
- assert.match(sw,/const CACHE_PUBLIC='control-public-data-v117'/);
+ assert.match(sw,/const CACHE_SHELL='control-shell-v118'/);
+ assert.match(sw,/const CACHE_PUBLIC='control-public-data-v118'/);
  const parts=sw.match(/const (?:ASSETS|CRITICAL_SHELL)=.+/g)||[];
  assert.ok(parts.length>=2);
  for(const part of parts)assert.match(part,/control-brand-global\.css/);
@@ -204,4 +204,11 @@ test('Manager destructive actions retain explicit red warning styling',()=>{
  assert.match(brand,/background:#FFF7F6!important/);
  assert.match(brand,/color:var\(--control-negative\)!important/);
  assert.match(brand,/background:#FCE9E6!important/);
+});
+
+test('Destructive buttons override the more specific secondary action rule',()=>{
+ const generic=brand.indexOf('body.control-shell-v3 #main .actions > button:not(.primary):not(.danger):not([data-danger]){');
+ const danger=brand.indexOf('body.control-shell-v3 #main .actions > button:not(.primary):not(.danger):not([data-danger]):is([data-act*="delete"]');
+ assert.ok(generic>=0);
+ assert.ok(danger>generic);
 });
