@@ -1023,10 +1023,19 @@ try{
  await js("document.querySelector('[data-as-action=confirm-import]').click()");
  await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')||'{}').imports?.length===1"),6000)();
  assert.match(await js("document.querySelector('.as-record strong').textContent"),/Décisions UX/);
- await js("document.querySelector('[data-as-create-memory]').click()");
+ // Read an actual archived message, draft a memory, and review it before saving.
+ await js("document.querySelector('[data-as-view]').click()");
+ await ready(()=>js("!!document.querySelector('[data-as-extract-memory]')"),5000)();
+ await js("document.querySelector('[data-as-extract-memory]').click()");
  await ready(()=>js("!!document.querySelector('#as-memory-form')"),5000)();
- await js("(()=>{document.querySelector('#as-memory-title').value='Priorité mobile';document.querySelector('#as-memory-content').value='Prioriser la navigation mobile et la clarté.';document.querySelector('#as-memory-project').value='general';document.querySelector('#as-memory-form').requestSubmit()})()");
+ assert.match(await js("document.querySelector('.as-memory-draft').textContent"),/chatgpt/i);
+ assert.match(await js("document.querySelector('#as-memory-content').value"),/version mobile est prioritaire/);
+ assert.equal(await js("document.querySelector('#as-memory-approve').checked"),false);
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).memories.length"),0,'Draft must not be saved without review');
+ await js("(()=>{document.querySelector('#as-memory-title').value='Priorité mobile';document.querySelector('#as-memory-content').value='Prioriser la navigation mobile et la clarté.';document.querySelector('#as-memory-project').value='general';document.querySelector('#as-memory-approve').checked=true;document.querySelector('#as-memory-form').requestSubmit()})()");
  await ready(()=>js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).memories?.length===1"),6000)();
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).memories[0].sourceMessageIndex"),0);
+ assert.equal(await js("JSON.parse(localStorage.getItem('control-ai-studio-v1')).memories[0].sourceRole"),'user');
  await js("document.querySelector('[data-as-tab=agents]').click()");
  await ready(()=>js("!!document.querySelector('#as-agent-form')"),6000)();
  await js("(()=>{document.querySelector('#as-agent-name').value='Mon assistant UX';document.querySelector('#as-agent-instructions').value='Conseiller en design responsive';document.querySelector('[name=agent-memory]').checked=true;document.querySelector('#as-agent-form').requestSubmit()})()");
